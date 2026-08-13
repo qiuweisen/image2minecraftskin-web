@@ -1,108 +1,114 @@
 import { createFileRoute } from '@tanstack/react-router';
+import { getSortedPosts, isIndexablePost } from '@/lib/blog';
 import { getBaseUrl } from '@/lib/urls';
-import { getSortedPosts } from '@/lib/blog';
 import { websiteConfig } from '@/config/website';
-import {
-  baseLocale,
-  isLocalizedPath,
-  localeConfig,
-  locales,
-  localizeHref,
-} from '@/lib/locale';
+import { chartMiniLocalePaths } from '@/lib/locale';
+
+const LOCALIZED_ROUTES = ['/', '/play', '/day-trading-simulator'] as const;
+const UNLOCALIZED_ROUTES = [
+  '/crypto-trading-simulator',
+  '/forex-trading-simulator',
+  '/intraday-trading-practice',
+  '/market-replay',
+  '/resources',
+  '/about',
+  '/contact',
+  '/privacy-policy',
+  '/user-agreement',
+] as const;
+
+function localizedPath(prefix: string, route: string): string {
+  if (prefix === '/') return route;
+  return route === '/' ? prefix : `${prefix}${route}`;
+}
+
+function escapeXml(value: string): string {
+  return value
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&apos;');
+}
+
+function alternateLinks(base: string, route: string): string {
+  const links = chartMiniLocalePaths
+    .map(
+      ({ prefix, hreflang }) =>
+        `\n    <xhtml:link rel="alternate" hreflang="${hreflang}" href="${escapeXml(`${base}${localizedPath(prefix, route)}`)}" />`
+    )
+    .join('');
+  return `${links}\n    <xhtml:link rel="alternate" hreflang="x-default" href="${escapeXml(`${base}${route}`)}" />`;
+}
+
+function urlEntry(
+  base: string,
+  path: string,
+  options?: {
+    alternateRoute?: string;
+    changefreq?: string;
+    lastmod?: string;
+    priority?: string;
+  }
+): string {
+  const alternate = options?.alternateRoute
+    ? alternateLinks(base, options.alternateRoute)
+    : '';
+  const lastmod = options?.lastmod
+    ? `\n    <lastmod>${escapeXml(options.lastmod)}</lastmod>`
+    : '';
+  const changefreq = options?.changefreq
+    ? `\n    <changefreq>${options.changefreq}</changefreq>`
+    : '';
+  const priority = options?.priority
+    ? `\n    <priority>${options.priority}</priority>`
+    : '';
+  return `  <url>\n    <loc>${escapeXml(`${base}${path}`)}</loc>${alternate}${lastmod}${changefreq}${priority}\n  </url>`;
+}
 
 /**
- * Dynamic sitemap.xml
- * https://tanstack.dev/start/latest/docs/framework/react/guide/seo#dynamic-sitemap
+ * ChartMini's production sitemap contract. Keep this list in lockstep with
+ * the current site until the DNS cutover has passed the URL/SEO gate.
  */
 export const Route = createFileRoute('/sitemap.xml')({
   server: {
     handlers: {
       GET: async () => {
         const base = getBaseUrl().replace(/\/$/, '');
-        const staticUrls: {
-          path: string;
-          changefreq?: string;
-          priority?: string;
-        }[] = [
-          { path: '/', changefreq: 'daily', priority: '1.0' },
-          { path: '/about', changefreq: 'monthly' },
-          { path: '/ai', changefreq: 'monthly' },
-          { path: '/changelog', changefreq: 'weekly' },
-          { path: '/roadmap', changefreq: 'monthly' },
-          { path: '/contact', changefreq: 'monthly' },
-          { path: '/waitlist', changefreq: 'monthly' },
-          { path: '/terms', changefreq: 'monthly' },
-          { path: '/privacy', changefreq: 'monthly' },
-          { path: '/cookie', changefreq: 'monthly' },
-        ];
+        const entries: string[] = [];
 
-        if (websiteConfig.blog?.enable) {
-          staticUrls.push({ path: '/blog', changefreq: 'weekly' });
-        }
-        if (websiteConfig.payment?.enable) {
-          staticUrls.push({ path: '/pricing', changefreq: 'weekly' });
-        }
-
-        const alternates = (path: string) => {
-          if (!isLocalizedPath(path)) {
-            return '';
-          }
-
-          const localeLinks = locales
-            .map((locale) => {
-              const href = `${base}${localizeHref(path, { locale })}`;
-              return `\n    <xhtml:link rel="alternate" hreflang="${localeConfig[locale].hreflang}" href="${href}" />`;
-            })
-            .join('');
-          const defaultHref = `${base}${localizeHref(path, {
-            locale: baseLocale,
-          })}`;
-          return `${localeLinks}\n    <xhtml:link rel="alternate" hreflang="x-default" href="${defaultHref}" />`;
-        };
-
-        const urlEntry = (
-          path: string,
-          opts?: { changefreq?: string; priority?: string; lastmod?: string }
-        ) => {
-          const loc = isLocalizedPath(path)
-            ? localizeHref(path, { locale: baseLocale })
-            : path;
-          const lastmod = opts?.lastmod
-            ? `\n    <lastmod>${opts.lastmod}</lastmod>`
-            : '';
-          const changefreq = opts?.changefreq
-            ? `\n    <changefreq>${opts.changefreq}</changefreq>`
-            : '';
-          const priority = opts?.priority
-            ? `\n    <priority>${opts.priority}</priority>`
-            : '';
-          return `  <url>\n    <loc>${base}${loc}</loc>${alternates(path)}${lastmod}${changefreq}${priority}\n  </url>`;
-        };
-
-        const staticPart = staticUrls
-          .map((u) =>
-            urlEntry(u.path, { changefreq: u.changefreq, priority: u.priority })
-          )
-          .join('\n');
-
-        let blogPart = '';
-        if (websiteConfig.blog?.enable) {
-          const posts = getSortedPosts(baseLocale);
-          blogPart = posts
-            .map((p) =>
-              urlEntry(`/blog/${p.slug}`, {
-                changefreq: 'weekly',
-                lastmod: new Date(p.date).toISOString().slice(0, 10),
+        for (const route of LOCALIZED_ROUTES) {
+          for (const { prefix } of chartMiniLocalePaths) {
+            entries.push(
+              urlEntry(base, localizedPath(prefix, route), {
+                alternateRoute: route,
               })
-            )
-            .join('\n');
+            );
+          }
+        }
+
+        for (const route of UNLOCALIZED_ROUTES) {
+          entries.push(urlEntry(base, route));
+        }
+
+        if (websiteConfig.blog?.enable) {
+          entries.push(urlEntry(base, '/blog', { changefreq: 'weekly' }));
+          for (const post of getSortedPosts('en').filter(isIndexablePost)) {
+            entries.push(
+              urlEntry(base, `/blog/${post.slug}`, {
+                changefreq: 'weekly',
+                lastmod: new Date(post.dateModified ?? post.date)
+                  .toISOString()
+                  .slice(0, 10),
+              })
+            );
+          }
         }
 
         const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
-${staticPart}
-${blogPart ? `\n${blogPart}` : ''}
+${entries.join('\n')}
 </urlset>`;
 
         return new Response(sitemap, {

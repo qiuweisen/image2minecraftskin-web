@@ -12,11 +12,21 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as CryptoTradingSimulatorRouteImport } from './routes/crypto-trading-simulator'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as DayTradingSimulatorRouteImport } from './routes/day-trading-simulator'
+import { Route as ForexTradingSimulatorRouteImport } from './routes/forex-trading-simulator'
+import { Route as IntradayTradingPracticeRouteImport } from './routes/intraday-trading-practice'
+import { Route as LanguagesRouteImport } from './routes/languages'
 import { Route as ManifestDotjsonRouteImport } from './routes/manifest[.]json'
+import { Route as MarketReplayRouteImport } from './routes/market-replay'
+import { Route as PlayRouteImport } from './routes/play'
+import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
+import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as UserAgreementRouteImport } from './routes/user-agreement'
 import { Route as legalsCookieRouteImport } from './routes/(legals)/cookie'
 import { Route as legalsPrivacyRouteImport } from './routes/(legals)/privacy'
 import { Route as legalsTermsRouteImport } from './routes/(legals)/terms'
@@ -31,6 +41,7 @@ import { Route as testsTest404RouteImport } from './routes/(tests)/test-404'
 import { Route as testsTestErrorRouteImport } from './routes/(tests)/test-error'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminUsersRouteImport } from './routes/admin/users'
+import { Route as ApiChartSettingsRouteImport } from './routes/api/chart-settings'
 import { Route as ApiPingRouteImport } from './routes/api/ping'
 import { Route as AuthErrorRouteImport } from './routes/auth/error'
 import { Route as AuthForgotPasswordRouteImport } from './routes/auth/forgot-password'
@@ -40,6 +51,7 @@ import { Route as AuthResetPasswordRouteImport } from './routes/auth/reset-passw
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
+import { Route as GoSlugRouteImport } from './routes/go/$slug'
 import { Route as SettingsIndexRouteImport } from './routes/settings/index'
 import { Route as SettingsApikeysRouteImport } from './routes/settings/apikeys'
 import { Route as SettingsBillingRouteImport } from './routes/settings/billing'
@@ -49,10 +61,13 @@ import { Route as SettingsPaymentRouteImport } from './routes/settings/payment'
 import { Route as SettingsProfileRouteImport } from './routes/settings/profile'
 import { Route as SettingsSecurityRouteImport } from './routes/settings/security'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as ApiDayTradingDataSplatRouteImport } from './routes/api/day-trading-data/$'
 import { Route as ApiE2eUsersRouteImport } from './routes/api/e2e/users'
+import { Route as ApiPlayDataSplatRouteImport } from './routes/api/play-data/$'
 import { Route as ApiStorageFileRouteImport } from './routes/api/storage/file'
 import { Route as ApiWebhooksCreemRouteImport } from './routes/api/webhooks/creem'
 import { Route as ApiWebhooksStripeRouteImport } from './routes/api/webhooks/stripe'
+import { Route as BlogPPageRouteImport } from './routes/blog/p/$page'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -69,14 +84,59 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CryptoTradingSimulatorRoute = CryptoTradingSimulatorRouteImport.update({
+  id: '/crypto-trading-simulator',
+  path: '/crypto-trading-simulator',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DayTradingSimulatorRoute = DayTradingSimulatorRouteImport.update({
+  id: '/day-trading-simulator',
+  path: '/day-trading-simulator',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForexTradingSimulatorRoute = ForexTradingSimulatorRouteImport.update({
+  id: '/forex-trading-simulator',
+  path: '/forex-trading-simulator',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IntradayTradingPracticeRoute = IntradayTradingPracticeRouteImport.update({
+  id: '/intraday-trading-practice',
+  path: '/intraday-trading-practice',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LanguagesRoute = LanguagesRouteImport.update({
+  id: '/languages',
+  path: '/languages',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ManifestDotjsonRoute = ManifestDotjsonRouteImport.update({
   id: '/manifest.json',
   path: '/manifest.json',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MarketReplayRoute = MarketReplayRouteImport.update({
+  id: '/market-replay',
+  path: '/market-replay',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlayRoute = PlayRouteImport.update({
+  id: '/play',
+  path: '/play',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
+  id: '/privacy-policy',
+  path: '/privacy-policy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResourcesRoute = ResourcesRouteImport.update({
+  id: '/resources',
+  path: '/resources',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
@@ -92,6 +152,11 @@ const SettingsRoute = SettingsRouteImport.update({
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UserAgreementRoute = UserAgreementRouteImport.update({
+  id: '/user-agreement',
+  path: '/user-agreement',
   getParentRoute: () => rootRouteImport,
 } as any)
 const legalsCookieRoute = legalsCookieRouteImport.update({
@@ -164,6 +229,11 @@ const AdminUsersRoute = AdminUsersRouteImport.update({
   path: '/users',
   getParentRoute: () => AdminRoute,
 } as any)
+const ApiChartSettingsRoute = ApiChartSettingsRouteImport.update({
+  id: '/api/chart-settings',
+  path: '/api/chart-settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPingRoute = ApiPingRouteImport.update({
   id: '/api/ping',
   path: '/api/ping',
@@ -208,6 +278,11 @@ const DashboardIndexRoute = DashboardIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => DashboardRoute,
+} as any)
+const GoSlugRoute = GoSlugRouteImport.update({
+  id: '/go/$slug',
+  path: '/go/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const SettingsIndexRoute = SettingsIndexRouteImport.update({
   id: '/',
@@ -254,9 +329,19 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiDayTradingDataSplatRoute = ApiDayTradingDataSplatRouteImport.update({
+  id: '/api/day-trading-data/$',
+  path: '/api/day-trading-data/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiE2eUsersRoute = ApiE2eUsersRouteImport.update({
   id: '/api/e2e/users',
   path: '/api/e2e/users',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPlayDataSplatRoute = ApiPlayDataSplatRouteImport.update({
+  id: '/api/play-data/$',
+  path: '/api/play-data/$',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiStorageFileRoute = ApiStorageFileRouteImport.update({
@@ -274,16 +359,31 @@ const ApiWebhooksStripeRoute = ApiWebhooksStripeRouteImport.update({
   path: '/api/webhooks/stripe',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogPPageRoute = BlogPPageRouteImport.update({
+  id: '/blog/p/$page',
+  path: '/blog/p/$page',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRouteWithChildren
+  '/crypto-trading-simulator': typeof CryptoTradingSimulatorRoute
   '/dashboard': typeof DashboardRouteWithChildren
+  '/day-trading-simulator': typeof DayTradingSimulatorRoute
+  '/forex-trading-simulator': typeof ForexTradingSimulatorRoute
+  '/intraday-trading-practice': typeof IntradayTradingPracticeRoute
+  '/languages': typeof LanguagesRoute
   '/manifest.json': typeof ManifestDotjsonRoute
+  '/market-replay': typeof MarketReplayRoute
+  '/play': typeof PlayRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
+  '/resources': typeof ResourcesRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/settings': typeof SettingsRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/user-agreement': typeof UserAgreementRoute
   '/cookie': typeof legalsCookieRoute
   '/privacy': typeof legalsPrivacyRoute
   '/terms': typeof legalsTermsRoute
@@ -297,6 +397,7 @@ export interface FileRoutesByFullPath {
   '/test-404': typeof testsTest404Route
   '/test-error': typeof testsTestErrorRoute
   '/admin/users': typeof AdminUsersRoute
+  '/api/chart-settings': typeof ApiChartSettingsRoute
   '/api/ping': typeof ApiPingRoute
   '/auth/error': typeof AuthErrorRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
@@ -304,6 +405,7 @@ export interface FileRoutesByFullPath {
   '/auth/register': typeof AuthRegisterRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/go/$slug': typeof GoSlugRoute
   '/settings/apikeys': typeof SettingsApikeysRoute
   '/settings/billing': typeof SettingsBillingRoute
   '/settings/files': typeof SettingsFilesRoute
@@ -316,17 +418,30 @@ export interface FileRoutesByFullPath {
   '/dashboard/': typeof DashboardIndexRoute
   '/settings/': typeof SettingsIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/day-trading-data/$': typeof ApiDayTradingDataSplatRoute
   '/api/e2e/users': typeof ApiE2eUsersRoute
+  '/api/play-data/$': typeof ApiPlayDataSplatRoute
   '/api/storage/file': typeof ApiStorageFileRoute
   '/api/webhooks/creem': typeof ApiWebhooksCreemRoute
   '/api/webhooks/stripe': typeof ApiWebhooksStripeRoute
+  '/blog/p/$page': typeof BlogPPageRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteWithChildren
+  '/crypto-trading-simulator': typeof CryptoTradingSimulatorRoute
+  '/day-trading-simulator': typeof DayTradingSimulatorRoute
+  '/forex-trading-simulator': typeof ForexTradingSimulatorRoute
+  '/intraday-trading-practice': typeof IntradayTradingPracticeRoute
+  '/languages': typeof LanguagesRoute
   '/manifest.json': typeof ManifestDotjsonRoute
+  '/market-replay': typeof MarketReplayRoute
+  '/play': typeof PlayRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
+  '/resources': typeof ResourcesRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/user-agreement': typeof UserAgreementRoute
   '/cookie': typeof legalsCookieRoute
   '/privacy': typeof legalsPrivacyRoute
   '/terms': typeof legalsTermsRoute
@@ -340,6 +455,7 @@ export interface FileRoutesByTo {
   '/test-404': typeof testsTest404Route
   '/test-error': typeof testsTestErrorRoute
   '/admin/users': typeof AdminUsersRoute
+  '/api/chart-settings': typeof ApiChartSettingsRoute
   '/api/ping': typeof ApiPingRoute
   '/auth/error': typeof AuthErrorRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
@@ -347,6 +463,7 @@ export interface FileRoutesByTo {
   '/auth/register': typeof AuthRegisterRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/go/$slug': typeof GoSlugRoute
   '/settings/apikeys': typeof SettingsApikeysRoute
   '/settings/billing': typeof SettingsBillingRoute
   '/settings/files': typeof SettingsFilesRoute
@@ -359,21 +476,34 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardIndexRoute
   '/settings': typeof SettingsIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/day-trading-data/$': typeof ApiDayTradingDataSplatRoute
   '/api/e2e/users': typeof ApiE2eUsersRoute
+  '/api/play-data/$': typeof ApiPlayDataSplatRoute
   '/api/storage/file': typeof ApiStorageFileRoute
   '/api/webhooks/creem': typeof ApiWebhooksCreemRoute
   '/api/webhooks/stripe': typeof ApiWebhooksStripeRoute
+  '/blog/p/$page': typeof BlogPPageRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRouteWithChildren
+  '/crypto-trading-simulator': typeof CryptoTradingSimulatorRoute
   '/dashboard': typeof DashboardRouteWithChildren
+  '/day-trading-simulator': typeof DayTradingSimulatorRoute
+  '/forex-trading-simulator': typeof ForexTradingSimulatorRoute
+  '/intraday-trading-practice': typeof IntradayTradingPracticeRoute
+  '/languages': typeof LanguagesRoute
   '/manifest.json': typeof ManifestDotjsonRoute
+  '/market-replay': typeof MarketReplayRoute
+  '/play': typeof PlayRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
+  '/resources': typeof ResourcesRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/settings': typeof SettingsRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/user-agreement': typeof UserAgreementRoute
   '/(legals)/cookie': typeof legalsCookieRoute
   '/(legals)/privacy': typeof legalsPrivacyRoute
   '/(legals)/terms': typeof legalsTermsRoute
@@ -387,6 +517,7 @@ export interface FileRoutesById {
   '/(tests)/test-404': typeof testsTest404Route
   '/(tests)/test-error': typeof testsTestErrorRoute
   '/admin/users': typeof AdminUsersRoute
+  '/api/chart-settings': typeof ApiChartSettingsRoute
   '/api/ping': typeof ApiPingRoute
   '/auth/error': typeof AuthErrorRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
@@ -394,6 +525,7 @@ export interface FileRoutesById {
   '/auth/register': typeof AuthRegisterRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/go/$slug': typeof GoSlugRoute
   '/settings/apikeys': typeof SettingsApikeysRoute
   '/settings/billing': typeof SettingsBillingRoute
   '/settings/files': typeof SettingsFilesRoute
@@ -406,10 +538,13 @@ export interface FileRoutesById {
   '/dashboard/': typeof DashboardIndexRoute
   '/settings/': typeof SettingsIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/day-trading-data/$': typeof ApiDayTradingDataSplatRoute
   '/api/e2e/users': typeof ApiE2eUsersRoute
+  '/api/play-data/$': typeof ApiPlayDataSplatRoute
   '/api/storage/file': typeof ApiStorageFileRoute
   '/api/webhooks/creem': typeof ApiWebhooksCreemRoute
   '/api/webhooks/stripe': typeof ApiWebhooksStripeRoute
+  '/blog/p/$page': typeof BlogPPageRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -417,11 +552,21 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/auth'
+    | '/crypto-trading-simulator'
     | '/dashboard'
+    | '/day-trading-simulator'
+    | '/forex-trading-simulator'
+    | '/intraday-trading-practice'
+    | '/languages'
     | '/manifest.json'
+    | '/market-replay'
+    | '/play'
+    | '/privacy-policy'
+    | '/resources'
     | '/robots.txt'
     | '/settings'
     | '/sitemap.xml'
+    | '/user-agreement'
     | '/cookie'
     | '/privacy'
     | '/terms'
@@ -435,6 +580,7 @@ export interface FileRouteTypes {
     | '/test-404'
     | '/test-error'
     | '/admin/users'
+    | '/api/chart-settings'
     | '/api/ping'
     | '/auth/error'
     | '/auth/forgot-password'
@@ -442,6 +588,7 @@ export interface FileRouteTypes {
     | '/auth/register'
     | '/auth/reset-password'
     | '/blog/$slug'
+    | '/go/$slug'
     | '/settings/apikeys'
     | '/settings/billing'
     | '/settings/files'
@@ -454,17 +601,30 @@ export interface FileRouteTypes {
     | '/dashboard/'
     | '/settings/'
     | '/api/auth/$'
+    | '/api/day-trading-data/$'
     | '/api/e2e/users'
+    | '/api/play-data/$'
     | '/api/storage/file'
     | '/api/webhooks/creem'
     | '/api/webhooks/stripe'
+    | '/blog/p/$page'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth'
+    | '/crypto-trading-simulator'
+    | '/day-trading-simulator'
+    | '/forex-trading-simulator'
+    | '/intraday-trading-practice'
+    | '/languages'
     | '/manifest.json'
+    | '/market-replay'
+    | '/play'
+    | '/privacy-policy'
+    | '/resources'
     | '/robots.txt'
     | '/sitemap.xml'
+    | '/user-agreement'
     | '/cookie'
     | '/privacy'
     | '/terms'
@@ -478,6 +638,7 @@ export interface FileRouteTypes {
     | '/test-404'
     | '/test-error'
     | '/admin/users'
+    | '/api/chart-settings'
     | '/api/ping'
     | '/auth/error'
     | '/auth/forgot-password'
@@ -485,6 +646,7 @@ export interface FileRouteTypes {
     | '/auth/register'
     | '/auth/reset-password'
     | '/blog/$slug'
+    | '/go/$slug'
     | '/settings/apikeys'
     | '/settings/billing'
     | '/settings/files'
@@ -497,20 +659,33 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/settings'
     | '/api/auth/$'
+    | '/api/day-trading-data/$'
     | '/api/e2e/users'
+    | '/api/play-data/$'
     | '/api/storage/file'
     | '/api/webhooks/creem'
     | '/api/webhooks/stripe'
+    | '/blog/p/$page'
   id:
     | '__root__'
     | '/'
     | '/admin'
     | '/auth'
+    | '/crypto-trading-simulator'
     | '/dashboard'
+    | '/day-trading-simulator'
+    | '/forex-trading-simulator'
+    | '/intraday-trading-practice'
+    | '/languages'
     | '/manifest.json'
+    | '/market-replay'
+    | '/play'
+    | '/privacy-policy'
+    | '/resources'
     | '/robots.txt'
     | '/settings'
     | '/sitemap.xml'
+    | '/user-agreement'
     | '/(legals)/cookie'
     | '/(legals)/privacy'
     | '/(legals)/terms'
@@ -524,6 +699,7 @@ export interface FileRouteTypes {
     | '/(tests)/test-404'
     | '/(tests)/test-error'
     | '/admin/users'
+    | '/api/chart-settings'
     | '/api/ping'
     | '/auth/error'
     | '/auth/forgot-password'
@@ -531,6 +707,7 @@ export interface FileRouteTypes {
     | '/auth/register'
     | '/auth/reset-password'
     | '/blog/$slug'
+    | '/go/$slug'
     | '/settings/apikeys'
     | '/settings/billing'
     | '/settings/files'
@@ -543,21 +720,34 @@ export interface FileRouteTypes {
     | '/dashboard/'
     | '/settings/'
     | '/api/auth/$'
+    | '/api/day-trading-data/$'
     | '/api/e2e/users'
+    | '/api/play-data/$'
     | '/api/storage/file'
     | '/api/webhooks/creem'
     | '/api/webhooks/stripe'
+    | '/blog/p/$page'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
   AuthRoute: typeof AuthRouteWithChildren
+  CryptoTradingSimulatorRoute: typeof CryptoTradingSimulatorRoute
   DashboardRoute: typeof DashboardRouteWithChildren
+  DayTradingSimulatorRoute: typeof DayTradingSimulatorRoute
+  ForexTradingSimulatorRoute: typeof ForexTradingSimulatorRoute
+  IntradayTradingPracticeRoute: typeof IntradayTradingPracticeRoute
+  LanguagesRoute: typeof LanguagesRoute
   ManifestDotjsonRoute: typeof ManifestDotjsonRoute
+  MarketReplayRoute: typeof MarketReplayRoute
+  PlayRoute: typeof PlayRoute
+  PrivacyPolicyRoute: typeof PrivacyPolicyRoute
+  ResourcesRoute: typeof ResourcesRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   SettingsRoute: typeof SettingsRouteWithChildren
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  UserAgreementRoute: typeof UserAgreementRoute
   legalsCookieRoute: typeof legalsCookieRoute
   legalsPrivacyRoute: typeof legalsPrivacyRoute
   legalsTermsRoute: typeof legalsTermsRoute
@@ -570,14 +760,19 @@ export interface RootRouteChildren {
   pagesWaitlistRoute: typeof pagesWaitlistRoute
   testsTest404Route: typeof testsTest404Route
   testsTestErrorRoute: typeof testsTestErrorRoute
+  ApiChartSettingsRoute: typeof ApiChartSettingsRoute
   ApiPingRoute: typeof ApiPingRoute
   BlogSlugRoute: typeof BlogSlugRoute
+  GoSlugRoute: typeof GoSlugRoute
   BlogIndexRoute: typeof BlogIndexRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+  ApiDayTradingDataSplatRoute: typeof ApiDayTradingDataSplatRoute
   ApiE2eUsersRoute: typeof ApiE2eUsersRoute
+  ApiPlayDataSplatRoute: typeof ApiPlayDataSplatRoute
   ApiStorageFileRoute: typeof ApiStorageFileRoute
   ApiWebhooksCreemRoute: typeof ApiWebhooksCreemRoute
   ApiWebhooksStripeRoute: typeof ApiWebhooksStripeRoute
+  BlogPPageRoute: typeof BlogPPageRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -603,6 +798,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/crypto-trading-simulator': {
+      id: '/crypto-trading-simulator'
+      path: '/crypto-trading-simulator'
+      fullPath: '/crypto-trading-simulator'
+      preLoaderRoute: typeof CryptoTradingSimulatorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dashboard': {
       id: '/dashboard'
       path: '/dashboard'
@@ -610,11 +812,67 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/day-trading-simulator': {
+      id: '/day-trading-simulator'
+      path: '/day-trading-simulator'
+      fullPath: '/day-trading-simulator'
+      preLoaderRoute: typeof DayTradingSimulatorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forex-trading-simulator': {
+      id: '/forex-trading-simulator'
+      path: '/forex-trading-simulator'
+      fullPath: '/forex-trading-simulator'
+      preLoaderRoute: typeof ForexTradingSimulatorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/intraday-trading-practice': {
+      id: '/intraday-trading-practice'
+      path: '/intraday-trading-practice'
+      fullPath: '/intraday-trading-practice'
+      preLoaderRoute: typeof IntradayTradingPracticeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/languages': {
+      id: '/languages'
+      path: '/languages'
+      fullPath: '/languages'
+      preLoaderRoute: typeof LanguagesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/manifest.json': {
       id: '/manifest.json'
       path: '/manifest.json'
       fullPath: '/manifest.json'
       preLoaderRoute: typeof ManifestDotjsonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/market-replay': {
+      id: '/market-replay'
+      path: '/market-replay'
+      fullPath: '/market-replay'
+      preLoaderRoute: typeof MarketReplayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/play': {
+      id: '/play'
+      path: '/play'
+      fullPath: '/play'
+      preLoaderRoute: typeof PlayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy-policy': {
+      id: '/privacy-policy'
+      path: '/privacy-policy'
+      fullPath: '/privacy-policy'
+      preLoaderRoute: typeof PrivacyPolicyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/resources': {
+      id: '/resources'
+      path: '/resources'
+      fullPath: '/resources'
+      preLoaderRoute: typeof ResourcesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/robots.txt': {
@@ -636,6 +894,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/user-agreement': {
+      id: '/user-agreement'
+      path: '/user-agreement'
+      fullPath: '/user-agreement'
+      preLoaderRoute: typeof UserAgreementRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(legals)/cookie': {
@@ -736,6 +1001,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminUsersRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/api/chart-settings': {
+      id: '/api/chart-settings'
+      path: '/api/chart-settings'
+      fullPath: '/api/chart-settings'
+      preLoaderRoute: typeof ApiChartSettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/ping': {
       id: '/api/ping'
       path: '/api/ping'
@@ -798,6 +1070,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/'
       preLoaderRoute: typeof DashboardIndexRouteImport
       parentRoute: typeof DashboardRoute
+    }
+    '/go/$slug': {
+      id: '/go/$slug'
+      path: '/go/$slug'
+      fullPath: '/go/$slug'
+      preLoaderRoute: typeof GoSlugRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/settings/': {
       id: '/settings/'
@@ -862,11 +1141,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/day-trading-data/$': {
+      id: '/api/day-trading-data/$'
+      path: '/api/day-trading-data/$'
+      fullPath: '/api/day-trading-data/$'
+      preLoaderRoute: typeof ApiDayTradingDataSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/e2e/users': {
       id: '/api/e2e/users'
       path: '/api/e2e/users'
       fullPath: '/api/e2e/users'
       preLoaderRoute: typeof ApiE2eUsersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/play-data/$': {
+      id: '/api/play-data/$'
+      path: '/api/play-data/$'
+      fullPath: '/api/play-data/$'
+      preLoaderRoute: typeof ApiPlayDataSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/storage/file': {
@@ -888,6 +1181,13 @@ declare module '@tanstack/react-router' {
       path: '/api/webhooks/stripe'
       fullPath: '/api/webhooks/stripe'
       preLoaderRoute: typeof ApiWebhooksStripeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/p/$page': {
+      id: '/blog/p/$page'
+      path: '/blog/p/$page'
+      fullPath: '/blog/p/$page'
+      preLoaderRoute: typeof BlogPPageRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -965,11 +1265,21 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
   AuthRoute: AuthRouteWithChildren,
+  CryptoTradingSimulatorRoute: CryptoTradingSimulatorRoute,
   DashboardRoute: DashboardRouteWithChildren,
+  DayTradingSimulatorRoute: DayTradingSimulatorRoute,
+  ForexTradingSimulatorRoute: ForexTradingSimulatorRoute,
+  IntradayTradingPracticeRoute: IntradayTradingPracticeRoute,
+  LanguagesRoute: LanguagesRoute,
   ManifestDotjsonRoute: ManifestDotjsonRoute,
+  MarketReplayRoute: MarketReplayRoute,
+  PlayRoute: PlayRoute,
+  PrivacyPolicyRoute: PrivacyPolicyRoute,
+  ResourcesRoute: ResourcesRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
   SettingsRoute: SettingsRouteWithChildren,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  UserAgreementRoute: UserAgreementRoute,
   legalsCookieRoute: legalsCookieRoute,
   legalsPrivacyRoute: legalsPrivacyRoute,
   legalsTermsRoute: legalsTermsRoute,
@@ -982,14 +1292,19 @@ const rootRouteChildren: RootRouteChildren = {
   pagesWaitlistRoute: pagesWaitlistRoute,
   testsTest404Route: testsTest404Route,
   testsTestErrorRoute: testsTestErrorRoute,
+  ApiChartSettingsRoute: ApiChartSettingsRoute,
   ApiPingRoute: ApiPingRoute,
   BlogSlugRoute: BlogSlugRoute,
+  GoSlugRoute: GoSlugRoute,
   BlogIndexRoute: BlogIndexRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
+  ApiDayTradingDataSplatRoute: ApiDayTradingDataSplatRoute,
   ApiE2eUsersRoute: ApiE2eUsersRoute,
+  ApiPlayDataSplatRoute: ApiPlayDataSplatRoute,
   ApiStorageFileRoute: ApiStorageFileRoute,
   ApiWebhooksCreemRoute: ApiWebhooksCreemRoute,
   ApiWebhooksStripeRoute: ApiWebhooksStripeRoute,
+  BlogPPageRoute: BlogPPageRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

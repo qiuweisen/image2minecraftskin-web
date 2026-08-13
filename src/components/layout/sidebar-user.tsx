@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/sidebar';
 import { websiteConfig } from '@/config/website';
 import type { SessionUser } from '@/auth/types';
-import { localeConfig, locales, type Locale } from '@/lib/locale';
+import { localeConfig, selectableLocales, type Locale } from '@/lib/locale';
 import { useLocaleSwitcher } from '@/components/layout/locale-switcher';
 import {
   IconDeviceDesktop,
@@ -48,7 +48,7 @@ export function SidebarUser({ user }: SidebarUserProps) {
     onLocaleChange: () => setOpen(false),
   });
   const showModeSwitch = websiteConfig.ui?.mode?.enableSwitch ?? false;
-  const showLocaleSwitch = locales.length > 1;
+  const showLocaleSwitch = selectableLocales.length > 1;
   const ThemeIcon =
     theme === 'system'
       ? IconDeviceDesktop
@@ -152,17 +152,15 @@ export function SidebarUser({ user }: SidebarUserProps) {
                       {m.common_switch_language()}
                     </DropdownMenuSubTrigger>
                     <DropdownMenuSubContent>
-                      {locales.map((locale: Locale) => (
+                      {selectableLocales.map((locale: Locale) => (
                         <DropdownMenuItem
                           key={locale}
                           onClick={() => switchLocale(locale)}
                           disabled={locale === currentLocale}
                         >
-                          {localeConfig[locale].flag ? (
-                            <span className="mr-2 text-base">
-                              {localeConfig[locale].flag}
-                            </span>
-                          ) : null}
+                          <span aria-hidden="true" className="mr-2 text-base">
+                            {localeConfig[locale].flag}
+                          </span>
                           <span>{localeConfig[locale].name}</span>
                         </DropdownMenuItem>
                       ))}

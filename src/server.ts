@@ -2,6 +2,7 @@
 // This file is a good smoke test to make sure the custom server entry is working
 import handler from '@tanstack/react-start/server-entry';
 import { localeMiddleware } from '@/locale/middleware';
+import { getChartMiniLegacyRedirect } from '@/lib/chartmini-legacy-redirects';
 
 /**
  * TanStack Start server entry
@@ -9,14 +10,44 @@ import { localeMiddleware } from '@/locale/middleware';
  */
 console.log("[server-entry]: using custom server entry in 'src/server.ts'");
 
+const stagingHosts = new Set([
+  'chartmini-v2.sudotradecom.workers.dev',
+  'v2.chartmini.com',
+]);
+
+function addStagingRobotsHeader(request: Request, response: Response) {
+  if (!stagingHosts.has(new URL(request.url).hostname)) {
+    return response;
+  }
+
+  const headers = new Headers(response.headers);
+  headers.set('X-Robots-Tag', 'noindex, nofollow, noarchive');
+
+  return new Response(response.body, {
+    headers,
+    status: response.status,
+    statusText: response.statusText,
+  });
+}
+
 export default {
   fetch(request: Request) {
+    // All historical ChartMini locale prefixes are now first-class Paraglide
+    // locales. Keep the original request intact so middleware can select the
+    // locale and canonical URL without changing public links.
+    const legacyRedirect = getChartMiniLegacyRedirect(request);
+    if (legacyRedirect) {
+      return addStagingRobotsHeader(request, legacyRedirect);
+    }
+
     return localeMiddleware(request, () =>
-      handler.fetch(request, {
-        context: {
-          fromFetch: true,
-        },
-      })
+      Promise.resolve(
+        handler.fetch(request, {
+          context: {
+            fromFetch: true,
+          },
+        })
+      ).then((response) => addStagingRobotsHeader(request, response))
     );
   },
 };

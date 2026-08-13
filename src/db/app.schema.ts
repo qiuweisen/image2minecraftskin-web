@@ -4,7 +4,13 @@
  */
 
 import { relations } from 'drizzle-orm';
-import { integer, sqliteTable, text, index } from 'drizzle-orm/sqlite-core';
+import {
+  integer,
+  primaryKey,
+  sqliteTable,
+  text,
+  index,
+} from 'drizzle-orm/sqlite-core';
 import { user } from './auth.schema';
 import type { PaymentScene, PaymentStatus, PaymentType, PlanInterval } from '@/payment/types';
 
@@ -86,3 +92,69 @@ export const userFilesRelations = relations(userFiles, ({ one }) => ({
     references: [user.id],
   }),
 }));
+
+/**
+ * Compact, cross-page TradingView indicator profile.
+ *
+ * Full chart layouts remain in each page's localStorage. This table stores
+ * only the official TradingView study template shared by the simulators.
+ */
+export const userIndicatorProfiles = sqliteTable(
+  'user_indicator_profiles',
+  {
+    userId: text('user_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
+    scope: text('scope').notNull().$type<'shared'>(),
+    templateJson: text('template_json').notNull(),
+    templateHash: text('template_hash').notNull(),
+    version: integer('version').notNull().default(1),
+    updatedAt: integer('updated_at', { mode: 'timestamp_ms' }).notNull(),
+  },
+  (table) => [primaryKey({ columns: [table.userId, table.scope] })]
+);
+
+export const userIndicatorProfilesRelations = relations(
+  userIndicatorProfiles,
+  ({ one }) => ({
+    user: one(user, {
+      fields: [userIndicatorProfiles.userId],
+      references: [user.id],
+    }),
+  })
+);
+
+/**
+ * Legacy daily AI-analysis quota counters.
+ *
+ * `day` is stored as a millisecond timestamp, matching the other Drizzle
+ * timestamp columns and the source Prisma DateTime representation.
+ */
+export const aiAnalysisDailyUsage = sqliteTable(
+  'ai_analysis_daily_usage',
+  {
+    id: text('id').primaryKey(),
+    userId: text('user_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
+    day: integer('day', { mode: 'timestamp_ms' }).notNull(),
+    count: integer('count').notNull().default(0),
+    createdAt: integer('created_at', { mode: 'timestamp_ms' }).notNull(),
+    updatedAt: integer('updated_at', { mode: 'timestamp_ms' }).notNull(),
+  },
+  (table) => [
+    index('ai_analysis_daily_usage_user_id_idx').on(table.userId),
+    index('ai_analysis_daily_usage_day_idx').on(table.day),
+    index('ai_analysis_daily_usage_user_day_idx').on(table.userId, table.day),
+  ]
+);
+
+export const aiAnalysisDailyUsageRelations = relations(
+  aiAnalysisDailyUsage,
+  ({ one }) => ({
+    user: one(user, {
+      fields: [aiAnalysisDailyUsage.userId],
+      references: [user.id],
+    }),
+  })
+);

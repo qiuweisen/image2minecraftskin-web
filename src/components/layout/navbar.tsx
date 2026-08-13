@@ -45,160 +45,155 @@ export function Navbar({ scroll = true }: NavbarProps) {
     setMenuValue(null);
   }, [pathname]);
   return (
-    <header
-      className={cn(
-        'sticky inset-x-0 top-0 z-40 py-4 transition-all duration-300',
-        showBarBg && 'border-b'
-      )}
-    >
-      {showBarBg && (
-        <div
-          className="absolute inset-0 z-0 bg-muted/50 backdrop-blur-md"
-          aria-hidden="true"
-        />
-      )}
+    <header className="sticky inset-x-0 top-0 z-40 px-4 py-3 transition-all duration-300">
       <div className="relative z-10">
-        <Container className="px-4">
-          <nav
-            aria-label={m.common_main_navigation()}
-            className="hidden lg:flex lg:items-center lg:justify-between lg:gap-4"
+        <Container className="px-0">
+          <div
+            className={cn(
+              'rounded-xl border bg-background/90 shadow-sm backdrop-blur-md transition-shadow',
+              showBarBg && 'shadow-md'
+            )}
           >
-            <Link
-              to="/"
-              aria-label={m.common_home()}
-              className="flex items-center gap-2 shrink-0"
+            <nav
+              aria-label={m.common_main_navigation()}
+              className="hidden px-2 py-2 lg:flex lg:items-center lg:justify-between lg:gap-4"
             >
-              <Logo />
-              <span className="text-xl font-semibold">
-                {websiteConfig.metadata?.name}
-              </span>
-            </Link>
-
-            <NavigationMenu
-              value={menuValue}
-              onValueChange={setMenuValue}
-              className="flex-1 justify-center"
-            >
-              <NavigationMenuList
-                aria-orientation={undefined}
-                className="gap-1"
+              <Link
+                to="/"
+                aria-label={m.common_home()}
+                className="flex shrink-0 items-center"
               >
-                {menuLinks?.map((item) =>
-                  item.items ? (
-                    <NavigationMenuItem key={item.title} value={item.title}>
-                      <NavigationMenuTrigger
-                        className={cn(
-                          'bg-transparent',
-                          item.items.some((sub) =>
-                            isLinkActive(sub.href, pathname)
-                          ) && 'font-semibold text-foreground'
-                        )}
-                      >
-                        {item.title}
-                      </NavigationMenuTrigger>
-                      <NavigationMenuContent>
-                        <ul className="grid w-100 gap-3 p-3 md:w-125 md:grid-cols-2 lg:w-150">
-                          {item.items.map((sub) => (
-                            <li key={sub.title}>
-                              <NavigationMenuLink
-                                closeOnClick
-                                className={cn(
-                                  'group flex select-none flex-row items-center gap-4 rounded-md',
-                                  'p-2 leading-none no-underline outline-hidden transition-colors',
-                                  'hover:bg-accent hover:text-accent-foreground',
-                                  'focus:bg-accent focus:text-accent-foreground',
-                                  isLinkActive(sub.href, pathname) &&
-                                    'bg-accent text-accent-foreground'
-                                )}
-                                render={
-                                  <Link
-                                    to={sub.href ?? '#'}
-                                    target={sub.external ? '_blank' : undefined}
-                                    rel={
-                                      sub.external
-                                        ? 'noopener noreferrer'
-                                        : undefined
-                                    }
-                                  />
-                                }
-                              >
-                                {sub.icon ? (
-                                  <sub.icon className="size-4 shrink-0" />
-                                ) : null}
-                                <div className="flex-1 min-w-0">
-                                  <div className="text-sm font-medium">
-                                    {sub.title}
-                                  </div>
-                                  {sub.description ? (
-                                    <p className="text-xs text-muted-foreground">
-                                      {sub.description}
-                                    </p>
+                <Logo />
+              </Link>
+
+              <NavigationMenu
+                value={menuValue}
+                onValueChange={setMenuValue}
+                className="flex-1 justify-center"
+              >
+                <NavigationMenuList
+                  aria-orientation={undefined}
+                  className="gap-1"
+                >
+                  {menuLinks?.map((item) =>
+                    item.items ? (
+                      <NavigationMenuItem key={item.title} value={item.title}>
+                        <NavigationMenuTrigger
+                          className={cn(
+                            'bg-transparent',
+                            item.items.some((sub) =>
+                              isLinkActive(sub.href, pathname)
+                            ) && 'font-semibold text-foreground'
+                          )}
+                        >
+                          {item.title}
+                        </NavigationMenuTrigger>
+                        <NavigationMenuContent>
+                          <ul className="grid w-100 gap-3 p-3 md:w-125 md:grid-cols-2 lg:w-150">
+                            {item.items.map((sub) => (
+                              <li key={sub.title}>
+                                <NavigationMenuLink
+                                  closeOnClick
+                                  className={cn(
+                                    'group flex select-none flex-row items-center gap-4 rounded-md',
+                                    'p-2 leading-none no-underline outline-hidden transition-colors',
+                                    'hover:bg-accent hover:text-accent-foreground',
+                                    'focus:bg-accent focus:text-accent-foreground',
+                                    isLinkActive(sub.href, pathname) &&
+                                      'bg-accent text-accent-foreground'
+                                  )}
+                                  render={
+                                    <Link
+                                      to={sub.href ?? '#'}
+                                      target={
+                                        sub.external ? '_blank' : undefined
+                                      }
+                                      rel={
+                                        sub.external
+                                          ? 'noopener noreferrer'
+                                          : undefined
+                                      }
+                                    />
+                                  }
+                                >
+                                  {sub.icon ? (
+                                    <sub.icon className="size-4 shrink-0" />
                                   ) : null}
-                                </div>
-                                {sub.external ? (
-                                  <IconArrowUpRight className="size-4 shrink-0" />
-                                ) : null}
-                              </NavigationMenuLink>
-                            </li>
-                          ))}
-                        </ul>
-                      </NavigationMenuContent>
-                    </NavigationMenuItem>
+                                  <div className="flex-1 min-w-0">
+                                    <div className="text-sm font-medium">
+                                      {sub.title}
+                                    </div>
+                                    {sub.description ? (
+                                      <p className="text-xs text-muted-foreground">
+                                        {sub.description}
+                                      </p>
+                                    ) : null}
+                                  </div>
+                                  {sub.external ? (
+                                    <IconArrowUpRight className="size-4 shrink-0" />
+                                  ) : null}
+                                </NavigationMenuLink>
+                              </li>
+                            ))}
+                          </ul>
+                        </NavigationMenuContent>
+                      </NavigationMenuItem>
+                    ) : (
+                      <NavigationMenuItem key={item.title}>
+                        <NavigationMenuLink
+                          render={<Link to={item.href ?? '#'} />}
+                          className={cn(
+                            navigationMenuTriggerStyle(),
+                            'bg-transparent',
+                            isLinkActive(item.href, pathname) &&
+                              'font-semibold text-primary'
+                          )}
+                        >
+                          {item.title}
+                        </NavigationMenuLink>
+                      </NavigationMenuItem>
+                    )
+                  )}
+                </NavigationMenuList>
+              </NavigationMenu>
+
+              <div className="flex items-center gap-4 shrink-0">
+                <LocaleSwitcher />
+                <ModeSwitcher />
+                {websiteConfig.auth?.enable &&
+                  (!mounted || isPending ? (
+                    <Skeleton className="size-8 rounded-full" />
+                  ) : user ? (
+                    <UserButton user={user} />
                   ) : (
-                    <NavigationMenuItem key={item.title}>
-                      <NavigationMenuLink
-                        render={<Link to={item.href ?? '#'} />}
-                        className={cn(
-                          navigationMenuTriggerStyle(),
-                          'bg-transparent',
-                          isLinkActive(item.href, pathname) &&
-                            'font-semibold text-primary'
-                        )}
+                    <>
+                      <LoginWrapper mode="modal" asChild>
+                        <button
+                          type="button"
+                          className={cn(
+                            buttonVariants({
+                              variant: 'outline',
+                              size: 'sm',
+                            }),
+                            'cursor-pointer'
+                          )}
+                        >
+                          {m.auth_common_login()}
+                        </button>
+                      </LoginWrapper>
+                      <Link
+                        to={Routes.Register}
+                        className={buttonVariants({ size: 'sm' })}
                       >
-                        {item.title}
-                      </NavigationMenuLink>
-                    </NavigationMenuItem>
-                  )
-                )}
-              </NavigationMenuList>
-            </NavigationMenu>
+                        {m.auth_common_signup()}
+                      </Link>
+                    </>
+                  ))}
+              </div>
+            </nav>
 
-            <div className="flex items-center gap-4 shrink-0">
-              <LocaleSwitcher />
-              <ModeSwitcher />
-              {websiteConfig.auth?.enable &&
-                (!mounted || isPending ? (
-                  <Skeleton className="size-8 rounded-full" />
-                ) : user ? (
-                  <UserButton user={user} />
-                ) : (
-                  <>
-                    <LoginWrapper mode="modal" asChild>
-                      <button
-                        type="button"
-                        className={cn(
-                          buttonVariants({
-                            variant: 'outline',
-                            size: 'sm',
-                          }),
-                          'cursor-pointer'
-                        )}
-                      >
-                        {m.auth_common_login()}
-                      </button>
-                    </LoginWrapper>
-                    <Link
-                      to={Routes.Register}
-                      className={buttonVariants({ size: 'sm' })}
-                    >
-                      {m.auth_common_signup()}
-                    </Link>
-                  </>
-                ))}
-            </div>
-          </nav>
-
-          <NavbarMobile className="lg:hidden" />
+            <NavbarMobile className="px-1 lg:hidden" />
+          </div>
         </Container>
       </div>
     </header>

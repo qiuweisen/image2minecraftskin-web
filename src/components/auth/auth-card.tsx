@@ -32,7 +32,7 @@ export function AuthCard({
     >
       <CardHeader className="flex flex-col items-center">
         <Link to="/">
-          <Logo className="mb-2" />
+          <Logo className="mb-2 h-8 w-auto" />
         </Link>
         <CardDescription>{headerLabel}</CardDescription>
       </CardHeader>

@@ -19,12 +19,15 @@ import { DefaultCatchBoundary } from '@/components/layout/default-catch-boundary
 import { Routes } from '@/lib/routes';
 import { getCanonicalUrl, getOgImage, twitterHandleFromUrl } from '@/lib/urls';
 import {
+  getCanonicalLocale,
   getCanonicalPathname,
   getLocale,
   localeConfig,
-  locales,
+  selectableLocales,
 } from '@/lib/locale';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { SimulatorHeader } from '@/components/simulator/simulator-header';
+import FeaturedBadgesSection from '@/components/blocks/featured-badges';
 
 /**
  * https://github.com/backpine/tanstack-start-on-cloudflare/blob/main/src/routes/__root.tsx
@@ -37,13 +40,13 @@ export const Route = createRootRouteWithContext<{
     const twitterSite = websiteConfig.social?.twitter
       ? twitterHandleFromUrl(websiteConfig.social.twitter)
       : null;
-    const currentLocale = getLocale();
-    // OG locale format uses underscore (e.g. en_US, zh_CN), unlike BCP 47 used
-    // for <html lang> / hreflang which uses hyphens.
-    const ogLocale = localeConfig[currentLocale].hreflang.replace('-', '_');
-    const alternateOgLocales = locales
+    const currentLocale = getCanonicalLocale(getLocale());
+    // OG locale uses a territory-style value (e.g. zh_CN), while the HTML lang
+    // and hreflang values use BCP 47 script/region tags such as zh-Hans.
+    const ogLocale = localeConfig[currentLocale].ogLocale;
+    const alternateOgLocales = selectableLocales
       .filter((l) => l !== currentLocale)
-      .map((l) => localeConfig[l].hreflang.replace('-', '_'));
+      .map((l) => localeConfig[l].ogLocale);
     return {
       meta: [
         { charSet: 'utf-8' },
@@ -90,23 +93,11 @@ export const Route = createRootRouteWithContext<{
       links: [
         { rel: 'stylesheet', href: appCss },
         {
-          rel: 'apple-touch-icon',
-          sizes: '180x180',
-          href: '/apple-touch-icon.png',
-        },
-        {
           rel: 'icon',
-          type: 'image/png',
+          type: 'image/x-icon',
           sizes: '32x32',
-          href: '/favicon-32x32.png',
+          href: '/favicon.ico',
         },
-        {
-          rel: 'icon',
-          type: 'image/png',
-          sizes: '16x16',
-          href: '/favicon-16x16.png',
-        },
-        { rel: 'icon', href: '/favicon.ico' },
         { rel: 'manifest', href: '/manifest.json' },
       ],
     };
@@ -131,6 +122,9 @@ function RootComponent() {
     canonicalPathname.startsWith(Routes.Admin) ||
     canonicalPathname.startsWith(Routes.Dashboard) ||
     canonicalPathname.startsWith(Routes.Settings);
+  const isSimulatorPage =
+    canonicalPathname === '/play' ||
+    canonicalPathname === '/day-trading-simulator';
   // When no child route matches (e.g. /hello), only root is in matches; use minimal layout
   const isNotFound =
     canonicalPathname !== Routes.Root &&
@@ -147,13 +141,25 @@ function RootComponent() {
     );
   }
 
+  if (isSimulatorPage) {
+    return (
+      <div className="flex min-h-screen flex-col">
+        <SimulatorHeader />
+        <main id="main-content" className="flex-1">
+          <Outlet />
+        </main>
+      </div>
+    );
+  }
+
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar scroll />
       <main id="main-content" className="flex-1">
         <Outlet />
       </main>
-      <Footer />
+      <FeaturedBadgesSection />
+      <Footer className="relative z-10 bg-background" />
     </div>
   );
 }
@@ -163,7 +169,10 @@ function RootComponent() {
  */
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
-    <html lang={localeConfig[getLocale()].hreflang} suppressHydrationWarning>
+    <html
+      lang={localeConfig[getCanonicalLocale(getLocale())].hreflang}
+      suppressHydrationWarning
+    >
       <head>
         <HeadContent />
       </head>

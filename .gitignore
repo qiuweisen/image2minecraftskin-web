@@ -8,6 +8,9 @@ count.txt
 .env.local
 .env.production
 .dev.vars
+.migration-source-export.json
+.migration-d1-import.sql
+.migration-d1-chunks/
 .nitro
 .tanstack
 .wrangler

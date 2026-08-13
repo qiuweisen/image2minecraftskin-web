@@ -6,10 +6,11 @@ import {
 } from '@/components/ui/dropdown-menu';
 import {
   deLocalizeHref,
+  getCanonicalLocale,
   getLocale,
   localeConfig,
-  locales,
   localizeHref,
+  selectableLocales,
   type Locale,
 } from '@/lib/locale';
 import { cn } from '@/lib/utils';
@@ -39,7 +40,7 @@ export function useLocaleSwitcher({
   onLocaleChange,
 }: UseLocaleSwitcherOptions = {}) {
   const location = useLocation();
-  const currentLocale = getLocale();
+  const currentLocale = getCanonicalLocale(getLocale());
   const currentHref = [
     location.pathname,
     withUrlPartPrefix(location.searchStr, '?'),
@@ -69,7 +70,7 @@ export function LocaleSwitcher({
     onLocaleChange,
   });
 
-  if (locales.length <= 1) {
+  if (selectableLocales.length <= 1) {
     return null;
   }
 
@@ -86,17 +87,15 @@ export function LocaleSwitcher({
         <IconLanguage className="size-4" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        {locales.map((locale) => (
+        {selectableLocales.map((locale) => (
           <DropdownMenuItem
             key={locale}
             onClick={() => switchLocale(locale)}
             disabled={locale === currentLocale}
           >
-            {localeConfig[locale].flag ? (
-              <span className="mr-2 text-base">
-                {localeConfig[locale].flag}
-              </span>
-            ) : null}
+            <span aria-hidden="true" className="mr-2 text-base">
+              {localeConfig[locale].flag}
+            </span>
             <span>{localeConfig[locale].name}</span>
           </DropdownMenuItem>
         ))}

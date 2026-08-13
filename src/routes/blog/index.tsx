@@ -7,7 +7,7 @@ import { getPaginatedPosts } from '@/lib/blog';
 import { websiteConfig } from '@/config/website';
 import { seo } from '@/lib/seo';
 import { getCanonicalUrlForLocale } from '@/lib/urls';
-import { getLocale, localeConfig } from '@/lib/locale';
+import { getCanonicalLocale, getLocale, localeConfig } from '@/lib/locale';
 
 export const Route = createFileRoute('/blog/')({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -60,7 +60,7 @@ export const Route = createFileRoute('/blog/')({
       name: m.blog_title(),
       description: m.blog_description(),
       url: canonicalHref,
-      inLanguage: localeConfig[getLocale()].hreflang,
+      inLanguage: localeConfig[getCanonicalLocale(getLocale())].hreflang,
     };
     return {
       ...metadata,

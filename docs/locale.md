@@ -5,13 +5,17 @@ This project uses Paraglide JS for runtime locale support.
 ## Locales
 
 - Base locale: `en`
-- Additional locale: `zh`
+- Canonical selectable locales: English, Simplified Chinese, Traditional
+  Chinese, and the other historical
+  ChartMini languages configured in `project.inlang/settings.json`
 - Default English URLs are unprefixed: `/about`
-- Chinese URLs use a prefix: `/zh/about`
+- Simplified Chinese URLs use the original prefix: `/zh-hans/about`
+- The migration-only `/zh/...` alias redirects to `/zh-hans/...` so the
+  historical SEO URL remains canonical.
 
 ## Files
 
-- Source messages: `project.inlang/messages/en.json` and `zh.json`
+- Source messages: `project.inlang/messages/*.json`
 - Paraglide settings: `project.inlang/settings.json`
 - Generated runtime: `src/locale/paraglide/`
 - Project locale helpers: `src/lib/locale.ts`
@@ -22,16 +26,17 @@ the base filename, while localized variants add the locale before `.md`:
 
 ```txt
 content/blog/getting-started.md
-content/blog/getting-started.zh.md
+content/blog/getting-started.zh-hans.md
 content/changelog/v1.0.0.md
-content/changelog/v1.0.0.zh.md
+content/changelog/v1.0.0.zh-hans.md
 content/pages/privacy.md
-content/pages/privacy.zh.md
+content/pages/privacy.zh-hans.md
 ```
 
-`content-collections.ts` strips the `.zh` suffix from the route slug, so
-`getting-started.md` and `getting-started.zh.md` both map to `/blog/getting-started`
-under their respective URL locale.
+`content-collections.ts` strips the locale suffix from the route slug. Existing
+`.zh.md` files are treated as Simplified Chinese for compatibility, so
+`getting-started.md` and `getting-started.zh-hans.md` both map to
+`/blog/getting-started` under their respective URL locale.
 
 `src/locale/paraglide/` is generated code and is ignored by git.
 
@@ -39,7 +44,7 @@ under their respective URL locale.
 
 ```bash
 pnpm locale:sort      # sort message keys by prefix/name in all locale JSON files
-pnpm locale:check     # verify en/zh key parity and JSON leaf values
+pnpm locale:check     # verify every configured locale has the same keys
 pnpm locale:compile   # compile Paraglide runtime manually
 ```
 
@@ -79,7 +84,7 @@ that list in the component and use `m.key()` for the translatable fields.
 ## Adding Copy
 
 - Short UI copy: add the same key to `project.inlang/messages/en.json` and
-  `project.inlang/messages/zh.json`, run `pnpm locale:sort`, then call the
+  `project.inlang/messages/zh-hans.json`, run `pnpm locale:sort`, then call the
   generated `m.key()`.
 - Email copy: add the key to the JSON files and read it through
   `m.key(undefined, { locale: 'en' })`.

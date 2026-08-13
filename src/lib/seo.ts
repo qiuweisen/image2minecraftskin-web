@@ -7,10 +7,11 @@ import {
 } from '@/lib/urls';
 import {
   baseLocale,
+  getCanonicalLocale,
   getLocale,
   isLocalizedPath,
   localeConfig,
-  locales,
+  selectableLocales,
 } from '@/lib/locale';
 
 /**
@@ -34,7 +35,7 @@ export function seo(
   const localized = isLocalizedPath(path);
   const alternateLinks = localized
     ? [
-        ...locales.map((locale) => ({
+        ...selectableLocales.map((locale) => ({
           rel: 'alternate',
           hrefLang: localeConfig[locale].hreflang,
           href: getCanonicalUrlForLocale(path, locale),
@@ -71,13 +72,13 @@ export const metadata = ({
   const twitterSite = websiteConfig.social?.twitter
     ? twitterHandleFromUrl(websiteConfig.social.twitter)
     : null;
-  // OG locale format uses underscore (e.g. en_US, zh_CN), unlike BCP 47 used
-  // for <html lang> / hreflang which uses hyphens.
-  const currentLocale = getLocale();
-  const ogLocale = localeConfig[currentLocale].hreflang.replace('-', '_');
-  const alternateLocales = locales
+  // OG locale uses a territory-style value (e.g. zh_CN), while the HTML lang
+  // and hreflang values use BCP 47 script/region tags such as zh-Hans.
+  const currentLocale = getCanonicalLocale(getLocale());
+  const ogLocale = localeConfig[currentLocale].ogLocale;
+  const alternateLocales = selectableLocales
     .filter((l) => l !== currentLocale)
-    .map((l) => localeConfig[l].hreflang.replace('-', '_'));
+    .map((l) => localeConfig[l].ogLocale);
   const metadata: Array<{
     title?: string;
     name?: string;

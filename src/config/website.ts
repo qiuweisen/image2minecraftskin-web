@@ -48,17 +48,12 @@ export const websiteConfig: WebsiteConfig = {
       return m.site_description();
     },
     images: {
-      ogImage: '/og.png',
-      logoLight: '/logo.png',
-      logoDark: '/logo-dark.png',
+      ogImage: '/chartmini-og.png',
+      logoLight: '/chartmini-logo.svg',
+      logoDark: '/chartmini-logo.svg',
     },
   },
-  social: {
-    github: 'https://github.com/MkFastHQ',
-    discord: 'https://mksaas.link/discord',
-    twitter: 'https://x.com/TanStarter',
-    youtube: 'https://www.youtube.com/@TanStarter',
-  },
+  social: {},
   auth: {
     enable: true,
     enableGoogleLogin: true,
@@ -71,9 +66,9 @@ export const websiteConfig: WebsiteConfig = {
   },
   mail: {
     enable: true,
-    provider: 'cloudflare',
-    fromEmail: 'TanStarter <support@tanstarter.dev>',
-    supportEmail: 'TanStarter <support@tanstarter.dev>',
+    provider: 'resend',
+    fromEmail: 'ChartMini V2 <security@send.chartmini.com>',
+    supportEmail: 'ChartMini Support <security@send.chartmini.com>',
   },
   newsletter: {
     enable: true,

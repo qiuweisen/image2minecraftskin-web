@@ -182,4 +182,83 @@ html {
   scrollbar-color: gray transparent;
 }
 
+/* Featured badges: preserve the original ChartMini marquee behavior. */
+.featured-badge-marquee {
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    black 12%,
+    black 88%,
+    transparent
+  );
+}
+
+.featured-badge-marquee__track {
+  animation: featured-badge-scroll 28s linear infinite;
+  will-change: transform;
+}
+
+.featured-badge-marquee:hover .featured-badge-marquee__track {
+  animation-play-state: paused;
+}
+
+@keyframes featured-badge-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .featured-badge-marquee {
+    mask-image: none;
+    overflow-x: auto;
+  }
+
+  .featured-badge-marquee__track {
+    animation: none;
+  }
+}
+
+/* Lightweight homepage market line: one cached SVG texture, compositor-only drift. */
+.home-market-line-track {
+  display: flex;
+  width: 200vw;
+  height: 100%;
+  background-color: var(--background);
+  animation: home-market-line-drift 46s linear infinite;
+  transform: translate3d(0, 0, 0);
+}
+
+.home-market-line {
+  display: block;
+  flex: 0 0 100vw;
+  width: 100vw;
+  height: 100%;
+  object-fit: fill;
+  opacity: 0.2;
+}
+
+.dark .home-market-line {
+  opacity: 0.34;
+  filter: brightness(1.2) saturate(1.1);
+}
+
+@keyframes home-market-line-drift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-market-line-track {
+    animation: none;
+  }
+}
+
 /* custom markdown styles end */

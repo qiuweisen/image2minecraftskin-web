@@ -1,19 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { getBaseUrl } from '@/lib/urls';
-import { baseLocale, locales, localizeHref } from '@/lib/locale';
 
-const disallowedPaths = ['/auth', '/admin', '/settings', '/dashboard'];
+const disallowedPaths = ['/api/', '/admin/', '/go/'];
 
 function getDisallowRules() {
-  return disallowedPaths
-    .flatMap((path) => [
-      path,
-      ...locales
-        .filter((locale) => locale !== baseLocale)
-        .map((locale) => localizeHref(path, { locale })),
-    ])
-    .map((path) => `Disallow: ${path}`)
-    .join('\n');
+  return disallowedPaths.map((path) => `Disallow: ${path}`).join('\n');
 }
 
 /**
@@ -23,9 +14,16 @@ function getDisallowRules() {
 export const Route = createFileRoute('/robots.txt')({
   server: {
     handlers: {
-      GET: async () => {
+      GET: async ({ request }) => {
         const base = getBaseUrl().replace(/\/$/, '');
-        const robots = `User-agent: *
+        const isStaging = [
+          'chartmini-v2.sudotradecom.workers.dev',
+          'v2.chartmini.com',
+        ].includes(new URL(request.url).hostname);
+        const robots = isStaging
+          ? `User-agent: *
+Disallow: /`
+          : `User-agent: *
 Allow: /
 ${getDisallowRules()}
 

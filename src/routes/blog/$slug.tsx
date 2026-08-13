@@ -1,18 +1,18 @@
 import { m } from '@/locale/paraglide/messages';
 import { createFileRoute, Link, notFound } from '@tanstack/react-router';
+import { loadBlogPost } from '@/api/blog';
 import Container from '@/components/layout/container';
 import { Markdown } from '@/components/markdown/markdown';
-import { getPostBySlug } from '@/lib/blog';
 import { websiteConfig } from '@/config/website';
 import { getCanonicalUrl, getImageUrl } from '@/lib/urls';
-import { getLocale, localeConfig } from '@/lib/locale';
+import { getCanonicalLocale, getLocale, localeConfig } from '@/lib/locale';
 import { seo } from '@/lib/seo';
 import { IconArrowLeft } from '@tabler/icons-react';
 import { formatDate } from '@/lib/formatter';
 
 export const Route = createFileRoute('/blog/$slug')({
   loader: async ({ params }) => {
-    const post = getPostBySlug(params.slug);
+    const post = await loadBlogPost({ data: { slug: params.slug } });
     if (!post) throw notFound();
     return post;
   },
@@ -36,10 +36,10 @@ export const Route = createFileRoute('/blog/$slug')({
       '@type': 'Article',
       headline: post.title,
       description,
-      inLanguage: localeConfig[getLocale()].hreflang,
+      inLanguage: localeConfig[getCanonicalLocale(getLocale())].hreflang,
       ...(image && { image }),
       datePublished: new Date(post.date).toISOString(),
-      dateModified: new Date(post.date).toISOString(),
+      dateModified: new Date(post.dateModified ?? post.date).toISOString(),
       url: canonicalUrl,
       mainEntityOfPage: {
         '@type': 'WebPage',
@@ -62,6 +62,14 @@ export const Route = createFileRoute('/blog/$slug')({
     };
     return {
       ...metadata,
+      ...(post.noindex === true || post.indexable === false
+        ? {
+            meta: [
+              ...(metadata.meta ?? []),
+              { name: 'robots', content: 'noindex, follow' },
+            ],
+          }
+        : {}),
       scripts: [
         {
           type: 'application/ld+json',
@@ -106,7 +114,7 @@ function BlogPostPage() {
 
           <div className="mt-6 pt-10 border-t border-border">
             <Markdown
-              content={post.content}
+              content={post.content ?? ''}
               className="prose prose-neutral dark:prose-invert max-w-none"
             />
           </div>

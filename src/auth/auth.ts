@@ -11,6 +11,10 @@ import { websiteConfig } from '@/config/website';
 import { emailHarmony } from 'better-auth-harmony';
 import { apiKey } from '@better-auth/api-key';
 import { admin } from 'better-auth/plugins';
+import {
+  hashLegacyPassword,
+  verifyLegacyPassword,
+} from '@/auth/legacy-password';
 
 /**
  * Better Auth Configuration
@@ -42,13 +46,23 @@ export const auth = betterAuth({
     enabled: websiteConfig.auth?.enableCredentialLogin ?? false,
     // https://www.better-auth.com/docs/concepts/email#2-require-email-verification
     requireEmailVerification: true,
+    // Keep compatibility with the legacy ChartMini bcrypt/PBKDF2 hashes that
+    // are imported into the Better Auth `account.password` column.
+    password: {
+      hash: hashLegacyPassword,
+      verify: async ({ password, hash }) =>
+        verifyLegacyPassword(password, hash),
+    },
     // https://www.better-auth.com/docs/authentication/email-password#forget-password
     sendResetPassword: async ({ user, url }) => {
-      await sendEmail({
+      const result = await sendEmail({
         to: user.email,
         template: 'forgotPassword',
         context: { url, name: user.name ?? '' },
       });
+      if (!result.success) {
+        throw new Error('Unable to send the password reset email.');
+      }
     },
   },
   emailVerification: {
@@ -56,12 +70,17 @@ export const auth = betterAuth({
     autoSignInAfterVerification: true,
     // https://www.better-auth.com/docs/authentication/email-password#require-email-verification
     sendVerificationEmail: async ({ user, url }) => {
-      await sendEmail({
+      const result = await sendEmail({
         to: user.email,
         template: 'verifyEmail',
         context: { url, name: user.name ?? '' },
       });
+      if (!result.success) {
+        throw new Error('Unable to send the verification email.');
+      }
     },
+    // Send the verification link immediately after registration.
+    sendOnSignUp: true,
     sendOnSignIn: true,
   },
   socialProviders: {
@@ -90,6 +109,14 @@ export const auth = betterAuth({
       customerId: {
         type: 'string',
         required: false,
+      },
+      // Kept for compatibility with the legacy ChartMini PostgreSQL users.
+      // New entitlement logic can later be reconciled with the payment table,
+      // but the legacy flag must not be discarded during the D1 migration.
+      isPremium: {
+        type: 'boolean',
+        required: false,
+        defaultValue: false,
       },
     },
     // https://www.better-auth.com/docs/concepts/users-accounts#delete-user

@@ -11,7 +11,6 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar';
-import { websiteConfig } from '@/config/website';
 import { Link } from '@tanstack/react-router';
 import { Routes } from '@/lib/routes';
 import type { SessionUser } from '@/auth/types';
@@ -38,11 +37,12 @@ export function DashboardSidebar({ user, ...props }: DashboardSidebarProps) {
           <SidebarMenuItem>
             <SidebarMenuButton
               render={
-                <Link to={Routes.Root} onClick={closeMobileSidebar}>
-                  <Logo className="size-5" />
-                  <span className="truncate font-semibold text-base">
-                    {websiteConfig.metadata?.name}
-                  </span>
+                <Link
+                  to={Routes.Root}
+                  aria-label="ChartMini"
+                  onClick={closeMobileSidebar}
+                >
+                  <Logo className="h-5 w-auto" />
                 </Link>
               }
               className="data-[slot=sidebar-menu-button]:!p-1.5"

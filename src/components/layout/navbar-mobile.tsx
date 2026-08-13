@@ -46,11 +46,8 @@ export function NavbarMobile({ className, ...props }: NavbarMobileProps) {
         className={cn('flex items-center justify-between', className)}
         {...props}
       >
-        <Link to="/" className="flex items-center gap-2">
+        <Link to="/" aria-label={m.common_home()} className="flex items-center">
           <Logo />
-          <span className="text-xl font-semibold">
-            {websiteConfig.metadata?.name}
-          </span>
         </Link>
 
         <div className="flex items-center gap-4">

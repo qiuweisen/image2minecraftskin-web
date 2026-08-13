@@ -22,6 +22,7 @@ export const user = sqliteTable("user", {
   banExpires: integer("ban_expires", { mode: "timestamp_ms" }),
   normalizedEmail: text("normalized_email").unique(),
   customerId: text("customer_id"),
+  isPremium: integer("is_premium", { mode: "boolean" }).default(false),
 });
 
 export const session = sqliteTable(

@@ -28,6 +28,12 @@ const stripeE2EConfig =
  * https://vite.dev/config/
  */
 const config = defineConfig({
+  // TanStack Start's SSR output is uploaded as separate Worker modules.
+  // Vite does not minify that output by default, so enable it explicitly to
+  // stay within Cloudflare Workers Free's 3 MiB compressed script limit.
+  build: {
+    minify: 'esbuild',
+  },
   server: {
     allowedHosts: ['.trycloudflare.com', '.tanstarter.dev'],
   },
