@@ -26,6 +26,8 @@ function addStagingRobotsHeader(request: Request, response: Response) {
     pathname.startsWith('/assets/') ||
     pathname.startsWith('/TradingView/') ||
     pathname.startsWith('/images/') ||
+    pathname.startsWith('/badges/') ||
+    pathname.startsWith('/fonts/') ||
     pathname === '/favicon.ico';
 
   headers.set('X-Robots-Tag', 'noindex, nofollow, noarchive');
@@ -48,10 +50,14 @@ function addStaticAssetCacheHeaders(request: Request, response: Response) {
 
   const pathname = new URL(request.url).pathname;
   const isHashedClientAsset = pathname.startsWith('/assets/');
+  const isLongLivedStaticAsset =
+    pathname.startsWith('/fonts/') ||
+    /^\/images\/simulators\/[^/]+-(?:480|600|768)\.webp$/.test(pathname);
   const isStableStaticAsset =
     pathname.startsWith('/images/') ||
     pathname.startsWith('/fonts/') ||
     pathname.startsWith('/TradingView/') ||
+    pathname.startsWith('/badges/') ||
     pathname === '/chartmini-favicon.svg';
 
   if (!isHashedClientAsset && !isStableStaticAsset) {
@@ -61,7 +67,7 @@ function addStaticAssetCacheHeaders(request: Request, response: Response) {
   const headers = new Headers(response.headers);
   headers.set(
     'Cache-Control',
-    isHashedClientAsset
+    isHashedClientAsset || isLongLivedStaticAsset
       ? 'public, max-age=31536000, immutable'
       : 'public, max-age=86400, stale-while-revalidate=604800'
   );

@@ -29,33 +29,33 @@ const featureVisuals = [
     dark: '/images/simulators/market-replay-dark.webp',
     light: '/images/simulators/market-replay-light.webp',
     darkSrcSet:
-      '/images/simulators/market-replay-dark-480.webp 480w, /images/simulators/market-replay-dark-768.webp 768w, /images/simulators/market-replay-dark.webp 1200w',
+      '/images/simulators/market-replay-dark-480.webp 480w, /images/simulators/market-replay-dark-600.webp 600w, /images/simulators/market-replay-dark-768.webp 768w, /images/simulators/market-replay-dark.webp 1200w',
     lightSrcSet:
-      '/images/simulators/market-replay-light-480.webp 480w, /images/simulators/market-replay-light-768.webp 768w, /images/simulators/market-replay-light.webp 1200w',
+      '/images/simulators/market-replay-light-480.webp 480w, /images/simulators/market-replay-light-600.webp 600w, /images/simulators/market-replay-light-768.webp 768w, /images/simulators/market-replay-light.webp 1200w',
   },
   {
     dark: '/images/simulators/intraday-practice-dark.webp',
     light: '/images/simulators/intraday-practice-light.webp',
     darkSrcSet:
-      '/images/simulators/intraday-practice-dark-480.webp 480w, /images/simulators/intraday-practice-dark-768.webp 768w, /images/simulators/intraday-practice-dark.webp 1200w',
+      '/images/simulators/intraday-practice-dark-480.webp 480w, /images/simulators/intraday-practice-dark-600.webp 600w, /images/simulators/intraday-practice-dark-768.webp 768w, /images/simulators/intraday-practice-dark.webp 1200w',
     lightSrcSet:
-      '/images/simulators/intraday-practice-light-480.webp 480w, /images/simulators/intraday-practice-light-768.webp 768w, /images/simulators/intraday-practice-light.webp 1200w',
+      '/images/simulators/intraday-practice-light-480.webp 480w, /images/simulators/intraday-practice-light-600.webp 600w, /images/simulators/intraday-practice-light-768.webp 768w, /images/simulators/intraday-practice-light.webp 1200w',
   },
   {
     dark: '/images/simulators/forex-simulator-dark.webp',
     light: '/images/simulators/forex-simulator-light.webp',
     darkSrcSet:
-      '/images/simulators/forex-simulator-dark-480.webp 480w, /images/simulators/forex-simulator-dark-768.webp 768w, /images/simulators/forex-simulator-dark.webp 1200w',
+      '/images/simulators/forex-simulator-dark-480.webp 480w, /images/simulators/forex-simulator-dark-600.webp 600w, /images/simulators/forex-simulator-dark-768.webp 768w, /images/simulators/forex-simulator-dark.webp 1200w',
     lightSrcSet:
-      '/images/simulators/forex-simulator-light-480.webp 480w, /images/simulators/forex-simulator-light-768.webp 768w, /images/simulators/forex-simulator-light.webp 1200w',
+      '/images/simulators/forex-simulator-light-480.webp 480w, /images/simulators/forex-simulator-light-600.webp 600w, /images/simulators/forex-simulator-light-768.webp 768w, /images/simulators/forex-simulator-light.webp 1200w',
   },
   {
     dark: '/images/simulators/crypto-simulator-dark.webp',
     light: '/images/simulators/crypto-simulator-light.webp',
     darkSrcSet:
-      '/images/simulators/crypto-simulator-dark-480.webp 480w, /images/simulators/crypto-simulator-dark-768.webp 768w, /images/simulators/crypto-simulator-dark.webp 1200w',
+      '/images/simulators/crypto-simulator-dark-480.webp 480w, /images/simulators/crypto-simulator-dark-600.webp 600w, /images/simulators/crypto-simulator-dark-768.webp 768w, /images/simulators/crypto-simulator-dark.webp 1200w',
     lightSrcSet:
-      '/images/simulators/crypto-simulator-light-480.webp 480w, /images/simulators/crypto-simulator-light-768.webp 768w, /images/simulators/crypto-simulator-light.webp 1200w',
+      '/images/simulators/crypto-simulator-light-480.webp 480w, /images/simulators/crypto-simulator-light-600.webp 600w, /images/simulators/crypto-simulator-light-768.webp 768w, /images/simulators/crypto-simulator-light.webp 1200w',
   },
 ] as const;
 
