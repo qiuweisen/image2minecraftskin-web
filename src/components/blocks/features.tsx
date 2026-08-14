@@ -94,6 +94,8 @@ export default function FeaturesSection() {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+  const [initialImageReady, setInitialImageReady] = useState(false);
+  const initialImageRef = useRef<HTMLImageElement | null>(null);
   const touchStartXRef = useRef<number | null>(null);
   const isPaused = isHovering || isFocused;
 
@@ -124,7 +126,13 @@ export default function FeaturesSection() {
   }, []);
 
   useEffect(() => {
-    if (!isDesktop || prefersReducedMotion || isPaused || items.length < 2) {
+    if (
+      !initialImageReady ||
+      !isDesktop ||
+      prefersReducedMotion ||
+      isPaused ||
+      items.length < 2
+    ) {
       return;
     }
 
@@ -133,7 +141,23 @@ export default function FeaturesSection() {
     }, FEATURE_AUTOPLAY_MS);
 
     return () => window.clearTimeout(timer);
-  }, [activeIndex, isDesktop, isPaused, prefersReducedMotion, timerResetKey]);
+  }, [
+    activeIndex,
+    initialImageReady,
+    isDesktop,
+    isPaused,
+    prefersReducedMotion,
+    timerResetKey,
+  ]);
+
+  useEffect(() => {
+    if (activeIndex !== 0 || initialImageReady) return;
+
+    const image = initialImageRef.current;
+    if (image?.complete && image.naturalWidth > 0) {
+      setInitialImageReady(true);
+    }
+  }, [activeIndex, initialImageReady, resolvedTheme]);
 
   const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
     touchStartXRef.current = event.changedTouches[0]?.clientX ?? null;
@@ -268,12 +292,17 @@ export default function FeaturesSection() {
                       )}
                     >
                       <img
+                        ref={activeIndex === 0 ? initialImageRef : undefined}
                         src={activeImage}
                         alt={`${activeItem.title} ${m.common_preview()}`}
                         loading={activeIndex === 0 ? 'eager' : 'lazy'}
+                        fetchPriority={activeIndex === 0 ? 'high' : 'auto'}
                         decoding="async"
                         width={1200}
                         height={750}
+                        onLoad={() => {
+                          if (activeIndex === 0) setInitialImageReady(true);
+                        }}
                         className="h-full w-full object-cover object-center"
                       />
                     </div>
