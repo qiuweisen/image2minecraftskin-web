@@ -5,6 +5,10 @@ Initialized: 2026-08-14
 
 ## Active protections
 
+### Task20 deployment closeout override — 2026-08-15
+
+All Task20 owner protections below are now active post-deployment observations rather than pending-deploy states. Production verification passed for the nine final owners and the checked direct redirects. Observation reviews are scheduled for 2026-08-22 and 2026-08-29; freeze through 2026-08-29 unless a hard technical defect, material factual error, or explicit user override applies. Seven canonical owners received user-confirmed GSC Request Indexing. Bull/Bear and the broad Journal Guide were already indexed per user and were not redundantly resubmitted. Any older `protected_pending_deploy` wording inside the original task blocks records the state at task completion and is superseded by this closeout section.
+
 ### Task 20.1 — Stocktwits platform / social-sentiment owner
 
 - Canonical: `/blog/stocktwits-social-trading-platform-how-to-use-crowd-wisdom-to-improve-your-trading-decisions-2026`

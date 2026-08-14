@@ -61,12 +61,16 @@
 - Result: `PASS_PENDING_DEPLOYMENT_VERIFICATION`
 - Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-15-task20-9-final-validation/memory.md`
 
-## Pending outside completed Task20 work
+## Task20 final closeout
 
-- commit / push only when requested;
-- deploy / R2 content sync only when requested;
-- after deployment, verify all updated owners and direct redirects, then establish real 7-day / 14-day observation dates;
-- obtain fresh v2 GSC/Bing data when access is available before making performance/indexation claims;
-- GSC/Bing remain `unknown_not_reverified`; no old-project metrics or submission state were inherited.
+- Production deployment verified on 2026-08-15.
+- Nine final owners: 200 + self-canonical + present in sitemap.
+- Checked duplicate long slugs and numeric legacy paths: direct 301 to selected owners.
+- User confirmed GSC Request Indexing for 7 canonical URLs.
+- `/blog/bull-market-vs-bear-market` and the broad Journal Guide were already indexed per user, so they were not resubmitted.
+- Redirecting duplicate URLs were not submitted.
+- 7-day observation: 2026-08-22.
+- 14-day observation: 2026-08-29.
+- Bing/IndexNow remain `unknown_not_reverified` because current credentials are unavailable.
 
-Task 20.1–20.9 is locally complete. No Task 21 target has been authorized.
+Task 20.1–20.9 is fully closed and in read-only observation. No Task 21 target has been authorized.

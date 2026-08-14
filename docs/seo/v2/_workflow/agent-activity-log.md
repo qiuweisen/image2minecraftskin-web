@@ -1,5 +1,16 @@
 # ChartMini v2 SEO Agent Activity Log
 
+## 2026-08-15 — ChatGPT / DevSpace — Task20 Production & GSC Closeout
+
+- Verified nine final Task20 canonical owners live on production: HTTP 200, self-canonical, and present in sitemap.
+- Verified prop-firm, bull/bear, journal, and trading-loss duplicate long slugs plus checked numeric legacy paths return direct 301 redirects to their selected owners.
+- User confirmed manual GSC Request Indexing for 7 canonical URLs.
+- User reported `/blog/bull-market-vs-bear-market` and the broad Journal Guide were already indexed; they were intentionally not resubmitted.
+- Redirecting duplicate/numeric URLs were not submitted.
+- Observation window established: 2026-08-22 (7d) and 2026-08-29 (14d); freeze through 2026-08-29 except hard defect, material factual error, or explicit user override.
+- Bing/IndexNow remain `unknown_not_reverified` because current credentials are unavailable.
+
+
 ## 2026-08-14 — ChatGPT / DevSpace — v2 Workflow Initialization
 
 - Scope: initialized a clean v2 SEO/GEO governance baseline only; no article body, route, UI, slug, canonical, deployment, GSC submission, Bing submission, or old-project file was changed.

@@ -31,7 +31,7 @@ Fresh production verification on 2026-08-14 confirms the current v2-style homepa
 
 ## Protection status
 
-Active local protections pending deployment now exist for Tasks 20.1 through 20.8, including the behavioral-recovery and broad-journal neighboring owners changed by the cluster review. Real 7-day/14-day observation dates must be created from the actual deployment/indexing event, not from the local edit date and not from legacy state.
+Task20 production deployment is verified. Active observation protections run from 2026-08-15 through the 7-day review on 2026-08-22 and 14-day review on 2026-08-29. Seven canonical URLs received user-confirmed manual GSC Request Indexing; `/blog/bull-market-vs-bear-market` and the broad Journal Guide were already indexed per user and were not redundantly resubmitted.
 
 ## Intent ownership baseline
 
@@ -107,7 +107,15 @@ The behavioral recovery owner (`content/blog/2026033102.md`) was rebuilt because
 
 Final local pre-deployment validation passed after Task20.8 cleanup: `pnpm build` PASS, `pnpm check` PASS with Vitest 3/3, `pnpm seo:v2:workflow:check` PASS, and `git diff --check` PASS. The generated manifest has 402 posts, all selected Task20 owners are routable, all four consolidated long duplicates carry `redirectTo`, Task20 redirect sources are unique/direct, and principal Task20 owner files have no missing or redirecting `/blog/...` links.
 
-Fresh production checks still return 200 for the newly consolidated duplicate URLs because no deployment has occurred. GSC remains `unknown_not_reverified`; `claude-seo` is unavailable. Bing/IndexNow remain unavailable because the environment has no current keys. No old-project data was substituted. Status: `PASS_PENDING_DEPLOYMENT_VERIFICATION`. Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-15-task20-9-final-validation/memory.md`.
+The pre-deployment result was `PASS_PENDING_DEPLOYMENT_VERIFICATION`. Deployment was subsequently verified on production during Task20 closeout; all selected owners are live and the checked duplicate/numeric sources return direct 301 redirects. GSC submission state is now recorded separately in `gsc-submission-log.md`. Bing/IndexNow remain unavailable because the environment has no current keys. Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-15-task20-9-final-validation/memory.md`.
+
+## 2026-08-15 Task20 deployment / GSC closeout
+
+Production verification after deployment confirmed all nine final Task20 owners return HTTP 200 with self-canonical URLs and are present in the production sitemap. The four consolidated long-slug duplicates and their checked numeric legacy sources return direct 301 redirects to the selected owners; no redirect chain was observed.
+
+The user confirmed successful manual GSC Request Indexing for seven canonical URLs: Stocktwits, Prop Trading/Funded Accounts, Drawdown Recovery Math, Finviz Heatmap, Post-Trade Review, Beginner Trading Charts, and Behavioral Trading-Loss Recovery. The user reported `/blog/bull-market-vs-bear-market` and `/blog/trading-journal-mastery-how-to-review-analyze-and-improve-your-trading-in-2026-2026` were already indexed, so they were not resubmitted. Redirecting duplicates were not submitted.
+
+Observation dates are fixed to 2026-08-22 (7 days) and 2026-08-29 (14 days). During this window, these owners should remain unchanged unless there is a hard technical defect, material factual error, or explicit user override. Bing/IndexNow remain `unknown_not_reverified` because current keys are unavailable.
 
 ## Validation baseline
 

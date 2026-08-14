@@ -126,3 +126,22 @@ After the user deploys, required production verification is:
 7. obtain fresh v2 GSC/Bing data if access becomes available before drawing performance conclusions.
 
 Result: `PASS_PENDING_DEPLOYMENT_VERIFICATION`.
+
+## Post-deployment closeout — 2026-08-15
+
+The deployment boundary above was subsequently cleared. Fresh production verification confirmed:
+
+- all nine final Task20 owner URLs return HTTP 200;
+- each checked owner is self-canonical;
+- all nine are present in the production sitemap;
+- the prop-firm, bull/bear, journal, and trading-loss duplicate long slugs return direct 301 redirects to the selected owners;
+- the checked numeric legacy sources return direct 301 redirects to the same owners;
+- no redirect chain was observed in the checked Task20 consolidation set.
+
+The user then confirmed manual GSC Request Indexing for seven canonical URLs: Stocktwits, Prop Trading/Funded Accounts, Drawdown Recovery Math, Finviz Heatmap, Post-Trade Review, Beginner Trading Charts, and Behavioral Trading-Loss Recovery.
+
+The user reported `/blog/bull-market-vs-bear-market` and `/blog/trading-journal-mastery-how-to-review-analyze-and-improve-your-trading-in-2026-2026` were already indexed, so they were not redundantly resubmitted. Redirecting duplicate/numeric URLs were not submitted.
+
+Observation dates are now 2026-08-22 and 2026-08-29, with the Task20 owner set frozen through 2026-08-29 except for hard technical defects, material factual errors, or explicit user override.
+
+Final closeout result: `PASS_DEPLOYED_GSC_RECORDED_OBSERVATION_ACTIVE`.
