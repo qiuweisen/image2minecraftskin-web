@@ -211,7 +211,12 @@
   },
   {
     "source": "/blog/2025122201",
-    "destination": "/blog/bull-market-vs-bear-market-trading-strategies-for-different-market-conditions-2026",
+    "destination": "/blog/bull-market-vs-bear-market",
+    "permanent": true
+  },
+  {
+    "source": "/blog/bull-market-vs-bear-market-trading-strategies-for-different-market-conditions-2026",
+    "destination": "/blog/bull-market-vs-bear-market",
     "permanent": true
   },
   {
@@ -361,7 +366,12 @@
   },
   {
     "source": "/blog/2026010503",
-    "destination": "/blog/trading-journal-secrets-how-to-review-your-trades-for-maximum-improvement-2026",
+    "destination": "/blog/trading-journal-mastery-how-to-review-analyze-and-improve-your-trading-in-2026-2026",
+    "permanent": true
+  },
+  {
+    "source": "/blog/trading-journal-secrets-how-to-review-your-trades-for-maximum-improvement-2026",
+    "destination": "/blog/trading-journal-mastery-how-to-review-analyze-and-improve-your-trading-in-2026-2026",
     "permanent": true
   },
   {
@@ -716,7 +726,12 @@
   },
   {
     "source": "/blog/2026012901",
-    "destination": "/blog/how-to-recover-from-trading-losses-a-step-by-step-guide-2026",
+    "destination": "/blog/how-to-recover-from-trading-loss",
+    "permanent": true
+  },
+  {
+    "source": "/blog/how-to-recover-from-trading-losses-a-step-by-step-guide-2026",
+    "destination": "/blog/how-to-recover-from-trading-loss",
     "permanent": true
   },
   {
@@ -741,7 +756,12 @@
   },
   {
     "source": "/blog/2026013102",
-    "destination": "/blog/prop-firm-trading-2026-get-funded-and-trade-capital-risk-free-2026",
+    "destination": "/blog/prop-trading-firms-funded-accounts",
+    "permanent": true
+  },
+  {
+    "source": "/blog/prop-firm-trading-2026-get-funded-and-trade-capital-risk-free-2026",
+    "destination": "/blog/prop-trading-firms-funded-accounts",
     "permanent": true
   },
   {

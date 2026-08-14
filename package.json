@@ -22,6 +22,7 @@
     "locale:sort": "tsx scripts/sort-locale-keys.ts",
     "locale:check": "tsx scripts/check-locale-keys.ts",
     "content:sync-r2": "node scripts/sync-blog-content-r2.mjs",
+    "seo:v2:workflow:check": "node scripts/seo-v2-workflow-check.mjs",
     "locale:compile": "paraglide-js compile --project ./project.inlang --outdir ./src/locale/paraglide --strategy url cookie baseLocale --emit-ts-declarations --is-server 'import.meta.env?.SSR === true'",
     "deploy": "pnpm run build && wrangler deploy",
     "postinstall": "pnpm run cf-typegen",

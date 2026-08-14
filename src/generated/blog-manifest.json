@@ -93,10 +93,24 @@
     "fileSlug": "2025102201",
     "contentKey": "chartmini-content/blog/2025102201.md",
     "locale": "en",
-    "title": "A Beginner's Guide to Reading Trading Charts",
-    "description": "A Beginner Expert guide with proven strategies, real examples, and actionable insights. Expert insights and practical strategies incl in 2026.",
+    "title": "How to Read Trading Charts: A Beginner's Step-by-Step Guide",
+    "metaTitle": "How to Read Trading Charts: Beginner Guide 2026",
+    "description": "Learn how to read a trading chart step by step: identify the instrument and timeframe, understand OHLC candles and axes, read trend and range structure, mark support and resistance, interpret volume, and practice without hindsight.",
     "date": "2025-10-22",
-    "category": "Beginner Guides"
+    "dateModified": "2026-08-15",
+    "category": "Beginner Guides",
+    "categories": [
+      "Beginner Guides",
+      "Trading Education",
+      "Technical Analysis"
+    ],
+    "tags": [
+      "Trading Charts",
+      "Chart Reading",
+      "Candlestick Charts",
+      "Technical Analysis",
+      "Market Structure"
+    ]
   },
   {
     "slug": "market-orders-limit-orders-and-stop-orders-explained-2026",
@@ -648,7 +662,8 @@
     "description": "Compare Bull Market vs Bear Market: Trading Strategies for Different Market Conditions: Key differences, pros and cons, and which performs better for your.",
     "date": "2025-12-22",
     "category": "Trading Strategies",
-    "tags": ["Market", "Trading", "Bull Market", "Bear Market"]
+    "tags": ["Market", "Trading", "Bull Market", "Bear Market"],
+    "redirectTo": "/blog/bull-market-vs-bear-market"
   },
   {
     "slug": "year-end-trading-review-how-to-analyze-and-improve-your-trading-performance-2026",
@@ -1214,7 +1229,8 @@
     "date": "2026-01-05",
     "category": "Beginner Guides",
     "categories": ["Beginner Guides", "Trading Tools", "Trading Education"],
-    "tags": ["Journal", "Trading"]
+    "tags": ["Journal", "Trading"],
+    "redirectTo": "/blog/trading-journal-mastery-how-to-review-analyze-and-improve-your-trading-in-2026-2026"
   },
   {
     "slug": "the-1-rule-why-most-traders-get-position-sizing-wrong-2026",
@@ -1686,11 +1702,20 @@
     "fileSlug": "2026011107",
     "contentKey": "chartmini-content/blog/2026011107.md",
     "locale": "en",
-    "title": "Post-Trade Review Mastery: How to Learn from Every Trade",
-    "description": "Post-Trade Review Mastery: How to Learn from Every Trade Step-by-step guide with proven strategies and expert tips. Learn from expert in 2026.",
+    "title": "Post-Trade Review: A Practical Checklist to Learn From Every Trade",
+    "metaTitle": "Post-Trade Review Checklist: Learn From Every Trade",
+    "description": "Use a structured post-trade review checklist to compare your plan with what actually happened, grade execution separately from P&L, and turn each closed trade into one testable lesson.",
     "date": "2026-01-11",
-    "category": "Beginner Guides",
-    "categories": ["Beginner Guides", "Trading Education"]
+    "dateModified": "2026-08-14",
+    "category": "Trading Education",
+    "categories": ["Trading Education", "Trading Journal", "Beginner Guides"],
+    "tags": [
+      "Post-Trade Review",
+      "Trade Review",
+      "Trading Journal",
+      "Trade Analysis",
+      "Trading Process"
+    ]
   },
   {
     "slug": "trading-journal-mastery-how-to-track-analyze-and-improve-your-trading-performance-2026",
@@ -1892,23 +1917,19 @@
     "fileSlug": "2026011502",
     "contentKey": "chartmini-content/blog/2026011502.md",
     "locale": "en",
-    "title": "Drawdown Recovery Math: Why a 50% Loss Needs a 100% Gain to Break Even",
-    "description": "Learn the drawdown recovery formula, why a 50% loss needs a 100% gain to break even, and a 5-phase plan with risk rules to rebuild a trading account after a deep loss.",
+    "title": "Drawdown Recovery Math: Why a 50% Loss Needs a 100% Gain",
+    "metaTitle": "Drawdown Recovery Math: Formula, Table & Break-Even Gain",
+    "description": "Use the drawdown recovery formula to calculate the gain needed to break even after a loss, understand recovery-time math, and see why limiting deep drawdowns matters.",
     "date": "2026-01-15",
-    "dateModified": "2026-06-07",
+    "dateModified": "2026-08-14",
     "category": "Risk Management",
-    "categories": [
-      "Risk Management",
-      "Trading Psychology",
-      "Beginner Guides",
-      "Trading Education"
-    ],
+    "categories": ["Risk Management", "Trading Education", "Beginner Guides"],
     "tags": [
-      "drawdown",
-      "recovery",
-      "risk management",
-      "position sizing",
-      "trading psychology"
+      "Drawdown Recovery",
+      "Recovery Formula",
+      "Risk Management",
+      "Maximum Drawdown",
+      "Break Even"
     ]
   },
   {
@@ -2047,12 +2068,20 @@
     "fileSlug": "2026012001",
     "contentKey": "chartmini-content/blog/2026012001.md",
     "locale": "en",
-    "title": "StockTwits Social Trading Platform: How to Use Crowd Wisdom to Improve Your Trading Decisions",
-    "description": "StockTwits Social Trading Platform: How to Use Crowd Wisdom to Improve Your Trading Decisions",
+    "title": "Stocktwits Guide: How to Read Sentiment, Watchlists, and Trending Without Following the Crowd",
+    "metaTitle": "Stocktwits Guide 2026: Sentiment, Watchlists & Trending",
+    "description": "Learn how Stocktwits sentiment, ticker streams, watchlists, and trending lists work, plus a verification workflow for using social chatter without treating it as a trade signal.",
     "date": "2026-01-20",
+    "dateModified": "2026-08-14",
     "category": "Stock Market",
     "categories": ["Stock Market", "Beginner Guides", "Trading Tools"],
-    "tags": ["StockTwits", "Trading"]
+    "tags": [
+      "Stocktwits",
+      "Stocktwits Sentiment",
+      "Social Trading",
+      "Market Sentiment",
+      "Trading Tools"
+    ]
   },
   {
     "slug": "e-mini-sp-500-futures-trading-a-complete-guide-for-day-traders-2026",
@@ -2147,11 +2176,20 @@
     "fileSlug": "2026012301",
     "contentKey": "chartmini-content/blog/2026012301.md",
     "locale": "en",
-    "title": "Finviz Elite Heatmap: Market Visualization Made Simple",
-    "description": "Finviz Elite Heatmap: Market Visualization Made Simple Expert guide with proven strategies and actionable insights. Learn from expert in 2026.",
+    "title": "Finviz Heatmap Guide: How to Read Market Maps and What Elite Adds",
+    "metaTitle": "Finviz Heatmap Guide 2026: Free Maps vs Elite",
+    "description": "Learn how to read the Finviz heatmap, what box size, color, sectors, and timeframes mean, which Maps are free, and what Finviz Elite adds in 2026.",
     "date": "2026-01-23",
-    "category": "Investing",
-    "tags": ["Market", "Finviz"]
+    "dateModified": "2026-08-14",
+    "category": "Trading Tools",
+    "categories": ["Trading Tools", "Market Analysis", "Beginner Guides"],
+    "tags": [
+      "Finviz",
+      "Finviz Heatmap",
+      "Stock Market Map",
+      "Finviz Elite",
+      "Sector Analysis"
+    ]
   },
   {
     "slug": "defi-llama-finding-the-best-yield-farming-opportunities-2026",
@@ -2349,7 +2387,8 @@
     "description": "How to Recover from Trading Losses: A Step-by-Step Guide Step-by-step guide with proven strategies and expert tips. Learn from expert in 2026.",
     "date": "2026-01-29",
     "category": "Beginner Guides",
-    "tags": ["Trading"]
+    "tags": ["Trading"],
+    "redirectTo": "/blog/how-to-recover-from-trading-loss"
   },
   {
     "slug": "portfolio-correlation-why-your-diversification-might-be-failing-2026",
@@ -2456,7 +2495,8 @@
     "date": "2026-01-31",
     "dateModified": "2026-07-28",
     "category": "Risk Management",
-    "tags": ["Trading", "Risk"]
+    "tags": ["Trading", "Risk"],
+    "redirectTo": "/blog/prop-trading-firms-funded-accounts"
   },
   {
     "slug": "trading-psychology-overcoming-fomo-and-emotional-trading-2026",
@@ -4116,18 +4156,19 @@
     "fileSlug": "2026031202",
     "contentKey": "chartmini-content/blog/2026031202.md",
     "locale": "en",
-    "title": "Prop Trading Firms Explained: How Funded Accounts Work & How to Pass the Challenge",
-    "description": "Everything you need to know about proprietary trading firms and funded account programs. How they work, which ones are legitimate, how to pass the evaluation, and whether they're right for you.",
+    "title": "Prop Trading Firms Explained: How Funded Accounts and Evaluations Really Work",
+    "metaTitle": "Prop Trading Firms & Funded Accounts: How They Work in 2026",
+    "description": "Learn how modern prop firm evaluations, simulated funded accounts, live funded accounts, drawdown rules, payouts, and challenge fees work before you pay for an account.",
     "date": "2026-03-12",
+    "dateModified": "2026-08-14",
     "category": "Education",
     "categories": ["Education", "Resources", "Day Trading"],
     "tags": [
       "Prop Trading",
       "Funded Account",
-      "FTMO",
-      "TopStep",
       "Prop Firm Challenge",
-      "Funded Trader"
+      "Trading Evaluation",
+      "Risk Management"
     ]
   },
   {
@@ -4714,18 +4755,19 @@
     "fileSlug": "2026032701",
     "contentKey": "chartmini-content/blog/2026032701.md",
     "locale": "en",
-    "title": "Bull Market vs Bear Market: How to Trade Both (And When to Sit Out)",
-    "description": "Understand bull and bear markets, how to identify which one you're in, strategies for each environment, and why knowing the cycle is the most important macro skill a trader can develop.",
+    "title": "Bull Market vs Bear Market: How Traders Adapt to Different Market Regimes",
+    "metaTitle": "Bull vs Bear Market: Differences & Trading Strategies",
+    "description": "Learn the difference between bull and bear markets, how traders identify changing market regimes, and how trend, risk, short selling, and no-trade decisions can change across bull, bear, and range conditions.",
     "date": "2026-03-27",
-    "category": "Education",
-    "categories": ["Education", "Trading Basics"],
+    "dateModified": "2026-08-15",
+    "category": "Trading Education",
+    "categories": ["Trading Education", "Market Analysis", "Beginner Guides"],
     "tags": [
       "Bull Market",
       "Bear Market",
-      "Market Cycles",
-      "Bear Market Rally",
-      "Market Correction",
-      "Market Crash"
+      "Market Regime",
+      "Market Cycle",
+      "Trading Strategy"
     ]
   },
   {
@@ -4892,18 +4934,19 @@
     "fileSlug": "2026033102",
     "contentKey": "chartmini-content/blog/2026033102.md",
     "locale": "en",
-    "title": "How to Recover from a Trading Loss: A Step-by-Step Drawdown Recovery Guide",
-    "description": "A practical guide to recovering from trading losses and drawdowns. Covers the math of recovery, the psychological spiral, a 7-step recovery protocol, and when to step away from the screen.",
+    "title": "How to Recover from a Trading Loss: A Behavioral Recovery Guide",
+    "metaTitle": "How to Recover From Trading Losses Without Revenge Trading",
+    "description": "Use a behavioral recovery process after trading losses: stop loss-chasing, separate normal strategy losses from rule violations, review execution, rebuild confidence in simulation, and define evidence-based conditions for resuming risk.",
     "date": "2026-03-31",
+    "dateModified": "2026-08-15",
     "category": "Education",
     "categories": ["Education", "Trading Psychology", "Risk Management"],
     "tags": [
       "Trading Loss",
       "Drawdown Recovery",
-      "Trading Slump",
       "Losing Streak",
-      "Mental Recovery",
-      "Trading Comeback"
+      "Revenge Trading",
+      "Trading Discipline"
     ]
   },
   {

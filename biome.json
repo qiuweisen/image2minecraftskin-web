@@ -26,6 +26,7 @@
       "!.wrangler",
       "!.content-collections",
       "!.firecrawl",
+      "!docs/seo",
       "!project.inlang/.meta.json",
       "!src/locale/paraglide",
       "!worker-configuration.d.ts",
