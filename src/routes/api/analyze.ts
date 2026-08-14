@@ -7,7 +7,7 @@ import { serverEnv } from '@/env/server';
 import { prepareAnalysisPrompt } from '@/lib/analyze-utils';
 
 const DEFAULT_GEMINI_BASE = 'https://generativelanguage.googleapis.com';
-const DEFAULT_GEMINI_MODEL = 'gemini-3.6-flash';
+const DEFAULT_GEMINI_MODEL = 'gemini-3.7-flash';
 const DAILY_AI_ANALYSIS_LIMIT = 10;
 const DAILY_LIMIT_TIMEZONE_OFFSET_MS = 8 * 60 * 60 * 1000;
 const MAX_REQUEST_BYTES = 256 * 1024;

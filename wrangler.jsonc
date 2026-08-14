@@ -52,7 +52,7 @@
 
   // Pin the production analysis model explicitly; API keys remain secrets.
   "vars": {
-    "GEMINI_API_MODEL": "gemini-3.6-flash"
+    "GEMINI_API_MODEL": "gemini-3.7-flash"
   },
 
   // Staging custom domain in the ChartMini Cloudflare account.
