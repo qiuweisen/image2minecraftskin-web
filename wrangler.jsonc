@@ -55,11 +55,16 @@
     "GEMINI_API_MODEL": "gemini-3.7-flash"
   },
 
-  // Staging custom domain in the ChartMini Cloudflare account.
+  // Keep the staging custom domain available for rollback and smoke tests;
+  // the production route below takes over chartmini.com at cutover.
   "routes": [
     {
       "pattern": "v2.chartmini.com",
       "custom_domain": true
+    },
+    {
+      "pattern": "chartmini.com/*",
+      "zone_name": "chartmini.com"
     }
   ],
 
