@@ -6,6 +6,9 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+
 # Ensure only one deployment runs at a time
 concurrency:
   group: deploy-production
@@ -15,7 +18,7 @@ jobs:
   deploy:
     name: Build & Deploy
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
     env:
       NODE_OPTIONS: '--max-old-space-size=4096'
       # --- Cloudflare credentials (needed by cf-typegen in postinstall) ---
@@ -32,6 +35,7 @@ jobs:
       VITE_CREEM_PRODUCT_PRO_YEARLY: ${{ secrets.VITE_CREEM_PRODUCT_PRO_YEARLY }}
       VITE_CREEM_PRODUCT_LIFETIME: ${{ secrets.VITE_CREEM_PRODUCT_LIFETIME }}
       VITE_GOOGLE_ANALYTICS_ID: ${{ secrets.VITE_GOOGLE_ANALYTICS_ID }}
+      VITE_GOOGLE_ADSENSE_CLIENT: ${{ secrets.VITE_GOOGLE_ADSENSE_CLIENT }}
       VITE_CLARITY_PROJECT_ID: ${{ secrets.VITE_CLARITY_PROJECT_ID }}
       VITE_PLAUSIBLE_SCRIPT: ${{ secrets.VITE_PLAUSIBLE_SCRIPT }}
       VITE_UMAMI_WEBSITE_ID: ${{ secrets.VITE_UMAMI_WEBSITE_ID }}
@@ -54,8 +58,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Sync blog content to R2
+        run: pnpm content:sync-r2
+        env:
+          BLOG_R2_CONCURRENCY: 4
+
       - name: Build
         run: pnpm build
 
       - name: Deploy to Cloudflare Workers
-        run: pnpx wrangler deploy
+        run: pnpm exec wrangler deploy --config dist/server/wrangler.json
