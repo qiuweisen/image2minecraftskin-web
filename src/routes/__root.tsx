@@ -27,8 +27,17 @@ import {
   selectableLocales,
 } from '@/lib/locale';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { SimulatorHeader } from '@/components/simulator/simulator-header';
 import FeaturedBadgesSection from '@/components/blocks/featured-badges';
+import { lazy, Suspense } from 'react';
+
+// The simulator header is only used by the two interactive simulator routes.
+// Keep it out of the shared marketing bundle while preserving the same SSR
+// layout and header height when those routes render.
+const SimulatorHeader = lazy(() =>
+  import('@/components/simulator/simulator-header').then(
+    ({ SimulatorHeader: header }) => ({ default: header })
+  )
+);
 
 /**
  * https://github.com/backpine/tanstack-start-on-cloudflare/blob/main/src/routes/__root.tsx
@@ -143,7 +152,9 @@ function RootComponent() {
   if (isSimulatorPage) {
     return (
       <div className="flex min-h-screen flex-col">
-        <SimulatorHeader />
+        <Suspense fallback={<div aria-hidden="true" className="h-14" />}>
+          <SimulatorHeader />
+        </Suspense>
         <main id="main-content" className="flex-1">
           <Outlet />
         </main>

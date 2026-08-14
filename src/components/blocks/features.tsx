@@ -4,6 +4,7 @@ import Container from '@/components/layout/container';
 import { useTheme } from '@/components/theme/theme-provider';
 import { HeaderSection } from '@/components/shared/header-section';
 import { ScrollReveal } from '@/components/shared/scroll-reveal';
+import { useInView } from '@/hooks/use-in-view';
 import {
   Accordion,
   AccordionContent,
@@ -114,6 +115,10 @@ export default function FeaturesSection() {
   const initialImageRef = useRef<HTMLImageElement | null>(null);
   const touchStartXRef = useRef<number | null>(null);
   const isPaused = isHovering || isFocused;
+  const { ref: imageViewportRef, isInView: isImageNearViewport } =
+    useInView<HTMLDivElement>({
+      rootMargin: '300px 0px 300px 0px',
+    });
 
   useEffect(() => {
     const desktopQuery = window.matchMedia('(min-width: 1024px)');
@@ -173,7 +178,7 @@ export default function FeaturesSection() {
     if (image?.complete && image.naturalWidth > 0) {
       setInitialImageReady(true);
     }
-  }, [activeIndex, initialImageReady, resolvedTheme]);
+  }, [activeIndex, initialImageReady, isImageNearViewport, resolvedTheme]);
 
   const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
     touchStartXRef.current = event.changedTouches[0]?.clientX ?? null;
@@ -300,34 +305,39 @@ export default function FeaturesSection() {
               >
                 <CardContent className="flex h-full items-center p-0">
                   <div
+                    ref={imageViewportRef}
                     className="relative aspect-[8/5] w-full overflow-hidden rounded-lg border bg-background touch-pan-y"
                     aria-live="polite"
                   >
-                    <div
-                      key={`${activeIndex}-${resolvedTheme}`}
-                      className={cn(
-                        'absolute inset-0',
-                        !prefersReducedMotion &&
-                          'animate-in fade-in-0 duration-[400ms]'
-                      )}
-                    >
-                      <img
-                        ref={activeIndex === 0 ? initialImageRef : undefined}
-                        src={activeImage}
-                        srcSet={activeImageSrcSet}
-                        sizes="(max-width: 1023px) calc(100vw - 3rem), 711px"
-                        alt={`${activeItem.title} ${m.common_preview()}`}
-                        loading={activeIndex === 0 ? 'eager' : 'lazy'}
-                        fetchPriority={activeIndex === 0 ? 'high' : 'auto'}
-                        decoding="async"
-                        width={1200}
-                        height={750}
-                        onLoad={() => {
-                          if (activeIndex === 0) setInitialImageReady(true);
-                        }}
-                        className="h-full w-full object-cover object-center"
-                      />
-                    </div>
+                    {isImageNearViewport ? (
+                      <div
+                        key={`${activeIndex}-${resolvedTheme}`}
+                        className={cn(
+                          'absolute inset-0',
+                          !prefersReducedMotion && 'animate-crossfade-in'
+                        )}
+                      >
+                        <img
+                          ref={activeIndex === 0 ? initialImageRef : undefined}
+                          src={activeImage}
+                          srcSet={activeImageSrcSet}
+                          sizes="(max-width: 1023px) calc(100vw - 3rem), 711px"
+                          alt={`${activeItem.title} ${m.common_preview()}`}
+                          // The feature card starts below the first viewport.
+                          // Mount the image only when it is close enough to
+                          // load before the user reaches it.
+                          loading="lazy"
+                          fetchPriority="auto"
+                          decoding="async"
+                          width={1200}
+                          height={750}
+                          onLoad={() => {
+                            if (activeIndex === 0) setInitialImageReady(true);
+                          }}
+                          className="h-full w-full object-cover object-center"
+                        />
+                      </div>
+                    ) : null}
                   </div>
                 </CardContent>
               </Card>
