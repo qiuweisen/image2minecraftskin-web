@@ -62,8 +62,8 @@ export const websiteConfig: WebsiteConfig = {
   },
   blog: {
     enable: true,
-    // Match the production URL contract: /blog/p/[page] contains ten posts.
-    paginationSize: 10,
+    // Keep the blog grid balanced at three columns on desktop.
+    paginationSize: 12,
   },
   mail: {
     enable: true,

@@ -6,6 +6,42 @@ import { renderMarkdown } from '@/lib/markdown';
 
 const blogPostSchema = z.object({ slug: z.string().min(1).max(200) });
 
+function getRenderedContentKey(contentKey: string) {
+  return contentKey
+    .replace('chartmini-content/blog/', 'chartmini-content/blog-rendered/')
+    .replace(/\.md$/i, '.json');
+}
+
+type RenderedBlogContent = {
+  contentHtml: string;
+  schemas: string[];
+};
+
+async function loadRenderedBlogContent(
+  contentKey: string
+): Promise<RenderedBlogContent | null> {
+  const object = await env.BUCKET.get(getRenderedContentKey(contentKey));
+  if (!object?.body) return null;
+
+  try {
+    const parsed = JSON.parse(await new Response(object.body).text()) as {
+      contentHtml?: unknown;
+      schemas?: unknown;
+    };
+    if (typeof parsed.contentHtml !== 'string') return null;
+    return {
+      contentHtml: parsed.contentHtml,
+      schemas: Array.isArray(parsed.schemas)
+        ? parsed.schemas.filter(
+            (schema): schema is string => typeof schema === 'string'
+          )
+        : [],
+    };
+  } catch {
+    return null;
+  }
+}
+
 function stripFrontmatter(markdown: string): string {
   if (!markdown.startsWith('---')) return markdown;
   const end = markdown.indexOf('\n---', 3);
@@ -42,6 +78,12 @@ export const loadBlogPost = createServerFn({ method: 'GET' })
   .handler(async ({ data }) => {
     const post = getPostBySlug(data.slug);
     if (!post) return null;
+
+    // Blog content is rendered during the content sync step and stored beside
+    // the source Markdown in R2. This avoids running unified/rehype during
+    // every SSR request, which is important on the Workers Free CPU limit.
+    const rendered = await loadRenderedBlogContent(post.contentKey);
+    if (rendered) return { ...post, ...rendered };
 
     const object = await env.BUCKET.get(post.contentKey);
     if (!object?.body) return null;
