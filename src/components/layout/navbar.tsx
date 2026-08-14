@@ -1,7 +1,7 @@
 import { m } from '@/locale/paraglide/messages';
 import { getNavbarLinks } from '@/config/navbar-config';
 import { useScroll } from '@/hooks/use-scroll';
-import { authClient } from '@/auth/client';
+import { sessionClient } from '@/auth/session-client';
 import { isLinkActive } from '@/lib/urls';
 import { cn } from '@/lib/utils';
 import { Routes } from '@/lib/routes';
@@ -21,12 +21,17 @@ import { Logo } from '@/components/shared/logo';
 import { ModeSwitcher } from '@/components/theme/mode-switcher';
 import { NavbarMobile } from '@/components/layout/navbar-mobile';
 import { LocaleSwitcher } from '@/components/layout/locale-switcher';
-import { UserButton } from '@/components/shared/user-button';
 import { LoginWrapper } from '@/components/auth/login-wrapper';
 import { IconArrowUpRight } from '@tabler/icons-react';
 import { Link, useLocation } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { websiteConfig } from '@/config/website';
+
+const UserButton = lazy(() =>
+  import('@/components/shared/user-button').then(({ UserButton: button }) => ({
+    default: button,
+  }))
+);
 interface NavbarProps {
   scroll?: boolean;
 }
@@ -36,7 +41,7 @@ export function Navbar({ scroll = true }: NavbarProps) {
   const menuLinks = getNavbarLinks();
   const [mounted, setMounted] = useState(false);
   const [menuValue, setMenuValue] = useState<string | null>(null);
-  const { data: session, isPending } = authClient.useSession();
+  const { data: session, isPending } = sessionClient.useSession();
   const user = session?.user;
   const showBarBg = scroll && scrolled;
   // Sync mount (avoid auth hydration mismatch) and close menu on route change
@@ -164,7 +169,11 @@ export function Navbar({ scroll = true }: NavbarProps) {
                   (!mounted || isPending ? (
                     <Skeleton className="size-8 rounded-full" />
                   ) : user ? (
-                    <UserButton user={user} />
+                    <Suspense
+                      fallback={<Skeleton className="size-8 rounded-full" />}
+                    >
+                      <UserButton user={user} />
+                    </Suspense>
                   ) : (
                     <>
                       <LoginWrapper mode="modal" asChild>

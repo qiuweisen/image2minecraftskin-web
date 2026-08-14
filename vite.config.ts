@@ -157,7 +157,12 @@ const config = defineConfig({
     tanstackStart({
       srcDirectory: 'src',
       start: { entry: './start.tsx' },
-      server: { entry: './server.ts' },
+      server: {
+        entry: './server.ts',
+        build: {
+          inlineCss: true,
+        },
+      },
     }),
     // react's vite plugin must come after start's vite plugin
     viteReact(),

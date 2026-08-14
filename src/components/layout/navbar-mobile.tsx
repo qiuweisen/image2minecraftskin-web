@@ -1,6 +1,6 @@
 import { m } from '@/locale/paraglide/messages';
 import { getNavbarLinks } from '@/config/navbar-config';
-import { authClient } from '@/auth/client';
+import { sessionClient } from '@/auth/session-client';
 import { isLinkActive } from '@/lib/urls';
 import { cn } from '@/lib/utils';
 import { Routes } from '@/lib/routes';
@@ -18,9 +18,15 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Logo } from '@/components/shared/logo';
 import { ModeSwitcherHorizontal } from '@/components/theme/mode-switcher-horizontal';
 import { LocaleSwitcher } from '@/components/layout/locale-switcher';
-import { UserButtonMobile } from '@/components/shared/user-button-mobile';
 import { LoginWrapper } from '@/components/auth/login-wrapper';
 import { websiteConfig } from '@/config/website';
+import { lazy, Suspense } from 'react';
+
+const UserButtonMobile = lazy(() =>
+  import('@/components/shared/user-button-mobile').then(
+    ({ UserButtonMobile: button }) => ({ default: button })
+  )
+);
 const mobileLinkClass =
   'flex w-full items-center rounded-md p-2 text-base text-muted-foreground transition-colors duration-150 hover:text-foreground';
 const mobileLinkActiveClass = 'font-semibold text-primary';
@@ -31,7 +37,7 @@ export function NavbarMobile({ className, ...props }: NavbarMobileProps) {
   const pathname = useLocation().pathname;
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const { data: session, isPending } = authClient.useSession();
+  const { data: session, isPending } = sessionClient.useSession();
   const user = session?.user;
   const menuLinks = getNavbarLinks();
   // Sync mount (avoid hydration mismatch) and close drawer on route change
@@ -55,7 +61,9 @@ export function NavbarMobile({ className, ...props }: NavbarMobileProps) {
             (isPending ? (
               <Skeleton className="size-8 rounded-full" />
             ) : user ? (
-              <UserButtonMobile user={user} />
+              <Suspense fallback={<Skeleton className="size-8 rounded-full" />}>
+                <UserButtonMobile user={user} />
+              </Suspense>
             ) : null)}
           <Button
             type="button"

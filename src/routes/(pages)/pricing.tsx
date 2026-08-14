@@ -1,5 +1,5 @@
 import { m } from '@/locale/paraglide/messages';
-import { authClient } from '@/auth/client';
+import { sessionClient } from '@/auth/session-client';
 import FaqSection from '@/components/blocks/faqs';
 import Container from '@/components/layout/container';
 import { PricingTable } from '@/components/pricing/pricing-table';
@@ -24,7 +24,7 @@ export const Route = createFileRoute('/(pages)/pricing')({
 });
 
 function PricingPage() {
-  const { data: session } = authClient.useSession();
+  const { data: session } = sessionClient.useSession();
   const userId = session?.user?.id;
   const { data: planData } = useCurrentPlan(!!userId);
   const currentPlan = planData?.currentPlan ?? null;

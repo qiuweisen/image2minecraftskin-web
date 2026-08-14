@@ -1,4 +1,4 @@
-import { getAuthErrorMessage } from '@/lib/locale';
+import { getAuthErrorMessage } from '@/lib/auth-errors';
 import { m } from '@/locale/paraglide/messages';
 import { useState } from 'react';
 import { useRouter } from '@tanstack/react-router';

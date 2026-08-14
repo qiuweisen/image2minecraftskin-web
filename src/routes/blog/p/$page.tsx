@@ -3,18 +3,18 @@ import { createFileRoute, notFound } from '@tanstack/react-router';
 import Container from '@/components/layout/container';
 import { BlogGrid } from '@/components/blog/blog-grid';
 import { BlogPagination } from '@/components/blog/blog-pagination';
-import { getPaginatedPosts } from '@/lib/blog';
+import { loadBlogPage } from '@/api/blog';
 import { websiteConfig } from '@/config/website';
 import { seo } from '@/lib/seo';
 import { getCanonicalUrl } from '@/lib/urls';
 import { getCanonicalLocale, getLocale } from '@/lib/locale';
 
 export const Route = createFileRoute('/blog/p/$page')({
-  loader: ({ params }) => {
+  loader: async ({ params }) => {
     const page = Number(params.page);
     if (!Number.isInteger(page) || page < 2) throw notFound();
 
-    const result = getPaginatedPosts(page);
+    const result = await loadBlogPage({ data: { page } });
     if (result.currentPage !== page) throw notFound();
     return result;
   },

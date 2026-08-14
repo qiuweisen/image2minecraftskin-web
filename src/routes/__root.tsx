@@ -13,9 +13,9 @@ import { ThemeProvider } from '@/components/theme/theme-provider';
 import { Navbar } from '@/components/layout/navbar';
 import { Footer } from '@/components/layout/footer';
 import { DefaultNotFound } from '@/components/layout/default-not-found';
-import { Toaster } from '@/components/shared/toaster';
+import { DeferredToaster } from '@/components/shared/deferred-toaster';
 import { websiteConfig } from '@/config/website';
-import appCss from '../styles.css?url';
+import '../styles.css';
 import { DefaultCatchBoundary } from '@/components/layout/default-catch-boundary';
 import { Routes } from '@/lib/routes';
 import { getCanonicalUrl, getOgImage, twitterHandleFromUrl } from '@/lib/urls';
@@ -92,7 +92,6 @@ export const Route = createRootRouteWithContext<{
           : []),
       ],
       links: [
-        { rel: 'stylesheet', href: appCss },
         {
           rel: 'icon',
           type: 'image/svg+xml',
@@ -183,7 +182,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <ThemeProvider>
           <TooltipProvider>
             {children}
-            <Toaster richColors position="top-right" offset={64} />
+            <DeferredToaster richColors position="top-right" offset={64} />
           </TooltipProvider>
         </ThemeProvider>
         <Analytics />

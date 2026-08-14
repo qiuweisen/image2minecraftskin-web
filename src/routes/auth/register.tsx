@@ -1,7 +1,7 @@
 import { m } from '@/locale/paraglide/messages';
 import { createFileRoute, Link, redirect } from '@tanstack/react-router';
 import { RegisterForm } from '@/components/auth/register-form';
-import { authClient } from '@/auth/client';
+import { sessionClient } from '@/auth/session-client';
 import { guestRouteMiddleware } from '@/middlewares/guest-middleware';
 import { websiteConfig } from '@/config/website';
 import { DEFAULT_LOGIN_REDIRECT, Routes } from '@/lib/routes';
@@ -13,7 +13,7 @@ export const Route = createFileRoute('/auth/register')({
     }
     // Client-side navigation: check session via auth client
     if (typeof window !== 'undefined') {
-      const { data: session } = await authClient.getSession();
+      const { data: session } = await sessionClient.getSession();
       if (session?.user) {
         throw redirect({ to: DEFAULT_LOGIN_REDIRECT });
       }

@@ -1,4 +1,4 @@
-import { getAuthErrorMessages } from '@/lib/locale';
+import { getAuthErrorMessages } from '@/lib/auth-errors';
 import { m } from '@/locale/paraglide/messages';
 import { AuthCard } from '@/components/auth/auth-card';
 import { Routes } from '@/lib/routes';

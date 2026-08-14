@@ -1,8 +1,7 @@
-import { authClient } from '@/auth/client';
+import { sessionClient } from '@/auth/session-client';
 import { LoginWrapper } from '@/components/auth/login-wrapper';
 import { LocaleSwitcher } from '@/components/layout/locale-switcher';
 import { ModeSwitcher } from '@/components/theme/mode-switcher';
-import { UserButton } from '@/components/shared/user-button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { buttonVariants } from '@/components/ui/button';
 import { websiteConfig } from '@/config/website';
@@ -10,11 +9,17 @@ import { Routes } from '@/lib/routes';
 import { cn } from '@/lib/utils';
 import { Logo } from '@/components/shared/logo';
 import { Link } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { m } from '@/locale/paraglide/messages';
 
+const UserButton = lazy(() =>
+  import('@/components/shared/user-button').then(({ UserButton: button }) => ({
+    default: button,
+  }))
+);
+
 export function SimulatorHeader() {
-  const { data: session, isPending } = authClient.useSession();
+  const { data: session, isPending } = sessionClient.useSession();
   const [mounted, setMounted] = useState(false);
   const user = session?.user;
 
@@ -59,7 +64,11 @@ export function SimulatorHeader() {
               (!mounted || isPending ? (
                 <Skeleton className="size-8 rounded-full" />
               ) : user ? (
-                <UserButton user={user} />
+                <Suspense
+                  fallback={<Skeleton className="size-8 rounded-full" />}
+                >
+                  <UserButton user={user} />
+                </Suspense>
               ) : (
                 <>
                   <LoginWrapper mode="modal" asChild>

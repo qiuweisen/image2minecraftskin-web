@@ -1,10 +1,13 @@
 import { createServerFn } from '@tanstack/react-start';
 import { env } from 'cloudflare:workers';
 import { z } from 'zod';
-import { getPostBySlug } from '@/lib/blog';
+import { getPaginatedPosts, getPostBySlug } from '@/lib/blog';
 import { renderMarkdown } from '@/lib/markdown';
 
 const blogPostSchema = z.object({ slug: z.string().min(1).max(200) });
+const blogPageSchema = z.object({
+  page: z.number().int().min(1).max(1000),
+});
 
 function getRenderedContentKey(contentKey: string) {
   return contentKey
@@ -97,3 +100,10 @@ export const loadBlogPost = createServerFn({ method: 'GET' })
     // payload in the hydration data sent to the browser.
     return { ...post, contentHtml, schemas };
   });
+
+// Keep the full blog manifest on the Worker side. The blog list only needs
+// the current page, and shipping all 402 post records in the public entry
+// would add a large amount of unused JavaScript to every homepage visit.
+export const loadBlogPage = createServerFn({ method: 'GET' })
+  .validator(blogPageSchema)
+  .handler(({ data }) => getPaginatedPosts(data.page));

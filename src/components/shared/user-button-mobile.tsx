@@ -1,5 +1,5 @@
 import { m } from '@/locale/paraglide/messages';
-import { authClient } from '@/auth/client';
+import { sessionClient } from '@/auth/session-client';
 import { getAvatarLinks } from '@/config/avatar-config';
 import type { SessionUser } from '@/auth/types';
 import { IconLogout } from '@tabler/icons-react';
@@ -26,7 +26,7 @@ export function UserButtonMobile({ user }: UserButtonMobileProps) {
   const [open, setOpen] = useState(false);
   const closeDrawer = () => setOpen(false);
   const handleSignOut = async () => {
-    await authClient.signOut({
+    await sessionClient.signOut({
       fetchOptions: {
         onSuccess: () => {
           closeDrawer();

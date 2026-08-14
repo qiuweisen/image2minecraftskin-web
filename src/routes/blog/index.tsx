@@ -3,7 +3,7 @@ import { createFileRoute, notFound } from '@tanstack/react-router';
 import Container from '@/components/layout/container';
 import { BlogGrid } from '@/components/blog/blog-grid';
 import { BlogPagination } from '@/components/blog/blog-pagination';
-import { getPaginatedPosts } from '@/lib/blog';
+import { loadBlogPage } from '@/api/blog';
 import { websiteConfig } from '@/config/website';
 import { jsonLdScript, seo, siteStructuredData } from '@/lib/seo';
 import { getCanonicalUrlForLocale } from '@/lib/urls';
@@ -18,9 +18,9 @@ export const Route = createFileRoute('/blog/')({
           ? Number(search.page) || undefined
           : undefined,
   }),
-  loader: ({ location }) => {
+  loader: async ({ location }) => {
     const page = Number(new URLSearchParams(location.search).get('page')) || 1;
-    return getPaginatedPosts(page);
+    return loadBlogPage({ data: { page } });
   },
   head: ({ loaderData }) => {
     const path = '/blog';
