@@ -165,6 +165,12 @@ export function prepareAnalysisPrompt(
   const losses = pairedTrades.filter((t) => t.pnl < 0);
   const totalTrades = pairedTrades.length;
 
+  const rawTotalReturn = Number(stats.pnlPct);
+  const totalReturn = Number.isFinite(rawTotalReturn) ? rawTotalReturn : 0;
+  const rawRealizedPnl = Number(stats.pnlReal);
+  const realizedPnl = Number.isFinite(rawRealizedPnl) ? rawRealizedPnl : 0;
+  const unpairedTradeCount = buyQueue.length + sellQueue.length;
+
   const winRate = totalTrades > 0 ? wins.length / totalTrades : 0;
   const avgWin =
     wins.length > 0 ? wins.reduce((s, t) => s + t.pnl, 0) / wins.length : 0;
@@ -195,7 +201,7 @@ export function prepareAnalysisPrompt(
 
   // Debug: log key stats
   console.log(
-    `[AI Analysis] WinRate: ${(winRate * 100).toFixed(1)}%, P/L Ratio: ${winLossRatioFormatted}, Avg Holding: ${avgHoldingDays.toFixed(1)} days, Return: ${(stats.pnlPct * 100).toFixed(2)}%`
+    `[AI Analysis] WinRate: ${(winRate * 100).toFixed(1)}%, P/L Ratio: ${winLossRatioFormatted}, Avg Holding: ${avgHoldingDays.toFixed(1)} days, Return: ${(totalReturn * 100).toFixed(2)}%`
   );
 
   // Streak calculation
@@ -210,7 +216,16 @@ export function prepareAnalysisPrompt(
     }
   }
 
-  const strictStopLoss = losses.every((t) => Math.abs(t.pnlPct) < 5);
+  const strictStopLoss =
+    totalTrades > 0 && losses.every((t) => Math.abs(t.pnlPct) < 5);
+  const stopLossDiscipline =
+    totalTrades === 0
+      ? 'Not assessable (no closed trades)'
+      : losses.length === 0
+        ? 'No closed losses'
+        : strictStopLoss
+          ? 'Strict (all losses <5%)'
+          : 'Loose';
   const diamondHandTrades = wins.filter((t) => t.holdingDays >= 20);
   const avgBuyPosition =
     pairedTrades.filter((t) => t.buyPricePosition !== undefined).length > 0
@@ -219,6 +234,24 @@ export function prepareAnalysisPrompt(
           .reduce((s, t) => s + (t.buyPricePosition || 0), 0) /
         pairedTrades.filter((t) => t.buyPricePosition !== undefined).length
       : 50;
+
+  // Give the model compact trade-level evidence without sending the full raw
+  // event list. For long sessions, keep the beginning and end of the sample.
+  const promptPairs =
+    pairedTrades.length > 100
+      ? [...pairedTrades.slice(0, 50), ...pairedTrades.slice(-50)]
+      : pairedTrades;
+  const tradeObservations = JSON.stringify(
+    promptPairs.map((trade, index) => ({
+      n: index + 1,
+      pnl: Number(trade.pnl.toFixed(2)),
+      pnlPct: Number(trade.pnlPct.toFixed(2)),
+      holdDays: Number(trade.holdingDays.toFixed(1)),
+      trend: trade.buyTrend ?? 'unknown',
+      entryPosition: trade.buyPricePosition ?? null,
+      gapPct: trade.gapPct == null ? null : Number(trade.gapPct.toFixed(2)),
+    }))
+  );
 
   // ========== Language Support ==========
   const langNames: Record<string, string> = {
@@ -271,124 +304,100 @@ export function prepareAnalysisPrompt(
   const langName = langNames[lang] || langNames[lang.split('-')[0]] || lang;
 
   // ========== JSON PROMPT ==========
-  const prompt = `[CRITICAL] You are ChartMini's trading analyst. Output in ${langName} ONLY!
+  const prompt = `You are ChartMini's post-session trading coach.
 
-# OUTPUT REQUIREMENTS
-- Valid JSON format only
-- ALL text content MUST be in ${langName} language
-- Use ONLY ${langName}, no other languages
-- IMPORTANT: Translate ALL labels, titles, and names to ${langName}, including badges and rank titles!
+## Task
+Analyze only this completed simulated-trading session. The calculated metrics below are authoritative; do not invent missing data or recalculate them with different definitions. Explain the user's process, not future market direction.
 
-## JSON Structure (fill with detailed content in ${langName}!)
+## Output contract
+- Return exactly one JSON object. No Markdown fences, preamble, comments, or trailing text.
+- Every human-readable value, including names, titles, badges, and labels, must be written only in ${langName}.
+- Use the exact keys and value types in the structure below. Do not add keys.
+- Keep the text concise and specific. Do not force awkward character counts in languages where they do not fit.
+- Do not give buy/sell instructions, price targets, guaranteed returns, or personalized financial advice. Give practice and risk-management suggestions only.
+- Do not include external links or platform recommendations.
 
+## Required JSON shape
 {
   "personality": {
     "type": "wolf|lion|turtle|rabbit|eagle|sheep",
-    "emoji": "corresponding emoji",
-    "name": "personality name in ${langName}",
-    "description": "15-25 character description in ${langName}"
+    "emoji": "one matching emoji",
+    "name": "localized personality name",
+    "description": "short localized description"
   },
-  "score": 0-100 integer,
-  "rank": {
-    "stars": 1-5,
-    "title": "rank title TRANSLATED to ${langName} (e.g. Alpha Hunter → 阿尔法猎手 in Chinese)"
-  },
-  "superpower": "20-40 char description of best strength in ${langName}",
-  "weakness": "20-40 char description of main weakness in ${langName}", 
-  "keyStats": "FORMAT: [Win Rate label in ${langName}] XX% | [P/L Ratio label in ${langName}] X.XX:1 | [Expectancy label in ${langName}] $XX.XX",
-  "badges": [{"emoji": "🏆", "name": "badge name TRANSLATED to ${langName}"}],
-  "tagline": "witty quote 15-30 chars in ${langName}",
-  "comparison": "2-3 sentences comparing to other traders in ${langName}",
-  "riskAssessment": "40-60 char risk assessment in ${langName}",
-  "tradingStyle": "30-50 char trading style summary in ${langName}",
+  "score": 0,
+  "rank": { "stars": 1, "title": "localized rank title" },
+  "superpower": "one concise strength",
+  "weakness": "one concise weakness",
+  "keyStats": "localized Win Rate | P/L Ratio | Expectancy summary",
+  "badges": [{ "emoji": "🏆", "name": "localized badge name" }],
+  "tagline": "short localized tagline",
+  "comparison": "brief comparison with general trading-practice standards, without made-up percentiles",
+  "riskAssessment": "concise risk assessment",
+  "tradingStyle": "concise trading-style summary",
   "analysis": {
-    "strengths": "80-120 char detailed analysis of strengths in ${langName}",
-    "weaknesses": "80-120 char detailed analysis of weaknesses in ${langName}",
-    "actionItem": "50-80 char specific improvement advice in ${langName}"
+    "strengths": "specific strengths supported by the metrics",
+    "weaknesses": "specific weaknesses supported by the metrics",
+    "actionItem": "one concrete next practice action"
   },
-  "improvementPlan": ["step 1 in ${langName}", "step 2 in ${langName}", "step 3 in ${langName}"],
-  "toolTip": "60-100 char tool recommendation in ${langName} with Markdown links: [OKX](https://utob.top/okx), [Binance](https://utob.top/bian), [TradingView](https://www.tradingview.com/?aff_id=158087), [NinjaTrader](https://ninjatraderdomesticvendor.sjv.io/c/6570566/3069488/37581)",
+  "improvementPlan": ["step 1", "step 2", "step 3"],
   "labels": {
-    "superpower": "translate 'Superpower' to ${langName}",
-    "weakness": "translate 'Weakness' to ${langName}",
-    "keyStats": "translate 'Key Stats' to ${langName}",
-    "badges": "translate 'Achievements' to ${langName}",
-    "tradingStyle": "translate 'Trading Style' to ${langName}",
-    "riskAssessment": "translate 'Risk Assessment' to ${langName}",
-    "strengths": "translate 'What You Did Well' to ${langName}",
-    "weaknesses": "translate 'Needs Improvement' to ${langName}",
-    "actionItem": "translate 'Action Item' to ${langName}",
-    "improvementPlan": "translate 'Improvement Roadmap' to ${langName}"
+    "superpower": "localized Superpower",
+    "weakness": "localized Weakness",
+    "keyStats": "localized Key Stats",
+    "badges": "localized Achievements",
+    "tradingStyle": "localized Trading Style",
+    "riskAssessment": "localized Risk Assessment",
+    "strengths": "localized What You Did Well",
+    "weaknesses": "localized Needs Improvement",
+    "actionItem": "localized Action Item",
+    "improvementPlan": "localized Improvement Roadmap"
   }
 }
 
-# Personality Selection Criteria (choose the MOST fitting type based on data, output name in ${langName})
-## CRITICAL: Losing traders (Total Return < 0%) can ONLY be 🐑 sheep or 🦁 lion!
-- 🐺 wolf: Win rate >55% AND P/L ratio >1.5 AND Total Return > 0%, strategic winner
-- 🦁 lion: Max single loss >10% OR Total Return < -20%, bold but reckless  
-- 🐢 turtle: Avg holding >10 days AND Total Return > 0%, patient profitable investor
-- 🐰 rabbit: Avg holding <3 days AND many trades, quick scalper (can be profitable or not)
-- 🦅 eagle: Total trades <10 AND win rate >60% AND Total Return > 0%, precise opportunist
-- 🐑 sheep: Win rate <45% OR (Total Return < 0% AND no clear edge), needs strategy
+## Interpretation rules
+1. Count only closed paired trades in win rate, P/L ratio, expectancy, streaks, and badges. Never treat an unpaired/open event as a win or loss.
+2. If closed trades are fewer than 3, state that the sample is too small to establish a reliable edge; keep the score conservative and do not overstate skill.
+3. Apply personality rules in this order: severe loss (lion), patient profitable trader (turtle), precise profitable low-frequency trader (eagle), strategic profitable trader (wolf), profitable short-horizon trader (rabbit), otherwise sheep.
+4. If Total Return is negative, personality must be sheep or lion. Rabbit, wolf, turtle, and eagle require Total Return > 0%.
+5. Lion applies when Max Single Loss >10% OR Total Return <= -20%. Sheep is the default for insufficient evidence or no clear edge.
+6. Calculate the score from Return 25%, Win Rate 20%, P/L Ratio 20%, Expectancy 20%, and Risk Control 15%. Score is an integer from 0 to 100.
+7. Hard score caps: Total Return <= -20% => max 29; Total Return <= -10% => max 39; Total Return < 0% => max 54; Win Rate <35% => max 49. Apply all relevant caps after the weighted score.
+8. Award a badge only when every condition is met. If there are no closed trades, return an empty badges array. Losing sessions may receive only Capital Guardian.
+9. Treat the compact trade observations as supporting evidence; the aggregate metrics are authoritative. If data conflicts, use the aggregate metrics.
 
-# Scoring Criteria - MULTI-DIMENSIONAL WEIGHTED SCORING
-## ⚠️ CRITICAL CONSTRAINTS - MUST FOLLOW:
-## - If Total Return < -20%: FINAL SCORE MUST BE < 30
-## - If Total Return < -10%: FINAL SCORE MUST BE < 40  
-## - If Total Return < 0%: FINAL SCORE MUST BE < 55
-## - If Win Rate < 35%: FINAL SCORE MUST BE < 50
+## Badge rules
+- Cold-Blooded: every loss is below 5% and Total Return >= 0%.
+- Diamond Hands: at least one profitable trade was held for 20+ days and Total Return > 0%.
+- Sharpshooter: at least 3 consecutive wins and Win Rate > 50%.
+- Streak Master: maximum win streak >= 5 and Total Return > 0%.
+- Capital Guardian: no loss exceeded 10%.
 
-## Calculate score using 5 dimensions with weights:
-### 1. Return Score (25% weight)
-- < -10%: 0-25 → -10% to -5%: 25-40 → -5% to 0%: 40-55 → 0% to 5%: 55-70 → 5% to 15%: 70-85 → > 15%: 85-100
-
-### 2. Win Rate Score (20% weight)
-- < 35%: 0-25 → 35-45%: 25-45 → 45-55%: 45-65 → 55-65%: 65-80 → > 65%: 80-100
-
-### 3. P/L Ratio Score (20% weight)
-- < 0.5: 0-25 → 0.5-1.0: 25-50 → 1.0-1.5: 50-70 → 1.5-2.5: 70-85 → > 2.5: 85-100
-
-### 4. Expectancy Score (20% weight)
-- < -$50: 0-20 → -$50 to $0: 20-45 → $0 to $50: 45-65 → $50 to $150: 65-85 → > $150: 85-100
-
-### 5. Risk Control Score (15% weight)
-- Max single loss < 5%: 80-100 → < 10%: 60-80 → < 15%: 40-60 → < 20%: 20-40 → > 20%: 0-20
-
-## FINAL SCORE = (Return×0.25) + (WinRate×0.20) + (PLRatio×0.20) + (Expectancy×0.20) + (RiskControl×0.15)
-
-## Star Rating (based on final weighted score, TRANSLATE titles to ${langName})
-- <40: ⭐ (translate "Liquidity Provider" to ${langName}) - Feeding money to market
-- 40-54: ⭐⭐ (translate "Noise Trader" to ${langName}) - Random results  
-- 55-69: ⭐⭐⭐ (translate "Disciplined Executor" to ${langName}) - Showing potential
-- 70-84: ⭐⭐⭐⭐ (translate "Alpha Hunter" to ${langName}) - Generating alpha
-- 85-100: ⭐⭐⭐⭐⭐ (translate "Market Wizard" to ${langName}) - Exceptional performance
-
-# Badges (TRANSLATE badge names to ${langName}, award ONLY if ALL criteria met!)
-## ⚠️ CRITICAL: Do NOT award badges to losing traders (Total Return < 0%) except for "Capital Guardian"!
-- 🏆 (translate "Cold-Blooded" to ${langName}): All losses <5% AND Total Return >= 0%
-- 💎 (translate "Diamond Hands" to ${langName}): Held winner 20+ days AND Total Return > 0%
-- 🎯 (translate "Sharpshooter" to ${langName}): 3+ consecutive wins AND Win Rate > 50%
-- 🔥 (translate "Streak Master" to ${langName}): 5+ win streak AND Total Return > 0%
-- 🛡️ (translate "Capital Guardian" to ${langName}): Never lost >10% per trade
-
-# Trading Data
-- Total Trades: ${totalTrades}
+## Session metrics
+- Raw trade events: ${trades.length}
+- Closed paired trades used for metrics: ${totalTrades}
+- Unpaired/open trade events excluded: ${unpairedTradeCount}
 - Win Rate: ${(winRate * 100).toFixed(1)}%
 - P/L Ratio: ${winLossRatioFormatted}
-- Expectancy: $${expectancy.toFixed(2)}/trade
+- Expectancy: $${expectancy.toFixed(2)} per closed trade
+- Realized P&L: $${realizedPnl.toFixed(2)}
 - Max Single Loss: ${Math.abs(maxLossPct).toFixed(1)}%
-- Max Win Streak: ${maxWinStreak}
-- Avg Holding (Overall): ${avgHoldingDays.toFixed(1)} days
-- Avg Holding (Win): ${avgWinHoldingDays.toFixed(1)} days
-- Avg Holding (Loss): ${avgLossHoldingDays.toFixed(1)} days
-- Stop-Loss Discipline: ${strictStopLoss ? 'Strict (all losses <5%)' : 'Loose'}
-- Diamond Hand Trades: ${diamondHandTrades.length}
-- Avg Entry Position: ${avgBuyPosition.toFixed(0)}% (0=low, 100=high)
-- Total Return: ${(stats.pnlPct * 100).toFixed(2)}%
+- Maximum Win Streak: ${maxWinStreak}
+- Average Holding Time: ${avgHoldingDays.toFixed(1)} days
+- Average Winning Hold: ${avgWinHoldingDays.toFixed(1)} days
+- Average Losing Hold: ${avgLossHoldingDays.toFixed(1)} days
+- Stop-Loss Discipline: ${stopLossDiscipline}
+- 20+ Day Profitable Trades: ${diamondHandTrades.length}
+- Average Entry Position: ${avgBuyPosition.toFixed(0)}% of the recent 20-bar range (0=low, 100=high)
+- Total Return: ${(totalReturn * 100).toFixed(2)}% (final equity, including any open position)
 
-[REMINDER] Output ONLY valid JSON in ${langName} language! No other text!`;
+## Compact closed-trade observations
+The following JSON array contains up to 100 closed pairs (the first 50 and last 50 for longer sessions). Fields are: pnl, pnlPct, holdDays, trend, entryPosition, gapPct.
+${tradeObservations}
 
-  const systemMessage = `You are a JSON API. Output ONLY valid JSON. All text content MUST be in ${langName}. Use ${langName} only, no other languages.`;
+Output the JSON object now, in ${langName} only.`;
+
+  const systemMessage = `You are ChartMini's deterministic JSON analysis service. Return exactly one valid JSON object matching the requested keys. Never invent metrics, never output Markdown, and write all human-readable text only in ${langName}.`;
 
   return { systemMessage, prompt };
 }

@@ -13,6 +13,7 @@ export function LegacyImage({
   priority,
   quality: _quality,
   sizes: _sizes,
+  alt,
   className,
   loading,
   ...props
@@ -20,6 +21,7 @@ export function LegacyImage({
   return (
     <img
       {...props}
+      alt={alt ?? ''}
       className={
         fill ? `absolute inset-0 h-full w-full ${className ?? ''}` : className
       }

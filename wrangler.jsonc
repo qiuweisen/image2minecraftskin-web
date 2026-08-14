@@ -24,6 +24,13 @@
   // The path to the entrypoint of your Worker that will be executed
   "main": "./src/server.ts",
 
+  // Keep long-form translated marketing content as CDN-served static assets.
+  // The ASSETS binding lets server functions read the requested locale without
+  // bundling all 40 translations into the Worker script.
+  "assets": {
+    "binding": "ASSETS"
+  },
+
   // Logpush is not enabled on this account; keep observability logs enabled below.
   "logpush": false,
 
@@ -43,11 +50,21 @@
     }
   },
 
-  // Staging custom domain in the ChartMini Cloudflare account.
+  // Pin the production analysis model explicitly; API keys remain secrets.
+  "vars": {
+    "GEMINI_API_MODEL": "gemini-3.7-flash"
+  },
+
+  // Keep the staging custom domain available for rollback and smoke tests;
+  // the production route below takes over chartmini.com at cutover.
   "routes": [
     {
       "pattern": "v2.chartmini.com",
       "custom_domain": true
+    },
+    {
+      "pattern": "chartmini.com/*",
+      "zone_name": "chartmini.com"
     }
   ],
 

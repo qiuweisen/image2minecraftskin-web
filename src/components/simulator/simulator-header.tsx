@@ -1,4 +1,3 @@
-import { m } from '@/locale/paraglide/messages';
 import { authClient } from '@/auth/client';
 import { LoginWrapper } from '@/components/auth/login-wrapper';
 import { LocaleSwitcher } from '@/components/layout/locale-switcher';
@@ -12,6 +11,12 @@ import { cn } from '@/lib/utils';
 import { Logo } from '@/components/shared/logo';
 import { Link } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
+import { simulator_nav_blog } from '@/locale/paraglide/messages/simulator_nav_blog';
+import { simulator_nav_daily_replay } from '@/locale/paraglide/messages/simulator_nav_daily_replay';
+import { simulator_nav_day_trading } from '@/locale/paraglide/messages/simulator_nav_day_trading';
+import { simulator_home } from '@/locale/paraglide/messages/simulator_home';
+import { auth_common_login } from '@/locale/paraglide/messages/auth_common_login';
+import { auth_common_signup } from '@/locale/paraglide/messages/auth_common_signup';
 
 export function SimulatorHeader() {
   const { data: session, isPending } = authClient.useSession();
@@ -23,11 +28,11 @@ export function SimulatorHeader() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/95 dark:border-white/10 dark:bg-black/95">
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
       <div className="flex h-14 items-center justify-between gap-4 px-3 sm:px-4 lg:px-6">
         <Link
           to="/"
-          aria-label={m.common_home()}
+          aria-label={simulator_home()}
           className="flex shrink-0 items-center"
         >
           <Logo className="h-7 sm:h-8" />
@@ -35,22 +40,22 @@ export function SimulatorHeader() {
         <nav className="flex items-center gap-1 text-sm sm:gap-2">
           <Link
             to="/play"
-            className="rounded-lg px-3 py-2 font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white"
+            className="rounded-lg px-3 py-2 font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
           >
-            {m.simulator_nav_daily_replay()}
+            {simulator_nav_daily_replay()}
           </Link>
           <Link
             to="/day-trading-simulator"
-            className="hidden rounded-lg px-3 py-2 font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white sm:inline-block"
+            className="hidden rounded-lg px-3 py-2 font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground sm:inline-block"
           >
-            {m.simulator_nav_day_trading()}
+            {simulator_nav_day_trading()}
           </Link>
           <Link
             to="/blog"
             search={{ page: 1 }}
-            className="hidden rounded-lg px-3 py-2 font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white md:inline-block"
+            className="hidden rounded-lg px-3 py-2 font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:inline-block"
           >
-            {m.simulator_nav_blog()}
+            {simulator_nav_blog()}
           </Link>
           <div className="ml-1 flex items-center gap-1 sm:ml-2 sm:gap-2">
             <LocaleSwitcher />
@@ -73,14 +78,14 @@ export function SimulatorHeader() {
                         'cursor-pointer'
                       )}
                     >
-                      {m.auth_common_login()}
+                      {auth_common_login()}
                     </button>
                   </LoginWrapper>
                   <Link
                     to={Routes.Register}
                     className={buttonVariants({ size: 'sm' })}
                   >
-                    {m.auth_common_signup()}
+                    {auth_common_signup()}
                   </Link>
                 </>
               ))}

@@ -10,6 +10,7 @@ import {
   sqliteTable,
   text,
   index,
+  uniqueIndex,
 } from 'drizzle-orm/sqlite-core';
 import { user } from './auth.schema';
 import type { PaymentScene, PaymentStatus, PaymentType, PlanInterval } from '@/payment/types';
@@ -125,6 +126,96 @@ export const userIndicatorProfilesRelations = relations(
 );
 
 /**
+ * Lightweight record for a completed simulator session.
+ *
+ * Candles, TradingView state, and individual trade details stay client-side.
+ * Only the summary needed by the dashboard is stored in D1.
+ */
+export const trainingRecords = sqliteTable(
+  'training_records',
+  {
+    id: text('id').primaryKey(),
+    userId: text('user_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
+    mode: text('mode').notNull().$type<'play' | 'day-trading-simulator'>(),
+    symbol: text('symbol').notNull(),
+    interval: text('interval').notNull(),
+    bars: integer('bars').notNull().default(0),
+    tradeCount: integer('trade_count').notNull().default(0),
+    pnlBps: integer('pnl_bps').notNull().default(0),
+    durationSeconds: integer('duration_seconds').notNull().default(0),
+    startedAt: integer('started_at', { mode: 'timestamp_ms' }),
+    completedAt: integer('completed_at', { mode: 'timestamp_ms' }).notNull(),
+  },
+  (table) => [
+    index('training_records_user_completed_idx').on(
+      table.userId,
+      table.completedAt
+    ),
+  ]
+);
+
+export const trainingRecordsRelations = relations(
+  trainingRecords,
+  ({ one }) => ({
+    user: one(user, {
+      fields: [trainingRecords.userId],
+      references: [user.id],
+    }),
+  })
+);
+
+/**
+ * One daily check-in per user. A composite key makes repeated clicks,
+ * refreshes, and multiple tabs unable to award the daily points twice.
+ */
+export const dailyCheckins = sqliteTable(
+  'daily_checkins',
+  {
+    userId: text('user_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
+    dayKey: text('day_key').notNull(),
+    monthKey: text('month_key').notNull(),
+    basePoints: integer('base_points').notNull().default(5),
+    bonusPoints: integer('bonus_points').notNull().default(0),
+    createdAt: integer('created_at', { mode: 'timestamp_ms' }).notNull(),
+  },
+  (table) => [
+    primaryKey({ columns: [table.userId, table.dayKey] }),
+    index('daily_checkins_user_month_idx').on(table.userId, table.monthKey),
+  ]
+);
+
+export const dailyCheckinsRelations = relations(dailyCheckins, ({ one }) => ({
+  user: one(user, {
+    fields: [dailyCheckins.userId],
+    references: [user.id],
+  }),
+}));
+
+/**
+ * One-row points summary. Detailed point events are intentionally deferred
+ * until a future points marketplace needs a full ledger.
+ */
+export const userPoints = sqliteTable('user_points', {
+  userId: text('user_id')
+    .primaryKey()
+    .references(() => user.id, { onDelete: 'cascade' }),
+  balance: integer('balance').notNull().default(0),
+  lifetimeEarned: integer('lifetime_earned').notNull().default(0),
+  updatedAt: integer('updated_at', { mode: 'timestamp_ms' }).notNull(),
+});
+
+export const userPointsRelations = relations(userPoints, ({ one }) => ({
+  user: one(user, {
+    fields: [userPoints.userId],
+    references: [user.id],
+  }),
+}));
+
+/**
  * Legacy daily AI-analysis quota counters.
  *
  * `day` is stored as a millisecond timestamp, matching the other Drizzle
@@ -146,6 +237,10 @@ export const aiAnalysisDailyUsage = sqliteTable(
     index('ai_analysis_daily_usage_user_id_idx').on(table.userId),
     index('ai_analysis_daily_usage_day_idx').on(table.day),
     index('ai_analysis_daily_usage_user_day_idx').on(table.userId, table.day),
+    uniqueIndex('ai_analysis_daily_usage_user_day_unique').on(
+      table.userId,
+      table.day
+    ),
   ]
 );
 

@@ -3,8 +3,14 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import html2canvas from 'html2canvas';
 import { QRCodeCanvas } from 'qrcode.react';
+import {
+  IconCheck,
+  IconCopy,
+  IconDownload,
+  IconLoader2,
+  IconSparkles,
+} from '@tabler/icons-react';
 import { useSessionStore, type SessionState } from '@/store/useSessionStore';
-import { useUiStore } from '@/store/useUiStore';
 import {
   parseAnalysisResponse,
   type AnalysisResult,
@@ -12,11 +18,29 @@ import {
 import { markdownToHtml } from '@/lib/legacy-markdown';
 import { getSessionSummaryCopy } from '@/lib/sessionSummaryCopy';
 import { toLegacySupportedLang } from '@/lib/locale';
-import Portal from './Portal';
 import Logo from './Logo';
 import AuthModal from './AuthModal';
 import { usePlayI18n } from './PlayI18nProvider';
+import { useTheme } from './theme/theme-provider';
 import { getSimulatorSession } from '@/lib/auth-client-compat';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Progress, ProgressLabel } from '@/components/ui/progress';
 
 type ApiErrorPayload = {
   code?: string;
@@ -166,7 +190,7 @@ function SessionSummaryInner({
   const open = sessionStore((s) => s.summaryOpen);
   const closeSummary = sessionStore((s) => s.closeSummary);
   const dismissSummaryAndReset = sessionStore((s) => s.dismissSummaryAndReset);
-  const theme = useUiStore((s) => s.theme);
+  const { resolvedTheme: theme } = useTheme();
   const { t, lang } = usePlayI18n();
   const [analysis, setAnalysis] = useState<AnalysisResult | string | null>(
     null
@@ -390,23 +414,130 @@ function SessionSummaryInner({
   };
 
   const handleGenerateImage = async () => {
-    if (!shareRef.current) return;
+    const shareElement = shareRef.current;
+    if (!shareElement) return;
     setSharing(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 50));
-      const canvas = await html2canvas(shareRef.current, {
+      // Let the report finish its layout before cloning it. The report is
+      // rendered off-screen so it never changes the visible simulator layout.
+      await new Promise<void>((resolve) => {
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+      });
+
+      const width = Math.max(1, shareElement.offsetWidth || 520);
+      const height = Math.max(
+        1,
+        shareElement.scrollHeight || shareElement.offsetHeight
+      );
+      const reportBackground = theme === 'dark' ? '#131722' : '#ffffff';
+      const reportForeground = theme === 'dark' ? '#f8fafc' : '#0f172a';
+
+      const canvas = await html2canvas(shareElement, {
         useCORS: true,
         scale: 2,
-        backgroundColor: theme === 'dark' ? '#131722' : '#ffffff',
+        backgroundColor: reportBackground,
         logging: false,
-        windowWidth: 520,
-        windowHeight: shareRef.current.scrollHeight,
+        windowWidth: width,
+        windowHeight: height,
+        width,
+        height,
+        scrollX: 0,
+        scrollY: 0,
+        x: 0,
+        y: 0,
+        ignoreElements: (element) =>
+          element.tagName === 'IFRAME' ||
+          element.hasAttribute('data-html2canvas-ignore'),
+        onclone: (_document, clonedElement) => {
+          // html2canvas clones the whole document before rendering the target.
+          // TradingView's iframe must not be evaluated by that clone, and the
+          // report itself must be moved back into the clone's viewport. The
+          // TanStarter theme uses oklch CSS variables, which html2canvas 1.x
+          // cannot parse, so the cloned document gets screenshot-safe colors.
+          const unsupportedColorTest = /(?:oklch|oklab|color-mix)\([^)]*\)/i;
+          const unsupportedColor = /(?:oklch|oklab|color-mix)\([^)]*\)/gi;
+          const colorCanvas = _document.createElement('canvas');
+          colorCanvas.width = 1;
+          colorCanvas.height = 1;
+          const colorContext = colorCanvas.getContext('2d');
+
+          const fallbackForProperty = (property: string) => {
+            if (
+              property.includes('image') ||
+              property.includes('shadow') ||
+              property === 'filter'
+            ) {
+              return 'none';
+            }
+            if (property.includes('background')) return reportBackground;
+            if (property.includes('border') || property.includes('outline')) {
+              return theme === 'dark' ? '#334155' : '#e2e8f0';
+            }
+            return reportForeground;
+          };
+
+          const convertColor = (value: string, property: string) => {
+            if (!colorContext) return fallbackForProperty(property);
+
+            try {
+              colorContext.clearRect(0, 0, 1, 1);
+              colorContext.fillStyle = value;
+              colorContext.fillRect(0, 0, 1, 1);
+              const [red, green, blue, alpha] = colorContext.getImageData(
+                0,
+                0,
+                1,
+                1
+              ).data;
+              return `rgba(${red}, ${green}, ${blue}, ${(alpha / 255).toFixed(3)})`;
+            } catch {
+              return fallbackForProperty(property);
+            }
+          };
+
+          _document.documentElement.style.backgroundColor = reportBackground;
+          _document.documentElement.style.color = reportForeground;
+          _document.body.style.backgroundColor = reportBackground;
+          _document.body.style.color = reportForeground;
+          clonedElement.style.position = 'absolute';
+          clonedElement.style.left = '0';
+          clonedElement.style.top = '0';
+          clonedElement.style.margin = '0';
+          clonedElement.style.backgroundColor = reportBackground;
+          clonedElement.style.color = reportForeground;
+          clonedElement.style.visibility = 'visible';
+          clonedElement.style.opacity = '1';
+
+          const clonedNodes = [
+            clonedElement,
+            ...Array.from(clonedElement.querySelectorAll('*')),
+          ];
+          for (const node of clonedNodes) {
+            const computed = _document.defaultView?.getComputedStyle(node);
+            if (!computed) continue;
+
+            for (let index = 0; index < computed.length; index += 1) {
+              const property = computed.item(index);
+              const value = computed.getPropertyValue(property);
+              if (!unsupportedColorTest.test(value)) continue;
+
+              const safeValue = value.replace(unsupportedColor, (color) =>
+                convertColor(color, property)
+              );
+              (node as HTMLElement | SVGElement).style.setProperty(
+                property,
+                safeValue
+              );
+            }
+          }
+        },
         removeContainer: true,
       });
 
       const dataUrl = canvas.toDataURL('image/png');
       if (mountedRef.current) setGeneratedImage(dataUrl);
-    } catch {
+    } catch (error) {
+      console.error('[SessionSummary] Share image generation failed', error);
       if (mountedRef.current) {
         setCopyStatus('error');
         setTimeout(() => setCopyStatus('idle'), 2000);
@@ -448,41 +579,26 @@ function SessionSummaryInner({
     'prose prose-sm max-w-none text-slate-700 dark:text-slate-300 prose-headings:font-bold prose-headings:text-slate-900 dark:prose-headings:text-white prose-p:leading-relaxed prose-strong:text-slate-900 dark:prose-strong:text-white prose-ul:my-2 prose-li:my-0.5';
 
   return (
-    <Portal>
-      {showAuthModal ? (
-        <AuthModal open onClose={() => setShowAuthModal(false)} />
-      ) : null}
-      <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/60 py-10 backdrop-blur-sm">
-        <div
-          role="dialog"
-          aria-modal
-          className="flex max-h-[90vh] w-[min(92vw,600px)] flex-col overflow-hidden rounded-xl border border-slate-200 bg-white text-slate-900 shadow-2xl ring-1 ring-black/5 transition-all duration-300 dark:border-[#2a2e39] dark:bg-[#131722] dark:text-slate-100 dark:ring-white/10"
-        >
-          <div className="flex items-center justify-between border-b border-slate-200 bg-slate-50/50 px-6 py-4 dark:border-[#2a2e39] dark:bg-[#131722]">
-            <h2 className="text-lg font-bold text-slate-900 dark:text-white">
+    <>
+      <Dialog
+        open={open}
+        onOpenChange={(nextOpen) => {
+          if (!nextOpen) closeSummary();
+        }}
+      >
+        <DialogContent className="flex max-h-[min(90vh,900px)] w-[min(92vw,600px)] max-w-3xl flex-col gap-0 overflow-hidden p-0 sm:max-w-3xl">
+          <DialogHeader className="shrink-0 border-b bg-muted/30 px-6 py-4 pr-14">
+            <DialogTitle>
               {generatedImage
                 ? t('imageGenerated') || 'Image Ready'
                 : t('sessionSummary')}
-            </h2>
-            <button
-              type="button"
-              onClick={() => closeSummary()}
-              className="text-slate-500 transition-colors hover:text-slate-800 dark:text-slate-400 dark:hover:text-white"
-            >
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path d="M18 6L6 18M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
+            </DialogTitle>
+            <DialogDescription>
+              {t('sessionSummary')}: {result.symbol} · {result.interval}
+            </DialogDescription>
+          </DialogHeader>
 
-          <div className="custom-scrollbar flex-1 space-y-6 overflow-y-auto p-6">
+          <div className="custom-scrollbar min-h-0 flex-1 space-y-6 overflow-y-auto p-6">
             {generatedImage ? (
               <div className="flex flex-col items-center gap-4 animate-in fade-in zoom-in duration-300">
                 <div className="relative overflow-hidden rounded-lg border border-slate-200 shadow-2xl dark:border-slate-700">
@@ -495,50 +611,59 @@ function SessionSummaryInner({
               </div>
             ) : (
               <>
-                <div
-                  className={`relative overflow-hidden rounded-xl border p-6 ${result.pnlPct >= 0 ? 'border-emerald-200 bg-emerald-50 dark:border-emerald-500/20 dark:bg-emerald-950/30' : 'border-rose-200 bg-rose-50 dark:border-rose-500/20 dark:bg-rose-950/30'}`}
+                <Card
+                  className={`relative overflow-hidden ${result.pnlPct >= 0 ? 'border-emerald-200 bg-emerald-50 dark:border-emerald-500/20 dark:bg-emerald-950/30' : 'border-rose-200 bg-rose-50 dark:border-rose-500/20 dark:bg-rose-950/30'}`}
                 >
-                  <div className="mb-1 text-center text-sm font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">
-                    {t('pnl')}
-                  </div>
-                  <div
-                    className={`text-center text-4xl font-black tracking-tight ${result.pnlPct >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}
-                  >
-                    {result.pnlPct >= 0 ? '+' : ''}
-                    {(result.pnlPct * 100).toFixed(2)}%
-                  </div>
-                  <div
-                    className={`mx-auto mt-2 inline-flex rounded-full px-3 py-1 text-sm font-medium ${result.pnlReal >= 0 ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300' : 'bg-rose-100 text-rose-700 dark:bg-rose-500/10 dark:text-rose-300'}`}
-                  >
-                    ${fmt(result.pnlReal)}
-                  </div>
-                </div>
+                  <CardContent className="p-6 text-center">
+                    <div className="mb-1 text-sm font-medium uppercase tracking-wide text-muted-foreground">
+                      {t('pnl')}
+                    </div>
+                    <div
+                      className={`text-4xl font-black tracking-tight ${result.pnlPct >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}
+                    >
+                      {result.pnlPct >= 0 ? '+' : ''}
+                      {(result.pnlPct * 100).toFixed(2)}%
+                    </div>
+                    <Badge
+                      variant="outline"
+                      className={`mt-2 ${result.pnlReal >= 0 ? 'border-emerald-300 bg-emerald-100 text-emerald-700 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-300' : 'border-rose-300 bg-rose-100 text-rose-700 dark:border-rose-500/30 dark:bg-rose-500/10 dark:text-rose-300'}`}
+                    >
+                      ${fmt(result.pnlReal)}
+                    </Badge>
+                  </CardContent>
+                </Card>
 
                 <div className="grid grid-cols-3 gap-4 text-sm">
-                  <div className="rounded-lg border border-slate-200 bg-white p-3 dark:border-[#2a2e39] dark:bg-[#1e222d]">
-                    <div className="mb-1 text-xs text-slate-500 dark:text-slate-400">
-                      {t('symbol')}
-                    </div>
-                    <div className="font-mono font-medium text-slate-900 dark:text-slate-200">
-                      {result.symbol}
-                    </div>
-                  </div>
-                  <div className="rounded-lg border border-slate-200 bg-white p-3 dark:border-[#2a2e39] dark:bg-[#1e222d]">
-                    <div className="mb-1 text-xs text-slate-500 dark:text-slate-400">
-                      {t('interval')}
-                    </div>
-                    <div className="font-mono font-medium text-slate-900 dark:text-slate-200">
-                      {result.interval}
-                    </div>
-                  </div>
-                  <div className="rounded-lg border border-slate-200 bg-white p-3 dark:border-[#2a2e39] dark:bg-[#1e222d]">
-                    <div className="mb-1 text-xs text-slate-500 dark:text-slate-400">
-                      {t('trades')}
-                    </div>
-                    <div className="font-mono font-medium text-slate-900 dark:text-slate-200">
-                      {result.trades.length}
-                    </div>
-                  </div>
+                  <Card size="sm">
+                    <CardContent className="p-3">
+                      <div className="mb-1 text-xs text-muted-foreground">
+                        {t('symbol')}
+                      </div>
+                      <div className="font-mono font-medium">
+                        {result.symbol}
+                      </div>
+                    </CardContent>
+                  </Card>
+                  <Card size="sm">
+                    <CardContent className="p-3">
+                      <div className="mb-1 text-xs text-muted-foreground">
+                        {t('interval')}
+                      </div>
+                      <div className="font-mono font-medium">
+                        {result.interval}
+                      </div>
+                    </CardContent>
+                  </Card>
+                  <Card size="sm">
+                    <CardContent className="p-3">
+                      <div className="mb-1 text-xs text-muted-foreground">
+                        {t('trades')}
+                      </div>
+                      <div className="font-mono font-medium">
+                        {result.trades.length}
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
 
                 <div>
@@ -551,365 +676,358 @@ function SessionSummaryInner({
                   )}
 
                   {loading && (
-                    <div className="rounded-xl border border-slate-200 bg-white p-5 dark:border-[#2a2e39] dark:bg-[#1e222d]">
-                      <div className="flex items-start justify-between gap-4">
-                        <div>
-                          <div className="text-sm font-semibold text-slate-900 dark:text-white">
-                            {summaryCopy.loadingTitle}
-                          </div>
-                          <div className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-                            {summaryCopy.loadingSubtitle}
-                          </div>
-                        </div>
-                        <div className="rounded-full bg-cyan-100 px-2.5 py-1 text-[11px] font-semibold text-cyan-700 dark:bg-cyan-500/10 dark:text-cyan-300">
-                          {result.symbol} · {result.interval}
-                        </div>
-                      </div>
-
-                      <div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-200 dark:bg-[#11161f]">
-                        <div
-                          className="h-full rounded-full bg-gradient-to-r from-cyan-500 via-sky-500 to-emerald-500 transition-all duration-500"
-                          style={{ width: `${loadingProgress}%` }}
-                        />
-                      </div>
-
-                      <div className="mt-4 space-y-2">
-                        {summaryCopy.loadingStages.map((stage, index) => {
-                          const completed = index < loadingStage;
-                          const active = index === loadingStage;
-
-                          return (
-                            <div
-                              key={stage}
-                              className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm ${active ? 'bg-slate-50 dark:bg-[#131722]' : ''}`}
-                            >
-                              <span
-                                className={`flex h-5 w-5 items-center justify-center rounded-full border text-[11px] ${completed ? 'border-emerald-500 bg-emerald-500 text-white' : active ? 'border-cyan-500 bg-cyan-500/10 text-cyan-600 dark:text-cyan-300' : 'border-slate-300 text-slate-400 dark:border-slate-600 dark:text-slate-500'}`}
-                              >
-                                {completed ? '✓' : active ? '•' : ''}
-                              </span>
-                              <span
-                                className={`${active ? 'font-semibold text-slate-900 dark:text-white' : 'text-slate-500 dark:text-slate-400'}`}
-                              >
-                                {stage}
-                              </span>
+                    <Card size="sm">
+                      <CardContent className="p-5">
+                        <div className="flex items-start justify-between gap-4">
+                          <div>
+                            <div className="text-sm font-semibold">
+                              {summaryCopy.loadingTitle}
                             </div>
-                          );
-                        })}
-                      </div>
+                            <div className="mt-1 text-xs text-muted-foreground">
+                              {summaryCopy.loadingSubtitle}
+                            </div>
+                          </div>
+                          <Badge
+                            variant="secondary"
+                            className="font-mono text-[11px]"
+                          >
+                            {result.symbol} · {result.interval}
+                          </Badge>
+                        </div>
 
-                      <div className="mt-4 text-xs text-slate-500 dark:text-slate-400">
-                        {summaryCopy.loadingDetails[Math.max(loadingStage, 0)]}
-                      </div>
-                    </div>
+                        <Progress value={loadingProgress} className="mt-4">
+                          <ProgressLabel className="sr-only">
+                            {summaryCopy.loadingTitle}
+                          </ProgressLabel>
+                        </Progress>
+
+                        <div className="mt-4 space-y-2">
+                          {summaryCopy.loadingStages.map((stage, index) => {
+                            const completed = index < loadingStage;
+                            const active = index === loadingStage;
+
+                            return (
+                              <div
+                                key={stage}
+                                className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm ${active ? 'bg-muted/60' : ''}`}
+                              >
+                                <span
+                                  className={`flex h-5 w-5 items-center justify-center rounded-full border text-[11px] ${completed ? 'border-emerald-500 bg-emerald-500 text-white' : active ? 'border-primary bg-primary/10 text-primary' : 'border-border text-muted-foreground'}`}
+                                >
+                                  {completed ? (
+                                    <IconCheck className="size-3" />
+                                  ) : active ? (
+                                    '•'
+                                  ) : (
+                                    ''
+                                  )}
+                                </span>
+                                <span
+                                  className={`${active ? 'font-semibold text-foreground' : 'text-muted-foreground'}`}
+                                >
+                                  {stage}
+                                </span>
+                              </div>
+                            );
+                          })}
+                        </div>
+
+                        <div className="mt-4 text-xs text-muted-foreground">
+                          {
+                            summaryCopy.loadingDetails[
+                              Math.max(loadingStage, 0)
+                            ]
+                          }
+                        </div>
+                      </CardContent>
+                    </Card>
                   )}
 
                   {analysis && !loading && (
-                    <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-5 dark:border-[#2a2e39] dark:bg-[#1e222d]">
-                      <h3 className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
-                        <span className="text-lg">🤖</span>{' '}
-                        {t('aiAnalysisHeader')}
-                      </h3>
-
-                      {typeof analysis === 'object' && !parseError ? (
-                        <>
-                          <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 dark:border-[#2a2e39] dark:bg-[#131722]">
-                            <div className="mb-3 flex items-center justify-between gap-3">
-                              <div className="flex items-center gap-2">
-                                <span className="text-3xl">
-                                  {analysis.personality?.emoji}
-                                </span>
-                                <div>
-                                  <div className="font-bold text-slate-900 dark:text-white">
-                                    {analysis.personality?.name}
+                    <Card size="sm">
+                      <CardHeader className="px-5 pt-5">
+                        <CardTitle className="flex items-center gap-2 text-sm uppercase tracking-wider text-primary">
+                          <IconSparkles className="size-4" />
+                          {t('aiAnalysisHeader')}
+                        </CardTitle>
+                        <CardDescription className="sr-only">
+                          {t('aiAnalysisHeader')}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-4 px-5 pb-5">
+                        {typeof analysis === 'object' && !parseError ? (
+                          <>
+                            <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 dark:border-[#2a2e39] dark:bg-[#131722]">
+                              <div className="mb-3 flex items-center justify-between gap-3">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-3xl">
+                                    {analysis.personality?.emoji}
+                                  </span>
+                                  <div>
+                                    <div className="font-bold text-slate-900 dark:text-white">
+                                      {analysis.personality?.name}
+                                    </div>
+                                    <div className="text-xs text-slate-500">
+                                      {analysis.personality?.description}
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="text-right">
+                                  <div className="text-2xl font-black text-indigo-600 dark:text-indigo-400">
+                                    {analysis.score}
                                   </div>
                                   <div className="text-xs text-slate-500">
-                                    {analysis.personality?.description}
+                                    /100
                                   </div>
                                 </div>
                               </div>
-                              <div className="text-right">
-                                <div className="text-2xl font-black text-indigo-600 dark:text-indigo-400">
-                                  {analysis.score}
-                                </div>
-                                <div className="text-xs text-slate-500">
-                                  /100
-                                </div>
+                              <div className="text-sm">
+                                {'⭐'.repeat(analysis.rank?.stars || 1)}{' '}
+                                {analysis.rank?.title}
                               </div>
                             </div>
-                            <div className="text-sm">
-                              {'⭐'.repeat(analysis.rank?.stars || 1)}{' '}
-                              {analysis.rank?.title}
+
+                            <table className="w-full border-collapse text-sm">
+                              <tbody>
+                                <tr className="border-b border-slate-200 dark:border-[#2a2e39]">
+                                  <td className="py-2 text-slate-500">
+                                    💪{' '}
+                                    {analysis.labels?.superpower ||
+                                      'Superpower'}
+                                  </td>
+                                  <td className="py-2 text-right font-medium">
+                                    {analysis.superpower}
+                                  </td>
+                                </tr>
+                                <tr className="border-b border-slate-200 dark:border-[#2a2e39]">
+                                  <td className="py-2 text-slate-500">
+                                    ⚠️ {analysis.labels?.weakness || 'Weakness'}
+                                  </td>
+                                  <td className="py-2 text-right font-medium">
+                                    {analysis.weakness}
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td className="py-2 text-slate-500">
+                                    📊{' '}
+                                    {analysis.labels?.keyStats || 'Key Stats'}
+                                  </td>
+                                  <td className="py-2 text-right font-mono text-xs">
+                                    {analysis.keyStats}
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+
+                            {analysis.badges && analysis.badges.length > 0 && (
+                              <div>
+                                <div className="mb-2 text-sm font-semibold">
+                                  🏅 {analysis.labels?.badges || 'Achievements'}
+                                </div>
+                                <div className="flex flex-wrap gap-2">
+                                  {analysis.badges.map((badge, index) => (
+                                    <span
+                                      key={`${badge.name}-${index}`}
+                                      className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-1 text-xs text-amber-800 dark:bg-amber-900/30 dark:text-amber-300"
+                                    >
+                                      {badge.emoji} {badge.name}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+
+                            {analysis.tagline && (
+                              <blockquote className="border-l-4 border-indigo-500 pl-4 italic text-slate-600 dark:text-slate-400">
+                                "{analysis.tagline}"
+                              </blockquote>
+                            )}
+
+                            {analysis.comparison && (
+                              <div className="rounded-lg bg-indigo-50 p-3 text-sm text-indigo-700 dark:bg-indigo-900/20 dark:text-indigo-300">
+                                📊 {analysis.comparison}
+                              </div>
+                            )}
+
+                            {analysis.tradingStyle && (
+                              <div className="text-sm text-slate-600 dark:text-slate-400">
+                                <span className="font-semibold">
+                                  🎯{' '}
+                                  {analysis.labels?.tradingStyle ||
+                                    'Trading Style'}
+                                  :
+                                </span>{' '}
+                                {analysis.tradingStyle}
+                              </div>
+                            )}
+
+                            {analysis.riskAssessment && (
+                              <div className="rounded-lg bg-amber-50 p-3 text-sm text-amber-700 dark:bg-amber-900/20 dark:text-amber-300">
+                                ⚠️{' '}
+                                <span className="font-semibold">
+                                  {analysis.labels?.riskAssessment ||
+                                    'Risk Assessment'}
+                                  :
+                                </span>{' '}
+                                {analysis.riskAssessment}
+                              </div>
+                            )}
+
+                            <div className="space-y-3 text-sm text-slate-700 dark:text-slate-300">
+                              <div className="rounded-lg bg-emerald-50 p-3 dark:bg-emerald-900/20">
+                                <div className="mb-1 font-semibold text-emerald-700 dark:text-emerald-400">
+                                  ✓{' '}
+                                  {analysis.labels?.strengths ||
+                                    'What You Did Well'}
+                                </div>
+                                <p>{analysis.analysis?.strengths}</p>
+                              </div>
+                              <div className="rounded-lg bg-rose-50 p-3 dark:bg-rose-900/20">
+                                <div className="mb-1 font-semibold text-rose-700 dark:text-rose-400">
+                                  ✗{' '}
+                                  {analysis.labels?.weaknesses ||
+                                    'Needs Improvement'}
+                                </div>
+                                <p>{analysis.analysis?.weaknesses}</p>
+                              </div>
+                              <div className="rounded-lg bg-indigo-50 p-3 dark:bg-indigo-900/20">
+                                <div className="mb-1 font-semibold text-indigo-700 dark:text-indigo-400">
+                                  →{' '}
+                                  {analysis.labels?.actionItem || 'Action Item'}
+                                </div>
+                                <p>{analysis.analysis?.actionItem}</p>
+                              </div>
                             </div>
-                          </div>
 
-                          <table className="w-full border-collapse text-sm">
-                            <tbody>
-                              <tr className="border-b border-slate-200 dark:border-[#2a2e39]">
-                                <td className="py-2 text-slate-500">
-                                  💪{' '}
-                                  {analysis.labels?.superpower || 'Superpower'}
-                                </td>
-                                <td className="py-2 text-right font-medium">
-                                  {analysis.superpower}
-                                </td>
-                              </tr>
-                              <tr className="border-b border-slate-200 dark:border-[#2a2e39]">
-                                <td className="py-2 text-slate-500">
-                                  ⚠️ {analysis.labels?.weakness || 'Weakness'}
-                                </td>
-                                <td className="py-2 text-right font-medium">
-                                  {analysis.weakness}
-                                </td>
-                              </tr>
-                              <tr>
-                                <td className="py-2 text-slate-500">
-                                  📊 {analysis.labels?.keyStats || 'Key Stats'}
-                                </td>
-                                <td className="py-2 text-right font-mono text-xs">
-                                  {analysis.keyStats}
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-
-                          {analysis.badges && analysis.badges.length > 0 && (
-                            <div>
+                            <div className="rounded-lg bg-slate-50 p-4 dark:bg-slate-800/50">
                               <div className="mb-2 text-sm font-semibold">
-                                🏅 {analysis.labels?.badges || 'Achievements'}
+                                📈 {summaryCopy.roadmapTitle}
                               </div>
-                              <div className="flex flex-wrap gap-2">
-                                {analysis.badges.map((badge, index) => (
-                                  <span
-                                    key={`${badge.name}-${index}`}
-                                    className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-1 text-xs text-amber-800 dark:bg-amber-900/30 dark:text-amber-300"
-                                  >
-                                    {badge.emoji} {badge.name}
-                                  </span>
+                              <ol className="list-decimal space-y-2 pl-5 text-sm text-slate-600 dark:text-slate-400">
+                                {summaryCopy.roadmapSteps.map((step, index) => (
+                                  <li
+                                    key={`roadmap-${index}`}
+                                    dangerouslySetInnerHTML={{
+                                      __html: markdownInlineToHtml(step),
+                                    }}
+                                  />
                                 ))}
-                              </div>
+                              </ol>
                             </div>
-                          )}
-
-                          {analysis.tagline && (
-                            <blockquote className="border-l-4 border-indigo-500 pl-4 italic text-slate-600 dark:text-slate-400">
-                              "{analysis.tagline}"
-                            </blockquote>
-                          )}
-
-                          {analysis.comparison && (
-                            <div className="rounded-lg bg-indigo-50 p-3 text-sm text-indigo-700 dark:bg-indigo-900/20 dark:text-indigo-300">
-                              📊 {analysis.comparison}
-                            </div>
-                          )}
-
-                          {analysis.tradingStyle && (
-                            <div className="text-sm text-slate-600 dark:text-slate-400">
-                              <span className="font-semibold">
-                                🎯{' '}
-                                {analysis.labels?.tradingStyle ||
-                                  'Trading Style'}
-                                :
-                              </span>{' '}
-                              {analysis.tradingStyle}
-                            </div>
-                          )}
-
-                          {analysis.riskAssessment && (
-                            <div className="rounded-lg bg-amber-50 p-3 text-sm text-amber-700 dark:bg-amber-900/20 dark:text-amber-300">
-                              ⚠️{' '}
-                              <span className="font-semibold">
-                                {analysis.labels?.riskAssessment ||
-                                  'Risk Assessment'}
-                                :
-                              </span>{' '}
-                              {analysis.riskAssessment}
-                            </div>
-                          )}
-
-                          <div className="space-y-3 text-sm text-slate-700 dark:text-slate-300">
-                            <div className="rounded-lg bg-emerald-50 p-3 dark:bg-emerald-900/20">
-                              <div className="mb-1 font-semibold text-emerald-700 dark:text-emerald-400">
-                                ✓{' '}
-                                {analysis.labels?.strengths ||
-                                  'What You Did Well'}
-                              </div>
-                              <p>{analysis.analysis?.strengths}</p>
-                            </div>
-                            <div className="rounded-lg bg-rose-50 p-3 dark:bg-rose-900/20">
-                              <div className="mb-1 font-semibold text-rose-700 dark:text-rose-400">
-                                ✗{' '}
-                                {analysis.labels?.weaknesses ||
-                                  'Needs Improvement'}
-                              </div>
-                              <p>{analysis.analysis?.weaknesses}</p>
-                            </div>
-                            <div className="rounded-lg bg-indigo-50 p-3 dark:bg-indigo-900/20">
-                              <div className="mb-1 font-semibold text-indigo-700 dark:text-indigo-400">
-                                → {analysis.labels?.actionItem || 'Action Item'}
-                              </div>
-                              <p>{analysis.analysis?.actionItem}</p>
-                            </div>
+                          </>
+                        ) : (
+                          <div className={analysisProseClass}>
+                            <div
+                              dangerouslySetInnerHTML={{
+                                __html: markdownToHtml(
+                                  typeof analysis === 'string'
+                                    ? analysis
+                                    : JSON.stringify(analysis)
+                                ),
+                              }}
+                            />
                           </div>
-
-                          <div className="rounded-lg bg-slate-50 p-4 dark:bg-slate-800/50">
-                            <div className="mb-2 text-sm font-semibold">
-                              📈 {summaryCopy.roadmapTitle}
-                            </div>
-                            <ol className="list-decimal space-y-2 pl-5 text-sm text-slate-600 dark:text-slate-400">
-                              {summaryCopy.roadmapSteps.map((step, index) => (
-                                <li
-                                  key={`roadmap-${index}`}
-                                  dangerouslySetInnerHTML={{
-                                    __html: markdownInlineToHtml(step),
-                                  }}
-                                />
-                              ))}
-                            </ol>
-                          </div>
-                        </>
-                      ) : (
-                        <div className={analysisProseClass}>
-                          <div
-                            dangerouslySetInnerHTML={{
-                              __html: markdownToHtml(
-                                typeof analysis === 'string'
-                                  ? analysis
-                                  : JSON.stringify(analysis)
-                              ),
-                            }}
-                          />
-                        </div>
-                      )}
-                    </div>
+                        )}
+                      </CardContent>
+                    </Card>
                   )}
                 </div>
               </>
             )}
           </div>
 
-          <div className="flex gap-3 border-t border-slate-200 bg-slate-50/50 p-6 pt-2 dark:border-[#2a2e39] dark:bg-[#131722]">
+          <DialogFooter className="m-0 shrink-0 rounded-none border-t px-6 py-4 sm:flex-row sm:justify-end">
             {generatedImage ? (
               <>
-                <button
+                <Button
                   type="button"
                   onClick={handleCopyImage}
-                  className={`flex flex-1 items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-bold shadow-lg transition-all ${copyStatus === 'success' ? 'bg-emerald-600 text-white' : 'bg-slate-200 text-slate-900 hover:bg-slate-300 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700'}`}
+                  size="lg"
+                  variant={copyStatus === 'success' ? 'default' : 'secondary'}
+                  className="flex-1"
                 >
-                  {copyStatus === 'success' ? (
-                    <>
-                      <svg
-                        width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
-                      {t('copySuccess') || 'Copied!'}
-                    </>
-                  ) : (
-                    <>
-                      <svg
-                        width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <rect
-                          x="9"
-                          y="9"
-                          width="13"
-                          height="13"
-                          rx="2"
-                          ry="2"
-                        />
-                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                      </svg>
-                      {t('copyImage') || 'Copy Image'}
-                    </>
-                  )}
-                </button>
+                  {copyStatus === 'success' ? <IconCheck /> : <IconCopy />}
+                  {copyStatus === 'success'
+                    ? t('copySuccess') || 'Copied!'
+                    : t('copyImage') || 'Copy Image'}
+                </Button>
 
-                <button
+                <Button
                   type="button"
                   onClick={handleDownloadImage}
-                  className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-3 text-sm font-bold text-white shadow-lg shadow-indigo-500/20 transition-all hover:bg-indigo-500"
+                  size="lg"
+                  className="flex-1"
                 >
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                    <polyline points="7 10 12 15 17 10" />
-                    <line x1="12" y1="15" x2="12" y2="3" />
-                  </svg>
+                  <IconDownload />
                   {t('downloadImage') || 'Download'}
-                </button>
+                </Button>
 
-                <button
+                <Button
                   type="button"
                   onClick={() => setGeneratedImage(null)}
-                  className="flex-none rounded-lg bg-slate-200 px-4 py-3 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-300 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+                  variant="outline"
+                  size="icon-lg"
+                  aria-label={t('dismiss')}
                 >
-                  ✕
-                </button>
+                  ×
+                </Button>
               </>
             ) : (
               <>
                 {!hasSuccessfulAnalysis && (
-                  <button
+                  <Button
                     type="button"
                     onClick={handleAnalyze}
                     disabled={loading}
-                    className="flex-1 rounded-lg border border-white/10 bg-gradient-to-r from-[#0284c7] via-[#0891b2] to-[#14b8a6] bg-[length:200%_auto] px-3 py-2 text-xs font-extrabold text-white shadow-lg transition-all hover:scale-[1.02] hover:shadow-cyan-500/30 disabled:cursor-not-allowed disabled:opacity-50 dark:from-white dark:via-[#e2e8f0] dark:to-[#94a3b8] dark:text-slate-900 dark:hover:shadow-white/20"
+                    size="lg"
+                    className="flex-1"
                   >
+                    {loading ? (
+                      <IconLoader2 className="animate-spin" />
+                    ) : (
+                      <IconSparkles />
+                    )}
                     {loading ? t('analyzing') : t('aiAnalyze')}
-                  </button>
+                  </Button>
                 )}
 
                 {hasSuccessfulAnalysis && (
-                  <button
+                  <Button
                     type="button"
                     onClick={handleGenerateImage}
                     disabled={sharing}
-                    className="flex-1 items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 px-4 py-3 text-sm font-bold text-white shadow-lg shadow-amber-500/20 transition-all hover:from-amber-400 hover:to-amber-500 dark:shadow-amber-900/20"
+                    size="lg"
+                    variant="secondary"
+                    className="flex-1"
                   >
+                    {sharing && <IconLoader2 className="animate-spin" />}
                     {sharing
                       ? summaryCopy.generating
                       : t('share') || 'Share Image'}
-                  </button>
+                  </Button>
                 )}
 
-                <button
+                <Button
                   type="button"
                   onClick={() => {
                     setShowAuthModal(false);
                     dismissSummaryAndReset();
                   }}
-                  className="flex-1 rounded-lg border border-slate-300 bg-slate-200 px-6 py-3 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-300 hover:text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-white"
+                  variant="outline"
+                  size="lg"
+                  className="flex-1"
                 >
                   {t('dismiss')}
-                </button>
+                </Button>
               </>
             )}
-          </div>
-        </div>
-      </div>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {showAuthModal ? (
+        <AuthModal open onClose={() => setShowAuthModal(false)} />
+      ) : null}
 
       <div className="pointer-events-none fixed left-[9999px] top-0">
         <div
@@ -1127,7 +1245,7 @@ function SessionSummaryInner({
           </div>
         </div>
       </div>
-    </Portal>
+    </>
   );
 }
 

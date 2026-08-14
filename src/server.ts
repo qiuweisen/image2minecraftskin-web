@@ -21,13 +21,45 @@ function addStagingRobotsHeader(request: Request, response: Response) {
   }
 
   const headers = new Headers(response.headers);
+  const pathname = new URL(request.url).pathname;
+  const isStaticAsset =
+    pathname.startsWith('/assets/') ||
+    pathname.startsWith('/TradingView/') ||
+    pathname.startsWith('/images/') ||
+    pathname === '/favicon.ico';
+
   headers.set('X-Robots-Tag', 'noindex, nofollow, noarchive');
+  if (!isStaticAsset) {
+    headers.set(
+      'Cache-Control',
+      'no-store, no-cache, max-age=0, must-revalidate'
+    );
+  }
 
   return new Response(response.body, {
     headers,
     status: response.status,
     statusText: response.statusText,
   });
+}
+
+function getTrailingSlashRedirect(request: Request): Response | null {
+  const url = new URL(request.url);
+  const { pathname } = url;
+  const isAssetPath =
+    pathname.startsWith('/api/') ||
+    pathname.startsWith('/assets/') ||
+    pathname.startsWith('/TradingView/') ||
+    pathname.startsWith('/images/') ||
+    pathname === '/favicon.ico' ||
+    /\/[^/]+\.[^/]+\/$/.test(pathname);
+
+  if (pathname.length <= 1 || !pathname.endsWith('/') || isAssetPath) {
+    return null;
+  }
+
+  url.pathname = pathname.replace(/\/+$/, '');
+  return Response.redirect(url, 308);
 }
 
 export default {
@@ -40,8 +72,16 @@ export default {
       return addStagingRobotsHeader(request, legacyRedirect);
     }
 
+    const trailingSlashRedirect = getTrailingSlashRedirect(request);
+    if (trailingSlashRedirect) {
+      return addStagingRobotsHeader(request, trailingSlashRedirect);
+    }
+
     return localeMiddleware(request, () =>
       Promise.resolve(
+        // TanStack Start handles localized URL rewriting itself. Passing the
+        // de-localized request from Paraglide here makes Start normalize every
+        // localized subpath back to itself with a 307 redirect.
         handler.fetch(request, {
           context: {
             fromFetch: true,

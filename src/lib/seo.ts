@@ -2,6 +2,7 @@ import { websiteConfig } from '@/config/website';
 import {
   getCanonicalUrl,
   getCanonicalUrlForLocale,
+  getBaseUrl,
   getOgImage,
   twitterHandleFromUrl,
 } from '@/lib/urls';
@@ -51,6 +52,92 @@ export function seo(
   return {
     meta: metadata({ ...options, url, image, type: options.type ?? 'website' }),
     links: [{ rel: 'canonical', href: url }, ...alternateLinks],
+  };
+}
+
+/**
+ * Site-level JSON-LD shared by the public marketing pages. Keeping this in a
+ * small helper avoids making every route duplicate the same graph and lets
+ * staging use its own build-time origin while production uses chartmini.com.
+ */
+export function siteStructuredData() {
+  const baseUrl = getBaseUrl().replace(/\/$/, '');
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'WebSite',
+        '@id': `${baseUrl}/#website`,
+        name: 'ChartMini',
+        alternateName: ['ChartMini Trading Simulator', 'chartmini.com'],
+        url: baseUrl,
+      },
+      {
+        '@type': 'SoftwareApplication',
+        '@id': `${baseUrl}/#software`,
+        name: 'ChartMini',
+        applicationCategory: 'FinanceApplication',
+        operatingSystem: 'Web',
+        url: baseUrl,
+        offers: {
+          '@type': 'Offer',
+          price: '0',
+          priceCurrency: 'USD',
+        },
+        description:
+          'ChartMini is a free browser-based trading simulator for daily stock, forex, and crypto replay plus intraday day trading practice on historical forex and crypto charts.',
+        featureList: [
+          'Chart Replay',
+          'Historical Candlestick Data',
+          'Price Action Practice',
+          'No Signup Required',
+          'Browser-Based Training',
+        ],
+      },
+    ],
+  };
+}
+
+export function faqStructuredData(
+  faqs: Array<{ question: string; answer: string }>
+) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map(({ question, answer }) => ({
+      '@type': 'Question',
+      name: question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: answer,
+      },
+    })),
+  };
+}
+
+export function simulatorStructuredData(path: string, description: string) {
+  const url = getCanonicalUrl(path);
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    '@id': `${getBaseUrl().replace(/\/$/, '')}/#software`,
+    name: 'ChartMini',
+    applicationCategory: 'FinanceApplication',
+    operatingSystem: 'Web',
+    url,
+    description,
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+    },
+  };
+}
+
+export function jsonLdScript(schema: unknown) {
+  return {
+    type: 'application/ld+json',
+    children: JSON.stringify(schema).replace(/</g, '\\u003c'),
   };
 }
 

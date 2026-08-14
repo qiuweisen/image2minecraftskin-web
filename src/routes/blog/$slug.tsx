@@ -2,13 +2,46 @@ import { m } from '@/locale/paraglide/messages';
 import { createFileRoute, Link, notFound } from '@tanstack/react-router';
 import { loadBlogPost } from '@/api/blog';
 import Container from '@/components/layout/container';
-import { Markdown } from '@/components/markdown/markdown';
 import { websiteConfig } from '@/config/website';
 import { getCanonicalUrl, getImageUrl } from '@/lib/urls';
 import { getCanonicalLocale, getLocale, localeConfig } from '@/lib/locale';
-import { seo } from '@/lib/seo';
+import { jsonLdScript, seo, siteStructuredData } from '@/lib/seo';
 import { IconArrowLeft } from '@tabler/icons-react';
 import { formatDate } from '@/lib/formatter';
+
+function scriptJson(value: unknown) {
+  return JSON.stringify(value).replace(/</g, '\\u003c');
+}
+
+function schemaTypes(value: string): string[] {
+  try {
+    const parsed = JSON.parse(value) as {
+      '@type'?: string | string[];
+      '@graph'?: Array<{ '@type'?: string | string[] }>;
+    };
+    const direct = Array.isArray(parsed['@type'])
+      ? parsed['@type']
+      : [parsed['@type']];
+    const graph = Array.isArray(parsed['@graph'])
+      ? parsed['@graph'].flatMap((item) =>
+          Array.isArray(item?.['@type']) ? item['@type'] : [item?.['@type']]
+        )
+      : [];
+    return [...direct, ...graph].filter(
+      (type): type is string => typeof type === 'string'
+    );
+  } catch {
+    return [];
+  }
+}
+
+function shouldRenderLegacySchema(value: string) {
+  const types = schemaTypes(value);
+  // Keep only schemas that describe visible FAQ/content structures. The
+  // production route generates BlogPosting and BreadcrumbList itself, so old
+  // Article schemas from legacy markdown must not create duplicates.
+  return types.some((type) => ['FAQPage', 'ItemList', 'HowTo'].includes(type));
+}
 
 export const Route = createFileRoute('/blog/$slug')({
   loader: async ({ params }) => {
@@ -20,7 +53,7 @@ export const Route = createFileRoute('/blog/$slug')({
     const post = loaderData;
     if (!post) return {};
     const path = `/blog/${params.slug}`;
-    const title = `${post.title} | ${websiteConfig.metadata?.name}`;
+    const title = `${post.metaTitle ?? post.title} | ${websiteConfig.metadata?.name} Blog`;
     const description =
       post.description ?? websiteConfig.metadata?.description ?? '';
     const image = post.image ? getImageUrl(post.image) : undefined;
@@ -33,7 +66,7 @@ export const Route = createFileRoute('/blog/$slug')({
     });
     const articleJsonLd = {
       '@context': 'https://schema.org',
-      '@type': 'Article',
+      '@type': 'BlogPosting',
       headline: post.title,
       description,
       inLanguage: localeConfig[getCanonicalLocale(getLocale())].hreflang,
@@ -46,20 +79,70 @@ export const Route = createFileRoute('/blog/$slug')({
         '@id': canonicalUrl,
       },
       author: {
-        '@type': 'Organization',
-        name: websiteConfig.metadata?.name ?? '',
+        '@type': 'Person',
+        name: 'Iven W.',
+        url: getCanonicalUrl('/about'),
       },
       publisher: {
         '@type': 'Organization',
         name: websiteConfig.metadata?.name ?? '',
         logo: {
           '@type': 'ImageObject',
-          url: getImageUrl(
-            websiteConfig.metadata?.images?.logoLight ?? '/logo.png'
-          ),
+          url: getImageUrl('/logo.png'),
         },
       },
+      articleSection: post.categories,
+      keywords: post.tags?.join(', '),
     };
+    const breadcrumbJsonLd = {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Home',
+          item: getCanonicalUrl('/'),
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Blog',
+          item: getCanonicalUrl('/blog'),
+        },
+        {
+          '@type': 'ListItem',
+          position: 3,
+          name: post.title,
+          item: canonicalUrl,
+        },
+      ],
+    };
+    const authorJsonLd = {
+      '@context': 'https://schema.org',
+      '@type': 'Person',
+      name: 'Iven W.',
+      url: getCanonicalUrl('/about'),
+      jobTitle: 'Founder & Developer',
+      description:
+        'MBA and active trader since 2007 with nearly two decades of experience. Built ChartMini — a lightweight trading simulator for focused practice.',
+      sameAs: ['https://www.linkedin.com/in/ivenwg'],
+      worksFor: {
+        '@type': 'Organization',
+        name: 'ChartMini',
+        url: getCanonicalUrl('/'),
+      },
+    };
+    const legacySchemas = (post.schemas ?? [])
+      .filter(shouldRenderLegacySchema)
+      .map((schema) => {
+        try {
+          return JSON.parse(schema) as Record<string, unknown>;
+        } catch {
+          return null;
+        }
+      })
+      .filter(Boolean);
     return {
       ...metadata,
       ...(post.noindex === true || post.indexable === false
@@ -73,8 +156,21 @@ export const Route = createFileRoute('/blog/$slug')({
       scripts: [
         {
           type: 'application/ld+json',
-          children: JSON.stringify(articleJsonLd),
+          children: scriptJson(articleJsonLd),
         },
+        {
+          type: 'application/ld+json',
+          children: scriptJson(breadcrumbJsonLd),
+        },
+        {
+          type: 'application/ld+json',
+          children: scriptJson(authorJsonLd),
+        },
+        ...legacySchemas.map((schema) => ({
+          type: 'application/ld+json',
+          children: scriptJson(schema),
+        })),
+        jsonLdScript(siteStructuredData()),
       ],
     };
   },
@@ -102,6 +198,24 @@ function BlogPostPage() {
               {post.category}
             </span>
             <span>{formatDate(new Date(post.date))}</span>
+            {post.dateModified && post.dateModified !== post.date ? (
+              <>
+                <span aria-hidden="true">·</span>
+                <span>
+                  Updated:{' '}
+                  <time dateTime={post.dateModified}>
+                    {formatDate(new Date(post.dateModified))}
+                  </time>
+                </span>
+              </>
+            ) : null}
+            <span aria-hidden="true">·</span>
+            <span>
+              By{' '}
+              <Link to="/about" className="font-medium hover:underline">
+                Iven W.
+              </Link>
+            </span>
           </div>
 
           <h1 className="text-3xl font-bold tracking-tight">{post.title}</h1>
@@ -113,9 +227,9 @@ function BlogPostPage() {
           )}
 
           <div className="mt-6 pt-10 border-t border-border">
-            <Markdown
-              content={post.content ?? ''}
+            <div
               className="prose prose-neutral dark:prose-invert max-w-none"
+              dangerouslySetInnerHTML={{ __html: post.contentHtml }}
             />
           </div>
 

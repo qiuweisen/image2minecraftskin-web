@@ -9,6 +9,17 @@ const JSON_MESSAGE_KEYS = [
   'pricing_plans_lifetime_limits',
   'pricing_plans_pro_features',
   'pricing_plans_pro_limits',
+  'marketing_market_replay_content',
+  'marketing_forex_content',
+  'marketing_crypto_content',
+  'marketing_intraday_content',
+] as const;
+
+const MARKETING_ARRAY_MESSAGE_KEYS = [
+  'marketing_market_replay_content',
+  'marketing_forex_content',
+  'marketing_crypto_content',
+  'marketing_intraday_content',
 ] as const;
 
 async function readMessages(locale: string) {
@@ -53,6 +64,19 @@ for (const key of JSON_MESSAGE_KEYS) {
       JSON.parse(messages[key] ?? '');
     } catch {
       throw new Error(`${locale}.${key} is not valid JSON`);
+    }
+  }
+}
+
+for (const key of MARKETING_ARRAY_MESSAGE_KEYS) {
+  const expected = JSON.parse(en[key] ?? '');
+  if (!Array.isArray(expected)) {
+    throw new Error(`en.${key} must be a JSON array`);
+  }
+  for (const [locale, messages] of localeMessages) {
+    const value = JSON.parse(messages[key] ?? '');
+    if (!Array.isArray(value) || value.length !== expected.length) {
+      throw new Error(`${locale}.${key} must contain ${expected.length} items`);
     }
   }
 }

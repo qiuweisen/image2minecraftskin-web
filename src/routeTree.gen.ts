@@ -41,6 +41,7 @@ import { Route as testsTest404RouteImport } from './routes/(tests)/test-404'
 import { Route as testsTestErrorRouteImport } from './routes/(tests)/test-error'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminUsersRouteImport } from './routes/admin/users'
+import { Route as ApiAnalyzeRouteImport } from './routes/api/analyze'
 import { Route as ApiChartSettingsRouteImport } from './routes/api/chart-settings'
 import { Route as ApiPingRouteImport } from './routes/api/ping'
 import { Route as AuthErrorRouteImport } from './routes/auth/error'
@@ -229,6 +230,11 @@ const AdminUsersRoute = AdminUsersRouteImport.update({
   path: '/users',
   getParentRoute: () => AdminRoute,
 } as any)
+const ApiAnalyzeRoute = ApiAnalyzeRouteImport.update({
+  id: '/api/analyze',
+  path: '/api/analyze',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiChartSettingsRoute = ApiChartSettingsRouteImport.update({
   id: '/api/chart-settings',
   path: '/api/chart-settings',
@@ -397,6 +403,7 @@ export interface FileRoutesByFullPath {
   '/test-404': typeof testsTest404Route
   '/test-error': typeof testsTestErrorRoute
   '/admin/users': typeof AdminUsersRoute
+  '/api/analyze': typeof ApiAnalyzeRoute
   '/api/chart-settings': typeof ApiChartSettingsRoute
   '/api/ping': typeof ApiPingRoute
   '/auth/error': typeof AuthErrorRoute
@@ -455,6 +462,7 @@ export interface FileRoutesByTo {
   '/test-404': typeof testsTest404Route
   '/test-error': typeof testsTestErrorRoute
   '/admin/users': typeof AdminUsersRoute
+  '/api/analyze': typeof ApiAnalyzeRoute
   '/api/chart-settings': typeof ApiChartSettingsRoute
   '/api/ping': typeof ApiPingRoute
   '/auth/error': typeof AuthErrorRoute
@@ -517,6 +525,7 @@ export interface FileRoutesById {
   '/(tests)/test-404': typeof testsTest404Route
   '/(tests)/test-error': typeof testsTestErrorRoute
   '/admin/users': typeof AdminUsersRoute
+  '/api/analyze': typeof ApiAnalyzeRoute
   '/api/chart-settings': typeof ApiChartSettingsRoute
   '/api/ping': typeof ApiPingRoute
   '/auth/error': typeof AuthErrorRoute
@@ -580,6 +589,7 @@ export interface FileRouteTypes {
     | '/test-404'
     | '/test-error'
     | '/admin/users'
+    | '/api/analyze'
     | '/api/chart-settings'
     | '/api/ping'
     | '/auth/error'
@@ -638,6 +648,7 @@ export interface FileRouteTypes {
     | '/test-404'
     | '/test-error'
     | '/admin/users'
+    | '/api/analyze'
     | '/api/chart-settings'
     | '/api/ping'
     | '/auth/error'
@@ -699,6 +710,7 @@ export interface FileRouteTypes {
     | '/(tests)/test-404'
     | '/(tests)/test-error'
     | '/admin/users'
+    | '/api/analyze'
     | '/api/chart-settings'
     | '/api/ping'
     | '/auth/error'
@@ -760,6 +772,7 @@ export interface RootRouteChildren {
   pagesWaitlistRoute: typeof pagesWaitlistRoute
   testsTest404Route: typeof testsTest404Route
   testsTestErrorRoute: typeof testsTestErrorRoute
+  ApiAnalyzeRoute: typeof ApiAnalyzeRoute
   ApiChartSettingsRoute: typeof ApiChartSettingsRoute
   ApiPingRoute: typeof ApiPingRoute
   BlogSlugRoute: typeof BlogSlugRoute
@@ -1000,6 +1013,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/users'
       preLoaderRoute: typeof AdminUsersRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/api/analyze': {
+      id: '/api/analyze'
+      path: '/api/analyze'
+      fullPath: '/api/analyze'
+      preLoaderRoute: typeof ApiAnalyzeRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/chart-settings': {
       id: '/api/chart-settings'
@@ -1292,6 +1312,7 @@ const rootRouteChildren: RootRouteChildren = {
   pagesWaitlistRoute: pagesWaitlistRoute,
   testsTest404Route: testsTest404Route,
   testsTestErrorRoute: testsTestErrorRoute,
+  ApiAnalyzeRoute: ApiAnalyzeRoute,
   ApiChartSettingsRoute: ApiChartSettingsRoute,
   ApiPingRoute: ApiPingRoute,
   BlogSlugRoute: BlogSlugRoute,

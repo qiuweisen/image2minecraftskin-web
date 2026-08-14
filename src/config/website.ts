@@ -62,7 +62,8 @@ export const websiteConfig: WebsiteConfig = {
   },
   blog: {
     enable: true,
-    paginationSize: 6,
+    // Keep the blog grid balanced at three columns on desktop.
+    paginationSize: 12,
   },
   mail: {
     enable: true,

@@ -1,0 +1,76 @@
+# ChartMini
+
+> ChartMini is a free educational trading simulator for practicing stock, forex, crypto, futures, and options decisions with historical chart replay and risk-free paper trading workflows.
+
+ChartMini is designed for learning and practice only. It does not provide brokerage services, execute real trades, manage money, or give personalized financial advice.
+
+Use the links below to understand the product, trading simulator workflows, educational content, and site policies. The blog contains practical guides for paper trading, market replay, backtesting, risk management, forex, futures, options, and trading platform comparisons.
+
+## Core Pages
+
+- [Home](https://chartmini.com/): Overview of ChartMini, a free no-signup trading simulator and chart replay tool.
+- [Trading Simulator](https://chartmini.com/play): Start a risk-free chart replay practice session with historical stocks, forex pairs, and crypto markets.
+- [Trading Blog](https://chartmini.com/blog): Educational articles about paper trading, replay practice, backtesting, forex, futures, options, and trading platforms.
+- [Trading Resources](https://chartmini.com/resources): Curated charting, broker, trading platform, and crypto exchange resources; some outbound links may be affiliate or referral links.
+- [About ChartMini](https://chartmini.com/about): Mission, founder background, data approach, and the educational scope of the simulator.
+
+## Trading Simulator Guides
+
+- [Market Replay: How to Practice Trading With Historical Charts](https://chartmini.com/blog/market-replay-how-to-practice-trading-with-historical-charts): Explains bar-by-bar chart replay, why it helps traders practice, and how to use replay sessions effectively.
+- [What Is Paper Trading?](https://chartmini.com/blog/what-is-paper-trading-ultimate-guide): Beginner guide to simulated trading, paper money workflows, and the limits of demo practice.
+- [What Is Market Replay?](https://chartmini.com/blog/what-is-market-replay-backtesting): Explains market replay and how it differs from static backtesting and live paper trading.
+- [How to Backtest a Trading Strategy](https://chartmini.com/blog/how-to-backtest-trading-strategy): Practical guide to testing trade ideas against historical market data.
+- [Best Free FX Replay Alternatives in 2026](https://chartmini.com/blog/best-free-fx-replay-alternatives-paper-trading): Comparison of free forex replay and paper trading tools for practice workflows.
+- [Best Day Trading Simulators in 2026](https://chartmini.com/blog/best-day-trading-simulators-2026-honest-comparison): Comparison of simulator tools for day trading practice.
+
+## Forex Education
+
+- [Forex Trading Journal Template](https://chartmini.com/blog/forex-trading-journal-template): Shows what to track in a forex journal and how to review trades systematically.
+- [How to Analyze the Forex Market](https://chartmini.com/blog/forex-market-analysis-technical-vs-fundamental): Compares technical and fundamental forex analysis and how traders combine them.
+- [Can You Trade Forex With $100?](https://chartmini.com/blog/trade-forex-with-100-dollars-reality): Reality check on small forex accounts, risk, leverage, and realistic expectations.
+- [Forex Risk Management](https://chartmini.com/blog/forex-risk-management-guide): Guide to position sizing, stop losses, risk-to-reward, and drawdown control.
+
+## Futures Education
+
+- [What Are Futures?](https://chartmini.com/blog/what-are-futures-explained): Plain-English explanation of futures contracts, how they work, and why they exist.
+- [How to Trade Futures](https://chartmini.com/blog/how-to-trade-futures-beginners): Beginner roadmap for futures trading, including brokers, margin, first trades, and common mistakes.
+- [Futures Demo Account Guide](https://chartmini.com/blog/futures-demo-account-guide): Where to get a futures demo account and how to use it without building bad habits.
+- [Futures Contract Explained](https://chartmini.com/blog/futures-contract-expiration-margin-settlement): Explains expiration, margin, settlement, and rolling futures contracts.
+- [Cheapest Futures Contracts for Small Accounts](https://chartmini.com/blog/cheapest-futures-contracts-small-account): Covers micro futures, margin ranges, and contract choices for smaller accounts.
+- [Futures Trading Platforms Compared](https://chartmini.com/blog/futures-trading-platforms-comparison): Compares futures platforms and what each is best suited for.
+
+## Options Education
+
+- [How to Trade Options](https://chartmini.com/blog/how-to-trade-options-beginners): Beginner guide to calls, puts, the Greeks, and placing an options trade.
+- [What Is a Call Option?](https://chartmini.com/blog/what-is-a-call-option-simple): Simple explanation of call options, payoff mechanics, and practical examples.
+- [Call Option Payoff Diagrams](https://chartmini.com/blog/call-option-payoff-diagram): Shows how to read visual profit-and-loss diagrams for call options.
+- [Options Greeks Simplified](https://chartmini.com/blog/options-greeks-delta-gamma-theta-vega): Plain-English explanation of delta, gamma, theta, and vega.
+- [Options Profit Calculator Guide](https://chartmini.com/blog/options-profit-calculator-guide): Explains how to model options profit and loss before entering a trade.
+
+## Platform And Tool Comparisons
+
+- [Best Trading Platform for Beginners](https://chartmini.com/blog/best-trading-platform-beginners-2026): Compares TradingView, MetaTrader, cTrader, and broker web platforms for newer traders.
+- [Thinkorswim PaperMoney Review](https://chartmini.com/blog/thinkorswim-paper-trading-review-alternatives): Review of Thinkorswim paper trading and alternative practice workflows.
+- [Futures Brokers Compared](https://chartmini.com/blog/futures-brokers-compared-fees-features): Compares major futures brokers by fees, features, platforms, and account requirements.
+- [Optimus Futures Review](https://chartmini.com/blog/optimus-futures-review): Review of Optimus Futures pricing, platform experience, and trader fit.
+- [Why You Should Have a TradingView Account](https://chartmini.com/blog/the-traders-arsenal-why-you-should-have-a-tradingview-account-2026): Explains TradingView's role in charting, analysis, and trader workflows.
+
+## Site Information
+
+- [Contact](https://chartmini.com/contact): Contact page for feedback, questions, and site inquiries.
+- [Privacy Policy](https://chartmini.com/privacy-policy): Explains privacy practices for ChartMini visitors and users.
+- [User Agreement](https://chartmini.com/user-agreement): Terms governing use of the ChartMini educational simulator and website.
+- [Sitemap](https://chartmini.com/sitemap.xml): Search-engine sitemap containing localized pages and indexable blog posts.
+
+## Optional
+
+- [English Home](https://chartmini.com/en): English localized home page.
+- [Spanish Home](https://chartmini.com/es-419): Spanish localized home page.
+- [Portuguese Home](https://chartmini.com/pt): Portuguese localized home page.
+- [French Home](https://chartmini.com/fr): French localized home page.
+- [German Home](https://chartmini.com/de): German localized home page.
+- [Japanese Home](https://chartmini.com/ja): Japanese localized home page.
+- [Korean Home](https://chartmini.com/ko): Korean localized home page.
+- [Simplified Chinese Home](https://chartmini.com/zh-hans): Simplified Chinese localized home page.
+- [Traditional Chinese Home](https://chartmini.com/zh-hant): Traditional Chinese localized home page.
+- [Languages](https://chartmini.com/languages): List of available localized versions of ChartMini.

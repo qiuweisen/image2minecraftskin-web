@@ -92,6 +92,9 @@ export const auth = betterAuth({
           google: {
             clientId: serverEnv.GOOGLE_CLIENT_ID,
             clientSecret: serverEnv.GOOGLE_CLIENT_SECRET,
+            // Keep account switching available even when a Google session is
+            // already active in the browser.
+            prompt: 'select_account',
           },
         }
       : {}),

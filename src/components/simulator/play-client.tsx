@@ -14,6 +14,9 @@ import Controls from '@/components/Controls';
 import PositionCard from '@/components/PositionCard';
 import StatsCard from '@/components/StatsCard';
 import TradesCard from '@/components/TradesCard';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 import {
   useSessionStore,
@@ -29,6 +32,7 @@ import {
 import type { PlayChunkLoader } from '@/lib/ohlcv/types';
 import { preloadChartPersistence } from '@/lib/chartPersistence';
 import { waitForTradingView } from '@/lib/tradingviewLoader';
+import { saveCompletedTraining } from '@/lib/training-records';
 
 type MarketCategory = 'stocks' | 'fx' | 'crypto';
 type ModeOption = { mode: SessionMode; label: string; hint: string };
@@ -142,6 +146,7 @@ function PlayContent() {
   );
   const prevSummaryOpen = useRef(false);
   const summaryResultIsProfit = useRef<boolean | undefined>(undefined);
+  const sessionStartedAt = useRef<number | null>(null);
   const loadMoreRef = useRef<PlayChunkLoader | null>(null);
   const loadingMoreRef = useRef(false);
   useEffect(() => {
@@ -355,6 +360,7 @@ function PlayContent() {
         }
 
         setLoading(true);
+        sessionStartedAt.current = Date.now();
         setChartReady(false);
         setError(null);
         // Start the guest settings request alongside the market data and chart library.
@@ -400,7 +406,9 @@ function PlayContent() {
   };
 
   const onFinish = () => {
+    if (summaryOpen || lastResult) return;
     const result = finish();
+    saveCompletedTraining(result, 'play', sessionStartedAt.current);
     try {
       const key = 'cg-sessions';
       const prev = JSON.parse(localStorage.getItem(key) || '[]') as any[];
@@ -421,6 +429,7 @@ function PlayContent() {
     } catch {}
     setChartKey((k) => k + 1);
     setChartReady(false);
+    sessionStartedAt.current = Date.now();
     clearResult();
     reset();
     loadMoreRef.current = null;
@@ -448,34 +457,51 @@ function PlayContent() {
     }
   };
 
-  const renderModeSelector = (compact = false) => (
-    <div className={`space-y-2 ${compact ? '' : 'mb-1'}`}>
-      <div className={`grid grid-cols-2 gap-2 ${compact ? '' : ''}`}>
-        {modeOptions.map((opt) => {
-          const active = sessionMode === opt.mode;
-          return (
-            <button
-              key={opt.mode}
-              onClick={() => switchSessionMode(opt.mode)}
-              disabled={loading || candles.length > 0}
-              className={`text-left rounded-lg border px-3 py-2 transition-colors ${
-                active
-                  ? 'border-emerald-400 bg-emerald-50 text-emerald-800 dark:border-emerald-500/60 dark:bg-emerald-500/15 dark:text-emerald-200'
-                  : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50 dark:border-[#2a2e39] dark:bg-[#111418] dark:text-slate-300 dark:hover:bg-[#171b22]'
-              } ${loading || candles.length > 0 ? 'opacity-60 cursor-not-allowed' : ''}`}
-            >
-              <div className="text-sm font-semibold leading-tight">
-                {opt.label}
-              </div>
-              <div className="mt-1 text-[11px] leading-snug text-slate-500 dark:text-slate-400">
-                {opt.hint}
-              </div>
-            </button>
-          );
-        })}
-      </div>
-    </div>
+  const renderCategoryTabs = (compact = false) => (
+    <Tabs
+      value={category}
+      onValueChange={(value) => loadCategory(value as MarketCategory)}
+      className={compact ? 'min-w-0 flex-1' : 'w-full'}
+    >
+      <TabsList className="grid w-full grid-cols-3">
+        {(['stocks', 'fx', 'crypto'] as const).map((cat) => (
+          <TabsTrigger key={cat} value={cat} disabled={loading}>
+            {t(cat)}
+          </TabsTrigger>
+        ))}
+      </TabsList>
+    </Tabs>
   );
+
+  const renderModeSelector = (compact = false) => {
+    const selectedMode = modeOptions.find(
+      (option) => option.mode === sessionMode
+    );
+
+    return (
+      <div className={compact ? 'space-y-2' : 'space-y-2 pb-1'}>
+        <Tabs
+          value={sessionMode}
+          onValueChange={(value) => switchSessionMode(value as SessionMode)}
+        >
+          <TabsList className="grid w-full grid-cols-2">
+            {modeOptions.map((option) => (
+              <TabsTrigger
+                key={option.mode}
+                value={option.mode}
+                disabled={loading || candles.length > 0}
+              >
+                {option.label}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </Tabs>
+        <p className="px-1 text-[11px] leading-snug text-muted-foreground">
+          {selectedMode?.hint}
+        </p>
+      </div>
+    );
+  };
 
   const showStartOverlay = candles.length === 0;
   const showChartLoadingOverlay = candles.length > 0 && !chartReady;
@@ -483,27 +509,18 @@ function PlayContent() {
   return (
     <div
       data-play-root
-      className="flex flex-col md:flex-row h-[100dvh] md:h-[calc(100vh-3.5rem)] md:overflow-hidden bg-slate-50 dark:bg-[#0F0F0F]"
+      className="flex h-[100dvh] flex-col bg-background md:h-[calc(100vh-3.5rem)] md:flex-row md:overflow-hidden"
       suppressHydrationWarning
     >
-      {/* Mobile Top Bar */}
-      <div className="md:hidden flex-none z-20 px-4 py-2 bg-white dark:bg-[#0F0F0F] border-b border-slate-200 dark:border-[#2a2e39] flex items-center justify-between gap-2">
-        <div className="flex items-center gap-1 overflow-x-auto no-scrollbar mask-fade-right flex-1">
-          {(['stocks', 'fx', 'crypto'] as const).map((cat) => (
-            <button
-              key={cat}
-              className={`flex-none px-2.5 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors ${category === cat ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900' : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400'}`}
-              onClick={() => loadCategory(cat)}
-              disabled={loading}
-            >
-              {t(cat)}
-            </button>
-          ))}
-        </div>
+      <h1 className="sr-only">{t('playOverlayTitle')}</h1>
 
+      {/* Mobile Top Bar */}
+      <div className="z-20 flex flex-none items-center justify-between gap-2 border-b border-border bg-background px-3 py-2 md:hidden">
+        {renderCategoryTabs(true)}
         <div className="flex-none">
           {candles.length === 0 ? (
-            <button
+            <Button
+              type="button"
               onClick={() => {
                 try {
                   localStorage.setItem('cg-guide-start', '1');
@@ -512,31 +529,34 @@ function PlayContent() {
                 onStart();
               }}
               disabled={summaryOpen}
-              className={`px-3 py-1.5 rounded-full text-xs font-bold shadow-sm ${summaryOpen ? 'bg-slate-300 text-slate-500 cursor-not-allowed' : 'bg-emerald-700 text-white'}`}
+              size="sm"
+              className="bg-emerald-600 text-white hover:bg-emerald-700 dark:bg-emerald-500 dark:text-emerald-950 dark:hover:bg-emerald-400"
             >
               {t('startSession')}
-            </button>
+            </Button>
           ) : (
-            <button
+            <Button
+              type="button"
               onClick={onFinish}
-              className="px-3 py-1.5 rounded-full text-xs font-bold bg-sky-600 text-white shadow-sm"
+              size="sm"
+              variant="secondary"
             >
               {t('finish')}
-            </button>
+            </Button>
           )}
         </div>
       </div>
 
       {candles.length === 0 && (
-        <div className="md:hidden flex-none z-20 px-4 py-2 bg-white dark:bg-[#0F0F0F] border-b border-slate-200 dark:border-[#2a2e39]">
+        <div className="z-20 flex-none border-b border-border bg-background px-3 py-2 md:hidden">
           {renderModeSelector(true)}
         </div>
       )}
 
       {/* Main Chart Area (3/4 of available space) */}
-      <section className="flex-[3] relative min-h-0 flex flex-col bg-white dark:bg-[#0F0F0F]">
-        {/* Chart */}
-        <div className="flex-1 relative w-full h-full">
+      <section className="relative flex min-h-0 flex-[3] flex-col bg-background">
+        {/* Keep TradingView unframed; this wrapper only provides sizing and overlays. */}
+        <div className="relative min-h-0 flex-1 w-full">
           {candles.length > 0 && symbol ? (
             <TradingViewChart
               key={chartKey}
@@ -549,47 +569,38 @@ function PlayContent() {
 
           {/* Overlay when no data */}
           {showStartOverlay && (
-            <div
-              onClick={loading ? undefined : onStart}
-              className={`absolute inset-0 z-10 flex flex-col items-center justify-center bg-slate-50/50 dark:bg-[#0F0F0F]/90 backdrop-blur-sm transition-all ${loading ? 'cursor-wait' : 'cursor-pointer hover:bg-slate-100/60 dark:hover:bg-[#1a1a1a]/90'}`}
-            >
-              <div className="text-center p-8 bg-white dark:bg-[#0F0F0F] rounded-2xl shadow-xl border border-slate-200 dark:border-[#2a2e39] mx-4">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-emerald-500/10 flex items-center justify-center">
-                  <svg
-                    className="w-8 h-8 text-emerald-500"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
+            <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/75 p-4 backdrop-blur-sm">
+              <Card className="mx-4 max-w-md bg-card/95 shadow-xl">
+                <CardContent className="p-6 text-center sm:p-8">
+                  <div className="mx-auto mb-4 flex size-14 items-center justify-center rounded-full bg-emerald-500/10 text-2xl text-emerald-600 dark:text-emerald-400">
+                    ▶
+                  </div>
+                  <h3 className="text-xl font-semibold tracking-tight">
+                    {t('playOverlayTitle')}
+                  </h3>
+                  <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                    {t('playOverlaySubtitle')}
+                  </p>
+                  <Button
+                    type="button"
+                    size="lg"
+                    onClick={() => void onStart()}
+                    disabled={loading}
+                    className="mt-6 w-full bg-emerald-600 text-white hover:bg-emerald-700 dark:bg-emerald-500 dark:text-emerald-950 dark:hover:bg-emerald-400"
                   >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
-                  {t('playOverlayTitle')}
-                </h3>
-                <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">
-                  {t('playOverlaySubtitle')}
-                </p>
-                <div
-                  className={`inline-flex items-center px-6 py-3 text-white font-bold rounded-lg transition-colors ${loading ? 'bg-slate-400 dark:bg-slate-600' : 'bg-emerald-700 hover:bg-emerald-800 shadow-lg shadow-emerald-700/20'}`}
-                >
-                  {loading ? t('loading') : t('startSession')}
-                </div>
-              </div>
+                    {loading ? t('loading') : t('startSession')}
+                  </Button>
+                </CardContent>
+              </Card>
             </div>
           )}
 
           {showChartLoadingOverlay && (
-            <div className="absolute inset-0 z-10 bg-white dark:bg-[#0F0F0F]">
-              <div className="h-full w-full animate-pulse bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.08),transparent_40%),linear-gradient(180deg,rgba(148,163,184,0.12),transparent)] dark:bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.12),transparent_42%),linear-gradient(180deg,rgba(30,41,59,0.45),transparent)]">
-                <div className="grid h-full grid-cols-7 gap-px bg-slate-100/80 dark:bg-[#171b22]">
-                  {Array.from({ length: 21 }).map((_, i) => (
-                    <div key={i} className="bg-white/70 dark:bg-[#111418]/85" />
-                  ))}
-                </div>
+            <div className="absolute inset-0 z-10 animate-pulse bg-background/95">
+              <div className="grid h-full grid-cols-7 gap-px bg-muted/60">
+                {Array.from({ length: 21 }).map((_, i) => (
+                  <div key={i} className="bg-card/80" />
+                ))}
               </div>
             </div>
           )}
@@ -597,7 +608,7 @@ function PlayContent() {
       </section>
 
       {/* Mobile Controls (Placed above stats) */}
-      <div className="md:hidden flex-none z-20 bg-white dark:bg-[#0F0F0F] border-t border-slate-200 dark:border-[#2a2e39] p-2">
+      <div className="z-20 flex-none border-t border-border bg-background p-2 md:hidden">
         <Controls
           layout="mobile"
           onAdvance={advanceChartBar}
@@ -607,7 +618,7 @@ function PlayContent() {
       </div>
 
       {/* Mobile Stats Area (Bottom, 1/4 space) */}
-      <div className="md:hidden flex-[1] min-h-0 overflow-y-auto scrollbar-thin bg-slate-50 dark:bg-[#0F0F0F]/50 p-2 pb-[env(safe-area-inset-bottom,20px)] space-y-2 border-t border-slate-200 dark:border-[#2a2e39]">
+      <div className="flex-[1] min-h-0 space-y-2 overflow-y-auto border-t border-border bg-muted/30 p-2 pb-[env(safe-area-inset-bottom,20px)] md:hidden">
         <PositionCard
           position={position}
           lastClose={lastClose}
@@ -623,95 +634,81 @@ function PlayContent() {
 
       {/* Desktop Sidebar (Controls) */}
       <aside
-        className="hidden md:flex w-[440px] flex-shrink-0 h-full min-h-0 overflow-hidden border-l border-slate-200 dark:border-[#2a2e39] bg-white dark:bg-[#0F0F0F]"
+        className="hidden h-full min-h-0 w-[440px] flex-shrink-0 overflow-hidden border-l border-border bg-background md:flex"
         suppressHydrationWarning
       >
-        <div className="flex h-full min-h-0 flex-col p-4 bg-white dark:bg-[#0F0F0F]">
-          {/* Desktop Top Controls */}
+        <div className="flex h-full min-h-0 w-full flex-col gap-4 overflow-y-auto p-4">
           <div className="flex-none space-y-4">
-            <div className="flex flex-col gap-4 mb-6">
-              <div className="flex items-center justify-between p-1 bg-slate-100 dark:bg-[#1a1a1a] border border-slate-200 dark:border-[#2a2e39] rounded-lg">
-                {(['stocks', 'fx', 'crypto'] as const).map((cat) => (
-                  <button
-                    key={cat}
-                    className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-all ${category === cat ? 'bg-white dark:bg-[#3a3f4b] text-slate-900 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-300'}`}
-                    onClick={() => loadCategory(cat)}
-                    disabled={loading}
-                  >
-                    {t(cat)}
-                  </button>
-                ))}
-              </div>
+            {renderCategoryTabs()}
 
-              {candles.length === 0 && renderModeSelector()}
+            {candles.length === 0 && renderModeSelector()}
 
-              {candles.length === 0 ? (
-                <div className="relative group">
-                  <button
-                    onClick={() => {
-                      try {
-                        localStorage.setItem('cg-guide-start', '1');
-                      } catch {}
-                      setGuide(false);
-                      onStart();
-                    }}
-                    disabled={summaryOpen}
-                    className={`w-full py-3 rounded-xl font-bold text-white shadow-lg transition-all ${summaryOpen ? 'bg-slate-400 cursor-not-allowed' : 'bg-emerald-700 hover:bg-emerald-800 hover:shadow-emerald-700/25 active:scale-[0.98]'}`}
-                  >
-                    {t('startSession')}
-                  </button>
-                  {/* Guide Pulse */}
-                  {guide && !summaryOpen && (
-                    <span className="absolute -top-1 -right-1 flex h-3 w-3">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
-                    </span>
-                  )}
-                </div>
-              ) : (
-                <button
-                  onClick={onFinish}
-                  className="w-full py-3 rounded-xl font-bold text-white bg-slate-700 hover:bg-slate-600 dark:bg-slate-700 dark:hover:bg-slate-600 shadow-lg transition-all active:scale-[0.98]"
+            {candles.length === 0 ? (
+              <div className="relative">
+                <Button
+                  type="button"
+                  onClick={() => {
+                    try {
+                      localStorage.setItem('cg-guide-start', '1');
+                    } catch {}
+                    setGuide(false);
+                    void onStart();
+                  }}
+                  disabled={summaryOpen}
+                  size="lg"
+                  className="w-full bg-emerald-600 font-semibold text-white shadow-lg shadow-emerald-600/15 hover:bg-emerald-700 dark:bg-emerald-500 dark:text-emerald-950 dark:hover:bg-emerald-400"
                 >
-                  {t('finish')}
-                </button>
-              )}
-            </div>
-
-            {/* Main Controls */}
-            <Controls
-              afterButtons={null}
-              onAdvance={advanceChartBar}
-              canAdvance={hasMoreData}
-              advancing={loadingMore}
-            />
-
-            <PositionCard
-              position={position}
-              lastClose={lastClose}
-              unrealized={unrealized}
-            />
-
-            <StatsCard
-              equity={equity}
-              unrealized={unrealized}
-              realized={pnlRealized}
-            />
+                  {t('startSession')}
+                </Button>
+                {guide && !summaryOpen && (
+                  <span className="absolute -right-1 -top-1 flex size-3">
+                    <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                    <span className="relative inline-flex size-3 rounded-full bg-emerald-500" />
+                  </span>
+                )}
+              </div>
+            ) : (
+              <Button
+                type="button"
+                onClick={onFinish}
+                variant="secondary"
+                size="lg"
+                className="w-full"
+              >
+                {t('finish')}
+              </Button>
+            )}
           </div>
 
-          <div className="flex-1 min-h-0 pt-4">
-            <TradesCard className="h-full min-h-0" />
-          </div>
+          <Controls
+            afterButtons={null}
+            onAdvance={advanceChartBar}
+            canAdvance={hasMoreData}
+            advancing={loadingMore}
+          />
 
-          {/* Info Footer */}
-          <div className="pt-4 mt-4 border-t border-slate-100 dark:border-[#2a2e39] text-center flex-none">
-            <div className="text-xs font-mono text-slate-400 dark:text-slate-500">
+          <PositionCard
+            position={position}
+            lastClose={lastClose}
+            unrealized={unrealized}
+          />
+
+          <StatsCard
+            equity={equity}
+            unrealized={unrealized}
+            realized={pnlRealized}
+          />
+
+          <TradesCard className="min-h-52 flex-1" />
+
+          <div className="flex-none border-t border-border pt-3 text-center">
+            <div className="font-mono text-xs text-muted-foreground">
               {candles.length > 0
                 ? `${interval} · ${visible}/${candles.length}`
                 : '—'}
             </div>
             {error && (
-              <div className="mt-2 text-xs font-medium text-rose-500 bg-rose-50 dark:bg-rose-900/20 py-1 px-2 rounded">
+              <div className="mt-2 rounded-md border border-destructive/20 bg-destructive/10 px-2 py-1 text-xs font-medium text-destructive">
                 {t('loadFailed')}: {error}
               </div>
             )}

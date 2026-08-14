@@ -40,6 +40,12 @@ export const serverEnv = createEnv({
 
     // AI image generation (fal.ai)
     FAL_KEY: z.string().optional(),
+
+    // AI trading-session analysis (server-only)
+    GEMINI_API_KEY: z.string().optional(),
+    GEMINI_API_KEYS: z.string().optional(),
+    GEMINI_API_BASE: z.url().optional(),
+    GEMINI_API_MODEL: z.string().optional(),
   },
   runtimeEnv: process.env,
 });

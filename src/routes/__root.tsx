@@ -7,6 +7,7 @@ import {
   useRouterState,
 } from '@tanstack/react-router';
 import { Analytics } from '@/components/analytics/analytics';
+import { GoogleAdSense } from '@/components/adsense/google-adsense';
 import { CrispChat } from '@/components/chatbox/crisp-chat';
 import { ThemeProvider } from '@/components/theme/theme-provider';
 import { Navbar } from '@/components/layout/navbar';
@@ -94,9 +95,8 @@ export const Route = createRootRouteWithContext<{
         { rel: 'stylesheet', href: appCss },
         {
           rel: 'icon',
-          type: 'image/x-icon',
-          sizes: '32x32',
-          href: '/favicon.ico',
+          type: 'image/svg+xml',
+          href: '/chartmini-favicon.svg',
         },
         { rel: 'manifest', href: '/manifest.json' },
       ],
@@ -168,6 +168,8 @@ function RootComponent() {
  * Root document
  */
 function RootDocument({ children }: { children: React.ReactNode }) {
+  const pathname = useRouterState({ select: (s) => s.location.pathname }) ?? '';
+
   return (
     <html
       lang={localeConfig[getCanonicalLocale(getLocale())].hreflang}
@@ -175,6 +177,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
     >
       <head>
         <HeadContent />
+        <GoogleAdSense pathname={pathname} />
       </head>
       <body>
         <ThemeProvider>
