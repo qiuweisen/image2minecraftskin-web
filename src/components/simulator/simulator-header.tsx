@@ -11,12 +11,7 @@ import { cn } from '@/lib/utils';
 import { Logo } from '@/components/shared/logo';
 import { Link } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { simulator_nav_blog } from '@/locale/paraglide/messages/simulator_nav_blog';
-import { simulator_nav_daily_replay } from '@/locale/paraglide/messages/simulator_nav_daily_replay';
-import { simulator_nav_day_trading } from '@/locale/paraglide/messages/simulator_nav_day_trading';
-import { simulator_home } from '@/locale/paraglide/messages/simulator_home';
-import { auth_common_login } from '@/locale/paraglide/messages/auth_common_login';
-import { auth_common_signup } from '@/locale/paraglide/messages/auth_common_signup';
+import { m } from '@/locale/paraglide/messages';
 
 export function SimulatorHeader() {
   const { data: session, isPending } = authClient.useSession();
@@ -32,7 +27,7 @@ export function SimulatorHeader() {
       <div className="flex h-14 items-center justify-between gap-4 px-3 sm:px-4 lg:px-6">
         <Link
           to="/"
-          aria-label={simulator_home()}
+          aria-label={m.simulator_home()}
           className="flex shrink-0 items-center"
         >
           <Logo className="h-7 sm:h-8" />
@@ -42,20 +37,20 @@ export function SimulatorHeader() {
             to="/play"
             className="rounded-lg px-3 py-2 font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
           >
-            {simulator_nav_daily_replay()}
+            {m.simulator_nav_daily_replay()}
           </Link>
           <Link
             to="/day-trading-simulator"
             className="hidden rounded-lg px-3 py-2 font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground sm:inline-block"
           >
-            {simulator_nav_day_trading()}
+            {m.simulator_nav_day_trading()}
           </Link>
           <Link
             to="/blog"
             search={{ page: 1 }}
             className="hidden rounded-lg px-3 py-2 font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:inline-block"
           >
-            {simulator_nav_blog()}
+            {m.simulator_nav_blog()}
           </Link>
           <div className="ml-1 flex items-center gap-1 sm:ml-2 sm:gap-2">
             <LocaleSwitcher />
@@ -78,14 +73,14 @@ export function SimulatorHeader() {
                         'cursor-pointer'
                       )}
                     >
-                      {auth_common_login()}
+                      {m.auth_common_login()}
                     </button>
                   </LoginWrapper>
                   <Link
                     to={Routes.Register}
                     className={buttonVariants({ size: 'sm' })}
                   >
-                    {auth_common_signup()}
+                    {m.auth_common_signup()}
                   </Link>
                 </>
               ))}

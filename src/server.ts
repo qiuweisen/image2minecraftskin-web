@@ -43,6 +43,36 @@ function addStagingRobotsHeader(request: Request, response: Response) {
   });
 }
 
+function addStaticAssetCacheHeaders(request: Request, response: Response) {
+  if (!response.ok) return response;
+
+  const pathname = new URL(request.url).pathname;
+  const isHashedClientAsset = pathname.startsWith('/assets/');
+  const isStableStaticAsset =
+    pathname.startsWith('/images/') ||
+    pathname.startsWith('/fonts/') ||
+    pathname.startsWith('/TradingView/') ||
+    pathname === '/chartmini-favicon.svg';
+
+  if (!isHashedClientAsset && !isStableStaticAsset) {
+    return response;
+  }
+
+  const headers = new Headers(response.headers);
+  headers.set(
+    'Cache-Control',
+    isHashedClientAsset
+      ? 'public, max-age=31536000, immutable'
+      : 'public, max-age=86400, stale-while-revalidate=604800'
+  );
+
+  return new Response(response.body, {
+    headers,
+    status: response.status,
+    statusText: response.statusText,
+  });
+}
+
 function getTrailingSlashRedirect(request: Request): Response | null {
   const url = new URL(request.url);
   const { pathname } = url;
@@ -87,7 +117,9 @@ export default {
             fromFetch: true,
           },
         })
-      ).then((response) => addStagingRobotsHeader(request, response))
+      )
+        .then((response) => addStagingRobotsHeader(request, response))
+        .then((response) => addStaticAssetCacheHeaders(request, response))
     );
   },
 };
