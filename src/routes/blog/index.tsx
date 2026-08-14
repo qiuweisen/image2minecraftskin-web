@@ -5,9 +5,9 @@ import { BlogGrid } from '@/components/blog/blog-grid';
 import { BlogPagination } from '@/components/blog/blog-pagination';
 import { getPaginatedPosts } from '@/lib/blog';
 import { websiteConfig } from '@/config/website';
-import { seo } from '@/lib/seo';
+import { jsonLdScript, seo, siteStructuredData } from '@/lib/seo';
 import { getCanonicalUrlForLocale } from '@/lib/urls';
-import { getCanonicalLocale, getLocale, localeConfig } from '@/lib/locale';
+import { getCanonicalLocale, getLocale } from '@/lib/locale';
 
 export const Route = createFileRoute('/blog/')({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -27,15 +27,24 @@ export const Route = createFileRoute('/blog/')({
     const currentPage = loaderData?.currentPage ?? 1;
     const totalPages = loaderData?.totalPages ?? 1;
     const pageSuffix = currentPage > 1 ? ` - Page ${currentPage}` : '';
+    const isEnglish = getCanonicalLocale(getLocale()) === 'en';
+    const title = isEnglish
+      ? `Trading Blog - Forex, Stocks & Crypto Trading Tips${pageSuffix} | ChartMini`
+      : `${m.blog_title()}${pageSuffix} | ${websiteConfig.metadata?.name}`;
+    const description = isEnglish
+      ? `Learn trading strategies, forex basics, chart reading and more. Free trading education from ChartMini's simulator team.${currentPage > 1 ? ` Page ${currentPage}.` : ''}`
+      : m.blog_description();
     const metadata = seo(path, {
-      title: `${m.blog_title()}${pageSuffix} | ${websiteConfig.metadata?.name}`,
-      description: m.blog_description(),
+      title,
+      description,
     });
     // Pass the current locale explicitly so canonical/prev/next are stable
     // across SSR + CSR regardless of any mid-render locale swap.
     const localizedUrl = (page?: number) => {
-      const base = getCanonicalUrlForLocale(path, getLocale());
-      return page && page > 1 ? `${base}?page=${page}` : base;
+      if (page && page > 1) {
+        return getCanonicalUrlForLocale(`/blog/p/${page}`, getLocale());
+      }
+      return getCanonicalUrlForLocale(path, getLocale());
     };
     const canonicalHref = localizedUrl(currentPage);
     const paginationLinks: Array<{
@@ -54,26 +63,13 @@ export const Route = createFileRoute('/blog/')({
         href: localizedUrl(currentPage + 1),
       });
     }
-    const blogJsonLd = {
-      '@context': 'https://schema.org',
-      '@type': 'Blog',
-      name: m.blog_title(),
-      description: m.blog_description(),
-      url: canonicalHref,
-      inLanguage: localeConfig[getCanonicalLocale(getLocale())].hreflang,
-    };
     return {
       ...metadata,
       links: [
         ...paginationLinks,
         ...metadata.links.filter((link) => link.rel !== 'canonical'),
       ],
-      scripts: [
-        {
-          type: 'application/ld+json',
-          children: JSON.stringify(blogJsonLd),
-        },
-      ],
+      scripts: [jsonLdScript(siteStructuredData())],
     };
   },
   component: BlogListPage,

@@ -17,8 +17,8 @@ export function BlogPagination({
     >
       {currentPage > 1 ? (
         <Link
-          to="/blog"
-          search={prevPage <= 1 ? { page: undefined } : { page: prevPage }}
+          to={prevPage <= 1 ? '/blog' : '/blog/p/$page'}
+          {...(prevPage <= 1 ? {} : { params: { page: String(prevPage) } })}
           className="inline-flex items-center rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
         >
           {m.blog_previous()}
@@ -33,8 +33,8 @@ export function BlogPagination({
       </span>
       {currentPage < totalPages ? (
         <Link
-          to="/blog"
-          search={{ page: nextPage }}
+          to="/blog/p/$page"
+          params={{ page: String(nextPage) }}
           className="inline-flex items-center rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
         >
           {m.blog_next()}

@@ -19,7 +19,11 @@ export const guestRouteMiddleware = createMiddleware().server(
     const headers = getRequestHeaders();
     const session = await auth.api.getSession({ headers });
 
-    if (session?.user) {
+    // Do not redirect an existing but unverified session back to a protected
+    // page. The protected middleware would send it straight back here with
+    // `email_not_verified`, creating a redirect loop. The login page can
+    // render the verification error and let the user recover.
+    if (session?.user?.emailVerified) {
       throw redirect({ to: DEFAULT_LOGIN_REDIRECT });
     }
 

@@ -40,6 +40,97 @@ function requiredString(value, label) {
   return value;
 }
 
+function isRecord(value) {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+const BAR_COUNT_STUDY_ID = 'Bar Count@tv-basicstudies-1';
+const BAR_COUNT_STUDY_NAME = 'Bar Count';
+
+function isBarCountSource(source) {
+  const metaInfo = isRecord(source.metaInfo) ? source.metaInfo : null;
+  const state = isRecord(source.state) ? source.state : null;
+  const ids = [
+    source.id,
+    source.name,
+    metaInfo?.id,
+    metaInfo?.name,
+    metaInfo?.description,
+    state?.shortName,
+  ];
+
+  return ids.some(
+    (value) => value === BAR_COUNT_STUDY_ID || value === BAR_COUNT_STUDY_NAME
+  );
+}
+
+function isUserIndicatorSource(source) {
+  if (!isRecord(source)) return false;
+  const type = typeof source.type === 'string' ? source.type : '';
+  if (type !== 'Study' && !type.startsWith('study_')) return false;
+  return !isBarCountSource(source);
+}
+
+function sortJson(value) {
+  if (Array.isArray(value)) return value.map(sortJson);
+  if (!isRecord(value)) return value;
+
+  return Object.fromEntries(
+    Object.entries(value)
+      .sort(([left], [right]) => left.localeCompare(right))
+      .map(([key, child]) => [key, sortJson(child)])
+  );
+}
+
+function emptyIndicatorTemplate() {
+  return { version: 1, panes: [] };
+}
+
+/**
+ * Convert the legacy full TradingView layout into the compact profile used by
+ * v2. Symbols, intervals, drawings, the main series, and page-owned studies
+ * are intentionally omitted. An empty profile is retained as a tombstone so
+ * a stale local profile cannot resurrect indicators the user removed.
+ */
+function extractIndicatorTemplate(studiesText, label) {
+  let value;
+  try {
+    value = JSON.parse(studiesText);
+  } catch {
+    throw new Error(`Invalid TradingView settings JSON in ${label}`);
+  }
+
+  const layout =
+    isRecord(value) && isRecord(value.layout) ? value.layout : value;
+  const chart =
+    isRecord(layout) &&
+    Array.isArray(layout.charts) &&
+    isRecord(layout.charts[0])
+      ? layout.charts[0]
+      : null;
+  if (!chart || !Array.isArray(chart.panes)) return emptyIndicatorTemplate();
+
+  const panes = chart.panes
+    .filter(isRecord)
+    .map((pane) => {
+      const sources = Array.isArray(pane.sources)
+        ? pane.sources.filter(isUserIndicatorSource)
+        : [];
+      return { ...pane, sources };
+    })
+    .filter((pane) => pane.sources.length > 0);
+
+  return { version: 1, panes };
+}
+
+function serializeIndicatorTemplate(template) {
+  return JSON.stringify(sortJson(template));
+}
+
+function hashIndicatorTemplate(templateJson) {
+  return crypto.createHash('sha256').update(templateJson).digest('hex');
+}
+
 function accountId(provider, providerAccountId) {
   const digest = crypto
     .createHash('sha256')
@@ -98,8 +189,9 @@ for (const user of users) {
     (normalizedEmailCounts.get(normalizedEmail) ?? 0) + 1
   );
 }
-const duplicateNormalizedEmailGroups = [...normalizedEmailCounts.values()].
-  filter((count) => count > 1).length;
+const duplicateNormalizedEmailGroups = [
+  ...normalizedEmailCounts.values(),
+].filter((count) => count > 1).length;
 if (duplicateNormalizedEmailGroups > 0) {
   console.warn(
     `Case-insensitive email collisions preserved for ${duplicateNormalizedEmailGroups} groups; normalized_email will be NULL for those users.`
@@ -117,9 +209,7 @@ for (const user of users) {
   const email = requiredString(user.email, `user.email:${id}`).trim();
   const normalizedEmail = email.toLowerCase();
   const storedNormalizedEmail =
-    normalizedEmailCounts.get(normalizedEmail) === 1
-      ? normalizedEmail
-      : null;
+    normalizedEmailCounts.get(normalizedEmail) === 1 ? normalizedEmail : null;
   const name =
     typeof user.name === 'string' && user.name.trim()
       ? user.name
@@ -145,7 +235,12 @@ for (const user of users) {
         id,
         name,
         email,
-        Boolean(user.emailVerified),
+        // The legacy production auth flow allowed existing accounts to sign
+        // in without Better Auth's email-verification gate. Treat those
+        // already-existing accounts as verified during migration so Google
+        // and email users do not enter an auth redirect loop. New accounts
+        // created in v2 still follow requireEmailVerification.
+        true,
         user.image ?? null,
         createdAt,
         updatedAt,
@@ -251,19 +346,29 @@ for (const row of chartSettings) {
     row.studies,
     `userChartSettings.studies:${id}`
   );
-  JSON.parse(studies);
+  const template = extractIndicatorTemplate(studies, id);
+  const templateJson = serializeIndicatorTemplate(template);
   statements.push(
     upsert(
-      'user_chart_settings',
-      ['id', 'user_id', 'studies', 'updated_at'],
+      'user_indicator_profiles',
       [
-        id,
+        'user_id',
+        'scope',
+        'template_json',
+        'template_hash',
+        'version',
+        'updated_at',
+      ],
+      [
         userId,
-        studies,
+        'shared',
+        templateJson,
+        hashIndicatorTemplate(templateJson),
+        template.version,
         epochMs(row.updatedAt, `userChartSettings.updatedAt:${id}`),
       ],
-      ['id'],
-      ['user_id', 'studies', 'updated_at']
+      ['user_id', 'scope'],
+      ['template_json', 'template_hash', 'version', 'updated_at']
     )
   );
 }
@@ -307,5 +412,16 @@ console.log(
 console.log(
   `OAuth accounts: ${sourceAccounts.filter((account) => !['credential', 'credentials'].includes(account.provider)).length}`
 );
-console.log(`TradingView settings: ${chartSettings.length}`);
+console.log(`TradingView profiles: ${chartSettings.length}`);
+console.log(
+  `TradingView profiles with indicators: ${
+    chartSettings.filter((row) => {
+      const template = extractIndicatorTemplate(
+        requiredString(row.studies, `userChartSettings.studies:${row.id}`),
+        row.id
+      );
+      return template.panes.length > 0;
+    }).length
+  }`
+);
 console.log(`AI daily usage rows: ${aiUsage.length}`);

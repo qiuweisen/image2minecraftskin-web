@@ -74,6 +74,7 @@ const posts = files.map((file) => {
     contentKey: `${contentPrefix}/${file}`,
     locale: 'en',
     title: toString(frontmatter.title) ?? fileSlug,
+    metaTitle: toString(frontmatter.metaTitle),
     description: toString(frontmatter.description) ?? '',
     date: toString(frontmatter.date) ?? '1970-01-01',
     dateModified: toString(frontmatter.dateModified),

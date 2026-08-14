@@ -512,6 +512,8 @@ function PlayContent() {
       className="flex h-[100dvh] flex-col bg-background md:h-[calc(100vh-3.5rem)] md:flex-row md:overflow-hidden"
       suppressHydrationWarning
     >
+      <h1 className="sr-only">{t('playOverlayTitle')}</h1>
+
       {/* Mobile Top Bar */}
       <div className="z-20 flex flex-none items-center justify-between gap-2 border-b border-border bg-background px-3 py-2 md:hidden">
         {renderCategoryTabs(true)}

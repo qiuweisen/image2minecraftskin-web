@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { loadMarketingContent } from '@/api/marketing-content';
 import { MarketReplayPage } from '@/components/marketing/market-replay-page';
 import { getCanonicalLocale, getLocale } from '@/lib/locale';
-import { seo } from '@/lib/seo';
+import { jsonLdScript, seo, siteStructuredData } from '@/lib/seo';
 import { m } from '@/locale/paraglide/messages';
 
 export const Route = createFileRoute('/market-replay')({
@@ -13,11 +13,13 @@ export const Route = createFileRoute('/market-replay')({
         locale: getCanonicalLocale(getLocale()),
       },
     }),
-  head: () =>
-    seo('/market-replay', {
+  head: () => ({
+    ...seo('/market-replay', {
       title: m.seo_market_replay_title(),
       description: m.seo_market_replay_description(),
     }),
+    scripts: [jsonLdScript(siteStructuredData())],
+  }),
   component: MarketReplayRoute,
 });
 

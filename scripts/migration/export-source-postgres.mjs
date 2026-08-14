@@ -93,7 +93,10 @@ function usage() {
 function sslForConnection(connectionString) {
   try {
     const hostname = new URL(connectionString).hostname;
-    if (hostname.endsWith('.supabase.co') || hostname.endsWith('.supabase.com')) {
+    if (
+      hostname.endsWith('.supabase.co') ||
+      hostname.endsWith('.supabase.com')
+    ) {
       return { rejectUnauthorized: false };
     }
   } catch {
@@ -304,9 +307,7 @@ try {
       )
     : { rows: [{ count: '0' }] };
   const sessionCount = Number(sessionsResult.rows[0]?.count ?? 0);
-  const verificationTokenCount = Number(
-    verificationResult.rows[0]?.count ?? 0
-  );
+  const verificationTokenCount = Number(verificationResult.rows[0]?.count ?? 0);
   let chartSettingsResult = { rows: [] };
   if (availableTables.has('UserChartSettings')) {
     const chartSettingIdsResult = await client.query(
@@ -351,8 +352,9 @@ try {
       (normalizedEmailCounts.get(normalizedEmail) ?? 0) + 1
     );
   }
-  const duplicateNormalizedEmailGroups = [...normalizedEmailCounts.values()].
-    filter((count) => count > 1).length;
+  const duplicateNormalizedEmailGroups = [
+    ...normalizedEmailCounts.values(),
+  ].filter((count) => count > 1).length;
   if (duplicateNormalizedEmailGroups > 0) {
     console.warn(
       `Case-insensitive email collisions preserved for ${duplicateNormalizedEmailGroups} groups; import will leave normalized_email NULL for those users.`
@@ -469,9 +471,7 @@ try {
   console.log(`Accounts: ${accounts.length}`);
   console.log(`TradingView settings: ${chartSettings.length}`);
   console.log(`AI daily usage rows: ${aiAnalysisDailyUsage.length}`);
-  console.log(
-    `Source sessions observed but not exported: ${sessionCount}`
-  );
+  console.log(`Source sessions observed but not exported: ${sessionCount}`);
   console.log(
     `Source verification tokens observed but not exported: ${verificationTokenCount}`
   );

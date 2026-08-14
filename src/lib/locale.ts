@@ -71,7 +71,9 @@ const localeNames: Record<string, string> = {
 const localeHreflangs: Record<string, string> = {
   zh: 'zh-Hans',
   'es-419': 'es',
-  pt: 'pt-BR',
+  // Keep the production hreflang contract. The URL remains /pt, while the
+  // current production site publishes `pt`, not `pt-BR`.
+  pt: 'pt',
   'zh-hans': 'zh-Hans',
   'zh-hant': 'zh-Hant',
 };
@@ -248,7 +250,7 @@ export const chartMiniLocalePaths = [
   { prefix: '/', hreflang: 'en' },
   { prefix: '/zh-hans', hreflang: 'zh-Hans' },
   { prefix: '/es-419', hreflang: 'es' },
-  { prefix: '/pt', hreflang: 'pt-BR' },
+  { prefix: '/pt', hreflang: 'pt' },
   { prefix: '/fr', hreflang: 'fr' },
   { prefix: '/de', hreflang: 'de' },
   { prefix: '/ru', hreflang: 'ru' },
@@ -336,14 +338,13 @@ export function getCanonicalPathname(pathname: string) {
 
 /**
  * Paths that are fully translated and should get hreflang alternates
- * in sitemap / SEO metadata. Blog posts (`/blog/<slug>`) are localized too,
- * but handled separately via {@link isLocalizedPath} since they're dynamic.
+ * in sitemap / SEO metadata. Blog content currently falls back to the
+ * English production article and is intentionally not marked as localized.
  */
 export const LOCALIZED_PATHS = new Set([
   '/',
   '/about',
   '/ai',
-  '/blog',
   '/changelog',
   '/contact',
   '/cookie',
@@ -370,6 +371,5 @@ export const LOCALIZED_PATHS = new Set([
  * `seo()` metadata and the dynamic sitemap.
  */
 export function isLocalizedPath(path: string): boolean {
-  if (LOCALIZED_PATHS.has(path)) return true;
-  return path.startsWith('/blog/');
+  return LOCALIZED_PATHS.has(path);
 }

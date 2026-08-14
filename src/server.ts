@@ -43,6 +43,25 @@ function addStagingRobotsHeader(request: Request, response: Response) {
   });
 }
 
+function getTrailingSlashRedirect(request: Request): Response | null {
+  const url = new URL(request.url);
+  const { pathname } = url;
+  const isAssetPath =
+    pathname.startsWith('/api/') ||
+    pathname.startsWith('/assets/') ||
+    pathname.startsWith('/TradingView/') ||
+    pathname.startsWith('/images/') ||
+    pathname === '/favicon.ico' ||
+    /\/[^/]+\.[^/]+\/$/.test(pathname);
+
+  if (pathname.length <= 1 || !pathname.endsWith('/') || isAssetPath) {
+    return null;
+  }
+
+  url.pathname = pathname.replace(/\/+$/, '');
+  return Response.redirect(url, 308);
+}
+
 export default {
   fetch(request: Request) {
     // All historical ChartMini locale prefixes are now first-class Paraglide
@@ -53,8 +72,16 @@ export default {
       return addStagingRobotsHeader(request, legacyRedirect);
     }
 
+    const trailingSlashRedirect = getTrailingSlashRedirect(request);
+    if (trailingSlashRedirect) {
+      return addStagingRobotsHeader(request, trailingSlashRedirect);
+    }
+
     return localeMiddleware(request, () =>
       Promise.resolve(
+        // TanStack Start handles localized URL rewriting itself. Passing the
+        // de-localized request from Paraglide here makes Start normalize every
+        // localized subpath back to itself with a 307 redirect.
         handler.fetch(request, {
           context: {
             fromFetch: true,

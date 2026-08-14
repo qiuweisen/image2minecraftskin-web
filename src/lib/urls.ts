@@ -16,6 +16,11 @@ export function getBaseUrl(): string {
   return clientEnv.VITE_BASE_URL;
 }
 
+function normalizeCanonicalPath(path: string): string {
+  if (path === '/') return '/';
+  return path.replace(/\/+$/, '') || '/';
+}
+
 /**
  * Build canonical URL for a path (e.g. /about -> https://example.com/about)
  * @param path - The path to build the canonical URL for
@@ -24,18 +29,22 @@ export function getBaseUrl(): string {
 export function getCanonicalUrl(path: string): string {
   const base = getBaseUrl().replace(/\/$/, '');
   const rawPath = path.startsWith('/') ? path : `/${path}`;
-  const p = localizeHref(rawPath, {
-    locale: getCanonicalLocale(getLocale()),
-  });
+  const p = normalizeCanonicalPath(
+    localizeHref(rawPath, {
+      locale: getCanonicalLocale(getLocale()),
+    })
+  );
   return `${base}${p}`;
 }
 
 export function getCanonicalUrlForLocale(path: string, locale: Locale): string {
   const base = getBaseUrl().replace(/\/$/, '');
   const rawPath = path.startsWith('/') ? path : `/${path}`;
-  return `${base}${localizeHref(rawPath, {
-    locale: getCanonicalLocale(locale),
-  })}`;
+  return `${base}${normalizeCanonicalPath(
+    localizeHref(rawPath, {
+      locale: getCanonicalLocale(locale),
+    })
+  )}`;
 }
 
 /**

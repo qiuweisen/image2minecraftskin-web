@@ -7,6 +7,7 @@ import { getPaginatedPosts } from '@/lib/blog';
 import { websiteConfig } from '@/config/website';
 import { seo } from '@/lib/seo';
 import { getCanonicalUrl } from '@/lib/urls';
+import { getCanonicalLocale, getLocale } from '@/lib/locale';
 
 export const Route = createFileRoute('/blog/p/$page')({
   loader: ({ params }) => {
@@ -19,9 +20,16 @@ export const Route = createFileRoute('/blog/p/$page')({
   },
   head: ({ loaderData, params }) => {
     const page = loaderData?.currentPage ?? Number(params.page);
+    const isEnglish = getCanonicalLocale(getLocale()) === 'en';
+    const title = isEnglish
+      ? `Trading Blog - Page ${page} | ChartMini`
+      : `${m.blog_title()} - Page ${page} | ${websiteConfig.metadata?.name}`;
+    const description = isEnglish
+      ? `Learn trading strategies, forex basics, chart reading and more. Free trading education from ChartMini's simulator team. Page ${page}.`
+      : m.blog_description();
     const metadata = seo(`/blog/p/${params.page}`, {
-      title: `${m.blog_title()} - Page ${page} | ${websiteConfig.metadata?.name}`,
-      description: m.blog_description(),
+      title,
+      description,
     });
     const links = [
       ...metadata.links.filter((link) => link.rel !== 'canonical'),

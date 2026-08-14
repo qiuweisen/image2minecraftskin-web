@@ -62,7 +62,8 @@ export const websiteConfig: WebsiteConfig = {
   },
   blog: {
     enable: true,
-    paginationSize: 6,
+    // Match the production URL contract: /blog/p/[page] contains ten posts.
+    paginationSize: 10,
   },
   mail: {
     enable: true,

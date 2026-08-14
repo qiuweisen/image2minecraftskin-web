@@ -17,64 +17,59 @@ function parseArgs(argv) {
 
 function usage() {
   console.error(
-    'Usage: node scripts/migration/split-d1-import.mjs --input=/path/import.sql --out-dir=/path/chunks --max-bytes=8000000'
+    'Usage: node scripts/migration/split-d1-import.mjs --input=/path/import.sql --out-dir=/path/chunks [--max-statements=700]'
   );
 }
 
 const args = parseArgs(process.argv.slice(2));
-const inputFile = args.input;
-const outputDirectory = args['out-dir'];
-const maxBytes = Number(args['max-bytes'] ?? 8000000);
-
-if (!inputFile || !outputDirectory || !Number.isInteger(maxBytes) || maxBytes < 100000) {
+if (!args.input || !args['out-dir']) {
   usage();
   process.exit(2);
 }
 
-const source = fs.readFileSync(path.resolve(inputFile), 'utf8');
-const lines = source.split(/\r?\n/).filter((line) => line.trim().length > 0);
-const firstInsertIndex = lines.findIndex((line) =>
-  line.startsWith('INSERT INTO')
+const maxStatements = Number(args['max-statements'] ?? 700);
+if (!Number.isInteger(maxStatements) || maxStatements < 1) {
+  throw new Error('--max-statements must be a positive integer');
+}
+
+const inputFile = path.resolve(args.input);
+const outputDirectory = path.resolve(args['out-dir']);
+const lines = fs.readFileSync(inputFile, 'utf8').split(/\r?\n/);
+const statements = lines.filter((line) =>
+  line.trim().startsWith('INSERT INTO ')
 );
-if (firstInsertIndex < 0) throw new Error('Import file contains no INSERT statements');
 
-const header = lines.slice(0, firstInsertIndex).join('\n') + '\n';
-const statements = lines.slice(firstInsertIndex);
-const resolvedOutputDirectory = path.resolve(outputDirectory);
-fs.mkdirSync(resolvedOutputDirectory, { recursive: true, mode: 0o700 });
-const existingEntries = fs.readdirSync(resolvedOutputDirectory);
-if (existingEntries.length > 0) {
-  throw new Error(`Output directory must be empty: ${resolvedOutputDirectory}`);
+if (statements.length === 0) {
+  throw new Error(`No INSERT statements found in ${inputFile}`);
 }
 
-const chunks = [];
-let current = header;
-let currentBytes = Buffer.byteLength(current);
-
-for (const statement of statements) {
-  const serialized = `${statement}\n`;
-  const statementBytes = Buffer.byteLength(serialized);
-  if (statementBytes + Buffer.byteLength(header) > maxBytes) {
-    throw new Error('A single SQL statement exceeds the requested chunk size');
+fs.mkdirSync(outputDirectory, { recursive: true, mode: 0o700 });
+for (const entry of fs.readdirSync(outputDirectory, { withFileTypes: true })) {
+  if (entry.isFile() && /^chunk-\d+\.sql$/.test(entry.name)) {
+    throw new Error(
+      `Refusing to overwrite existing chunk: ${path.join(outputDirectory, entry.name)}`
+    );
   }
-  if (current !== header && currentBytes + statementBytes > maxBytes) {
-    chunks.push(current);
-    current = header;
-    currentBytes = Buffer.byteLength(header);
-  }
-  current += serialized;
-  currentBytes += statementBytes;
-}
-if (current !== header) chunks.push(current);
-
-for (let index = 0; index < chunks.length; index += 1) {
-  const fileName = `part-${String(index + 1).padStart(3, '0')}.sql`;
-  const filePath = path.join(resolvedOutputDirectory, fileName);
-  fs.writeFileSync(filePath, chunks[index], { mode: 0o600 });
-  fs.chmodSync(filePath, 0o600);
 }
 
-console.log(`Chunks written: ${chunks.length}`);
-console.log(`Output directory: ${resolvedOutputDirectory}`);
-console.log(`Maximum chunk bytes: ${maxBytes}`);
-console.log(`Statements: ${statements.length}`);
+const totalChunks = Math.ceil(statements.length / maxStatements);
+for (let index = 0; index < totalChunks; index += 1) {
+  const start = index * maxStatements;
+  const chunk = statements.slice(start, start + maxStatements);
+  const filename = `chunk-${String(index + 1).padStart(3, '0')}.sql`;
+  const outputFile = path.join(outputDirectory, filename);
+  const header = [
+    '-- ChartMini production user-data import chunk',
+    `-- Chunk ${index + 1}/${totalChunks}; ${chunk.length} statements`,
+    'PRAGMA foreign_keys = ON;',
+  ];
+  fs.writeFileSync(outputFile, `${header.concat(chunk).join('\n')}\n`, {
+    mode: 0o600,
+  });
+  fs.chmodSync(outputFile, 0o600);
+}
+
+fs.chmodSync(outputDirectory, 0o700);
+console.log(
+  `Split ${statements.length} statements into ${totalChunks} chunks of at most ${maxStatements}: ${outputDirectory}`
+);

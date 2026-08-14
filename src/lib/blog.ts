@@ -8,6 +8,7 @@ export type BlogPost = {
   contentKey: string;
   locale: Locale;
   title: string;
+  metaTitle?: string;
   description: string;
   date: string;
   dateModified?: string;

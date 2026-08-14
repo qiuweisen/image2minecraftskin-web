@@ -71,7 +71,12 @@
   },
   {
     "source": "/blog/2025110701",
-    "destination": "/blog/how-to-analyze-a-company-a-beginners-guide-to-stock-research-2026",
+    "destination": "/blog/how-to-analyze-a-stock-fundamental-analysis",
+    "permanent": true
+  },
+  {
+    "source": "/blog/how-to-analyze-a-company-a-beginners-guide-to-stock-research-2026",
+    "destination": "/blog/how-to-analyze-a-stock-fundamental-analysis",
     "permanent": true
   },
   {
@@ -786,7 +791,12 @@
   },
   {
     "source": "/blog/2026020502",
-    "destination": "/blog/penny-stocks-trading-2026-high-risk-strategies-for-small-caps-2026",
+    "destination": "/blog/penny-stock-trading-guide",
+    "permanent": true
+  },
+  {
+    "source": "/blog/penny-stocks-trading-2026-high-risk-strategies-for-small-caps-2026",
+    "destination": "/blog/penny-stock-trading-guide",
     "permanent": true
   },
   {
