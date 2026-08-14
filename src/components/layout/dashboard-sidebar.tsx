@@ -36,16 +36,25 @@ export function DashboardSidebar({ user, ...props }: DashboardSidebarProps) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
+              size="lg"
               render={
                 <Link
                   to={Routes.Root}
                   aria-label="ChartMini"
                   onClick={closeMobileSidebar}
                 >
-                  <Logo className="h-5 w-auto" />
+                  <Logo className="!h-8 !w-auto group-data-[collapsible=icon]:hidden" />
+                  <img
+                    src="/chartmini-favicon.svg"
+                    alt=""
+                    aria-hidden="true"
+                    width={24}
+                    height={24}
+                    className="hidden !size-6 shrink-0 object-contain group-data-[collapsible=icon]:block"
+                  />
                 </Link>
               }
-              className="data-[slot=sidebar-menu-button]:!p-1.5"
+              className="data-[slot=sidebar-menu-button]:!p-1.5 group-data-[collapsible=icon]:p-1!"
             />
           </SidebarMenuItem>
         </SidebarMenu>

@@ -21,7 +21,20 @@ function addStagingRobotsHeader(request: Request, response: Response) {
   }
 
   const headers = new Headers(response.headers);
+  const pathname = new URL(request.url).pathname;
+  const isStaticAsset =
+    pathname.startsWith('/assets/') ||
+    pathname.startsWith('/TradingView/') ||
+    pathname.startsWith('/images/') ||
+    pathname === '/favicon.ico';
+
   headers.set('X-Robots-Tag', 'noindex, nofollow, noarchive');
+  if (!isStaticAsset) {
+    headers.set(
+      'Cache-Control',
+      'no-store, no-cache, max-age=0, must-revalidate'
+    );
+  }
 
   return new Response(response.body, {
     headers,

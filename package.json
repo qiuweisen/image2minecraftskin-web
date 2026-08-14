@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev --port 3000",
-    "prebuild": "node scripts/build-blog-manifest.mjs && biome format --write src/generated/blog-manifest.json",
+    "prebuild": "node scripts/build-blog-manifest.mjs && node scripts/build-marketing-content.mjs && biome format --write src/generated/blog-manifest.json",
     "build": "vite build",
     "e2e": "playwright test",
     "e2e:production": "playwright test --config playwright.production.config.ts",

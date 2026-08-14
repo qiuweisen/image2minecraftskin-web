@@ -7,6 +7,9 @@ import Controls from '@/components/Controls';
 import PositionCard from '@/components/PositionCard';
 import StatsCard from '@/components/StatsCard';
 import TradesCard from '@/components/TradesCard';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { usePlayI18n } from '@/components/PlayI18nProvider';
 import {
   useDayTradingSessionStore,
@@ -25,6 +28,7 @@ import { nextVisibleForChartResolution } from '@/lib/ohlcv/chartResolution';
 import { getDayTradingCopy } from '@/lib/i18n/dayTrading';
 import { toLegacySupportedLang } from '@/lib/locale';
 import { waitForTradingView } from '@/lib/tradingviewLoader';
+import { saveCompletedTraining } from '@/lib/training-records';
 
 const importTradingViewChart = () => import('@/components/TradingViewChart');
 const TradingViewChart = clientDynamic(importTradingViewChart);
@@ -109,6 +113,7 @@ function DayTradingSimulatorContent() {
   const previousSummaryOpen = useRef(false);
   const sessionLoadController = useRef<AbortController | null>(null);
   const earlierHistoryLoader = useRef<null | (() => Promise<Candle[]>)>(null);
+  const sessionStartedAt = useRef<number | null>(null);
 
   const visibleCandles = useMemo(
     () =>
@@ -328,6 +333,7 @@ function DayTradingSimulatorContent() {
       sessionMode,
     });
     setChartReady(false);
+    sessionStartedAt.current = Date.now();
     setChartResolution('5');
     setChartKey((value) => value + 1);
     setLoading(true);
@@ -346,7 +352,13 @@ function DayTradingSimulatorContent() {
   };
 
   const onFinish = () => {
+    if (summaryOpen || lastResult) return;
     const result = finish();
+    saveCompletedTraining(
+      result,
+      'day-trading-simulator',
+      sessionStartedAt.current
+    );
     try {
       const previous = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
       localStorage.setItem(HISTORY_KEY, JSON.stringify([...previous, result]));
@@ -371,97 +383,89 @@ function DayTradingSimulatorContent() {
   };
 
   const renderMarketSelector = (compact = false) => (
-    <div
-      className={`grid grid-cols-2 rounded-lg border border-slate-200 bg-slate-100 p-1 dark:border-[#2a2e39] dark:bg-[#1a1a1a] ${compact ? 'min-w-[154px]' : ''}`}
+    <Tabs
+      value={selectedMarket}
+      onValueChange={(value) => loadCategory(value as DayTradingMarket)}
+      className={compact ? 'min-w-0 flex-1' : 'w-full'}
     >
-      {(['crypto', 'fx'] as const).map((market) => (
-        <button
-          key={market}
-          type="button"
-          onClick={() => loadCategory(market)}
-          disabled={loading}
-          aria-pressed={selectedMarket === market}
-          className={`rounded-md px-3 py-1.5 text-xs font-semibold transition-all ${
-            selectedMarket === market
-              ? 'bg-white text-slate-900 shadow-sm dark:bg-[#3a3f4b] dark:text-white'
-              : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
-          } disabled:cursor-wait disabled:opacity-60`}
-        >
-          {t(market)}
-        </button>
-      ))}
-    </div>
+      <TabsList className="grid w-full grid-cols-2">
+        {(['crypto', 'fx'] as const).map((market) => (
+          <TabsTrigger key={market} value={market} disabled={loading}>
+            {t(market)}
+          </TabsTrigger>
+        ))}
+      </TabsList>
+    </Tabs>
   );
 
-  const renderModes = () => (
-    <div className="grid grid-cols-2 gap-2">
-      {(
-        [
-          [
-            'random-segment',
-            t('modeRandomSegment'),
-            t('modeRandomSegmentHint'),
-          ],
-          ['random-time', t('modeRandomTime'), t('modeRandomTimeHint')],
-        ] as const
-      ).map(([mode, label, hint]) => (
-        <button
-          key={mode}
-          type="button"
-          onClick={() => setMode(mode)}
-          disabled={active || loading}
-          className={`rounded-lg border px-3 py-2 text-left ${
-            sessionMode === mode
-              ? 'border-emerald-500 bg-emerald-50 text-emerald-800 dark:bg-emerald-500/15 dark:text-emerald-200'
-              : 'border-slate-200 bg-white text-slate-700 dark:border-[#2a2e39] dark:bg-[#111418] dark:text-slate-300'
-          }`}
+  const renderModes = () => {
+    const selectedMode =
+      sessionMode === 'random-time'
+        ? t('modeRandomTimeHint')
+        : t('modeRandomSegmentHint');
+
+    return (
+      <div className="space-y-2">
+        <Tabs
+          value={sessionMode}
+          onValueChange={(value) => setMode(value as SessionMode)}
         >
-          <span className="block text-sm font-semibold">{label}</span>
-          <span className="mt-1 block text-[11px] leading-snug text-slate-500 dark:text-slate-400">
-            {hint}
-          </span>
-        </button>
-      ))}
-    </div>
-  );
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="random-segment" disabled={active || loading}>
+              {t('modeRandomSegment')}
+            </TabsTrigger>
+            <TabsTrigger value="random-time" disabled={active || loading}>
+              {t('modeRandomTime')}
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+        <p className="px-1 text-[11px] leading-snug text-muted-foreground">
+          {selectedMode}
+        </p>
+      </div>
+    );
+  };
 
   return (
     <div
       id="day-trading-simulator-tool"
       data-day-trading-root
-      className="flex h-[100dvh] scroll-mt-16 flex-col bg-slate-50 dark:bg-[#0F0F0F] md:h-[calc(100vh-3.5rem)] md:flex-row md:overflow-hidden"
+      className="flex h-[100dvh] scroll-mt-16 flex-col bg-background md:h-[calc(100vh-3.5rem)] md:flex-row md:overflow-hidden"
     >
-      <div className="flex-none border-b border-slate-200 bg-white px-3 py-2 dark:border-[#2a2e39] dark:bg-[#0F0F0F] md:hidden">
+      <div className="flex flex-none items-center justify-between gap-2 border-b border-border bg-background px-3 py-2 md:hidden">
         <div className="flex items-center justify-between gap-2">
           {renderMarketSelector(true)}
           {active ? (
-            <button
+            <Button
               type="button"
               onClick={onFinish}
-              className="h-10 rounded-lg bg-sky-600 px-3 text-xs font-bold text-white"
+              variant="secondary"
+              size="sm"
             >
               {t('finish')}
-            </button>
+            </Button>
           ) : (
-            <button
+            <Button
               type="button"
               onClick={onStart}
               disabled={loading || summaryOpen}
-              className="h-10 rounded-lg bg-emerald-700 px-3 text-xs font-bold text-white disabled:bg-slate-400"
+              size="sm"
+              className="bg-emerald-600 text-white hover:bg-emerald-700 dark:bg-emerald-500 dark:text-emerald-950 dark:hover:bg-emerald-400"
             >
               {loading ? t('loading') : t('startSession')}
-            </button>
+            </Button>
           )}
         </div>
       </div>
       {!active && (
-        <div className="flex-none border-b border-slate-200 bg-white px-3 py-2 dark:border-[#2a2e39] dark:bg-[#0F0F0F] md:hidden">
+        <div className="flex-none border-b border-border bg-background px-3 py-2 md:hidden">
           {renderModes()}
         </div>
       )}
 
-      <section className="relative flex min-h-0 flex-[3] flex-col bg-white dark:bg-[#0F0F0F]">
-        <div className="relative h-full w-full flex-1">
+      <section className="relative flex min-h-0 flex-[3] flex-col bg-background">
+        {/* Keep TradingView unframed; this wrapper only provides sizing and overlays. */}
+        <div className="relative min-h-0 flex-1 w-full">
           {active ? (
             <TradingViewChart
               key={chartKey}
@@ -481,39 +485,42 @@ function DayTradingSimulatorContent() {
           ) : null}
 
           {!active && (
-            <div className="absolute inset-0 z-10 flex items-center justify-center bg-slate-50/75 p-4 backdrop-blur-sm dark:bg-[#0F0F0F]/90">
-              <div className="max-w-xl rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-xl dark:border-[#2a2e39] dark:bg-[#111418] sm:p-8">
-                <span className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/10 text-3xl text-emerald-600">
-                  ▶
-                </span>
-                <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-3xl">
-                  {pageCopy.overlayTitle}
-                </h1>
-                <p className="mt-3 whitespace-pre-line text-sm leading-6 text-slate-600 dark:text-slate-300 sm:text-base">
-                  {pageCopy.overlaySubtitle}
-                </p>
-                <button
-                  type="button"
-                  onClick={loading ? undefined : onStart}
-                  disabled={loading}
-                  className="mt-6 inline-flex rounded-lg bg-emerald-700 px-6 py-3 font-bold text-white hover:bg-emerald-800 disabled:cursor-wait disabled:bg-slate-400"
-                >
-                  {loading ? t('loading') : t('startSession')}
-                </button>
-              </div>
+            <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/75 p-4 backdrop-blur-sm">
+              <Card className="max-w-xl bg-card/95 shadow-xl">
+                <CardContent className="p-6 text-center sm:p-8">
+                  <div className="mx-auto mb-4 flex size-14 items-center justify-center rounded-full bg-emerald-500/10 text-2xl text-emerald-600 dark:text-emerald-400">
+                    ▶
+                  </div>
+                  <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+                    {pageCopy.overlayTitle}
+                  </h1>
+                  <p className="mt-3 whitespace-pre-line text-sm leading-6 text-muted-foreground sm:text-base">
+                    {pageCopy.overlaySubtitle}
+                  </p>
+                  <Button
+                    type="button"
+                    size="lg"
+                    className="mt-6 w-full bg-emerald-600 text-white hover:bg-emerald-700 dark:bg-emerald-500 dark:text-emerald-950 dark:hover:bg-emerald-400 sm:w-auto"
+                    onClick={() => void onStart()}
+                    disabled={loading}
+                  >
+                    {loading ? t('loading') : t('startSession')}
+                  </Button>
+                </CardContent>
+              </Card>
             </div>
           )}
 
           {active && !chartReady && (
             <output
-              className="absolute inset-0 z-10 animate-pulse bg-white dark:bg-[#0F0F0F]"
+              className="absolute inset-0 z-10 animate-pulse bg-background/95"
               aria-label={t('loading')}
             />
           )}
         </div>
       </section>
 
-      <div className="flex-none border-t border-slate-200 bg-white p-2 dark:border-[#2a2e39] dark:bg-[#0F0F0F] md:hidden">
+      <div className="z-20 flex-none border-t border-border bg-background p-2 md:hidden">
         <Controls
           layout="mobile"
           sessionStore={useDayTradingSessionStore}
@@ -522,7 +529,7 @@ function DayTradingSimulatorContent() {
           onAdvance={advanceChartBar}
         />
       </div>
-      <div className="min-h-0 flex-[1] space-y-2 overflow-y-auto border-t border-slate-200 bg-slate-50 p-2 dark:border-[#2a2e39] dark:bg-[#0F0F0F] md:hidden">
+      <div className="min-h-0 flex-[1] space-y-2 overflow-y-auto border-t border-border bg-muted/30 p-2 md:hidden">
         <PositionCard
           position={position}
           lastClose={currentPrice}
@@ -536,60 +543,62 @@ function DayTradingSimulatorContent() {
         <TradesCard sessionStore={useDayTradingSessionStore} />
       </div>
 
-      <aside className="hidden h-full w-[440px] flex-shrink-0 border-l border-slate-200 bg-white dark:border-[#2a2e39] dark:bg-[#0F0F0F] md:flex">
-        <div className="flex h-full min-h-0 w-full flex-col p-4">
+      <aside className="hidden h-full min-h-0 w-[440px] flex-shrink-0 overflow-hidden border-l border-border bg-background md:flex">
+        <div className="flex h-full min-h-0 w-full flex-col gap-4 overflow-y-auto p-4">
           <div className="flex-none space-y-4">
             {renderMarketSelector()}
             {!active && renderModes()}
             {active ? (
-              <button
+              <Button
                 type="button"
                 onClick={onFinish}
-                className="w-full rounded-xl bg-slate-700 py-3 font-bold text-white hover:bg-slate-600"
+                variant="secondary"
+                size="lg"
+                className="w-full"
               >
                 {t('finish')}
-              </button>
+              </Button>
             ) : (
-              <button
+              <Button
                 type="button"
                 onClick={onStart}
                 disabled={loading || summaryOpen}
-                className="w-full rounded-xl bg-emerald-700 py-3 font-bold text-white shadow-lg hover:bg-emerald-800 disabled:bg-slate-400"
+                size="lg"
+                className="w-full bg-emerald-600 font-semibold text-white shadow-lg shadow-emerald-600/15 hover:bg-emerald-700 dark:bg-emerald-500 dark:text-emerald-950 dark:hover:bg-emerald-400"
               >
                 {loading ? t('loading') : t('startSession')}
-              </button>
+              </Button>
             )}
-            <Controls
-              sessionStore={useDayTradingSessionStore}
-              defaultQuantity={1}
-              quantityStep={1}
-              onAdvance={advanceChartBar}
-            />
-            <PositionCard
-              position={position}
-              lastClose={currentPrice}
-              unrealized={unrealized}
-            />
-            <StatsCard
-              equity={equity}
-              unrealized={unrealized}
-              realized={pnlRealized}
-            />
           </div>
-          <div className="min-h-0 flex-1 pt-4">
-            <TradesCard
-              className="h-full min-h-0"
-              sessionStore={useDayTradingSessionStore}
-            />
-          </div>
-          <div className="mt-4 flex-none border-t border-slate-100 pt-3 text-center dark:border-[#2a2e39]">
-            <div className="font-mono text-xs text-slate-400">
+
+          <Controls
+            sessionStore={useDayTradingSessionStore}
+            defaultQuantity={1}
+            quantityStep={1}
+            onAdvance={advanceChartBar}
+          />
+          <PositionCard
+            position={position}
+            lastClose={currentPrice}
+            unrealized={unrealized}
+          />
+          <StatsCard
+            equity={equity}
+            unrealized={unrealized}
+            realized={pnlRealized}
+          />
+          <TradesCard
+            className="min-h-52 flex-1"
+            sessionStore={useDayTradingSessionStore}
+          />
+          <div className="flex-none border-t border-border pt-3 text-center">
+            <div className="font-mono text-xs text-muted-foreground">
               {active
                 ? `${symbol} · ${marketLabel} · 5m ${pageCopy.baseLabel} · ${visible}/${candles.length}`
                 : `${marketLabel} · ${pageCopy.randomMarket} · TradingView 5m–12M`}
             </div>
             {error && (
-              <div className="mt-2 rounded bg-rose-50 px-2 py-1 text-xs font-medium text-rose-600 dark:bg-rose-900/20">
+              <div className="mt-2 rounded-md border border-destructive/20 bg-destructive/10 px-2 py-1 text-xs font-medium text-destructive">
                 {error}
               </div>
             )}

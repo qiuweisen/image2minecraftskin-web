@@ -46,7 +46,7 @@ export function SidebarLayout({ children }: { children: ReactNode }) {
       }
     >
       <DashboardSidebar user={session.user} variant="inset" />
-      <SidebarInset>{children}</SidebarInset>
+      <SidebarInset className="min-w-0">{children}</SidebarInset>
     </SidebarProvider>
   );
 }

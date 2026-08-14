@@ -94,9 +94,8 @@ export const Route = createRootRouteWithContext<{
         { rel: 'stylesheet', href: appCss },
         {
           rel: 'icon',
-          type: 'image/x-icon',
-          sizes: '32x32',
-          href: '/favicon.ico',
+          type: 'image/svg+xml',
+          href: '/chartmini-favicon.svg',
         },
         { rel: 'manifest', href: '/manifest.json' },
       ],

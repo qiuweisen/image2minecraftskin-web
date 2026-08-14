@@ -73,6 +73,18 @@
 
 /* ── Global interaction polish ── */
 
+/* Quantity uses the adjacent +/- buttons instead of native number spinners. */
+.no-spinner {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.no-spinner::-webkit-inner-spin-button,
+.no-spinner::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 /* Smooth focus-visible ring for all focusable elements */
 :focus-visible {
   outline: 2px solid var(--primary);

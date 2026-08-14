@@ -1,6 +1,7 @@
 'use client';
 import type { Position } from '@/store/useSessionStore';
 import { usePlayI18n } from '@/components/PlayI18nProvider';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 type Props = {
   position: Position;
@@ -31,74 +32,73 @@ export default function PositionCard({
   const mkt = lastClose || 0;
   const pnlTone =
     unrealized >= 0
-      ? 'text-emerald-700 dark:text-emerald-400'
+      ? 'text-emerald-600 dark:text-emerald-400'
       : 'text-rose-600 dark:text-rose-400';
   return (
-    <div className="glass-panel overflow-hidden dark:bg-[#0F0F0F]">
-      <div
-        className="px-4 py-3 border-b border-slate-100 dark:border-[#2a2e39] text-sm font-semibold text-slate-900 dark:text-white"
-        title={String(t('positionPanel'))}
-      >
-        {t('positionPanel')}
-      </div>
-      <div className="grid grid-cols-2 md:grid-cols-2 gap-4 p-4 text-sm">
-        <div className="flex flex-col min-w-0">
-          <div className="text-slate-500 dark:text-slate-400 text-xs font-medium mb-0.5">
+    <Card className="shrink-0 gap-0 py-0">
+      <CardHeader className="border-b px-4 py-3">
+        <CardTitle className="text-sm" title={String(t('positionPanel'))}>
+          {t('positionPanel')}
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="grid grid-cols-2 gap-4 p-4 text-sm">
+        <div className="flex min-w-0 flex-col">
+          <div className="mb-0.5 text-xs font-medium text-muted-foreground">
             {t('type')}
           </div>
           <div
-            className="font-semibold truncate leading-tight text-slate-900 dark:text-white"
+            className="truncate font-semibold leading-tight"
             title={String(typeLabel)}
           >
             {typeLabel}
           </div>
         </div>
-        <div className="flex flex-col min-w-0">
-          <div className="text-slate-500 dark:text-slate-400 text-xs font-medium mb-0.5">
+        <div className="flex min-w-0 flex-col">
+          <div className="mb-0.5 text-xs font-medium text-muted-foreground">
             {t('shares')}
           </div>
           <div
-            className="font-semibold truncate leading-tight text-slate-900 dark:text-white"
+            className="truncate font-semibold leading-tight"
             title={String(shares)}
           >
             {shares}
           </div>
         </div>
-        <div className="flex flex-col min-w-0">
-          <div className="text-slate-500 dark:text-slate-400 text-xs font-medium mb-0.5">
+        <div className="flex min-w-0 flex-col">
+          <div className="mb-0.5 text-xs font-medium text-muted-foreground">
             {t('costBasis')}
           </div>
           <div
-            className="font-semibold truncate leading-tight text-slate-900 dark:text-white"
+            className="truncate font-semibold leading-tight"
             title={`$${fmt(costBasis)}`}
           >
             ${fmt(costBasis)}
           </div>
         </div>
-        <div className="flex flex-col min-w-0">
-          <div className="text-slate-500 dark:text-slate-400 text-xs font-medium mb-0.5">
+        <div className="flex min-w-0 flex-col">
+          <div className="mb-0.5 text-xs font-medium text-muted-foreground">
             {t('marketPrice')}
           </div>
           <div
-            className="font-semibold truncate leading-tight text-slate-900 dark:text-white"
+            className="truncate font-semibold leading-tight"
             title={`$${fmt(mkt)}`}
           >
             ${fmt(mkt)}
           </div>
         </div>
-        <div className="flex flex-col min-w-0 col-span-2 md:col-span-2">
-          <div className="text-slate-500 dark:text-slate-400 text-xs font-medium mb-0.5">
+        <div className="col-span-2 flex min-w-0 flex-col">
+          <div className="mb-0.5 text-xs font-medium text-muted-foreground">
             {t('unrealizedPL')}
           </div>
           <div
-            className={`font-semibold truncate leading-tight ${pnlTone}`}
+            className={`truncate font-semibold leading-tight ${pnlTone}`}
             title={`${unrealized >= 0 ? '+' : ''}${fmt(unrealized)}`}
           >
             {unrealized >= 0 ? '+' : ''}
             {fmt(unrealized)}
           </div>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }
