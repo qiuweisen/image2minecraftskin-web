@@ -168,6 +168,8 @@ function RootComponent() {
  * Root document
  */
 function RootDocument({ children }: { children: React.ReactNode }) {
+  const pathname = useRouterState({ select: (s) => s.location.pathname }) ?? '';
+
   return (
     <html
       lang={localeConfig[getCanonicalLocale(getLocale())].hreflang}
@@ -175,7 +177,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
     >
       <head>
         <HeadContent />
-        <GoogleAdSense />
+        <GoogleAdSense pathname={pathname} />
       </head>
       <body>
         <ThemeProvider>

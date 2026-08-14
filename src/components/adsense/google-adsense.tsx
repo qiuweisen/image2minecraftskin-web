@@ -1,4 +1,21 @@
 import { clientEnv } from '@/env/client';
+import { getCanonicalPathname } from '@/lib/locale';
+
+const ADSENSE_EXCLUDED_SECTIONS = [
+  '/play',
+  '/day-trading-simulator',
+  '/dashboard',
+] as const;
+
+function isExcludedPath(pathname: string) {
+  const canonicalPathname = getCanonicalPathname(pathname);
+
+  return ADSENSE_EXCLUDED_SECTIONS.some(
+    (section) =>
+      canonicalPathname === section ||
+      canonicalPathname.startsWith(`${section}/`)
+  );
+}
 
 /**
  * Google AdSense Auto ads loader.
@@ -7,9 +24,9 @@ import { clientEnv } from '@/env/client';
  * verify the site and apply the page exclusions configured in the AdSense
  * dashboard. The Publisher ID is public configuration, not a secret.
  */
-export function GoogleAdSense() {
+export function GoogleAdSense({ pathname }: { pathname: string }) {
   const client = clientEnv.VITE_GOOGLE_ADSENSE_CLIENT;
-  if (!client) return null;
+  if (!client || isExcludedPath(pathname)) return null;
 
   return (
     <script
