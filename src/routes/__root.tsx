@@ -7,6 +7,7 @@ import {
   useRouterState,
 } from '@tanstack/react-router';
 import { Analytics } from '@/components/analytics/analytics';
+import { GoogleAdSense } from '@/components/adsense/google-adsense';
 import { CrispChat } from '@/components/chatbox/crisp-chat';
 import { ThemeProvider } from '@/components/theme/theme-provider';
 import { Navbar } from '@/components/layout/navbar';
@@ -174,6 +175,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
     >
       <head>
         <HeadContent />
+        <GoogleAdSense />
       </head>
       <body>
         <ThemeProvider>
