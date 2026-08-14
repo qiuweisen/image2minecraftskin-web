@@ -49,11 +49,11 @@ export function NavbarMobile({ className, ...props }: NavbarMobileProps) {
   return (
     <>
       <div
-        className={cn('flex items-center justify-between', className)}
+        className={cn('flex h-14 items-center justify-between', className)}
         {...props}
       >
         <Link to="/" aria-label={m.common_home()} className="flex items-center">
-          <Logo />
+          <Logo className="h-6" />
         </Link>
 
         <div className="flex items-center gap-4">
@@ -88,7 +88,7 @@ export function NavbarMobile({ className, ...props }: NavbarMobileProps) {
           role="dialog"
           aria-modal="true"
           aria-label={m.common_mobile_navigation()}
-          className="fixed inset-0 top-14.25 z-50 flex flex-col overflow-y-auto bg-background animate-in fade-in-0 duration-200"
+          className="fixed inset-0 top-[5.125rem] z-50 flex flex-col overflow-y-auto bg-background animate-in fade-in-0 duration-200"
         >
           <div className="flex flex-1 flex-col items-start gap-4 p-4">
             {websiteConfig.auth?.enable && !user && (

@@ -61,14 +61,14 @@ export function Navbar({ scroll = true }: NavbarProps) {
           >
             <nav
               aria-label={m.common_main_navigation()}
-              className="hidden px-2 py-2 lg:flex lg:items-center lg:justify-between lg:gap-4"
+              className="hidden h-14 px-3 lg:flex lg:items-center lg:justify-between lg:gap-4"
             >
               <Link
                 to="/"
                 aria-label={m.common_home()}
                 className="flex shrink-0 items-center"
               >
-                <Logo />
+                <Logo className="h-7" />
               </Link>
 
               <NavigationMenu

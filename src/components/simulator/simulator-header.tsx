@@ -35,7 +35,7 @@ export function SimulatorHeader() {
           aria-label={m.simulator_home()}
           className="flex shrink-0 items-center"
         >
-          <Logo className="h-7 sm:h-8" />
+          <Logo className="h-6 sm:h-7" />
         </Link>
         <nav className="flex items-center gap-1 text-sm sm:gap-2">
           <Link

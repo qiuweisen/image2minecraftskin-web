@@ -20,6 +20,7 @@ count.txt
 public/marketing-content/
 __unconfig*
 todos.json
+/tmp/
 
 # locale
 project.inlang/cache
