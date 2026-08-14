@@ -45,6 +45,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
       - name: Validate required deployment configuration
         shell: bash
@@ -78,9 +80,12 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Sync blog content to R2
-        run: pnpm content:sync-r2
         env:
+          BLOG_R2_BASE_SHA: ${{ github.event_name == 'push' && github.event.before || '' }}
           BLOG_R2_CONCURRENCY: 4
+          BLOG_R2_FULL_SYNC: ${{ github.event_name == 'workflow_dispatch' && 'true' || 'false' }}
+          BLOG_R2_HEAD_SHA: ${{ github.sha }}
+        run: pnpm content:sync-r2
 
       - name: Build
         run: pnpm build
