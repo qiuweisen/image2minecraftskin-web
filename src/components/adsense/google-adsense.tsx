@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { ClientScript } from '@/components/shared/client-script';
 import { clientEnv } from '@/env/client';
 import { getCanonicalPathname } from '@/lib/locale';
 
@@ -55,9 +56,9 @@ function removeAdSenseNodes() {
 /**
  * Google AdSense Auto ads loader.
  *
- * The script is intentionally rendered in the document head so AdSense can
- * verify the site and apply the page exclusions configured in the AdSense
- * dashboard. The Publisher ID is public configuration, not a secret.
+ * The script is injected after the initial page load on monetized pages. The
+ * Publisher ID is public configuration, not a secret. Excluded pages fail
+ * closed and never receive the script in their server-rendered HTML.
  */
 export function GoogleAdSense({ pathname }: { pathname: string }) {
   const client = clientEnv.VITE_GOOGLE_ADSENSE_CLIENT;
@@ -84,9 +85,9 @@ export function GoogleAdSense({ pathname }: { pathname: string }) {
   if (excluded) return null;
 
   return (
-    <script
-      async
+    <ClientScript
       src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${encodeURIComponent(client)}`}
+      async
       crossOrigin="anonymous"
     />
   );

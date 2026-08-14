@@ -28,18 +28,34 @@ const featureVisuals = [
   {
     dark: '/images/simulators/market-replay-dark.webp',
     light: '/images/simulators/market-replay-light.webp',
+    darkSrcSet:
+      '/images/simulators/market-replay-dark-480.webp 480w, /images/simulators/market-replay-dark-768.webp 768w, /images/simulators/market-replay-dark.webp 1200w',
+    lightSrcSet:
+      '/images/simulators/market-replay-light-480.webp 480w, /images/simulators/market-replay-light-768.webp 768w, /images/simulators/market-replay-light.webp 1200w',
   },
   {
     dark: '/images/simulators/intraday-practice-dark.webp',
     light: '/images/simulators/intraday-practice-light.webp',
+    darkSrcSet:
+      '/images/simulators/intraday-practice-dark-480.webp 480w, /images/simulators/intraday-practice-dark-768.webp 768w, /images/simulators/intraday-practice-dark.webp 1200w',
+    lightSrcSet:
+      '/images/simulators/intraday-practice-light-480.webp 480w, /images/simulators/intraday-practice-light-768.webp 768w, /images/simulators/intraday-practice-light.webp 1200w',
   },
   {
     dark: '/images/simulators/forex-simulator-dark.webp',
     light: '/images/simulators/forex-simulator-light.webp',
+    darkSrcSet:
+      '/images/simulators/forex-simulator-dark-480.webp 480w, /images/simulators/forex-simulator-dark-768.webp 768w, /images/simulators/forex-simulator-dark.webp 1200w',
+    lightSrcSet:
+      '/images/simulators/forex-simulator-light-480.webp 480w, /images/simulators/forex-simulator-light-768.webp 768w, /images/simulators/forex-simulator-light.webp 1200w',
   },
   {
     dark: '/images/simulators/crypto-simulator-dark.webp',
     light: '/images/simulators/crypto-simulator-light.webp',
+    darkSrcSet:
+      '/images/simulators/crypto-simulator-dark-480.webp 480w, /images/simulators/crypto-simulator-dark-768.webp 768w, /images/simulators/crypto-simulator-dark.webp 1200w',
+    lightSrcSet:
+      '/images/simulators/crypto-simulator-light-480.webp 480w, /images/simulators/crypto-simulator-light-768.webp 768w, /images/simulators/crypto-simulator-light.webp 1200w',
   },
 ] as const;
 
@@ -189,6 +205,10 @@ export default function FeaturesSection() {
   const activeItem = items[activeIndex];
   const activeImage =
     resolvedTheme === 'dark' ? activeItem.visual.dark : activeItem.visual.light;
+  const activeImageSrcSet =
+    resolvedTheme === 'dark'
+      ? activeItem.visual.darkSrcSet
+      : activeItem.visual.lightSrcSet;
 
   return (
     <section id="features" className="px-4 py-10 md:py-14">
@@ -294,6 +314,8 @@ export default function FeaturesSection() {
                       <img
                         ref={activeIndex === 0 ? initialImageRef : undefined}
                         src={activeImage}
+                        srcSet={activeImageSrcSet}
+                        sizes="(max-width: 1023px) calc(100vw - 3rem), 711px"
                         alt={`${activeItem.title} ${m.common_preview()}`}
                         loading={activeIndex === 0 ? 'eager' : 'lazy'}
                         fetchPriority={activeIndex === 0 ? 'high' : 'auto'}

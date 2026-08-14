@@ -12,6 +12,7 @@ export function ClientScript({
   src,
   async: asyncAttr,
   defer,
+  crossOrigin,
   id,
   dataAttributes,
   inlineHtml,
@@ -19,6 +20,7 @@ export function ClientScript({
   src?: string;
   async?: boolean;
   defer?: boolean;
+  crossOrigin?: string;
   id?: string;
   dataAttributes?: Record<string, string>;
   inlineHtml?: string;
@@ -35,6 +37,7 @@ export function ClientScript({
       if (src) script.src = src;
       if (asyncAttr) script.async = true;
       if (defer) script.defer = true;
+      if (crossOrigin) script.crossOrigin = crossOrigin;
       if (inlineHtml) script.textContent = inlineHtml;
       if (dataAttributes) {
         for (const [key, value] of Object.entries(dataAttributes)) {
