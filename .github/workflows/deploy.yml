@@ -46,6 +46,25 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v5
 
+      - name: Validate required deployment configuration
+        shell: bash
+        run: |
+          missing=0
+          for name in \
+            CLOUDFLARE_ACCOUNT_ID \
+            CLOUDFLARE_API_TOKEN \
+            CLOUDFLARE_DATABASE_ID \
+            VITE_BASE_URL \
+            VITE_GOOGLE_ADSENSE_CLIENT; do
+            if [[ -z "${!name}" ]]; then
+              echo "::error::Missing GitHub Actions secret: ${name}"
+              missing=1
+            fi
+          done
+          if [[ "${missing}" -ne 0 ]]; then
+            exit 1
+          fi
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
 
