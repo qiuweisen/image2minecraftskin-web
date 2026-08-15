@@ -55,13 +55,9 @@
     "GEMINI_API_MODEL": "gemini-3.7-flash"
   },
 
-  // Keep the staging custom domain available for rollback and smoke tests;
-  // the production route below takes over chartmini.com at cutover.
+  // Route production traffic through the Worker while the existing Cloudflare
+  // DNS record remains the hostname entry point.
   "routes": [
-    {
-      "pattern": "v2.chartmini.com",
-      "custom_domain": true
-    },
     {
       "pattern": "chartmini.com/*",
       "zone_name": "chartmini.com"

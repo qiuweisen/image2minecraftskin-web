@@ -8,6 +8,8 @@ import { getCanonicalLocale, getLocale, localeConfig } from '@/lib/locale';
 import { jsonLdScript, seo, siteStructuredData } from '@/lib/seo';
 import { IconArrowLeft } from '@tabler/icons-react';
 import { formatDate } from '@/lib/formatter';
+import { PracticeModesCard } from '@/components/blog/practice-modes-card';
+import { splitBlogContentForPracticeCard } from '@/lib/blog-content';
 
 function scriptJson(value: unknown) {
   return JSON.stringify(value).replace(/</g, '\\u003c');
@@ -180,6 +182,7 @@ export const Route = createFileRoute('/blog/$slug')({
 function BlogPostPage() {
   const post = Route.useLoaderData();
   if (!post || !websiteConfig.blog?.enable) throw notFound();
+  const content = splitBlogContentForPracticeCard(post.contentHtml);
   return (
     <Container className="py-16 px-4">
       <div className="mx-auto max-w-4xl">
@@ -227,10 +230,21 @@ function BlogPostPage() {
           )}
 
           <div className="mt-6 pt-10 border-t border-border">
-            <div
-              className="prose prose-neutral dark:prose-invert max-w-none"
-              dangerouslySetInnerHTML={{ __html: post.contentHtml }}
-            />
+            {content.before ? (
+              <div
+                className="prose prose-neutral dark:prose-invert max-w-none"
+                dangerouslySetInnerHTML={{ __html: content.before }}
+              />
+            ) : null}
+
+            <PracticeModesCard />
+
+            {content.after ? (
+              <div
+                className="prose prose-neutral dark:prose-invert max-w-none"
+                dangerouslySetInnerHTML={{ __html: content.after }}
+              />
+            ) : null}
           </div>
 
           <div className="mt-10 pt-6 border-t border-border">

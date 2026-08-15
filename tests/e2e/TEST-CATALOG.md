@@ -53,7 +53,10 @@ browser console errors or page errors.
 |---|---|---|
 | 1 | Public pages render successfully | Open `/`, `/pricing`, `/blog`, `/blog/getting-started`, `/ai`, `/about`, `/contact`, `/changelog`, `/roadmap`, `/waitlist`, `/cookie`, `/privacy`, `/terms`, `/auth/login`, `/auth/register`, `/auth/forgot-password`, `/auth/reset-password` for `en` and `zh`, in `dark` and `light` mode. Verify each returns 2xx, renders a visible body, applies the requested theme, and emits no browser errors. |
 | 2 | Home login modal opens | Open `/`, click the navbar login button, verify the login dialog and credential inputs are visible, and assert no browser errors. |
-| 3 | Health check responds with pong | Call `/api/ping` and verify `{ "message": "pong" }`. |
+| 3 | Mobile navbar controls and menu | Open `/` at a mobile viewport, verify the language/theme buttons are visible in the top navbar, then open the navigation dialog. |
+| 4 | Mobile simulator navbar hides duplicate links | Open `/play` and `/day-trading-simulator` at a mobile viewport and verify the Daily Replay and Day Trading links are hidden while language/theme controls remain visible. |
+| 5 | Article practice modes card | Open `/blog/why-practice-trading-matters-simulate-before-you-risk-real-money-2026`, verify the card is visible, and verify its Daily Replay and Day Trading Simulator links point to `/play` and `/day-trading-simulator`. |
+| 6 | Health check responds with pong | Call `/api/ping` and verify `{ "message": "pong" }`. |
 
 ## 2. Authentication And Protected Routes
 
