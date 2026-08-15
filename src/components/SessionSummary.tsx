@@ -125,7 +125,8 @@ function getApiErrorCopy(
 async function readAnalysisStream(
   response: Response,
   onThinking: (value: string) => void,
-  onContent: (value: string) => void
+  onContent: (value: string) => void,
+  onStatus: (value: string) => void
 ) {
   const reader = response.body?.getReader();
   if (!reader) {
@@ -156,13 +157,20 @@ async function readAnalysisStream(
         content?: string;
         finishReason?: string;
         complete?: boolean;
+        status?: string;
+        code?: string;
         error?: string;
       };
       if (typeof json.finishReason === 'string') {
         finishReason = json.finishReason;
       }
       if (json.complete === true) complete = true;
-      if (typeof json.error === 'string') streamError = json.error;
+      if (typeof json.status === 'string') onStatus(json.status);
+      if (typeof json.error === 'string') {
+        streamError = json.error;
+      } else if (typeof json.code === 'string') {
+        streamError = json.code;
+      }
       if (json.thinking) {
         fullThinking += json.thinking;
         onThinking(fullThinking);
@@ -348,6 +356,9 @@ function SessionSummaryInner({
         },
         (value) => {
           if (mountedRef.current) setStreamingText(value);
+        },
+        (value) => {
+          if (mountedRef.current) setThinkingText(value);
         }
       );
 
@@ -359,44 +370,7 @@ function SessionSummaryInner({
         throw new Error('INCOMPLETE_AI_RESPONSE');
       }
 
-      let finalText = streamed.fullText.trim();
-
-      if (!finalText) {
-        const fallbackResponse = await fetch('/api/analyze', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          signal: controller.signal,
-          body: JSON.stringify({ ...requestPayload, stream: false }),
-        });
-
-        if (!fallbackResponse.ok) {
-          const errorText = await fallbackResponse.text();
-          if (fallbackResponse.status === 401) {
-            if (mountedRef.current) setShowAuthModal(true);
-            return;
-          }
-          if (mountedRef.current) {
-            setAnalysis(
-              getApiErrorCopy(
-                errorText,
-                summaryCopy.rateLimit,
-                summaryCopy.emptyResponse,
-                fallbackText
-              )
-            );
-            setParseError(true);
-          }
-          return;
-        }
-
-        const fallbackJson = (await fallbackResponse.json()) as {
-          content?: unknown;
-        };
-        finalText =
-          typeof fallbackJson.content === 'string'
-            ? fallbackJson.content.trim()
-            : '';
-      }
+      const finalText = streamed.fullText.trim();
 
       if (!finalText) {
         if (mountedRef.current) {

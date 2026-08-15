@@ -64,6 +64,22 @@
     }
   ],
 
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "GEMINI_KEY_POOL",
+        "class_name": "GeminiKeyPool"
+      }
+    ]
+  },
+
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["GeminiKeyPool"]
+    }
+  ],
+
   /**
    * Bindings
    * Bindings allow your Worker to interact with resources on the Cloudflare Developer Platform, including

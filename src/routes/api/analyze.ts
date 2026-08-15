@@ -13,7 +13,7 @@ const DAILY_LIMIT_TIMEZONE_OFFSET_MS = 8 * 60 * 60 * 1000;
 const MAX_REQUEST_BYTES = 256 * 1024;
 const MAX_TRADES = 2_000;
 const GEMINI_STREAM_TIMEOUT_MS = 30_000;
-const GEMINI_NON_STREAM_TIMEOUT_MS = 45_000;
+const GEMINI_TOTAL_TIMEOUT_MS = 60_000;
 const GEMINI_COMPLETION_RETRIES = 2;
 
 const NO_STORE_HEADERS = {
@@ -30,11 +30,79 @@ const analysisRequestSchema = z.object({
 
 type AnalysisRequest = z.infer<typeof analysisRequestSchema>;
 
+const analysisResponseSchema = z.object({
+  personality: z.object({
+    type: z.enum(['wolf', 'lion', 'turtle', 'rabbit', 'eagle', 'sheep']),
+    emoji: z.string().min(1),
+    name: z.string().min(1),
+    description: z.string().min(1),
+  }),
+  score: z.number().int().min(0).max(100),
+  rank: z.object({
+    stars: z.number().int().min(0).max(5),
+    title: z.string().min(1),
+  }),
+  superpower: z.string().min(1),
+  weakness: z.string().min(1),
+  keyStats: z.string().min(1),
+  badges: z.array(
+    z.object({ emoji: z.string().min(1), name: z.string().min(1) })
+  ),
+  tagline: z.string().min(1),
+  comparison: z.string().min(1),
+  riskAssessment: z.string().min(1),
+  tradingStyle: z.string().min(1),
+  analysis: z.object({
+    strengths: z.string().min(1),
+    weaknesses: z.string().min(1),
+    actionItem: z.string().min(1),
+  }),
+  improvementPlan: z.array(z.string().min(1)).min(1),
+  labels: z.object({
+    superpower: z.string().min(1),
+    weakness: z.string().min(1),
+    keyStats: z.string().min(1),
+    badges: z.string().min(1),
+    tradingStyle: z.string().min(1),
+    riskAssessment: z.string().min(1),
+    strengths: z.string().min(1),
+    weaknesses: z.string().min(1),
+    actionItem: z.string().min(1),
+    improvementPlan: z.string().min(1),
+  }),
+  toolTip: z.string().optional(),
+});
+
+type GeminiKeyPoolBinding = {
+  nextKeySlots: (keyCount: number) => Promise<{
+    slots: number[];
+    allCoolingDown: boolean;
+  }>;
+  reportSuccess: (slot: number) => Promise<void>;
+  reportFailure: (
+    slot: number,
+    reason: 'invalid' | 'rate-limit' | 'provider' | 'timeout' | 'network',
+    requestedCooldownMs?: number
+  ) => Promise<void>;
+};
+
+type GeminiKeyCandidate = {
+  key: string;
+  slot: number;
+};
+
+type ProviderSuccess = {
+  response: Response;
+  keySlot: number;
+  release: () => void;
+  timedOut: () => boolean;
+};
+
 type ProviderResult =
-  | { response: Response }
+  | ProviderSuccess
   | { errorStatus: number; rateLimited: boolean };
 
-let geminiKeyCursor = 0;
+let localGeminiKeyCursor = 0;
 
 function splitApiKeys(...values: Array<string | undefined>) {
   return Array.from(
@@ -72,13 +140,80 @@ function getGeminiApiKeys() {
   return splitApiKeys(serverEnv.GEMINI_API_KEYS, serverEnv.GEMINI_API_KEY);
 }
 
-function getGeminiKeyOrder(apiKeys: string[]) {
-  if (apiKeys.length <= 1) return apiKeys;
+function getGeminiKeyPoolBinding() {
+  const candidate = (env as unknown as { GEMINI_KEY_POOL?: unknown })
+    .GEMINI_KEY_POOL;
+  if (!candidate || typeof candidate !== 'object') return null;
+  return candidate as GeminiKeyPoolBinding;
+}
 
-  const start = geminiKeyCursor % apiKeys.length;
-  geminiKeyCursor = (geminiKeyCursor + 1) % apiKeys.length;
-  console.info(`[AI] provider=gemini key-slot=${start + 1}/${apiKeys.length}`);
-  return apiKeys.map((_, offset) => apiKeys[(start + offset) % apiKeys.length]);
+async function getGeminiKeyOrder(
+  apiKeys: string[]
+): Promise<GeminiKeyCandidate[]> {
+  const pool = getGeminiKeyPoolBinding();
+
+  if (pool) {
+    try {
+      const result = await pool.nextKeySlots(apiKeys.length);
+      const slots = Array.from(
+        new Set(
+          (Array.isArray(result.slots) ? result.slots : []).filter(
+            (slot) =>
+              Number.isInteger(slot) && slot >= 0 && slot < apiKeys.length
+          )
+        )
+      );
+      if (slots.length > 0) {
+        console.info(
+          `[AI] provider=gemini key-slot=${slots[0] + 1}/${apiKeys.length} source=durable-object cooling-down=${result.allCoolingDown ? 'all' : 'none'}`
+        );
+        return slots.map((slot) => ({ key: apiKeys[slot], slot }));
+      }
+    } catch (error) {
+      console.warn(
+        `[AI] provider=gemini key-pool=unavailable fallback=local error=${error instanceof Error ? error.name : 'unknown'}`
+      );
+    }
+  }
+
+  // Local fallback keeps the provider available during a temporary DO outage.
+  // Production uses the Durable Object path above for global round-robin state.
+  const start = localGeminiKeyCursor % apiKeys.length;
+  localGeminiKeyCursor = (localGeminiKeyCursor + 1) % apiKeys.length;
+  console.info(
+    `[AI] provider=gemini key-slot=${start + 1}/${apiKeys.length} source=local-fallback`
+  );
+  return apiKeys.map((key, offset) => ({
+    key: apiKeys[(start + offset) % apiKeys.length] ?? key,
+    slot: (start + offset) % apiKeys.length,
+  }));
+}
+
+async function reportGeminiKeySuccess(slot: number) {
+  const pool = getGeminiKeyPoolBinding();
+  if (!pool) return;
+  try {
+    await pool.reportSuccess(slot);
+  } catch (error) {
+    console.warn(
+      `[AI] provider=gemini key-health=success-report-failed error=${error instanceof Error ? error.name : 'unknown'}`
+    );
+  }
+}
+
+async function reportGeminiKeyFailure(
+  slot: number,
+  reason: 'invalid' | 'rate-limit' | 'provider' | 'timeout' | 'network'
+) {
+  const pool = getGeminiKeyPoolBinding();
+  if (!pool) return;
+  try {
+    await pool.reportFailure(slot, reason);
+  } catch (error) {
+    console.warn(
+      `[AI] provider=gemini key-health=failure-report-failed error=${error instanceof Error ? error.name : 'unknown'}`
+    );
+  }
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -219,18 +354,48 @@ function isCompleteJsonObject(value: string) {
   if (!candidate) return false;
 
   try {
-    return isRecord(JSON.parse(candidate));
+    return analysisResponseSchema.safeParse(JSON.parse(candidate)).success;
   } catch {
     return false;
   }
 }
 
-async function readGeminiCompletion(response: Response) {
-  const json = (await response.json().catch(() => null)) as unknown;
-  return {
-    content: extractGeminiText(json),
-    finishReason: extractGeminiFinishReason(json),
+async function readGeminiStreamCompletion(response: Response) {
+  const reader = response.body?.getReader();
+  if (!reader) throw new Error('Gemini returned an empty stream');
+
+  const decoder = new TextDecoder();
+  let buffer = '';
+  let content = '';
+  let finishReason: string | undefined;
+
+  const processLine = (line: string) => {
+    const trimmed = line.trim();
+    if (!trimmed || !trimmed.startsWith('data:')) return;
+
+    const data = trimmed.slice(5).trim();
+    if (!data || data === '[DONE]') return;
+
+    const json = JSON.parse(data) as unknown;
+    content += extractGeminiText(json);
+    const reason = extractGeminiFinishReason(json);
+    if (reason) finishReason = reason;
   };
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+
+    buffer += decoder.decode(value, { stream: true });
+    const lines = buffer.split('\n');
+    buffer = lines.pop() ?? '';
+    for (const line of lines) processLine(line);
+  }
+
+  buffer += decoder.decode();
+  if (buffer.trim()) processLine(buffer);
+
+  return { content, finishReason };
 }
 
 function isRetryableStatus(status: number, errorText: string) {
@@ -307,13 +472,11 @@ async function callGemini(
   systemMessage: string,
   prompt: string,
   stream: boolean,
-  clientSignal: AbortSignal
+  clientSignal: AbortSignal,
+  deadline: number
 ): Promise<ProviderResult> {
   const model = serverEnv.GEMINI_API_MODEL || DEFAULT_GEMINI_MODEL;
-  const timeoutMs = stream
-    ? GEMINI_STREAM_TIMEOUT_MS
-    : GEMINI_NON_STREAM_TIMEOUT_MS;
-  const orderedKeys = getGeminiKeyOrder(apiKeys);
+  const orderedKeys = await getGeminiKeyOrder(apiKeys);
   let lastStatus = 503;
   let lastRateLimited = false;
 
@@ -323,17 +486,41 @@ async function callGemini(
     let shouldRetryWithoutJsonMode = false;
 
     for (let index = 0; index < orderedKeys.length; index += 1) {
+      const remainingMs = deadline - Date.now();
+      if (remainingMs <= 0) break;
+
+      if (clientSignal.aborted) {
+        throw new DOMException(
+          'The analysis request was aborted.',
+          'AbortError'
+        );
+      }
+
+      const candidate = orderedKeys[index];
+      if (!candidate) break;
+
       const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), timeoutMs);
+      const timeout = setTimeout(
+        () => controller.abort(),
+        Math.min(GEMINI_STREAM_TIMEOUT_MS, remainingMs)
+      );
       const onClientAbort = () => controller.abort();
       clientSignal.addEventListener('abort', onClientAbort);
+      let handedOff = false;
+      let released = false;
+      const release = () => {
+        if (released) return;
+        released = true;
+        clearTimeout(timeout);
+        clientSignal.removeEventListener('abort', onClientAbort);
+      };
 
       try {
         const response = await fetch(buildGeminiUrl(model, stream), {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'x-goog-api-key': orderedKeys[index],
+            'x-goog-api-key': candidate.key,
           },
           body: JSON.stringify(
             buildGeminiPayload(model, systemMessage, prompt, allowJsonMode)
@@ -341,13 +528,21 @@ async function callGemini(
           signal: controller.signal,
         });
 
-        if (response.ok) return { response };
+        if (response.ok) {
+          handedOff = true;
+          return {
+            response,
+            keySlot: candidate.slot,
+            release,
+            timedOut: () => controller.signal.aborted && !clientSignal.aborted,
+          };
+        }
 
         const errorText = await response.text().catch(() => '');
         lastStatus = response.status;
         lastRateLimited = isRateLimited(response.status, errorText);
         console.error(
-          `[AI] provider=gemini attempt=${index + 1}/${orderedKeys.length} status=${response.status}`
+          `[AI] provider=gemini key-slot=${candidate.slot + 1}/${apiKeys.length} attempt=${index + 1}/${orderedKeys.length} status=${response.status}`
         );
 
         if (
@@ -356,6 +551,21 @@ async function callGemini(
         ) {
           shouldRetryWithoutJsonMode = true;
           break;
+        }
+
+        if (isRetryableStatus(response.status, errorText)) {
+          await reportGeminiKeyFailure(
+            candidate.slot,
+            response.status === 401 ||
+              response.status === 403 ||
+              errorText.toLowerCase().includes('invalid api key')
+              ? 'invalid'
+              : lastRateLimited
+                ? 'rate-limit'
+                : response.status >= 500
+                  ? 'provider'
+                  : 'provider'
+          );
         }
 
         const canRetry =
@@ -367,12 +577,15 @@ async function callGemini(
         lastStatus = controller.signal.aborted ? 504 : 502;
         lastRateLimited = false;
         console.error(
-          `[AI] provider=gemini ${controller.signal.aborted ? 'timeout' : 'network'} attempt=${index + 1}/${orderedKeys.length}`
+          `[AI] provider=gemini key-slot=${candidate.slot + 1}/${apiKeys.length} ${controller.signal.aborted ? 'timeout' : 'network'} attempt=${index + 1}/${orderedKeys.length}`
+        );
+        await reportGeminiKeyFailure(
+          candidate.slot,
+          controller.signal.aborted ? 'timeout' : 'network'
         );
         if (index >= orderedKeys.length - 1) break;
       } finally {
-        clearTimeout(timeout);
-        clientSignal.removeEventListener('abort', onClientAbort);
+        if (!handedOff) release();
       }
     }
 
@@ -390,15 +603,19 @@ type CompleteProviderResult =
       code?: 'INCOMPLETE_AI_RESPONSE';
     };
 
-// The analysis payload is a small, bounded JSON document. Buffering the
-// provider's non-stream response lets us validate finishReason and JSON
-// completeness before anything reaches the browser.
+type CompletionStatus = (event: {
+  status: 'analyzing' | 'retrying';
+  attempt: number;
+}) => void;
+
 async function callGeminiUntilComplete(
   apiKeys: string[],
   systemMessage: string,
   prompt: string,
-  clientSignal: AbortSignal
+  clientSignal: AbortSignal,
+  onStatus?: CompletionStatus
 ): Promise<CompleteProviderResult> {
+  const deadline = Date.now() + GEMINI_TOTAL_TIMEOUT_MS;
   let lastFailure: CompleteProviderResult = {
     errorStatus: 502,
     rateLimited: false,
@@ -406,22 +623,57 @@ async function callGeminiUntilComplete(
   };
 
   for (let retry = 0; retry < GEMINI_COMPLETION_RETRIES; retry += 1) {
+    onStatus?.({
+      status: retry === 0 ? 'analyzing' : 'retrying',
+      attempt: retry + 1,
+    });
+
     const upstream = await callGemini(
       apiKeys,
       systemMessage,
       prompt,
-      false,
-      clientSignal
+      true,
+      clientSignal,
+      deadline
     );
 
     if (!('response' in upstream)) return upstream;
 
-    const completion = await readGeminiCompletion(upstream.response);
+    let completion: Awaited<ReturnType<typeof readGeminiStreamCompletion>>;
+    try {
+      completion = await readGeminiStreamCompletion(upstream.response);
+    } catch (error) {
+      const timedOut = upstream.timedOut();
+      upstream.release();
+      if (clientSignal.aborted) throw error;
+
+      await reportGeminiKeyFailure(
+        upstream.keySlot,
+        timedOut
+          ? 'timeout'
+          : error instanceof SyntaxError
+            ? 'provider'
+            : 'network'
+      );
+      lastFailure = {
+        errorStatus: timedOut ? 504 : 502,
+        rateLimited: false,
+        code: 'INCOMPLETE_AI_RESPONSE',
+      };
+      console.warn(
+        `[AI] provider=gemini stream-failed key-slot=${upstream.keySlot + 1} timeout=${timedOut}`
+      );
+      continue;
+    }
+
+    const timedOut = upstream.timedOut();
+    upstream.release();
     const isComplete =
       completion.finishReason === 'STOP' &&
       isCompleteJsonObject(completion.content);
 
     if (isComplete) {
+      await reportGeminiKeySuccess(upstream.keySlot);
       console.info(
         `[AI] provider=gemini complete retry=${retry + 1}/${GEMINI_COMPLETION_RETRIES} content-length=${completion.content.length}`
       );
@@ -429,16 +681,35 @@ async function callGeminiUntilComplete(
     }
 
     console.warn(
-      `[AI] provider=gemini incomplete retry=${retry + 1}/${GEMINI_COMPLETION_RETRIES} finish-reason=${completion.finishReason ?? 'UNKNOWN'} content-length=${completion.content.length}`
+      `[AI] provider=gemini incomplete retry=${retry + 1}/${GEMINI_COMPLETION_RETRIES} finish-reason=${completion.finishReason ?? 'UNKNOWN'} content-length=${completion.content.length} timeout=${timedOut}`
     );
     lastFailure = {
-      errorStatus: 502,
+      errorStatus: timedOut ? 504 : 502,
       rateLimited: false,
       code: 'INCOMPLETE_AI_RESPONSE',
     };
   }
 
   return lastFailure;
+}
+
+function getCompletionErrorDetails(completion: CompleteProviderResult) {
+  if ('content' in completion) return null;
+
+  const isIncomplete = completion.code === 'INCOMPLETE_AI_RESPONSE';
+  return {
+    status: completion.rateLimited ? 429 : isIncomplete ? 502 : 503,
+    code: completion.rateLimited
+      ? 'RATE_LIMIT'
+      : isIncomplete
+        ? 'INCOMPLETE_AI_RESPONSE'
+        : 'AI_PROVIDER_ERROR',
+    message: completion.rateLimited
+      ? 'AI analysis is temporarily rate limited. Please try again shortly.'
+      : isIncomplete
+        ? 'AI analysis returned an incomplete response. Please try again.'
+        : 'AI analysis is temporarily unavailable. Please try again later.',
+  };
 }
 
 function errorResponse(
@@ -453,26 +724,82 @@ function errorResponse(
   );
 }
 
-function buildGeminiContentStreamResponse(content: string, request: Request) {
+function buildGeminiContentStreamResponse(
+  apiKeys: string[],
+  systemMessage: string,
+  prompt: string,
+  request: Request
+) {
   const encoder = new TextEncoder();
+  const abortController = new AbortController();
+  const onRequestAbort = () => abortController.abort();
+  request.signal.addEventListener('abort', onRequestAbort);
+  let closed = false;
+
   const stream = new ReadableStream<Uint8Array>({
     start(controller) {
       if (request.signal.aborted) {
+        request.signal.removeEventListener('abort', onRequestAbort);
         controller.close();
+        closed = true;
         return;
       }
 
-      controller.enqueue(encoder.encode(': stream started\n\n'));
-      controller.enqueue(
-        encoder.encode(`data: ${JSON.stringify({ content })}\n\n`)
-      );
-      controller.enqueue(
-        encoder.encode(
-          `data: ${JSON.stringify({ finishReason: 'STOP', complete: true })}\n\n`
-        )
-      );
-      controller.enqueue(encoder.encode('data: [DONE]\n\n'));
-      controller.close();
+      const enqueue = (payload: Record<string, unknown> | '[DONE]') => {
+        if (closed || abortController.signal.aborted) return;
+        try {
+          const data =
+            payload === '[DONE]' ? '[DONE]' : JSON.stringify(payload);
+          controller.enqueue(encoder.encode(`data: ${data}\n\n`));
+        } catch {
+          closed = true;
+        }
+      };
+
+      const run = async () => {
+        enqueue({ status: 'queued' });
+        try {
+          const completion = await callGeminiUntilComplete(
+            apiKeys,
+            systemMessage,
+            prompt,
+            abortController.signal,
+            (status) => enqueue(status)
+          );
+          if (!('content' in completion)) {
+            const error = getCompletionErrorDetails(completion);
+            if (!error) return;
+            enqueue({ error: error.message, code: error.code });
+            enqueue('[DONE]');
+            return;
+          }
+
+          enqueue({ content: completion.content });
+          enqueue({ finishReason: 'STOP', complete: true });
+          enqueue('[DONE]');
+        } catch (error) {
+          if (abortController.signal.aborted) return;
+          console.error('[AI] analyze stream failed', error);
+          enqueue({
+            error: 'AI analysis failed. Please try again later.',
+            code: 'AI_ANALYSIS_FAILED',
+          });
+          enqueue('[DONE]');
+        } finally {
+          if (!closed && !abortController.signal.aborted) {
+            closed = true;
+            controller.close();
+          }
+          request.signal.removeEventListener('abort', onRequestAbort);
+        }
+      };
+
+      void run();
+    },
+    cancel() {
+      abortController.abort();
+      request.signal.removeEventListener('abort', onRequestAbort);
+      closed = true;
     },
   });
 
@@ -573,30 +900,27 @@ export const Route = createFileRoute('/api/analyze')({
             );
           }
 
+          if (data.stream) {
+            return buildGeminiContentStreamResponse(
+              apiKeys,
+              systemMessage,
+              prompt,
+              request
+            );
+          }
+
           const completion = await callGeminiUntilComplete(
             apiKeys,
             systemMessage,
             prompt,
             request.signal
           );
-          if (!('content' in completion)) {
-            const isIncomplete = completion.code === 'INCOMPLETE_AI_RESPONSE';
-            return errorResponse(
-              completion.rateLimited ? 429 : isIncomplete ? 502 : 503,
-              completion.rateLimited
-                ? 'RATE_LIMIT'
-                : isIncomplete
-                  ? 'INCOMPLETE_AI_RESPONSE'
-                  : 'AI_PROVIDER_ERROR',
-              completion.rateLimited
-                ? 'AI analysis is temporarily rate limited. Please try again shortly.'
-                : isIncomplete
-                  ? 'AI analysis returned an incomplete response. Please try again.'
-                  : 'AI analysis is temporarily unavailable. Please try again later.'
-            );
+          const error = getCompletionErrorDetails(completion);
+          if (error) {
+            return errorResponse(error.status, error.code, error.message);
           }
 
-          if (!data.stream) {
+          if ('content' in completion) {
             return Response.json(
               { content: completion.content },
               {
@@ -608,7 +932,11 @@ export const Route = createFileRoute('/api/analyze')({
             );
           }
 
-          return buildGeminiContentStreamResponse(completion.content, request);
+          return errorResponse(
+            503,
+            'AI_PROVIDER_ERROR',
+            'AI analysis is temporarily unavailable. Please try again later.'
+          );
         } catch (error) {
           if (error instanceof Error && error.name === 'AbortError') {
             return new Response(null, { status: 204 });

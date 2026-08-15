@@ -3,6 +3,10 @@
 import handler from '@tanstack/react-start/server-entry';
 import { localeMiddleware } from '@/locale/middleware';
 import { getChartMiniLegacyRedirect } from '@/lib/chartmini-legacy-redirects';
+import { GeminiKeyPool } from '@/lib/gemini-key-pool';
+
+// Wrangler discovers Durable Object classes from the Worker entry module.
+export { GeminiKeyPool };
 
 /**
  * TanStack Start server entry
