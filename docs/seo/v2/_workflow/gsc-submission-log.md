@@ -29,3 +29,24 @@ Their existing indexation status is user-confirmed, not independently re-read fr
 Redirecting duplicate URLs and numeric legacy URLs were intentionally not submitted.
 
 Historical GSC Request Indexing records from the previous project remain excluded from this v2 log.
+
+## 2026-08-15 — Task 21 closeout
+
+After the Task21 deployment and production verification, the user confirmed that these three canonical owners were not indexed and were manually submitted through GSC Request Indexing:
+
+1. `https://chartmini.com/blog/correlation-analysis-mastery-how-to-use-market-relationships-to-reduce-risk-2026`
+2. `https://chartmini.com/blog/holiday-trading-market-patterns-and-strategies-for-the-christmas-season-2026`
+3. `https://chartmini.com/blog/how-to-keep-trading-journal`
+
+Submission source: user-confirmed manual GSC URL Inspection / Request Indexing.
+Submission date: 2026-08-15.
+Planned read-only reviews: 2026-08-22 and 2026-08-29.
+
+The user reported these Task21 canonical owners were already indexed, so no duplicate Request Indexing submission was made:
+
+- `https://chartmini.com/blog/scalping-strategies-guide`
+- `https://chartmini.com/blog/how-to-recover-from-trading-loss`
+- `https://chartmini.com/blog/your-2026-trading-blueprint-setting-goals-that-actually-work-2026`
+- `https://chartmini.com/blog/trading-journal-mastery-how-to-review-analyze-and-improve-your-trading-in-2026-2026`
+
+The broad Journal owner was not rewritten in Task21.8; Task21 only added four new redirect sources and canonicalized inbound links to it. All Task21 redirecting long slugs and numeric legacy URLs were intentionally not submitted.

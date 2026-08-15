@@ -73,4 +73,167 @@
 - 14-day observation: 2026-08-29.
 - Bing/IndexNow remain `unknown_not_reverified` because current credentials are unavailable.
 
-Task 20.1–20.9 is fully closed and in read-only observation. No Task 21 target has been authorized.
+Task 20.1–20.9 is fully closed and in read-only observation.
+
+## Task 21
+
+### 21.1 — Scalping beginner guide
+- Requested URL: `/blog/beginners-guide-to-scalping-start-here`
+- Owner Gate: `consolidate_redirect + rebuild_owner`
+- Selected owner: `/blog/scalping-strategies-guide`
+- Additional duplicate consolidated: `/blog/scalping-small-price-moves-beginner-guide`
+- Owner rebuilt for beginner definition, costs/execution, setup-study workflow, risk, current 2026 U.S. intraday-margin transition, and ChartMini practice limitations.
+- `pnpm build`: PASS
+- `pnpm check`: PASS; Vitest 9/9
+- `pnpm seo:v2:workflow:check`: PASS
+- `git diff --check`: PASS
+- Generated routable broad scalping owners: 1
+- Duplicate redirect-source count: 0
+- Status: `protected_observation` — production verified; owner already indexed per user; reviews 2026-08-22 / 2026-08-29.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-15-task21-1-scalping-consolidation/memory.md`
+
+### 21.2 — Correlation analysis
+- Target: `/blog/correlation-analysis-mastery-how-to-use-market-relationships-to-reduce-risk-2026`
+- Owner Gate: `retain_narrow + rebuild`
+- Owner boundary: general Pearson/rolling trading correlation, aligned-return measurement, correlation-vs-beta/cointegration, hedge/intermarket/pair-screening limitations.
+- Portfolio matrix/covariance/weights/stress diversification remains owned by `/blog/portfolio-correlation-why-your-diversification-might-be-failing-2026`.
+- Two numeric inbound links converted to canonical.
+- `pnpm build`: PASS
+- `pnpm check`: PASS; Vitest 9/9
+- `pnpm seo:v2:workflow:check`: PASS
+- `git diff --check`: PASS
+- Target manifest count: 1
+- Target internal blog links: all valid/routable
+- Status: `protected_observation` — production verified; user-confirmed GSC Request Indexing; reviews 2026-08-22 / 2026-08-29.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-15-task21-2-correlation-analysis/memory.md`
+
+### 21.3 — Holiday trading / Christmas seasonality
+- Target: `/blog/holiday-trading-market-patterns-and-strategies-for-the-christmas-season-2026`
+- Owner Gate: `retain_narrow + rebuild`
+- Owner boundary: Christmas/New Year U.S. equity holiday-trading conditions, exact Santa Claus Rally dates/definition, historical-seasonality limits, execution/liquidity/event-risk context, and reproducible testing workflow.
+- Annual market hours/holiday calendar, annual trading-day count, year-end review, portfolio rebalancing, and generic volume analysis remain separate owners.
+- Old `/blog/2025122401` body inlink converted to canonical; canonical body inlinks now 4.
+- `pnpm build`: PASS
+- `pnpm check`: PASS; Vitest 13/13 across 5 files
+- `pnpm seo:v2:workflow:check`: PASS
+- `git diff --check`: PASS
+- Target manifest count: 1
+- Target internal blog links: all valid/routable
+- Status: `protected_observation` — production verified; user-confirmed GSC Request Indexing; reviews 2026-08-22 / 2026-08-29.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-15-task21-3-holiday-trading/memory.md`
+
+### 21.4 — How to keep a trading journal
+- Target: `/blog/how-to-keep-trading-journal`
+- Owner Gate: `retain_narrow + consolidate_habit_duplicate`
+- Canonical owner: `/blog/how-to-keep-trading-journal`
+- Consolidated duplicate: `/blog/the-trading-journal-your-most-powerful-trading-tool-2026`
+- Owner boundary: sustainable journal-maintenance process, minimum viable record, logging triggers, data integrity, missed-entry recovery, live-vs-simulation labeling, and handoff to periodic review.
+- Broad template/metrics/replay remains owned by `/blog/trading-journal-mastery-how-to-review-analyze-and-improve-your-trading-in-2026-2026`; detailed single-trade and periodic review remain separate owners.
+- Duplicate long slug and `/blog/2026010202` configured as direct redirects to Task21.4; `/blog/2026031102` remains direct to owner.
+- Six duplicate/numeric body links converted to canonical; Task21.4 canonical body-inlink files now 23.
+- `pnpm build`: PASS
+- `pnpm check`: PASS; Vitest 13/13 across 5 files
+- `pnpm seo:v2:workflow:check`: PASS
+- `git diff --check`: PASS
+- Target manifest count: 1
+- Target internal blog links: all valid/routable
+- Residual body links to duplicate: 0
+- Status: `protected_observation` — production verified; user-confirmed GSC Request Indexing; reviews 2026-08-22 / 2026-08-29.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-15-task21-4-trading-journal-habit/memory.md`
+
+### 21.5 — Trading-loss behavioral recovery
+- Target: `/blog/how-to-recover-from-trading-loss`
+- Explicit override: reopened protected Task20 behavioral-recovery owner.
+- Owner Gate: `retain_owner + surgical_refresh`
+- Owner boundary: planned-vs-rule-breaking-vs-blowup triage, loss-chasing controls, aggressive-vs-frozen post-loss behavior, process-matched recovery controls, simulation/reduced-risk re-entry, and evidence for restoring normal risk.
+- Exact drawdown recovery math remains owned by Task20.3; broad risk-management architecture remains separate.
+- Duplicate long slug and `/blog/2026012901` remain direct redirects to owner.
+- Added current Schwab 2026 / FINRA source notes; no universal pause/percentage/position-size/trade-count thresholds introduced.
+- `pnpm build`: PASS
+- `pnpm check`: PASS; Vitest 13/13 across 5 files
+- `pnpm seo:v2:workflow:check`: PASS
+- `git diff --check`: PASS
+- Target internal blog links: all valid/routable
+- Production redeploy verified with refreshed body; user reported the canonical owner already indexed, so no duplicate GSC resubmission was made. Redirect sources remain no-submit.
+- Status: `protected_observation` — reviews 2026-08-22 / 2026-08-29.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-15-task21-5-trading-loss-recovery/memory.md`
+
+### 21.6 — Recovery duplicate redirect revalidation
+- Requested URL: `/blog/how-to-recover-from-trading-losses-a-step-by-step-guide-2026`
+- Source: `content/blog/2026012901.md`
+- Owner Gate: `preserve_consolidation_redirect`
+- Canonical owner: `/blog/how-to-recover-from-trading-loss`
+- Production long slug: direct 301 to owner
+- Production `/blog/2026012901`: direct 301 to owner
+- Production sitemap: owner present; duplicate absent
+- Live body inlinks to duplicate/numeric path: 0
+- Fresh search still surfaces stale historical duplicate content with retired fixed recovery thresholds; this is treated as a stale-index signal, not a reason to restore a second owner.
+- No Task21.6 article-body or redirect-code change required; existing `redirectTo` and permanent redirects are correct.
+- `pnpm check`: PASS; Vitest 13/13 across 5 files.
+- `pnpm seo:v2:workflow:check`: PASS.
+- `git diff --check`: PASS.
+- Manifest: duplicate keeps redirectTo; routable behavioral-recovery owner count = 1.
+- Redirect config: both duplicate sources unique/direct; global duplicate redirect-source count = 0.
+- GSC: canonical owner already indexed per user; do not submit this duplicate redirect source.
+- Status: `redirect_protected_live`.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-15-task21-6-recovery-duplicate-revalidation/memory.md`
+
+### 21.7 — Trading goals / beginner blueprint consolidation
+- Requested URL: `/blog/how-to-set-trading-goals-for-2026-a-beginners-guide-2026`
+- Owner Gate: `consolidate_to_blueprint_owner + rebuild_owner`
+- Selected owner: `/blog/your-2026-trading-blueprint-setting-goals-that-actually-work-2026`
+- Additional duplicate consolidated: `/blog/trading-resolutions-for-2026-goals-that-actually-work-2026`
+- Owner boundary: process-vs-outcome trading goals, SMART/measurable goal design, evidence/review points, missed-goal diagnosis, and mid-year/annual goal reset.
+- Full trading-plan mechanics, risk architecture, journal maintenance/metrics and year-end performance review remain separate owners.
+- Requested long slug + `/blog/2026010701` configured direct to owner.
+- Trading Resolutions long slug + `/blog/2026010102` configured direct to owner.
+- `/blog/2026010301` remains direct to owner.
+- Three routable canonical body inlinks established; residual live links to duplicate/numeric paths = 0.
+- `pnpm build`: PASS
+- `pnpm check`: PASS; Vitest 13/13 across 5 files
+- `pnpm seo:v2:workflow:check`: PASS
+- `git diff --check`: PASS
+- Routable goal owner count: 1
+- Owner internal blog links: all valid/routable
+- Global duplicate redirect-source count: 0
+- Status: `protected_observation` — production verified; owner already indexed per user; reviews 2026-08-22 / 2026-08-29.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-15-task21-7-trading-goals-consolidation/memory.md`
+
+### 21.8 — Cluster intent, internal links, and cannibalization review
+- Scope: Task21.1–21.7 owners plus directly adjacent live pages.
+- Result: `PASS_WITH_FOUR_JOURNAL_CONSOLIDATIONS`
+- Existing Scalping / Correlation / Holiday / Journal Habit / Behavioral Recovery / Trading Goals boundaries revalidated.
+- New consolidation finding: four generic Trading Journal pages had no durable unique intent and are now direct redirect sources to the broad Journal owner.
+- New redirect sources: `/blog/trading-journal-guide-track-and-improve-your-trading-performance-2026`, `/blog/the-trading-journal-why-elite-traders-never-skip-it-2026`, `/blog/trading-journal-mastery-how-to-track-analyze-and-improve-your-trading-performance-2026`, `/blog/top-5-trading-journal-strategies-beginners` plus their numeric paths.
+- Live body links to Task21 redirect sources: 0.
+- Principal owner live body inlinks: Scalping 11; Correlation 4; Holiday 4; Journal Habit 22; Behavioral Recovery 4; Trading Goals 3; Broad Journal 23.
+- Global duplicate redirect-source count: 0.
+- Status: broad Journal owner `protected_observation`; four additional redirect sources `redirect_protected_live`; production 301/sitemap behavior verified; owner already indexed per user.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-15-task21-8-cluster-review/memory.md`
+
+### 21.9 — Final validation, Flowtrace, and Workflow sync
+- `pnpm build`: PASS; 402 blog posts generated.
+- `pnpm check`: PASS; 5 test files / 13 tests.
+- `pnpm seo:v2:workflow:check`: PASS.
+- `git diff --check`: PASS.
+- Selected Task21 owners: routable.
+- Task21 consolidation sources: non-routable via `redirectTo`.
+- Task21 redirect-source residual body links: 0.
+- Global duplicate redirect sources: 0.
+- Sitemap rule: redirectTo posts are non-indexable and excluded by `isIndexablePost`.
+- Original local result: `PASS_PENDING_DEPLOYMENT_VERIFICATION`.
+- Post-deployment closeout: production verified and GSC state recorded; final status `DEPLOY_VERIFIED_GSC_RECORDED_OBSERVATION_ACTIVE`.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-15-task21-9-final-validation/memory.md`
+
+### Task 21 deployment / GSC closeout
+- Remote code commit: `f3629380ada9a88720ebf0755f7296fb4430c52b` on `chartminiv2/main`.
+- Production deployment: verified complete on 2026-08-15.
+- Seven Task21 selected owners: production 200 + self-canonical + sitemap membership verified.
+- Task21 long/numeric consolidation sources: direct 301 verified; checked redirect chains = 0; redirect sources absent from sitemap.
+- User-confirmed GSC Request Indexing: Correlation Analysis, Holiday Trading, How to Keep a Trading Journal.
+- User-confirmed already indexed/no resubmit: Scalping, Behavioral Recovery, Trading Goals Blueprint, Broad Journal owner.
+- Redirect sources: no GSC submission.
+- Observation reviews: 2026-08-22 and 2026-08-29.
+- Closeout status: `DEPLOY_VERIFIED_GSC_RECORDED_OBSERVATION_ACTIVE`.
+
+Task 21.1–21.9 is complete and in observation. No Task 22 target has been authorized.
