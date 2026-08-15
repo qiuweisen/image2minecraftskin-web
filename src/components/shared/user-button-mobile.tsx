@@ -1,7 +1,7 @@
 import { m } from '@/locale/paraglide/messages';
 import { sessionClient } from '@/auth/session-client';
 import { getAvatarLinks } from '@/config/avatar-config';
-import type { SessionUser } from '@/auth/types';
+import type { SessionUserIdentity } from '@/auth/types';
 import { IconLogout } from '@tabler/icons-react';
 import { Link, useRouter } from '@tanstack/react-router';
 import { useState } from 'react';
@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/drawer';
 import { UserAvatar } from '@/components/shared/user-avatar';
 interface UserButtonMobileProps {
-  user: SessionUser;
+  user: SessionUserIdentity;
 }
 /**
  * Mobile user button

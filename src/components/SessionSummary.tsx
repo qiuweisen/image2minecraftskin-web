@@ -108,6 +108,13 @@ function getApiErrorCopy(
     return rateLimitText;
   }
 
+  if (
+    haystack.includes('incomplete_ai_response') ||
+    haystack.includes('incomplete response')
+  ) {
+    return fallbackText;
+  }
+
   if (!raw.trim()) {
     return emptyResponseText;
   }
@@ -129,6 +136,9 @@ async function readAnalysisStream(
   let buffer = '';
   let fullText = '';
   let fullThinking = '';
+  let finishReason: string | null = null;
+  let complete = false;
+  let streamError = '';
 
   const processLine = (line: string) => {
     const trimmed = line.trim();
@@ -144,7 +154,15 @@ async function readAnalysisStream(
       const json = JSON.parse(trimmed.slice(6)) as {
         thinking?: string;
         content?: string;
+        finishReason?: string;
+        complete?: boolean;
+        error?: string;
       };
+      if (typeof json.finishReason === 'string') {
+        finishReason = json.finishReason;
+      }
+      if (json.complete === true) complete = true;
+      if (typeof json.error === 'string') streamError = json.error;
       if (json.thinking) {
         fullThinking += json.thinking;
         onThinking(fullThinking);
@@ -176,7 +194,7 @@ async function readAnalysisStream(
     processLine(trailing);
   }
 
-  return { fullText, fullThinking };
+  return { fullText, fullThinking, finishReason, complete, streamError };
 }
 
 type SessionStoreHook = <T>(selector: (state: SessionState) => T) => T;
@@ -332,6 +350,14 @@ function SessionSummaryInner({
           if (mountedRef.current) setStreamingText(value);
         }
       );
+
+      if (
+        streamed.streamError ||
+        (streamed.finishReason && streamed.finishReason !== 'STOP') ||
+        (streamed.fullText.trim() && !streamed.complete)
+      ) {
+        throw new Error('INCOMPLETE_AI_RESPONSE');
+      }
 
       let finalText = streamed.fullText.trim();
 

@@ -13,9 +13,9 @@ import {
 import { UserAvatar } from './user-avatar';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import type { SessionUser } from '@/auth/types';
+import type { SessionUserIdentity } from '@/auth/types';
 interface UserButtonProps {
-  user: SessionUser;
+  user: SessionUserIdentity;
 }
 export function UserButton({ user }: UserButtonProps) {
   const router = useRouter();

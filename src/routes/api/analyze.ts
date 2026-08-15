@@ -14,6 +14,7 @@ const MAX_REQUEST_BYTES = 256 * 1024;
 const MAX_TRADES = 2_000;
 const GEMINI_STREAM_TIMEOUT_MS = 30_000;
 const GEMINI_NON_STREAM_TIMEOUT_MS = 45_000;
+const GEMINI_COMPLETION_RETRIES = 2;
 
 const NO_STORE_HEADERS = {
   'Cache-Control': 'no-store, no-cache, max-age=0, must-revalidate',
@@ -194,17 +195,42 @@ function extractGeminiText(json: unknown) {
   return content ? extractTextPart(content.parts) : '';
 }
 
-function parseGeminiFrame(line: string) {
-  const trimmed = line.trim();
-  if (!trimmed || trimmed === 'data: [DONE]' || !trimmed.startsWith('data: ')) {
-    return '';
-  }
+function extractGeminiFinishReason(json: unknown) {
+  if (!isRecord(json)) return undefined;
+  const candidates = Array.isArray(json.candidates) ? json.candidates : [];
+  const candidate = isRecord(candidates[0]) ? candidates[0] : null;
+  return candidate && typeof candidate.finishReason === 'string'
+    ? candidate.finishReason
+    : undefined;
+}
+
+function extractJsonObjectCandidate(value: string) {
+  let text = value.trim();
+  const fenced = text.match(/^```(?:json)?\s*([\s\S]*?)\s*```$/i);
+  if (fenced?.[1]) text = fenced[1].trim();
+
+  const start = text.indexOf('{');
+  const end = text.lastIndexOf('}');
+  return start >= 0 && end > start ? text.slice(start, end + 1) : '';
+}
+
+function isCompleteJsonObject(value: string) {
+  const candidate = extractJsonObjectCandidate(value);
+  if (!candidate) return false;
 
   try {
-    return extractGeminiText(JSON.parse(trimmed.slice(6)));
+    return isRecord(JSON.parse(candidate));
   } catch {
-    return '';
+    return false;
   }
+}
+
+async function readGeminiCompletion(response: Response) {
+  const json = (await response.json().catch(() => null)) as unknown;
+  return {
+    content: extractGeminiText(json),
+    finishReason: extractGeminiFinishReason(json),
+  };
 }
 
 function isRetryableStatus(status: number, errorText: string) {
@@ -248,7 +274,7 @@ function buildGeminiPayload(
   allowJsonMode: boolean
 ) {
   const generationConfig: Record<string, unknown> = {
-    maxOutputTokens: 2400,
+    maxOutputTokens: 9600,
   };
   if (model.startsWith('gemini-3')) {
     generationConfig.thinkingConfig = { thinkingLevel: 'low' };
@@ -356,6 +382,65 @@ async function callGemini(
   return { errorStatus: lastStatus, rateLimited: lastRateLimited };
 }
 
+type CompleteProviderResult =
+  | { content: string }
+  | {
+      errorStatus: number;
+      rateLimited: boolean;
+      code?: 'INCOMPLETE_AI_RESPONSE';
+    };
+
+// The analysis payload is a small, bounded JSON document. Buffering the
+// provider's non-stream response lets us validate finishReason and JSON
+// completeness before anything reaches the browser.
+async function callGeminiUntilComplete(
+  apiKeys: string[],
+  systemMessage: string,
+  prompt: string,
+  clientSignal: AbortSignal
+): Promise<CompleteProviderResult> {
+  let lastFailure: CompleteProviderResult = {
+    errorStatus: 502,
+    rateLimited: false,
+    code: 'INCOMPLETE_AI_RESPONSE',
+  };
+
+  for (let retry = 0; retry < GEMINI_COMPLETION_RETRIES; retry += 1) {
+    const upstream = await callGemini(
+      apiKeys,
+      systemMessage,
+      prompt,
+      false,
+      clientSignal
+    );
+
+    if (!('response' in upstream)) return upstream;
+
+    const completion = await readGeminiCompletion(upstream.response);
+    const isComplete =
+      completion.finishReason === 'STOP' &&
+      isCompleteJsonObject(completion.content);
+
+    if (isComplete) {
+      console.info(
+        `[AI] provider=gemini complete retry=${retry + 1}/${GEMINI_COMPLETION_RETRIES} content-length=${completion.content.length}`
+      );
+      return { content: completion.content };
+    }
+
+    console.warn(
+      `[AI] provider=gemini incomplete retry=${retry + 1}/${GEMINI_COMPLETION_RETRIES} finish-reason=${completion.finishReason ?? 'UNKNOWN'} content-length=${completion.content.length}`
+    );
+    lastFailure = {
+      errorStatus: 502,
+      rateLimited: false,
+      code: 'INCOMPLETE_AI_RESPONSE',
+    };
+  }
+
+  return lastFailure;
+}
+
 function errorResponse(
   status: number,
   code: string,
@@ -368,78 +453,26 @@ function errorResponse(
   );
 }
 
-function buildGeminiStreamResponse(upstream: Response, request: Request) {
+function buildGeminiContentStreamResponse(content: string, request: Request) {
   const encoder = new TextEncoder();
-  const decoder = new TextDecoder();
   const stream = new ReadableStream<Uint8Array>({
-    async start(controller) {
-      const reader = upstream.body?.getReader();
-      if (!reader) {
+    start(controller) {
+      if (request.signal.aborted) {
         controller.close();
         return;
       }
 
-      let closed = false;
-      let clientAborted = request.signal.aborted;
-      let buffer = '';
-      const close = () => {
-        if (closed) return;
-        closed = true;
-        try {
-          controller.close();
-        } catch {
-          // The client may have disconnected between chunks.
-        }
-      };
-      const enqueue = (value: string) => {
-        if (!closed && !clientAborted)
-          controller.enqueue(encoder.encode(value));
-      };
-      const emitLine = (line: string) => {
-        const content = parseGeminiFrame(line);
-        if (content) enqueue(`data: ${JSON.stringify({ content })}\n\n`);
-      };
-      const onAbort = () => {
-        clientAborted = true;
-        void reader.cancel();
-        close();
-      };
-
-      request.signal.addEventListener('abort', onAbort);
-      if (clientAborted) {
-        onAbort();
-        request.signal.removeEventListener('abort', onAbort);
-        return;
-      }
-
-      enqueue(': stream started\n\n');
-
-      try {
-        while (!clientAborted) {
-          const { done, value } = await reader.read();
-          if (done) break;
-
-          buffer += decoder.decode(value, { stream: true });
-          const lines = buffer.split('\n');
-          buffer = lines.pop() ?? '';
-          for (const line of lines) emitLine(line);
-        }
-
-        const trailing = buffer.trim();
-        if (trailing) emitLine(trailing);
-      } catch (error) {
-        if (!clientAborted)
-          console.error('[AI] Gemini stream processing failed', error);
-      } finally {
-        request.signal.removeEventListener('abort', onAbort);
-        if (!clientAborted) enqueue('data: [DONE]\n\n');
-        close();
-        try {
-          reader.releaseLock();
-        } catch {
-          // The reader is already released or cancelled.
-        }
-      }
+      controller.enqueue(encoder.encode(': stream started\n\n'));
+      controller.enqueue(
+        encoder.encode(`data: ${JSON.stringify({ content })}\n\n`)
+      );
+      controller.enqueue(
+        encoder.encode(
+          `data: ${JSON.stringify({ finishReason: 'STOP', complete: true })}\n\n`
+        )
+      );
+      controller.enqueue(encoder.encode('data: [DONE]\n\n'));
+      controller.close();
     },
   });
 
@@ -540,35 +573,32 @@ export const Route = createFileRoute('/api/analyze')({
             );
           }
 
-          const upstream = await callGemini(
+          const completion = await callGeminiUntilComplete(
             apiKeys,
             systemMessage,
             prompt,
-            data.stream,
             request.signal
           );
-          if (!('response' in upstream)) {
+          if (!('content' in completion)) {
+            const isIncomplete = completion.code === 'INCOMPLETE_AI_RESPONSE';
             return errorResponse(
-              upstream.rateLimited ? 429 : 503,
-              upstream.rateLimited ? 'RATE_LIMIT' : 'AI_PROVIDER_ERROR',
-              upstream.rateLimited
+              completion.rateLimited ? 429 : isIncomplete ? 502 : 503,
+              completion.rateLimited
+                ? 'RATE_LIMIT'
+                : isIncomplete
+                  ? 'INCOMPLETE_AI_RESPONSE'
+                  : 'AI_PROVIDER_ERROR',
+              completion.rateLimited
                 ? 'AI analysis is temporarily rate limited. Please try again shortly.'
-                : 'AI analysis is temporarily unavailable. Please try again later.'
+                : isIncomplete
+                  ? 'AI analysis returned an incomplete response. Please try again.'
+                  : 'AI analysis is temporarily unavailable. Please try again later.'
             );
           }
 
           if (!data.stream) {
-            const json = (await upstream.response.json()) as unknown;
-            const content = extractGeminiText(json);
-            if (!content) {
-              return errorResponse(
-                502,
-                'EMPTY_AI_RESPONSE',
-                'AI analysis returned an empty response.'
-              );
-            }
             return Response.json(
-              { content },
+              { content: completion.content },
               {
                 headers: {
                   ...NO_STORE_HEADERS,
@@ -578,7 +608,7 @@ export const Route = createFileRoute('/api/analyze')({
             );
           }
 
-          return buildGeminiStreamResponse(upstream.response, request);
+          return buildGeminiContentStreamResponse(completion.content, request);
         } catch (error) {
           if (error instanceof Error && error.name === 'AbortError') {
             return new Response(null, { status: 204 });
