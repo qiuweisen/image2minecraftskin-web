@@ -83,6 +83,72 @@ const areMarkersEqual = (a: ChartMarker[], b: ChartMarker[]) => {
   return true;
 };
 
+const MARKER_OFFSET_RATIO = 0.2;
+const MARKER_MIN_TICK_COUNT = 4;
+
+const normalizeChartResolution = (resolution: string) =>
+  resolution === '1D' ? 'D' : resolution;
+
+const getDecimalPlaces = (value: number) => {
+  if (!Number.isFinite(value)) return 0;
+  const [coefficient, exponentText] = value.toString().toLowerCase().split('e');
+  const decimalPlaces = coefficient.split('.')[1]?.length ?? 0;
+  const exponent = exponentText ? Number(exponentText) : 0;
+  return Math.max(0, decimalPlaces - exponent);
+};
+
+const getPriceStep = (candles: Candle[]) => {
+  let maxDecimalPlaces = 2;
+  for (const candle of candles) {
+    for (const value of [candle.open, candle.high, candle.low, candle.close]) {
+      maxDecimalPlaces = Math.max(
+        maxDecimalPlaces,
+        Math.min(6, getDecimalPlaces(value))
+      );
+    }
+  }
+  return 10 ** -Math.min(6, maxDecimalPlaces);
+};
+
+const getMarkerBounds = (
+  marker: ChartMarker,
+  candles: Candle[],
+  resolution: string
+) => {
+  const markerTime = Date.parse(marker.time);
+  const normalizedResolution = normalizeChartResolution(resolution);
+  const bucketStart = Number.isFinite(markerTime)
+    ? chartResolutionBucketStart(markerTime, normalizedResolution)
+    : markerTime;
+  let high = Number.NEGATIVE_INFINITY;
+  let low = Number.POSITIVE_INFINITY;
+
+  for (const candle of candles) {
+    const candleTime = Date.parse(candle.time);
+    if (
+      !Number.isFinite(candleTime) ||
+      chartResolutionBucketStart(candleTime, normalizedResolution) !==
+        bucketStart
+    ) {
+      continue;
+    }
+    high = Math.max(high, candle.high);
+    low = Math.min(low, candle.low);
+  }
+
+  if (!Number.isFinite(high) || !Number.isFinite(low)) {
+    return { time: markerTime, high: marker.high, low: marker.low };
+  }
+
+  return { time: bucketStart, high, low };
+};
+
+const getMarkerOffset = (high: number, low: number, priceStep: number) =>
+  Math.max(
+    (high - low) * MARKER_OFFSET_RATIO,
+    priceStep * MARKER_MIN_TICK_COUNT
+  );
+
 /**
  * Custom Datafeed implementation for TradingView
  * Bridges our simple Candle[] data to TradingView's JS API.
@@ -394,6 +460,9 @@ function TradingViewChartInner({
   const markerIdsRef = useRef<any[]>([]);
   const candlesRef = useRef(candles);
   const activeResolutionRef = useRef(interval === '1D' ? 'D' : interval);
+  const [activeResolution, setActiveResolution] = useState(
+    interval === '1D' ? 'D' : interval
+  );
   const barCountShapesRef = useRef<
     Map<
       string,
@@ -404,6 +473,8 @@ function TradingViewChartInner({
   const syncBarCountDrawingsRef = useRef<() => void>(() => undefined);
   const [isChartReady, setIsChartReady] = useState(false);
   const prevMarkersRef = useRef<ChartMarker[]>([]);
+  const prevMarkerContextRef = useRef('');
+  const markerRenderTokenRef = useRef(0);
   const chartPersistenceRef = useRef<ChartPersistenceState>({
     layout: null,
     userSettings: {},
@@ -741,6 +812,11 @@ function TradingViewChartInner({
     setIsChartReady(false);
     onReadyChange?.(false);
     prevMarkersRef.current = [];
+    prevMarkerContextRef.current = '';
+    markerRenderTokenRef.current += 1;
+    const requestedResolution = interval === '1D' ? 'D' : interval;
+    activeResolutionRef.current = requestedResolution;
+    setActiveResolution(requestedResolution);
 
     const restorePageOwnedBarCount = async (chart: any) => {
       if (
@@ -898,6 +974,7 @@ function TradingViewChartInner({
         try {
           const syncResolution = (interval: string) => {
             activeResolutionRef.current = interval;
+            setActiveResolution(interval);
             datafeedRef.current?.setResolution(interval);
             onIntervalChange?.(interval);
           };
@@ -1142,53 +1219,99 @@ function TradingViewChartInner({
   useEffect(() => {
     if (!widgetRef.current || !isChartReady) return;
 
-    if (areMarkersEqual(markers, prevMarkersRef.current)) return;
+    const lastCandle = candles[candles.length - 1];
+    const markerContext = [
+      activeResolution,
+      candles.length,
+      candles[0]?.time ?? '',
+      lastCandle?.time ?? '',
+      lastCandle?.high ?? '',
+      lastCandle?.low ?? '',
+    ].join(':');
+    if (
+      areMarkersEqual(markers, prevMarkersRef.current) &&
+      markerContext === prevMarkerContextRef.current
+    ) {
+      return;
+    }
     prevMarkersRef.current = markers;
+    prevMarkerContextRef.current = markerContext;
 
-    try {
-      const chart = widgetRef.current.activeChart();
-      if (!chart) return;
+    const widget = widgetRef.current;
+    const chart = widget.activeChart();
+    if (!chart) return;
 
-      // Clear old
-      markerIdsRef.current.forEach((id) => {
-        try {
-          chart.removeEntity(id);
-        } catch {}
-      });
-      markerIdsRef.current = [];
+    const renderToken = ++markerRenderTokenRef.current;
+    markerIdsRef.current.forEach((id) => {
+      try {
+        chart.removeEntity(id);
+      } catch {}
+    });
+    markerIdsRef.current = [];
+
+    const drawMarkers = () => {
+      if (
+        renderToken !== markerRenderTokenRef.current ||
+        widgetRef.current !== widget ||
+        !isChartReady
+      ) {
+        return;
+      }
 
       if (!markers.length) return;
 
-      markers.forEach((m) => {
-        const isBuy = m.kind === 'buy';
-        const timeSec = Math.floor(new Date(m.time).getTime() / 1000);
-        const color = isBuy ? '#26a69a' : '#ef5350';
-        const offset = Math.max((m.high - m.low) * 0.4, m.low * 0.01);
-        const markerPrice = isBuy ? m.low - offset : m.high + offset;
+      try {
+        const priceStep = getPriceStep(candles);
+        markers.forEach((m) => {
+          const isBuy = m.kind === 'buy';
+          const bounds = getMarkerBounds(m, candles, activeResolution);
+          const timeSec = Math.floor(bounds.time / 1000);
+          const color = isBuy ? '#26a69a' : '#ef5350';
+          const offset = getMarkerOffset(bounds.high, bounds.low, priceStep);
+          const markerPrice = isBuy
+            ? bounds.low - offset
+            : bounds.high + offset;
 
-        const id = chart.createShape(
-          { time: timeSec, price: markerPrice },
-          {
-            shape: isBuy ? 'arrow_up' : 'arrow_down',
-            text: m.price.toFixed(2),
-            lock: true,
-            disableSelection: true,
-            disableSave: true,
-            disableUndo: true,
-            overrides: {
-              color,
-              fontsize: 9,
-              arrowColor: color,
-              backgroundColor: 'transparent',
-            },
-          }
-        );
-        if (hasEntityId(id)) markerIdsRef.current.push(id);
-      });
+          const id = chart.createShape(
+            { time: timeSec, price: markerPrice },
+            {
+              shape: isBuy ? 'arrow_up' : 'arrow_down',
+              text: m.price.toFixed(2),
+              lock: true,
+              disableSelection: true,
+              disableSave: true,
+              disableUndo: true,
+              overrides: {
+                color,
+                fontsize: 9,
+                arrowColor: color,
+                backgroundColor: 'transparent',
+              },
+            }
+          );
+          if (hasEntityId(id)) markerIdsRef.current.push(id);
+        });
+      } catch (e) {
+        console.error('[TradingView] Marker update failed', e);
+      }
+    };
+
+    try {
+      if (typeof chart.dataReady === 'function') {
+        chart.dataReady(drawMarkers);
+      } else {
+        drawMarkers();
+      }
     } catch (e) {
-      console.error('[TradingView] Marker update failed', e);
+      console.error('[TradingView] Marker readiness check failed', e);
     }
-  }, [markers, isChartReady]);
+
+    return () => {
+      if (markerRenderTokenRef.current === renderToken) {
+        markerRenderTokenRef.current += 1;
+      }
+    };
+  }, [activeResolution, candles, isChartReady, markers]);
 
   /**
    * 4. Theme Update Effect

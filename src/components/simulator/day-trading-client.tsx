@@ -433,14 +433,15 @@ function DayTradingSimulatorContent() {
       className="flex h-[100dvh] scroll-mt-16 flex-col bg-background md:h-[calc(100vh-3.5rem)] md:flex-row md:overflow-hidden"
     >
       <div className="flex flex-none items-center justify-between gap-2 border-b border-border bg-background px-3 py-2 md:hidden">
-        <div className="flex items-center justify-between gap-2">
-          {renderMarketSelector(true)}
+        {renderMarketSelector(true)}
+        <div className="flex-none">
           {active ? (
             <Button
               type="button"
               onClick={onFinish}
-              variant="secondary"
+              variant="destructive"
               size="sm"
+              className="bg-destructive font-semibold text-white shadow-md shadow-destructive/20 hover:bg-destructive/90 dark:bg-destructive dark:text-red-950 dark:hover:bg-destructive/90"
             >
               {t('finish')}
             </Button>
@@ -552,9 +553,9 @@ function DayTradingSimulatorContent() {
               <Button
                 type="button"
                 onClick={onFinish}
-                variant="secondary"
+                variant="destructive"
                 size="lg"
-                className="w-full"
+                className="w-full bg-destructive font-semibold text-white shadow-md shadow-destructive/20 hover:bg-destructive/90 dark:bg-destructive dark:text-red-950 dark:hover:bg-destructive/90"
               >
                 {t('finish')}
               </Button>

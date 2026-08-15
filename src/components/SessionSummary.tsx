@@ -973,14 +973,14 @@ function SessionSummaryInner({
                 </Button>
               </>
             ) : (
-              <>
+              <div className="flex w-full flex-row gap-2 sm:contents">
                 {!hasSuccessfulAnalysis && (
                   <Button
                     type="button"
                     onClick={handleAnalyze}
                     disabled={loading}
                     size="lg"
-                    className="flex-1"
+                    className="min-h-11 flex-1 sm:min-h-0"
                   >
                     {loading ? (
                       <IconLoader2 className="animate-spin" />
@@ -998,7 +998,7 @@ function SessionSummaryInner({
                     disabled={sharing}
                     size="lg"
                     variant="secondary"
-                    className="flex-1"
+                    className="min-h-11 flex-1 sm:min-h-0"
                   >
                     {sharing && <IconLoader2 className="animate-spin" />}
                     {sharing
@@ -1015,11 +1015,11 @@ function SessionSummaryInner({
                   }}
                   variant="outline"
                   size="lg"
-                  className="flex-1"
+                  className="min-h-11 flex-1 sm:min-h-0"
                 >
                   {t('dismiss')}
                 </Button>
-              </>
+              </div>
             )}
           </DialogFooter>
         </DialogContent>

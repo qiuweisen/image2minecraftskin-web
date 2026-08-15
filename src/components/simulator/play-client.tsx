@@ -539,7 +539,8 @@ function PlayContent() {
               type="button"
               onClick={onFinish}
               size="sm"
-              variant="secondary"
+              variant="destructive"
+              className="bg-destructive font-semibold text-white shadow-md shadow-destructive/20 hover:bg-destructive/90 dark:bg-destructive dark:text-red-950 dark:hover:bg-destructive/90"
             >
               {t('finish')}
             </Button>
@@ -671,9 +672,9 @@ function PlayContent() {
               <Button
                 type="button"
                 onClick={onFinish}
-                variant="secondary"
+                variant="destructive"
                 size="lg"
-                className="w-full"
+                className="w-full bg-destructive font-semibold text-white shadow-md shadow-destructive/20 hover:bg-destructive/90 dark:bg-destructive dark:text-red-950 dark:hover:bg-destructive/90"
               >
                 {t('finish')}
               </Button>

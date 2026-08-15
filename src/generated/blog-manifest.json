@@ -651,7 +651,8 @@
     "category": "Beginner Guides",
     "categories": ["Beginner Guides", "Trading Tools"],
     "tags": ["Journal", "Trading"],
-    "noindex": true
+    "noindex": true,
+    "redirectTo": "/blog/trading-journal-mastery-how-to-review-analyze-and-improve-your-trading-in-2026-2026"
   },
   {
     "slug": "bull-market-vs-bear-market-trading-strategies-for-different-market-conditions-2026",
@@ -691,11 +692,25 @@
     "fileSlug": "2025122401",
     "contentKey": "chartmini-content/blog/2025122401.md",
     "locale": "en",
-    "title": "Holiday Trading: Market Patterns and Strategies for the Christmas Season",
-    "description": "Master Holiday Trading: Market Patterns and strategies. Proven techniques, entry signals, and risk management. Learn from expert anal in 2026.",
+    "title": "Holiday Trading 2026: Christmas Market Hours, Santa Rally, and Seasonal Risk",
+    "metaTitle": "Holiday Trading 2026: Santa Rally, Hours & Risk",
+    "description": "Learn what changes around Christmas and New Year trading, the exact 2026 Santa Claus rally window, holiday market hours, liquidity risks, and how to test seasonal patterns without treating the calendar as a trading signal.",
     "date": "2025-12-24",
-    "category": "Trading Strategies",
-    "tags": ["Market", "Trading"]
+    "dateModified": "2026-08-15",
+    "category": "Trading Education",
+    "categories": [
+      "Trading Education",
+      "Market Seasonality",
+      "Risk Management"
+    ],
+    "tags": [
+      "Holiday Trading",
+      "Santa Claus Rally",
+      "Market Seasonality",
+      "Christmas Trading",
+      "Year-End Trading",
+      "Liquidity"
+    ]
   },
   {
     "slug": "5-technical-indicators-every-new-trader-should-learn-first-2026",
@@ -1008,7 +1023,8 @@
       "trading performance",
       "trading psychology",
       "paper trading journal"
-    ]
+    ],
+    "redirectTo": "/blog/trading-journal-mastery-how-to-review-analyze-and-improve-your-trading-in-2026-2026"
   },
   {
     "slug": "year-end-portfolio-rebalancing-start-2026-strong-2026",
@@ -1030,7 +1046,8 @@
     "description": "Trading Resolutions for 2026: Goals That Actually Work Expert insights and strategies to improve your trading performance.",
     "date": "2026-01-01",
     "category": "Trading Education",
-    "tags": ["Trading"]
+    "tags": ["Trading"],
+    "redirectTo": "/blog/your-2026-trading-blueprint-setting-goals-that-actually-work-2026"
   },
   {
     "slug": "mastering-support-and-resistance-the-foundation-of-technical-analysis-2026",
@@ -1069,26 +1086,28 @@
       "weekly trading review",
       "trade log habit",
       "trading discipline"
-    ]
+    ],
+    "redirectTo": "/blog/how-to-keep-trading-journal"
   },
   {
     "slug": "your-2026-trading-blueprint-setting-goals-that-actually-work-2026",
     "fileSlug": "2026010301",
     "contentKey": "chartmini-content/blog/2026010301.md",
     "locale": "en",
-    "title": "Trading Blueprint 2026: A 12-Month Goal Plan and Review System",
-    "description": "Build your 2026 trading blueprint with a 12-month goal plan, process goals, quarterly milestones, weekly review system, goal dashboard, trading journal metrics, and ChartMini practice workflow.",
+    "title": "How to Set Trading Goals for 2026: A Beginner Trading Blueprint",
+    "metaTitle": "Trading Goals 2026: Beginner Process & Review Blueprint",
+    "description": "Learn how to set trading goals for 2026 using process goals, measurable evidence, risk boundaries, and a review system that separates controllable actions from market outcomes.",
     "date": "2026-01-03",
-    "dateModified": "2026-06-02",
+    "dateModified": "2026-08-15",
     "category": "Trading Plan",
-    "categories": ["Trading Plan", "Trading Goals", "Trading Discipline"],
+    "categories": ["Trading Plan", "Trading Goals", "Beginner Guides"],
     "tags": [
-      "trading blueprint 2026",
-      "trading goals 2026",
-      "trading goal plan",
-      "trading goal dashboard",
-      "trading review system",
-      "trading process goals"
+      "Trading Goals",
+      "Trading Plan",
+      "Process Goals",
+      "Trading Discipline",
+      "Trading Journal",
+      "Trading Review"
     ]
   },
   {
@@ -1308,7 +1327,8 @@
     "description": "How to Set Trading Goals for 2026: A Beginner Step-by-step guide with proven strategies and expert tips. Learn from expert analysis. in 2026.",
     "date": "2026-01-07",
     "category": "Beginner Guides",
-    "tags": ["Trading"]
+    "tags": ["Trading"],
+    "redirectTo": "/blog/your-2026-trading-blueprint-setting-goals-that-actually-work-2026"
   },
   {
     "slug": "risk-management-in-trading-the-hidden-skill-that-separates-winners-from-losers-2026",
@@ -1629,12 +1649,21 @@
     "fileSlug": "2026011102",
     "contentKey": "chartmini-content/blog/2026011102.md",
     "locale": "en",
-    "title": "Correlation Analysis Mastery: How to Use Market Relationships to Reduce Risk",
-    "description": "Correlation Analysis Mastery: How to Use Market Relationships to Reduce Risk Practical guide with clear examples.",
+    "title": "Correlation Trading Guide: How to Measure Market Relationships Without Fooling Yourself",
+    "metaTitle": "Correlation Trading Guide 2026: Pearson, Rolling & Pair Risk",
+    "description": "Learn how trading correlation works, how to calculate Pearson and rolling correlation from returns, and how to use market relationships without treating correlation as causation, a hedge guarantee, or a pair-trading signal by itself.",
     "date": "2026-01-11",
+    "dateModified": "2026-08-15",
     "category": "Risk Management",
-    "categories": ["Risk Management", "Beginner Guides", "Trading Education"],
-    "tags": ["Market", "Risk"]
+    "categories": ["Risk Management", "Trading Education", "Beginner Guides"],
+    "tags": [
+      "Correlation",
+      "Pearson Correlation",
+      "Rolling Correlation",
+      "Pair Trading",
+      "Intermarket Analysis",
+      "Risk Management"
+    ]
   },
   {
     "slug": "mean-reversion-trading-mastery-how-to-profit-from-market-extremes-2026",
@@ -1727,7 +1756,8 @@
     "date": "2026-01-12",
     "category": "Beginner Guides",
     "categories": ["Beginner Guides", "Trading Tools", "Trading Education"],
-    "tags": ["Journal", "Trading"]
+    "tags": ["Journal", "Trading"],
+    "redirectTo": "/blog/trading-journal-mastery-how-to-review-analyze-and-improve-your-trading-in-2026-2026"
   },
   {
     "slug": "momentum-trading-guide-2026",
@@ -3052,7 +3082,8 @@
       "Forex Scalping",
       "Crypto Scalping",
       "Risk Management"
-    ]
+    ],
+    "redirectTo": "/blog/scalping-strategies-guide"
   },
   {
     "slug": "how-to-trade-news-trading-like-a-pro-in-2026",
@@ -3352,7 +3383,8 @@
       "Beginner Trading",
       "Trading Strategy",
       "Self-Improvement"
-    ]
+    ],
+    "redirectTo": "/blog/trading-journal-mastery-how-to-review-analyze-and-improve-your-trading-in-2026-2026"
   },
   {
     "slug": "beginners-guide-to-altcoins-start-here",
@@ -4115,18 +4147,20 @@
     "fileSlug": "2026031102",
     "contentKey": "chartmini-content/blog/2026031102.md",
     "locale": "en",
-    "title": "How to Keep a Trading Journal: The Habit That Separates Winners from Losers",
-    "description": "Learn how to create and maintain a trading journal that actually improves your performance. Includes templates, what to track, and how to analyze your data for profitable insights.",
+    "title": "How to Keep a Trading Journal: A Simple Routine You Can Maintain",
+    "metaTitle": "How to Keep a Trading Journal: Daily Habit & Routine",
+    "description": "Learn how to keep a trading journal with a simple before-entry, after-exit, end-of-day, and weekly routine that preserves your original plan without turning journaling into extra busywork.",
     "date": "2026-03-11",
-    "category": "Education",
-    "categories": ["Education", "Tools", "Risk Management"],
+    "dateModified": "2026-08-15",
+    "category": "Trading Education",
+    "categories": ["Trading Education", "Trading Journal", "Beginner Guides"],
     "tags": [
       "Trading Journal",
       "Trade Log",
-      "Performance Tracking",
+      "Trading Routine",
       "Trading Discipline",
-      "Backtesting",
-      "Self-Improvement"
+      "Trade Review",
+      "Trading Process"
     ]
   },
   {
@@ -4328,7 +4362,8 @@
       "Price Action Scalping",
       "1-Minute Chart",
       "Quick Profits"
-    ]
+    ],
+    "redirectTo": "/blog/scalping-strategies-guide"
   },
   {
     "slug": "chartmini-vs-candledojo-comparison",
@@ -5527,9 +5562,11 @@
     "fileSlug": "2026041502",
     "contentKey": "chartmini-content/blog/2026041502.md",
     "locale": "en",
-    "title": "Scalping strategies: what actually works (and the math that makes most scalpers lose)",
-    "description": "A realistic guide to scalping. Covers what scalping actually requires (not what YouTube shows), the math of why most scalpers lose, specific setups that work, and how to know if scalping fits your personality.",
+    "title": "Scalping Trading for Beginners: How It Works, Costs, Risks, and Setups",
+    "metaTitle": "Scalping Trading Guide 2026: Costs, Risks & Setups",
+    "description": "Learn what scalping trading is, why costs and execution matter, how common scalping setups are structured, and how beginners can practice without treating speed as an edge.",
     "date": "2026-04-15",
+    "dateModified": "2026-08-15",
     "category": "Education",
     "categories": ["Education", "Day Trading", "Trading Strategies"],
     "tags": [
@@ -5537,8 +5574,8 @@
       "Scalping Strategy",
       "Day Trading",
       "1-Minute Chart",
-      "Level 2 Trading",
-      "Tape Reading"
+      "Trading Costs",
+      "Risk Management"
     ]
   },
   {
