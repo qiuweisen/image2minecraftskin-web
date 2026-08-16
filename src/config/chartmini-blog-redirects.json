@@ -36,7 +36,12 @@
   },
   {
     "source": "/blog/2025102401",
-    "destination": "/blog/market-orders-limit-orders-and-stop-orders-explained-2026",
+    "destination": "/blog/order-types-explained",
+    "permanent": true
+  },
+  {
+    "source": "/blog/market-orders-limit-orders-and-stop-orders-explained-2026",
+    "destination": "/blog/order-types-explained",
     "permanent": true
   },
   {
@@ -296,7 +301,12 @@
   },
   {
     "source": "/blog/2025123002",
-    "destination": "/blog/mastering-trading-emotions-a-guide-to-psychological-discipline-2026",
+    "destination": "/blog/trading-psychology-master-emotions",
+    "permanent": true
+  },
+  {
+    "source": "/blog/mastering-trading-emotions-a-guide-to-psychological-discipline-2026",
+    "destination": "/blog/trading-psychology-master-emotions",
     "permanent": true
   },
   {
@@ -371,12 +381,22 @@
   },
   {
     "source": "/blog/2026010403",
-    "destination": "/blog/the-revenge-trading-trap-how-to-stop-the-spiral-2026",
+    "destination": "/blog/how-to-recover-from-trading-loss",
+    "permanent": true
+  },
+  {
+    "source": "/blog/the-revenge-trading-trap-how-to-stop-the-spiral-2026",
+    "destination": "/blog/how-to-recover-from-trading-loss",
     "permanent": true
   },
   {
     "source": "/blog/2026010501",
-    "destination": "/blog/the-art-of-position-sizing-how-much-to-trade-2026",
+    "destination": "/blog/position-sizing-mastery-the-secret-to-consistent-trading-profits-2026",
+    "permanent": true
+  },
+  {
+    "source": "/blog/the-art-of-position-sizing-how-much-to-trade-2026",
+    "destination": "/blog/position-sizing-mastery-the-secret-to-consistent-trading-profits-2026",
     "permanent": true
   },
   {
@@ -406,7 +426,12 @@
   },
   {
     "source": "/blog/2026010603",
-    "destination": "/blog/fomo-trading-how-to-stop-chasing-moves-and-start-making-money-2026",
+    "destination": "/blog/how-to-stop-fomo-trading-the-psychology-of-missing-out-thats-killing-your-account-2026",
+    "permanent": true
+  },
+  {
+    "source": "/blog/fomo-trading-how-to-stop-chasing-moves-and-start-making-money-2026",
+    "destination": "/blog/how-to-stop-fomo-trading-the-psychology-of-missing-out-thats-killing-your-account-2026",
     "permanent": true
   },
   {
@@ -421,7 +446,12 @@
   },
   {
     "source": "/blog/2026010702",
-    "destination": "/blog/risk-management-in-trading-the-hidden-skill-that-separates-winners-from-losers-2026",
+    "destination": "/blog/risk-management-position-sizing-guide",
+    "permanent": true
+  },
+  {
+    "source": "/blog/risk-management-in-trading-the-hidden-skill-that-separates-winners-from-losers-2026",
+    "destination": "/blog/risk-management-position-sizing-guide",
     "permanent": true
   },
   {
@@ -436,7 +466,12 @@
   },
   {
     "source": "/blog/2026010705",
-    "destination": "/blog/trading-psychology-in-2026-master-your-mind-or-watch-your-account-die-2026",
+    "destination": "/blog/trading-psychology-master-emotions",
+    "permanent": true
+  },
+  {
+    "source": "/blog/trading-psychology-in-2026-master-your-mind-or-watch-your-account-die-2026",
+    "destination": "/blog/trading-psychology-master-emotions",
     "permanent": true
   },
   {
@@ -466,12 +501,22 @@
   },
   {
     "source": "/blog/2026010901",
-    "destination": "/blog/trading-psychology-mastery-how-to-control-your-emotions-and-trade-with-discipline-in-2026-2026",
+    "destination": "/blog/trading-psychology-master-emotions",
+    "permanent": true
+  },
+  {
+    "source": "/blog/trading-psychology-mastery-how-to-control-your-emotions-and-trade-with-discipline-in-2026-2026",
+    "destination": "/blog/trading-psychology-master-emotions",
     "permanent": true
   },
   {
     "source": "/blog/2026010902",
-    "destination": "/blog/position-sizing-mastery-how-to-calculate-the-perfect-trade-size-every-time-in-2026-2026",
+    "destination": "/blog/position-sizing-dont-let-one-trade-ruin-your-portfolio-2026",
+    "permanent": true
+  },
+  {
+    "source": "/blog/position-sizing-mastery-how-to-calculate-the-perfect-trade-size-every-time-in-2026-2026",
+    "destination": "/blog/position-sizing-dont-let-one-trade-ruin-your-portfolio-2026",
     "permanent": true
   },
   {
@@ -516,7 +561,12 @@
   },
   {
     "source": "/blog/2026011005",
-    "destination": "/blog/multiple-timeframe-analysis-how-to-confirm-trades-across-timeframes-in-2026-2026",
+    "destination": "/blog/multiple-timeframe-analysis",
+    "permanent": true
+  },
+  {
+    "source": "/blog/multiple-timeframe-analysis-how-to-confirm-trades-across-timeframes-in-2026-2026",
+    "destination": "/blog/multiple-timeframe-analysis",
     "permanent": true
   },
   {
@@ -581,12 +631,22 @@
   },
   {
     "source": "/blog/2026011302",
-    "destination": "/blog/trading-psychology-mastery-how-to-conquer-fear-greed-and-revenge-trading-2026",
+    "destination": "/blog/trading-psychology-master-emotions",
+    "permanent": true
+  },
+  {
+    "source": "/blog/trading-psychology-mastery-how-to-conquer-fear-greed-and-revenge-trading-2026",
+    "destination": "/blog/trading-psychology-master-emotions",
     "permanent": true
   },
   {
     "source": "/blog/2026011303",
-    "destination": "/blog/risk-management-mastery-protect-your-capital-and-survive-any-market-2026",
+    "destination": "/blog/risk-management-position-sizing-guide",
+    "permanent": true
+  },
+  {
+    "source": "/blog/risk-management-mastery-protect-your-capital-and-survive-any-market-2026",
+    "destination": "/blog/risk-management-position-sizing-guide",
     "permanent": true
   },
   {
@@ -796,7 +856,12 @@
   },
   {
     "source": "/blog/2026020101",
-    "destination": "/blog/trading-psychology-overcoming-fomo-and-emotional-trading-2026",
+    "destination": "/blog/trading-psychology-master-emotions",
+    "permanent": true
+  },
+  {
+    "source": "/blog/trading-psychology-overcoming-fomo-and-emotional-trading-2026",
+    "destination": "/blog/trading-psychology-master-emotions",
     "permanent": true
   },
   {
@@ -891,7 +956,12 @@
   },
   {
     "source": "/blog/2026021001",
-    "destination": "/blog/the-future-of-fomo-in-2026-market-how-to-master-fear-of-missing-out",
+    "destination": "/blog/how-to-stop-fomo-trading-the-psychology-of-missing-out-thats-killing-your-account-2026",
+    "permanent": true
+  },
+  {
+    "source": "/blog/the-future-of-fomo-in-2026-market-how-to-master-fear-of-missing-out",
+    "destination": "/blog/how-to-stop-fomo-trading-the-psychology-of-missing-out-thats-killing-your-account-2026",
     "permanent": true
   },
   {
@@ -976,12 +1046,22 @@
   },
   {
     "source": "/blog/2026021702",
-    "destination": "/blog/the-future-of-trading-psychology-in-2026-market",
+    "destination": "/blog/trading-psychology-master-emotions",
+    "permanent": true
+  },
+  {
+    "source": "/blog/the-future-of-trading-psychology-in-2026-market",
+    "destination": "/blog/trading-psychology-master-emotions",
     "permanent": true
   },
   {
     "source": "/blog/2026021801",
-    "destination": "/blog/how-to-trade-fomo-like-a-pro-in-2026",
+    "destination": "/blog/how-to-stop-fomo-trading-the-psychology-of-missing-out-thats-killing-your-account-2026",
+    "permanent": true
+  },
+  {
+    "source": "/blog/how-to-trade-fomo-like-a-pro-in-2026",
+    "destination": "/blog/how-to-stop-fomo-trading-the-psychology-of-missing-out-thats-killing-your-account-2026",
     "permanent": true
   },
   {
@@ -1201,7 +1281,12 @@
   },
   {
     "source": "/blog/2026031001",
-    "destination": "/blog/trading-psychology-emotional-discipline-guide",
+    "destination": "/blog/trading-psychology-master-emotions",
+    "permanent": true
+  },
+  {
+    "source": "/blog/trading-psychology-emotional-discipline-guide",
+    "destination": "/blog/trading-psychology-master-emotions",
     "permanent": true
   },
   {
@@ -1361,7 +1446,12 @@
   },
   {
     "source": "/blog/2026032402",
-    "destination": "/blog/multiple-timeframe-analysis-trade-entries",
+    "destination": "/blog/multiple-timeframe-analysis",
+    "permanent": true
+  },
+  {
+    "source": "/blog/multiple-timeframe-analysis-trade-entries",
+    "destination": "/blog/multiple-timeframe-analysis",
     "permanent": true
   },
   {

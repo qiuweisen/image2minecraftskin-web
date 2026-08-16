@@ -121,7 +121,8 @@
     "description": "Understand market orders, limit orders, and stop orders: Clear explanations, practical examples, and expert insights for beginners. Expert insights and...",
     "date": "2025-10-24",
     "category": "Beginner Guides",
-    "tags": ["Market"]
+    "tags": ["Market"],
+    "redirectTo": "/blog/order-types-explained"
   },
   {
     "slug": "why-90-of-retail-traders-lose-money-common-psychological-traps-2026",
@@ -985,7 +986,8 @@
       "emotional discipline",
       "trading mindset",
       "trading journal emotions"
-    ]
+    ],
+    "redirectTo": "/blog/trading-psychology-master-emotions"
   },
   {
     "slug": "macd-indicator-catching-trend-changes-before-they-happen-2026",
@@ -1193,7 +1195,8 @@
     "description": "The Revenge Trading Trap: How to Stop the Spiral Step-by-step guide with proven strategies and expert tips. Learn from expert analysi in 2026.",
     "date": "2026-01-04",
     "category": "Beginner Guides",
-    "tags": ["Trading"]
+    "tags": ["Trading"],
+    "redirectTo": "/blog/how-to-recover-from-trading-loss"
   },
   {
     "slug": "the-art-of-position-sizing-how-much-to-trade-2026",
@@ -1214,7 +1217,8 @@
       "portfolio heat",
       "trade size calculator",
       "trading risk management"
-    ]
+    ],
+    "redirectTo": "/blog/position-sizing-mastery-the-secret-to-consistent-trading-profits-2026"
   },
   {
     "slug": "candlestick-patterns-that-actually-work-high-probability-trading-setups-2026",
@@ -1316,7 +1320,8 @@
       "fear of missing out trading",
       "trading discipline",
       "trading psychology"
-    ]
+    ],
+    "redirectTo": "/blog/how-to-stop-fomo-trading-the-psychology-of-missing-out-thats-killing-your-account-2026"
   },
   {
     "slug": "how-to-set-trading-goals-for-2026-a-beginners-guide-2026",
@@ -1339,7 +1344,8 @@
     "description": "Risk Management in Trading: The Hidden Skill That Separates Winners from Losers Expert insights and strategies to improve your trading performance. Learn from.",
     "date": "2026-01-07",
     "category": "Risk Management",
-    "tags": ["Trading", "Risk"]
+    "tags": ["Trading", "Risk"],
+    "redirectTo": "/blog/risk-management-position-sizing-guide"
   },
   {
     "slug": "the-5-deadly-day-trading-mistakes-that-will-blow-up-your-account-in-2026-2026",
@@ -1382,7 +1388,8 @@
     "description": "Trading Psychology in 2026: Master Your Mind or Watch Your Account Die Expert insights and strategies to improve your trading performance.",
     "date": "2026-01-07",
     "category": "Trading Psychology",
-    "tags": ["Trading", "Psychology"]
+    "tags": ["Trading", "Psychology"],
+    "redirectTo": "/blog/trading-psychology-master-emotions"
   },
   {
     "slug": "moving-average-trading-strategies-that-actually-work-in-2026-2026",
@@ -1457,12 +1464,21 @@
     "fileSlug": "2026010804",
     "contentKey": "chartmini-content/blog/2026010804.md",
     "locale": "en",
-    "title": "How to Stop FOMO Trading: The Psychology of Missing Out That's Killing Your Account",
-    "description": "How to Stop FOMO Trading: The Psychology of Missing Out That Step-by-step guide with proven strategies and expert tips. Learn from ex in 2026.",
+    "title": "How to Stop FOMO Trading: A Practical Anti-Chasing System for 2026",
+    "metaTitle": "How to Stop FOMO Trading in 2026: Triggers, Rules & Checklist",
+    "description": "Learn how to recognize and stop FOMO trading with a practical decision system for missed moves, social-media hype, fast markets, rule breaks, journaling, and replay practice.",
     "date": "2026-01-08",
+    "dateModified": "2026-08-16",
     "category": "Trading Psychology",
     "categories": ["Trading Psychology", "Beginner Guides"],
-    "tags": ["Trading", "Fomo", "Psychology"]
+    "tags": [
+      "FOMO Trading",
+      "Fear of Missing Out",
+      "Trading Psychology",
+      "Trading Discipline",
+      "Emotional Trading",
+      "Anti-Chasing"
+    ]
   },
   {
     "slug": "backtesting-trading-strategies-the-complete-guide-to-validating-your-edge-in-2026-2026",
@@ -1497,7 +1513,8 @@
       "Beginner Guides",
       "Trading Education"
     ],
-    "tags": ["Trading", "Psychology"]
+    "tags": ["Trading", "Psychology"],
+    "redirectTo": "/blog/trading-psychology-master-emotions"
   },
   {
     "slug": "position-sizing-mastery-how-to-calculate-the-perfect-trade-size-every-time-in-2026-2026",
@@ -1510,7 +1527,8 @@
     "dateModified": "2026-06-04",
     "category": "Risk Management",
     "categories": ["Risk Management", "Beginner Guides", "Trading Education"],
-    "tags": ["Position Sizing"]
+    "tags": ["Position Sizing"],
+    "redirectTo": "/blog/position-sizing-dont-let-one-trade-ruin-your-portfolio-2026"
   },
   {
     "slug": "candlestick-patterns-that-actually-work-the-complete-guide-to-price-action-trading-in-2026-2026",
@@ -1617,7 +1635,8 @@
     "description": "Multiple Timeframe Analysis: How to Confirm Trades Across Timeframes in 2026 Practical guide with clear examples.",
     "date": "2026-01-10",
     "category": "Beginner Guides",
-    "categories": ["Beginner Guides", "Trading Education"]
+    "categories": ["Beginner Guides", "Trading Education"],
+    "redirectTo": "/blog/multiple-timeframe-analysis"
   },
   {
     "slug": "order-flow-trading-mastery-how-to-read-market-activity-like-a-pro-2026",
@@ -1805,7 +1824,7 @@
     "metaTitle": "Position Sizing Methods: Fixed Risk, ATR & Kelly",
     "description": "Compare position sizing methods, calculate cross-market risk for stocks, futures, forex and options, and test costs, rounding, stop-fill and portfolio limits.",
     "date": "2026-01-13",
-    "dateModified": "2026-08-06",
+    "dateModified": "2026-08-17",
     "category": "Risk Management",
     "categories": ["Risk Management", "Trading Education", "Backtesting"],
     "tags": [
@@ -1831,7 +1850,8 @@
       "Beginner Guides",
       "Trading Education"
     ],
-    "tags": ["Trading", "Psychology"]
+    "tags": ["Trading", "Psychology"],
+    "redirectTo": "/blog/trading-psychology-master-emotions"
   },
   {
     "slug": "risk-management-mastery-protect-your-capital-and-survive-any-market-2026",
@@ -1843,7 +1863,8 @@
     "date": "2026-01-13",
     "category": "Risk Management",
     "categories": ["Risk Management", "Trading Education"],
-    "tags": ["Market", "Risk"]
+    "tags": ["Market", "Risk"],
+    "redirectTo": "/blog/risk-management-position-sizing-guide"
   },
   {
     "slug": "backtesting-mastery-how-to-validate-your-trading-strategy-before-risking-real-money-2026",
@@ -2537,7 +2558,8 @@
     "description": "Trading Psychology: Overcoming FOMO and Emotional Trading Expert insights and strategies to improve your trading performance.",
     "date": "2026-02-01",
     "category": "Trading Psychology",
-    "tags": ["Trading", "Fomo", "Psychology"]
+    "tags": ["Trading", "Fomo", "Psychology"],
+    "redirectTo": "/blog/trading-psychology-master-emotions"
   },
   {
     "slug": "golden-cross-vs-death-cross-moving-average-crossover-strategy-2026",
@@ -2824,17 +2846,23 @@
     "fileSlug": "2026020901",
     "contentKey": "chartmini-content/blog/2026020901.md",
     "locale": "en",
-    "title": "Order Block Trading: Finding Supply and Demand Zones",
-    "description": "Master order block trading and identify institutional supply and demand zones. Learn to trade with smart money concepts, locate high-probability entry points, and profit from.",
+    "title": "Order Block Trading in 2026: How to Define, Test, and Trade the Setup",
+    "metaTitle": "Order Block Trading: Definition, Rules, Retests & Testing (2026)",
+    "description": "Learn how order blocks are defined, how they differ from supply and demand zones, how to set objective retest and invalidation rules, and how to test them without assuming institutional activity from candles alone.",
     "date": "2026-02-09",
+    "dateModified": "2026-08-16",
     "category": "Technical Analysis",
-    "categories": ["Technical Analysis", "Smart Money Concepts"],
+    "categories": [
+      "Technical Analysis",
+      "Smart Money Concepts",
+      "Price Action"
+    ],
     "tags": [
       "Order Blocks",
-      "Supply and Demand",
       "Smart Money Concepts",
-      "Institutional Trading",
-      "ICT Trading"
+      "Supply and Demand",
+      "Market Structure",
+      "Price Action"
     ]
   },
   {
@@ -2875,7 +2903,8 @@
       "Emotional Control",
       "Discipline",
       "Risk Management"
-    ]
+    ],
+    "redirectTo": "/blog/how-to-stop-fomo-trading-the-psychology-of-missing-out-thats-killing-your-account-2026"
   },
   {
     "slug": "is-swing-trading-still-effective-in-2026-complete-analysis",
@@ -3193,7 +3222,8 @@
       "Discipline",
       "Trading Education",
       "Risk Management"
-    ]
+    ],
+    "redirectTo": "/blog/trading-psychology-master-emotions"
   },
   {
     "slug": "how-to-trade-fomo-like-a-pro-in-2026",
@@ -3217,7 +3247,8 @@
       "Risk Management",
       "Trading Education",
       "Mental Game"
-    ]
+    ],
+    "redirectTo": "/blog/how-to-stop-fomo-trading-the-psychology-of-missing-out-thats-killing-your-account-2026"
   },
   {
     "slug": "bear-flag-explained-the-ultimate-guide-for-2026",
@@ -4066,18 +4097,19 @@
     "fileSlug": "2026030902",
     "contentKey": "chartmini-content/blog/2026030902.md",
     "locale": "en",
-    "title": "How to Start Day Trading: The No-Nonsense Beginner's Roadmap (2026)",
-    "description": "A complete, realistic guide to starting day trading in 2026. Covers capital requirements, the PDT rule, essential strategies, risk management, and the exact steps to go from zero to your first live trade.",
+    "title": "How to Start Day Trading in 2026: A Beginner's Step-by-Step Roadmap",
+    "description": "Learn how to start day trading in 2026 with a realistic beginner roadmap covering markets, account rules, risk, strategy testing, simulation, journaling, and the new U.S. intraday margin transition.",
     "date": "2026-03-09",
+    "dateModified": "2026-08-16",
     "category": "Education",
     "categories": ["Education", "Day Trading", "Trading Basics"],
     "tags": [
       "Day Trading",
       "How to Day Trade",
-      "PDT Rule",
+      "Day Trading for Beginners",
+      "Intraday Margin",
       "Risk Management",
-      "Price Action",
-      "Beginner Guide"
+      "Trading Plan"
     ]
   },
   {
@@ -4098,7 +4130,8 @@
       "Discipline",
       "Losing Streak",
       "Emotional Trading"
-    ]
+    ],
+    "redirectTo": "/blog/trading-psychology-master-emotions"
   },
   {
     "slug": "how-to-read-candlestick-charts-patterns",
@@ -4172,7 +4205,7 @@
     "metaTitle": "Trading Risk Management: Sizing, Stops & Drawdowns",
     "description": "Build a trading risk-management plan covering position sizing, stop execution, portfolio exposure, leverage, loss limits, drawdowns, expectancy, and review.",
     "date": "2026-03-12",
-    "dateModified": "2026-08-06",
+    "dateModified": "2026-08-17",
     "category": "Risk Management",
     "categories": ["Risk Management", "Trading Education", "Trading Process"],
     "tags": [
@@ -4552,7 +4585,7 @@
     "title": "Order Types Explained: Market, Limit, Stop, Stop-Limit, Trailing Stop, and Bracket Orders",
     "description": "Learn the main trading order types, including market, limit, stop, stop-limit, trailing stop, OCO, and bracket orders, with examples, risks, and when to use each one.",
     "date": "2026-03-21",
-    "dateModified": "2026-08-05",
+    "dateModified": "2026-08-16",
     "category": "Education",
     "categories": ["Education", "Trading Basics"],
     "tags": [
@@ -4706,7 +4739,8 @@
       "Timeframe Alignment",
       "Trading Timeframes",
       "Higher Timeframe"
-    ]
+    ],
+    "redirectTo": "/blog/multiple-timeframe-analysis"
   },
   {
     "slug": "price-action-trading-guide",
@@ -5445,6 +5479,7 @@
     "title": "Trading psychology: why smart people keep making the same bad trades",
     "description": "The psychology behind why traders repeat mistakes. Covers FOMO, revenge trading, loss aversion, overconfidence, and concrete tactics for keeping emotions out of execution.",
     "date": "2026-04-12",
+    "dateModified": "2026-08-17",
     "category": "Education",
     "categories": ["Education", "Trading Psychology", "Risk Management"],
     "tags": [
@@ -5524,9 +5559,10 @@
     "fileSlug": "2026041402",
     "contentKey": "chartmini-content/blog/2026041402.md",
     "locale": "en",
-    "title": "Multiple timeframe analysis: how to stop fighting the trend you can't see",
-    "description": "How to use multiple timeframes to improve entry timing and avoid trading against the main trend. Covers the three-timeframe approach, how to align timeframes for entries, and why most retail traders look at the wrong chart.",
+    "title": "Multiple Timeframe Analysis: A Top-Down Trading Framework for 2026",
+    "description": "Learn multiple timeframe analysis with a practical top-down framework: assign each timeframe a job, handle conflicting trends, avoid look-ahead bias, and test whether higher-timeframe context actually improves your trades.",
     "date": "2026-04-14",
+    "dateModified": "2026-08-16",
     "category": "Education",
     "categories": ["Education", "Technical Analysis", "Trading Strategies"],
     "tags": [

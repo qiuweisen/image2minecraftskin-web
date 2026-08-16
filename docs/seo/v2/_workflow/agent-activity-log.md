@@ -1,5 +1,117 @@
 # ChartMini v2 SEO Agent Activity Log
 
+## 2026-08-17 — ChatGPT / DevSpace — Task 22.9 Final Validation
+
+- Completed final local validation and governance closeout for Task22.1–22.8.
+- `pnpm build` PASS with 402 posts; `pnpm check` PASS with Biome 414 files and Vitest 5 files / 13 tests; v2 Workflow check PASS with 13 required files / 402 Blog sources; `git diff --check` PASS.
+- Custom audit checked 11 core Task22 owners for manifest ownership, routable non-redirecting Blog links, and duplicate manual Article/BlogPosting schema.
+- First custom pass found one residual manual Article schema on `/blog/trading-psychology-master-emotions`; removed it, reran full validation, and final result is `OWNER_INTEGRITY_BAD 0`.
+- Task22 redirect-source body-link residuals = 0; global duplicate redirect-source definitions = 0.
+- Task22.1–22.5, 22.7 and 22.8 remain pending manual deployment; Task22.6 remains an already-live consolidation revalidation.
+- Status: `PASS_PENDING_DEPLOYMENT_VERIFICATION`.
+- No commit, push, deploy, R2 sync, GSC, Bing, or IndexNow action performed.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-17-task22-9-final-validation/memory.md`.
+
+## 2026-08-17 — ChatGPT / DevSpace — Task 22.8 Cluster Review
+
+- Revalidated Task22.1–22.7 owners against fresh ChartMini search visibility, current production state, local manifest, body-level internal links and redirect architecture.
+- Core Task22 owner boundaries remain intact. Additional cleanup found ten live broad duplicates/orphans: one broad Risk Management duplicate, two Position Sizing middle pages, six broad Trading Psychology/Emotions pages, and one Revenge Trading orphan.
+- Consolidation destinations: broad Risk -> `/blog/risk-management-position-sizing-guide`; advanced sizing duplicate -> `/blog/position-sizing-mastery-the-secret-to-consistent-trading-profits-2026`; beginner sizing duplicate -> `/blog/position-sizing-dont-let-one-trade-ruin-your-portfolio-2026`; six broad psychology pages -> `/blog/trading-psychology-master-emotions`; revenge orphan -> `/blog/how-to-recover-from-trading-loss`.
+- Broad Psychology received a surgical post-loss-rule correction and direct Behavioral Recovery link; Advanced Position Sizing owner boundary copy was updated. Both now use `dateModified: 2026-08-17`.
+- All new numeric and long redirect sources point directly to final owners; residual body links to new redirect-source long slugs = 0; global duplicate redirect-source definitions = 0.
+- Body-inlink snapshot: Day Trading 38, FOMO 5, Order Types 23, MTA 26, Order Block 4, Prop Firm 4, Broad Risk 62, Beginner Position Sizing 12, Advanced Position Sizing 11, 1% Rule 3, Broad Psychology 20, Behavioral Recovery 7.
+- `pnpm prebuild` PASS with 402 posts; all ten new sources carry `redirectTo` in the generated manifest.
+- Status: `PASS_WITH_TEN_ADDITIONAL_CONSOLIDATIONS_PENDING_DEPLOY`.
+- No commit, push, deploy, R2 sync, GSC, Bing, or IndexNow action performed.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-17-task22-8-cluster-review/memory.md`.
+
+## 2026-08-17 — ChatGPT / DevSpace — Task 22.7 Broad Trading Risk Consolidation
+
+- Requested target: `/blog/risk-management-in-trading-the-hidden-skill-that-separates-winners-from-losers-2026` (`content/blog/2026010702.md`).
+- Fresh production/SERP/current CME-FINRA-Investor.gov/site-graph gate found the requested target and `/blog/risk-management-position-sizing-guide` both live 200/self-canonical/in sitemap for the same broad risk intent; current GSC/Bing performance remains `unknown_not_reverified`.
+- Owner decision: `consolidate_redirect + surgical_refresh_owner`; `/blog/risk-management-position-sizing-guide` selected with 62 body-link files vs 1 external body-link file for the requested duplicate.
+- Requested long slug and `/blog/2026010702` now point directly to the selected owner; residual duplicate body links = 0; duplicate redirect sources = 0.
+- Strong owner received only a surgical current-rule refresh: `dateModified: 2026-08-17`, current FINRA intraday-margin transition added, and old PDT `$25,000 / 4x` assumptions explicitly framed as broker-transition dependent rather than universal.
+- Position sizing, 1% rule, portfolio heat, drawdown recovery, stop/target planning, order types and margin mechanics remain separate specialist intents.
+- Owner has 15/15 valid routable internal Blog destinations and no manual Article/BlogPosting schema; FAQPage remains as secondary schema.
+- `pnpm build` PASS with 402 posts; `pnpm check` PASS with 5 test files / 13 tests; workflow check and `git diff --check` PASS.
+- Status: `protected_pending_deploy`; no commit, push, deploy, R2 sync, GSC, Bing, or IndexNow action performed.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-17-task22-7-risk-management-consolidation/memory.md`.
+
+## 2026-08-17 — ChatGPT / DevSpace — Task 22.6 Prop Firm Redirect Revalidation
+
+- Requested target: `/blog/prop-firm-trading-2026-get-funded-and-trade-capital-risk-free-2026` (`content/blog/2026013102.md`).
+- Fresh production confirms the requested long slug and `/blog/2026013102` already direct 301 to `/blog/prop-trading-firms-funded-accounts`; canonical owner is 200/self-canonical/in sitemap and redirect source is absent from sitemap.
+- Fresh web/SERP still surfaces the historical long slug alongside the canonical owner; interpreted as index lag, not evidence for restoring a competing 200 owner.
+- Fresh official FTMO and Topstep documentation revalidates the owner’s key simulated-vs-live distinction: FTMO funded-stage accounts remain simulated; Topstep uses simulated Trading Combine/XFA before possible progression to a Live Funded Account.
+- Owner decision: `preserve_consolidation_redirect + revalidate_owner`. No owner-body change was made because Task20.2 is in observation and no hard factual or redirect defect was found.
+- External routable body links to the redirect source = 0; global duplicate redirect-source definitions = 0.
+- Protected-page workflow status was corrected from stale `protected_pending_deploy` to `protected_observation`; reviews remain 2026-08-22 and 2026-08-29.
+- Status: `PRESERVE_CONSOLIDATION_REDIRECT_REVALIDATED_LIVE`; no commit, push, deploy, R2 sync, GSC, Bing, or IndexNow action performed.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-17-task22-6-prop-firm-redirect-revalidation/memory.md`.
+
+## 2026-08-16 — ChatGPT / DevSpace — Task 22.5 Order Block Trading
+
+- Requested target: `/blog/order-block-trading-supply-demand-zones-2026` (`content/blog/2026020901.md`).
+- Fresh production/SERP/current SEC-CME market-data/site-graph gate confirmed the requested URL as a distinct Order Block specialist; current GSC/Bing performance remains `unknown_not_reverified`.
+- Owner decision: `retain_narrow + rebuild`; Supply/Demand remains the broader zone owner, broad SMC remains the terminology/evidence owner, and Order Flow/Level 2 remain actual market-data specialists.
+- Rebuilt target to ~4,458 words by `wc -w`, centered on versioned zone definitions, candle/base selection, displacement, optional structure rules, retest/freshness, invalidation/expiry, entry variants, no-hindsight testing and baseline comparison.
+- Removed unsupported institutional-footprint causality, 70-80% movement claims, fixed retest probabilities, standardized three-type claims, universal HTF/risk/R:R/sample/mastery rules, stop-hunting narratives, automatic confluence advantages and false ChartMini institutional-order-block alerts.
+- Added/clarified canonical support links from Supply/Demand, Market Structure and Level 2; with the existing broad SMC owner, four independent body-level source files now link to the target.
+- Target has 8/8 valid routable internal Blog destinations, FAQPage only as manual secondary schema, and no manual Article/BlogPosting schema.
+- `pnpm build` PASS with 402 posts; `pnpm check` PASS with 5 test files / 13 tests; workflow check and `git diff --check` PASS.
+- Status: `protected_pending_deploy`; no commit, push, deploy, R2 sync, GSC, Bing, or IndexNow action performed.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-16-task22-5-order-block-trading/memory.md`.
+
+## 2026-08-16 — ChatGPT / DevSpace — Task 22.4 Multiple Timeframe Analysis
+
+- Requested target: `/blog/multiple-timeframe-analysis-how-to-confirm-trades-across-timeframes-in-2026-2026` (`content/blog/2026011005.md`).
+- Fresh production/SERP/current Fidelity-TradingView/site-graph gate found three live overlapping MTA tutorials; current GSC/Bing performance remains `unknown_not_reverified`.
+- Owner decision: `consolidate_redirect + rebuild_owner`; clean `/blog/multiple-timeframe-analysis` selected as the single broad MTA owner, with 25 routable body-level canonical inlink files after cleanup.
+- Consolidated requested January tutorial and `/blog/multiple-timeframe-analysis-trade-entries` plus both numeric paths directly to the selected owner. `/blog/multi-timeframe-replay-trading-simulator` remains separate for replay synchronization/look-ahead intent.
+- Rebuilt owner to ~3,182 words around context/decision/execution roles, conflicting horizons, incomplete higher-timeframe bars, session/aggregation differences, explicit test rules and MTF look-ahead bias; removed higher-timeframe-always-wins, mandatory-three-frame/alignment, fixed-ratio and automatic performance claims.
+- Owner has 8/8 valid routable internal Blog links and no manual Article/BlogPosting schema; redirect-source residual body links = 0 and duplicate redirect sources = 0.
+- `pnpm build` PASS with 402 posts; `pnpm check` PASS with 5 test files / 13 tests; workflow check and `git diff --check` PASS.
+- Status: `protected_pending_deploy`; no commit, push, deploy, R2 sync, GSC, Bing, or IndexNow action performed.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-16-task22-4-multiple-timeframe-analysis/memory.md`.
+
+## 2026-08-16 — ChatGPT / DevSpace — Task 22.3 Order Types Consolidation
+
+- Requested target: `/blog/market-orders-limit-orders-and-stop-orders-explained-2026` (`content/blog/2025102401.md`).
+- Fresh production/SERP/current Investor.gov-FINRA/site-graph gate completed; current-v2 GSC/Bing performance remains `unknown_not_reverified`.
+- Owner decision: `consolidate_redirect + surgical_refresh_owner`; `/blog/order-types-explained` selected because fresh search surfaces it for the broad intent and it has 23 body-level inlink files vs 1 for the requested duplicate.
+- Requested long slug and `/blog/2025102401` now point directly to `/blog/order-types-explained`; duplicate residual body links = 0; global duplicate redirect sources = 0.
+- Strong owner received a surgical refresh only: removed manual BlogPosting schema, corrected limit-touch/non-fill wording, broker-specific OCO/bracket and time-in-force behavior, OHLC replay-fill limitation, and current SEC/FINRA sources; `dateModified` set to 2026-08-16.
+- Stop-vs-stop-limit, trailing-stop, stop/target planning, and Level 2 remain separate specialist intents.
+- `pnpm build` PASS with 402 posts; `pnpm check` PASS with 5 test files / 13 tests; workflow check and `git diff --check` PASS.
+- Status: `protected_pending_deploy`; no commit, push, deploy, R2 sync, GSC, Bing, or IndexNow action performed.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-16-task22-3-order-types-consolidation/memory.md`.
+
+## 2026-08-16 — ChatGPT / DevSpace — Task 22.2 FOMO Trading Psychology
+
+- Requested target: `/blog/how-to-stop-fomo-trading-the-psychology-of-missing-out-thats-killing-your-account-2026` (`content/blog/2026010804.md`).
+- Fresh production/SERP/current FINRA-SEC/FoMO research/site-graph gate found five live 200/self-owned/sitemap-visible FOMO/emotional pages; GSC/Bing performance remains `unknown_not_reverified`.
+- Owner decision: `retain_narrow + rebuild + duplicate_consolidation`; requested URL selected as the FOMO specialist because it matches the direct stop-FOMO intent and surfaced in fresh search.
+- Consolidated three pure-FOMO duplicates (`2026010603`, `2026021001`, `2026021801`) directly to the selected owner. Consolidated mixed `2026020101` FOMO/emotional page to the stronger broad psychology owner `/blog/trading-psychology-master-emotions`.
+- Rebuilt FOMO owner to ~3,112 words around FOMO-vs-momentum, social/missed-move triggers, late-entry re-evaluation, anti-chasing gate, missed-trade journal, feed controls and replay practice; removed fabricated prevalence/account-killer claims and universal time/trade/loss/move/risk thresholds plus manual Article schema.
+- Added scoped body links from broad psychology, pre-trade checklist and broad emotions pages; FOMO owner now has at least five routable body-level canonical inlink files.
+- Redirect config is direct for all new long/numeric sources; global duplicate redirect-source definitions = 0. Target has 8/8 valid routable internal Blog links.
+- `pnpm build` PASS with 402 posts; `pnpm check` PASS with 5 test files / 13 tests.
+- Status: `protected_pending_deploy`; no commit, push, deploy, R2 sync, GSC, Bing, or IndexNow action performed.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-16-task22-2-fomo-trading/memory.md`.
+
+## 2026-08-16 — ChatGPT / DevSpace — Task 22.1 How to Start Day Trading
+
+- Target: `/blog/how-to-start-day-trading` (`content/blog/2026030902.md`).
+- Fresh production/SERP/current SEC-FINRA/current-v2 site-graph gate completed; GSC/Bing performance remains `unknown_not_reverified` and no legacy metrics were imported.
+- Owner decision: `retain_narrow + rebuild`; target already had 38 direct Markdown canonical inlink files and remains distinct from simulator/practice routes, style comparison, mistakes, risk, journal, trading-plan and hardware owners.
+- Corrected a material 2026 regulatory defect: FINRA's new intraday-margin framework became effective 2026-06-04 after SEC approval, while broker migration can continue through 2027-10-20; article no longer presents the old $25,000 PDT minimum as universally current.
+- Rebuilt target to ~3,169 words; removed unsupported 90%/10%, universal 1-2% risk, universal 2:1 R:R, fixed 100-trade, 6-12 month and calendar-based live-scaling claims; removed manual Article schema.
+- Verified ChartMini capability boundary: intraday historical 5-minute forex/crypto replay, not live broker execution or live stock replay.
+- `pnpm build` PASS with 402 posts; `pnpm check` PASS with 5 test files / 13 tests; nine internal blog destinations validated as routable/non-redirecting.
+- Status: `protected_pending_deploy`; no commit, push, deploy, R2 sync, GSC, Bing, or IndexNow action performed.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-16-task22-1-how-to-start-day-trading/memory.md`.
+
 ## 2026-08-15 — ChatGPT / DevSpace — Task 21 Deployment and GSC Closeout
 
 - Remote `chartminiv2/main` and local `main` confirmed at `f3629380ada9a88720ebf0755f7296fb4430c52b` (`sync: publish blog and simulator updates`) for the Task21 article/code batch.
