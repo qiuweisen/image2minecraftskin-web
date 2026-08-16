@@ -352,7 +352,11 @@ function DayTradingSimulatorContent() {
   };
 
   const onFinish = () => {
-    if (summaryOpen || lastResult) return;
+    if (summaryOpen) return;
+    if (lastResult) {
+      useDayTradingSessionStore.setState({ summaryOpen: true });
+      return;
+    }
     const result = finish();
     saveCompletedTraining(
       result,

@@ -406,7 +406,11 @@ function PlayContent() {
   };
 
   const onFinish = () => {
-    if (summaryOpen || lastResult) return;
+    if (summaryOpen) return;
+    if (lastResult) {
+      useSessionStore.setState({ summaryOpen: true });
+      return;
+    }
     const result = finish();
     saveCompletedTraining(result, 'play', sessionStartedAt.current);
     try {

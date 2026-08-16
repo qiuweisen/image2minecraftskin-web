@@ -52,7 +52,7 @@
 
   // Pin the production analysis model explicitly; API keys remain secrets.
   "vars": {
-    "GEMINI_API_MODEL": "gemini-3.7-flash"
+    "GEMINI_API_MODEL": "gemma-4-31b-it"
   },
 
   // Route production traffic through the Worker while the existing Cloudflare

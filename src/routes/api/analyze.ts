@@ -7,7 +7,7 @@ import { serverEnv } from '@/env/server';
 import { prepareAnalysisPrompt } from '@/lib/analyze-utils';
 
 const DEFAULT_GEMINI_BASE = 'https://generativelanguage.googleapis.com';
-const DEFAULT_GEMINI_MODEL = 'gemini-3.7-flash';
+const DEFAULT_GEMINI_MODEL = 'gemma-4-31b-it';
 const DAILY_AI_ANALYSIS_LIMIT = 10;
 const DAILY_LIMIT_TIMEZONE_OFFSET_MS = 8 * 60 * 60 * 1000;
 const MAX_REQUEST_BYTES = 256 * 1024;
@@ -441,7 +441,12 @@ function buildGeminiPayload(
   const generationConfig: Record<string, unknown> = {
     maxOutputTokens: 9600,
   };
-  if (model.startsWith('gemini-3')) {
+  if (model.startsWith('gemma-4')) {
+    // Gemma 4 exposes an explicit switch for its internal reasoning. Keep it
+    // minimal here so the streamed payload stays focused on the JSON report.
+    generationConfig.thinkingConfig = { thinkingLevel: 'minimal' };
+    generationConfig.temperature = 0.4;
+  } else if (model.startsWith('gemini-3')) {
     generationConfig.thinkingConfig = { thinkingLevel: 'low' };
   } else {
     // Keep compatibility with an explicitly configured Gemini 2.x model.
