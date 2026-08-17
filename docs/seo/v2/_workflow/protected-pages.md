@@ -626,6 +626,21 @@ All Task20 owner protections below are now active post-deployment observations r
 - Observation dates: pending actual Task23 deployment and fresh production verification.
 - Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-17-task23-8-cluster-intent-link-cannibalization-review/memory.md` and `docs/seo/v2/flowtrace/chartmini-2026-08-17-task23-9-final-validation/memory.md`.
 
+### Task 23 deployment / GSC observation closeout
+
+- Status: `protected_observation`.
+- Event date: 2026-08-17.
+- Production verification: Task23 canonical owner graph is live; the eight submitted rewritten/restored owners are 200, exact self-canonical and sitemap-listed; Broad Psychology is also live 200 as the Task23.8 consolidation destination.
+- Restored owners: AI Psychology and Revenge Trading are production 200; `/blog/2026021702` and `/blog/2026010403` are direct 301 to them.
+- Consolidated redirects: Truth About Discipline + `/blog/2026022703` -> Execution Gap; Why-90% Psychology + `/blog/2025102601` -> Broad Psychology; checked redirect sources are excluded from sitemap.
+- GSC: user-confirmed Request Indexing on 2026-08-17 for AI Psychology, Revenge Trading, Swing Explained, Swing Strategies, Part-Time Swing, Swing Viability, Day Trading Mistakes and Execution Gap.
+- No new Task23 GSC submission is claimed for Broad Psychology. Redirect/numeric sources remain no-submit.
+- Review dates: 2026-08-24 and 2026-08-31.
+- Freeze until: 2026-08-31.
+- During observation, do not materially rewrite, reconsolidate or reverse Task23 owners/redirects except for a hard technical defect, material factual/regulatory/research error, broken canonical/redirect behavior, or explicit user override.
+- This closeout supersedes the `protected_pending_deploy` / `final_validation_pass_pending_deploy` statuses in the earlier Task23 task-specific blocks above.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-17-task23-deployment-gsc-closeout/memory.md`.
+
 Old-project protection windows are not inherited. A page enters this file only after a fresh v2 content change, deployment/submission event, or other explicitly verified v2 observation that creates a freeze window.
 
 ## Protection rule

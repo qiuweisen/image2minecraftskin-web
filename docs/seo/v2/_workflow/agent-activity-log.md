@@ -1,5 +1,16 @@
 # ChartMini v2 SEO Agent Activity Log
 
+## 2026-08-17 — ChatGPT / DevSpace — Task23 Deployment / GSC Closeout
+
+- Freshly verified the deployed Task23 production graph: nine relevant canonical owners return 200; the eight submitted rewritten/restored owners have exact self-canonical and sitemap inclusion.
+- Confirmed AI Psychology and Revenge Trading are restored to production 200, with their numeric legacy paths direct 301 to the restored owners.
+- Confirmed Truth About Discipline + `/blog/2026022703` direct 301 to Execution Gap and Why-90% Psychology + `/blog/2025102601` direct 301 to Broad Psychology; checked redirect sources are excluded from sitemap.
+- User explicitly confirmed manual GSC Request Indexing for all eight Task23 canonical URLs previously supplied on 2026-08-17.
+- Recorded the eight URL submissions; no new Task23 GSC submission is claimed for Broad Psychology; redirect/numeric sources remain no-submit.
+- Started read-only observation for 2026-08-24 and 2026-08-31, frozen through 2026-08-31 except hard defects/material factual errors/explicit override.
+- Final closeout: `DEPLOY_VERIFIED_GSC_RECORDED_OBSERVATION_ACTIVE`.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-17-task23-deployment-gsc-closeout/memory.md`.
+
 ## 2026-08-17 — ChatGPT / DevSpace — Task 23.9 Final Validation
 
 - Ran the final `pnpm build && pnpm check && pnpm seo:v2:workflow:check && git diff --check`; all PASS after the final link repair and governance sync.

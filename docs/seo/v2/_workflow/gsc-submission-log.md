@@ -58,3 +58,24 @@ After the Task22 deployment, the user confirmed that many canonical owners were 
 The user did not enumerate the exact submitted-vs-already-indexed URL set. Therefore no per-URL Task22 GSC submission claims are added to this log without further evidence. Exact Task22 owner states remain `unknown_not_reverified` unless separately confirmed in a later task.
 
 Task22 redirecting long slugs and numeric legacy URLs remain no-submit URLs.
+
+## 2026-08-17 — Task 23 deployment / GSC closeout
+
+Fresh production verification after the Task23 deployment confirmed the eight requested canonical owners are live as HTTP 200 pages with exact self-canonical URLs and sitemap inclusion. The user then confirmed manual GSC URL Inspection / Request Indexing was completed for all eight URLs previously provided for Task23 submission:
+
+1. `https://chartmini.com/blog/the-future-of-trading-psychology-in-2026-market`
+2. `https://chartmini.com/blog/the-revenge-trading-trap-how-to-stop-the-spiral-2026`
+3. `https://chartmini.com/blog/swing-trading-explained-the-ultimate-guide-for-2026`
+4. `https://chartmini.com/blog/swing-trading-strategies-guide`
+5. `https://chartmini.com/blog/swing-trading-for-part-time-traders`
+6. `https://chartmini.com/blog/is-swing-trading-still-effective-in-2026-complete-analysis`
+7. `https://chartmini.com/blog/the-5-deadly-day-trading-mistakes-that-will-blow-up-your-account-in-2026-2026`
+8. `https://chartmini.com/blog/the-execution-gap-why-traders-fail-to-follow-their-own-rules-2026`
+
+Submission source: user-confirmed manual GSC URL Inspection / Request Indexing.
+Submission date: 2026-08-17.
+Planned read-only reviews: 2026-08-24 and 2026-08-31.
+
+Production also verified the Task23 redirect sources as direct 301s to their final canonical owners, including Truth About Discipline -> Execution Gap and Why-90% Psychology -> Broad Psychology. Numeric legacy paths are direct 301s as designed. Redirect-source URLs were not part of the GSC submission list and remain no-submit URLs.
+
+`https://chartmini.com/blog/trading-psychology-master-emotions` remains a live 200 canonical destination for the Task23.8 broad-psychology consolidation, but no new Task23 GSC submission is claimed for that owner because the user-confirmed eight-URL submission set did not include it.

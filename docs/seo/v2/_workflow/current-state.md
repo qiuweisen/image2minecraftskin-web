@@ -363,6 +363,16 @@ Eleven expected Task23 numeric/duplicate routes point directly to final owners. 
 
 Task23.2–23.8 therefore finish locally as `PASS_PENDING_DEPLOYMENT_VERIFICATION`. Production is still pre-deployment for these Task23 changes, so no new Task23 observation dates are established yet. After user deployment, freshly verify owner 200/self-canonical/title/body/dateModified/schema/sitemap state and all redirect sources before recording observation or GSC state. Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-17-task23-9-final-validation/memory.md`.
 
+## 2026-08-17 Task 23 deployment / GSC closeout
+
+Fresh production verification after the Task23 deployment confirms the deployable Task23 owner graph is live. Swing Explained, Swing Strategies, Part-Time Swing, Swing Viability, Day Trading Mistakes, AI Psychology, Revenge Trading, Execution Gap and Broad Psychology all return HTTP 200. The eight rewritten/restored canonical URLs provided to the user for GSC submission have exact self-canonical URLs and are present in the sitemap.
+
+The restored AI Psychology and Revenge Trading owners are now 200 in production, reversing their prior Task22.8 301 states as intended. `/blog/2026021702` redirects directly to AI Psychology; `/blog/2026010403` redirects directly to Revenge Trading. Truth About Discipline plus `/blog/2026022703` now redirect directly to Execution Gap. Why-90% Psychology plus `/blog/2025102601` now redirect directly to Broad Psychology. Checked redirect sources are excluded from sitemap.
+
+The user explicitly confirmed manual GSC URL Inspection / Request Indexing for all eight Task23 canonical URLs previously supplied: AI Psychology, Revenge Trading, Swing Explained, Swing Strategies, Part-Time Swing, Swing Viability, Day Trading Mistakes and Execution Gap. Submission date: 2026-08-17. No Task23 GSC submission is claimed for Broad Psychology, and redirect/numeric sources remain no-submit.
+
+Task23.2–23.8 now enter read-only observation with reviews on 2026-08-24 and 2026-08-31 and freeze through 2026-08-31 except for hard technical/material factual defects or explicit user override. Final closeout status: `DEPLOY_VERIFIED_GSC_RECORDED_OBSERVATION_ACTIVE`. Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-17-task23-deployment-gsc-closeout/memory.md`.
+
 ## Validation baseline
 
 Initialization validation on 2026-08-14:

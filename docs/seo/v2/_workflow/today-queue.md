@@ -549,3 +549,15 @@ Task 21.1–21.9 is complete and in observation.
 - GSC/Bing/IndexNow: no action; exact per-owner current GSC state remains `unknown_not_reverified` unless already explicitly recorded from user confirmation.
 - Status: `PASS_PENDING_DEPLOYMENT_VERIFICATION`.
 - Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-17-task23-9-final-validation/memory.md`
+
+### Task23 deployment / GSC closeout
+- Fresh production verification: PASS.
+- Canonical owners checked live 200: Swing Explained, Swing Strategies, Part-Time Swing, Swing Viability, Day Trading Mistakes, AI Psychology, Revenge Trading, Execution Gap, Broad Psychology.
+- Eight submitted Task23 canonical URLs: 200 + exact self-canonical + sitemap inclusion verified.
+- Restored-owner checks: AI Psychology and Revenge Trading are now production 200; their numeric legacy paths direct 301 to the restored owners.
+- Consolidation checks: Truth About Discipline + `/blog/2026022703` direct 301 to Execution Gap; Why-90% Psychology + `/blog/2025102601` direct 301 to Broad Psychology; redirect sources excluded from sitemap.
+- User confirmed GSC URL Inspection / Request Indexing for all eight Task23 canonical URLs previously supplied on 2026-08-17.
+- Redirect and numeric legacy URLs remain no-submit.
+- Observation reviews: 2026-08-24 and 2026-08-31; freeze through 2026-08-31 except hard defect/material factual error/explicit user override.
+- Status: `DEPLOY_VERIFIED_GSC_RECORDED_OBSERVATION_ACTIVE`.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-17-task23-deployment-gsc-closeout/memory.md`
