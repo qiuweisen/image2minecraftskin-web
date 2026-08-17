@@ -50,3 +50,11 @@ The user reported these Task21 canonical owners were already indexed, so no dupl
 - `https://chartmini.com/blog/trading-journal-mastery-how-to-review-analyze-and-improve-your-trading-in-2026-2026`
 
 The broad Journal owner was not rewritten in Task21.8; Task21 only added four new redirect sources and canonicalized inbound links to it. All Task21 redirecting long slugs and numeric legacy URLs were intentionally not submitted.
+
+## 2026-08-17 — Task 22 selective GSC submission note
+
+After the Task22 deployment, the user confirmed that many canonical owners were already indexed and that manual GSC Request Indexing was used only for canonical owners found to be unindexed.
+
+The user did not enumerate the exact submitted-vs-already-indexed URL set. Therefore no per-URL Task22 GSC submission claims are added to this log without further evidence. Exact Task22 owner states remain `unknown_not_reverified` unless separately confirmed in a later task.
+
+Task22 redirecting long slugs and numeric legacy URLs remain no-submit URLs.

@@ -399,3 +399,153 @@ Task 21.1–21.9 is complete and in observation.
 - Task22.1–22.5, 22.7 and 22.8 remain locally complete/pending deployment. Task22.6 is an already-live revalidation and needs no new deployment.
 - No commit, push, deployment, R2 sync, GSC, Bing, or IndexNow action performed.
 - Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-17-task22-9-final-validation/memory.md`
+
+### 23.1 — Risk Management Mastery Redirect Revalidation
+- Requested target: `/blog/risk-management-mastery-protect-your-capital-and-survive-any-market-2026`
+- Source: `content/blog/2026011303.md`
+- Canonical owner: `/blog/risk-management-position-sizing-guide` (`content/blog/2026031201.md`)
+- Owner Gate: `preserve_consolidation_redirect + revalidate_owner`
+- Fresh production: requested long slug and `/blog/2026011303` direct HTTP 301 to canonical owner; owner 200, exact self-canonical, in sitemap, route BlogPosting + FAQPage, `dateModified: 2026-08-17`.
+- Fresh SERP: stale historical requested URL can still surface alongside the canonical owner; because production is a direct 301, treat this as migration lag rather than restore-two-owners evidence.
+- Fresh source boundary: CME treats fixed 1%/2% rules as educational parameters rather than universal laws; Investor.gov confirms stop-price execution risk; FINRA confirms the 2026 intraday-margin replacement framework and transition window.
+- Site graph: owner has 64 external Markdown body-inlink files; redirect source has 0 external body inlinks.
+- Article/code changes: none.
+- GSC: user confirmed selective submission of unindexed Task22 canonical owners, but exact state for this owner is `unknown_not_reverified`; redirect sources remain no-submit.
+- Observation: 2026-08-24 and 2026-08-31; freeze through 2026-08-31 except hard defect/material factual issue/explicit override.
+- Status: `PRESERVE_CONSOLIDATION_REDIRECT_REVALIDATED_LIVE`.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-17-task23-1-risk-management-mastery-revalidation/memory.md`
+
+### 23.2 — Swing Trading Explained
+- Target: `/blog/swing-trading-explained-the-ultimate-guide-for-2026`
+- Source: `content/blog/2026021402.md`
+- Owner Gate: `retain_narrow + rebuild`.
+- Fresh production pre-edit: target 200/in sitemap; `/blog/2026021402` direct 301 to target. Swing Strategies, Part-Time Swing, Still-Effective and Day-vs-Swing-vs-Investing neighbors are also live 200/sitemap pages.
+- Fresh SERP: `what is / explained` searches surface the requested target while strategy searches surface `/blog/swing-trading-strategies-guide`, supporting separate concept vs strategy ownership.
+- Pre-edit body inlinks: target 1 file vs Strategies owner 23; after scoped canonical links target has 3 body-inlink files.
+- Rebuild: ~3,012 words; concept/mechanics, overnight/event/gap risk, order behavior, margin/settlement boundaries, timeframe roles, market-specific risks and replay limitations. Strategy-specific rules delegate to the Strategies owner.
+- Removed fixed duration/trade-count/stop/win-rate/account-size/risk/R:R rules, outdated universal PDT framing, invented outcomes and false ChartMini setup/alert automation claims; manual Article/BlogPosting absent.
+- Internal Blog links: 7/7 valid, routable, non-redirecting owners.
+- `pnpm build`: PASS; 402 posts.
+- `pnpm check`: PASS; 5 files / 13 tests.
+- `pnpm seo:v2:workflow:check`: PASS.
+- `git diff --check`: PASS.
+- Status: `RETAIN_NARROW_REBUILD_COMPLETE_PENDING_DEPLOY`.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-17-task23-2-swing-trading-explained/memory.md`
+
+### 23.3 — Swing Trading Strategies Guide
+- Target: `/blog/swing-trading-strategies-guide`
+- Source: `content/blog/2026032401.md`
+- Owner Gate: `retain_narrow + rebuild`.
+- Fresh production pre-edit: target 200/self-canonical/in sitemap; `/blog/2026032401` direct 301 to target. Concept, part-time and current-viability Swing neighbors are separate live 200 pages.
+- Fresh SERP: generic Swing Trading strategy queries surface this target; exact part-time and current-viability queries surface their dedicated neighbors, supporting separate intent boundaries.
+- Site graph: target has 24 external body-inlink files; part-time and current-viability neighbors currently have 0 each.
+- Rebuild: ~3,634 words around four testable setup families: Trend Pullback, Support/Resistance Reaction, Breakout & Retest, Trend Transition. Each now separates context, setup, trigger, invalidation, exit, failure mode and test variables.
+- Removed/reframed universal `proven` setup claims, fixed EMA/RSI/Fibonacci/volume thresholds, fixed stop/target/retest timing, 1% risk, 3-5 positions, fixed capital requirements, universal PDT framing and categorical retest superiority.
+- Added current FINRA intraday-margin transition, Investor.gov stop-execution risk, SEC margin-risk and TradingView look-ahead/broker-emulator boundaries.
+- ChartMini is bounded to candle replay/chart-reading practice, not broker execution simulation.
+- Manual Article/BlogPosting absent; 12/12 internal Blog links resolve to non-redirecting owners.
+- `pnpm build`: PASS; 402 posts.
+- `pnpm check`: PASS; 5 files / 13 tests.
+- `pnpm seo:v2:workflow:check`: PASS.
+- `git diff --check`: PASS.
+- Status: `RETAIN_NARROW_REBUILD_COMPLETE_PENDING_DEPLOY`.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-17-task23-3-swing-trading-strategies/memory.md`
+
+### 23.4 — Day Trading Mistakes
+- Target: `/blog/the-5-deadly-day-trading-mistakes-that-will-blow-up-your-account-in-2026-2026`
+- Source: `content/blog/2026010703.md`
+- Owner Gate: `retain_narrow + rebuild`.
+- Fresh production pre-edit: target 200/self-canonical/in sitemap; `/blog/2026010703` direct 301 to target.
+- Fresh SERP: dedicated `day trading mistakes` intent surfaces this target; `/blog/common-trading-mistakes-beginners` remains the broader cross-style beginner mistakes owner.
+- Pre-edit support: one external body-inlink file; Task23.4 added scoped canonical links from Day Trading Reddit and Structured Replay, for 3 final body-inlink source files.
+- Rebuild: ~3,233 words around five observable intraday process failures—risk expansion, loss-chasing/revenge trading, overtrading as setup/cost degradation, stop/adverse-fill assumptions, and exit-rule drift.
+- Removed unsupported 90%/win-rate/cortisol/professional-trade-count claims; universal 15-minute/3-strike/max-3-trades/never-average-down/1% rules; exact-stop-loss promises; and false ChartMini position-sizing/risk automation.
+- Added current FINRA intraday-margin transition, SEC day-trading/margin risk and Investor.gov stop-order/fee boundaries.
+- Manual Article/BlogPosting absent; 8/8 internal Blog links resolve to non-redirecting owners.
+- `pnpm build`: PASS; 402 posts.
+- `pnpm check`: PASS; 5 files / 13 tests.
+- `pnpm seo:v2:workflow:check`: PASS.
+- `git diff --check`: PASS.
+- Status: `RETAIN_NARROW_REBUILD_COMPLETE_PENDING_DEPLOY`.
+- No commit, push, deployment, R2 sync, GSC, Bing, or IndexNow action performed.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-17-task23-4-day-trading-mistakes/memory.md`
+
+### 23.5 — AI / Future Trading Psychology
+- Target: `/blog/the-future-of-trading-psychology-in-2026-market`
+- Source: `content/blog/2026021702.md`
+- Owner Gate: `retain_narrow + rebuild + reverse_recent_consolidation`.
+- Fresh production pre-edit: target long slug and `/blog/2026021702` were direct 301 to `/blog/trading-psychology-master-emotions`; broad owner was 200/self-canonical/in sitemap.
+- Fresh evidence change: 2026 SERP now supports a distinct AI/automation trading-psychology intent, and current research directly covers GenAI retail-investor adoption, information processing, human intervention in AI-assisted investing, emerging herding effects, and social-media-influenced investing.
+- Rebuild: ~3,194 words focused on GenAI adoption, automation reliance, human overrides, confirmation seeking, AI/social-media narrative loops, source verification and a bounded AI-assisted research workflow.
+- Task22.8 consolidation reversed only for this specialist: canonical long slug restored locally as an owner; `/blog/2026021702` now points directly to it.
+- Broad psychology remains the owner for fear, greed, revenge, anchoring, analysis paralysis and broad emotional execution; five generic Task22.8 psychology duplicates remain consolidated there.
+- Removed fabricated AI/psychology statistics and false ChartMini auto-sizing, stop/risk enforcement, AI-signal, emotional-tracking and psychology-reminder claims.
+- Target body support: 3 source files; 8/8 internal Blog links resolve to non-redirecting owners; manual Article/BlogPosting absent.
+- `pnpm build`: PASS; 402 posts.
+- `pnpm check`: PASS; 5 files / 13 tests.
+- `pnpm seo:v2:workflow:check`: PASS before final Workflow sync.
+- `git diff --check`: PASS before final Workflow sync.
+- Status: `RETAIN_NARROW_REBUILD_RESTORE_OWNER_COMPLETE_PENDING_DEPLOY`.
+- No commit, push, deployment, R2 sync, GSC, Bing, or IndexNow action performed.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-17-task23-5-ai-trading-psychology/memory.md`
+
+### 23.6 — Revenge Trading Specialist Owner
+- Target: `/blog/the-revenge-trading-trap-how-to-stop-the-spiral-2026`
+- Source: `content/blog/2026010403.md`
+- Owner Gate: `retain_narrow + rebuild + reverse_recent_consolidation`.
+- Fresh production pre-edit: target long slug and `/blog/2026010403` direct 301 to `/blog/how-to-recover-from-trading-loss`; Recovery owner 200/in sitemap.
+- Fresh SERP: dedicated 2026 `revenge trading / how to stop revenge trading` results now support a separate trigger/interruption intent from broad `recover from trading loss`.
+- Rebuild: ~3,036 words around loss-recovery motivation, valid immediate re-entry vs revenge, fresh-trade test, post-loss decision gate, size/frequency drift, journaling urges, and escalation handoff to Recovery.
+- Task22.8 consolidation reversed only for this specialist: long slug restored locally as owner; `/blog/2026010403` now points directly to it.
+- Behavioral Recovery owner body was not modified and remains the broader loss-event/drawdown diagnosis and return-to-risk owner.
+- Removed deterministic neurobiology, universal 15/30/60-minute cooldowns, universal trade-count/risk limits, blowup prevalence claims, and false ChartMini emotional tracking/automatic lockout.
+- Added 3 scoped body-link sources; 8/8 target internal Blog links resolve to non-redirecting owners.
+- `pnpm build`: PASS; 402 posts.
+- `pnpm check`: PASS; 5 files / 13 tests.
+- `pnpm seo:v2:workflow:check`: PASS before final Workflow sync.
+- `git diff --check`: PASS before final Workflow sync.
+- Status: `RETAIN_NARROW_REBUILD_RESTORE_OWNER_COMPLETE_PENDING_DEPLOY`.
+- No commit, push, deployment, R2 sync, GSC, Bing, or IndexNow action performed.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-17-task23-6-revenge-trading/memory.md`
+
+### 23.7 — Trading Discipline / Execution Gap Consolidation
+- Requested target: `/blog/the-truth-about-discipline-no-one-tells-you`
+- Requested source: `content/blog/2026022703.md`
+- Selected owner: `/blog/the-execution-gap-why-traders-fail-to-follow-their-own-rules-2026` (`content/blog/2026010302.md`)
+- Owner Gate: `consolidate_redirect + rebuild_owner`.
+- Fresh production pre-edit: requested long slug 200/in sitemap; `/blog/2026022703` direct 301 to requested long slug; Execution Gap owner 200/in sitemap.
+- Fresh SERP/site graph: generic trading-discipline/follow-rules intent surfaces the Execution Gap owner; requested page has 0 body inlinks while the selected owner has 3 current non-redirecting body-support sources after scoped link work.
+- Consolidation: requested long slug and `/blog/2026022703` now route directly to the selected owner; requested Markdown carries `redirectTo`; no redirect chain or duplicate redirect source.
+- Owner rebuild: ~3,422 words around observable rule definition, strategy-vs-execution quality, decision-point diagnosis, descriptive compliance measurement, trigger-specific controls, environment/friction design, process-vs-P&L review and rule-rehearsal loop.
+- Evidence correction: removed ego-depletion/willpower-battery framing as settled fact after fresh preregistered multilab replication checks; removed deterministic neurobiology, universal 90% compliance, cooldown/trade-count/risk thresholds and false ChartMini discipline automation.
+- Manual Article/BlogPosting absent on owner; 10/10 internal Blog destinations resolve to current non-redirecting owners.
+- `pnpm build`: PASS; 402 posts.
+- `pnpm check`: PASS; 5 files / 13 tests.
+- `pnpm seo:v2:workflow:check`: PASS before final Workflow sync.
+- `git diff --check`: PASS before final Workflow sync.
+- Status: `CONSOLIDATE_REDIRECT_REBUILD_OWNER_COMPLETE_PENDING_DEPLOY`.
+- No commit, push, deployment, R2 sync, GSC, Bing, or IndexNow action performed.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-17-task23-7-trading-discipline-consolidation/memory.md`
+
+### 23.8 — Cluster Intent, Internal Links, and Cannibalization Review
+- Scope: Swing Trading concept/strategy/part-time/current-viability/style comparison; Day Trading mistakes; Broad Psychology/AI Psychology/Revenge/FOMO/Recovery/Discipline; body links and redirects.
+- Fresh production remains pre-Task23 deployment: Task23.5 and 23.6 restored specialists still expose the old production redirect state; Task23.7 consolidation is also not yet deployed.
+- Part-Time Swing Trading: exact-intent SERP supports a separate schedule/workflow owner; `retain_narrow + rebuild`; rebuilt ~2,680 words around decision windows, event policy, unattended-order/stop-fill risk, sizing, current account-rule boundaries, journaling and replay.
+- Swing Trading current viability: exact-intent SERP supports a separate effectiveness/validation owner; `retain_narrow + rebuild`; rebuilt ~2,597 words around realistic costs/fills, out-of-sample testing, look-ahead avoidance, regime segmentation and forward validation.
+- Additional psychology consolidation: `/blog/why-90-of-retail-traders-lose-money-common-psychological-traps-2026` + `/blog/2025102601` -> `/blog/trading-psychology-master-emotions`; residual body links 0; redirect sources are no-submit.
+- One Task23.9 integrity defect was found and repaired: Style Comparison linked to removed `/blog/best-day-trading-simulators-2026`; it now links directly to `/blog/best-day-trading-simulators-2026-honest-comparison`.
+- Final support after Task23.9 audit: Swing concept 5; Swing strategies 23; Part-Time 4; Viability 4; Style Comparison 5; Day Trading mistakes 4; Broad Psychology 21; FOMO 6; AI Psychology 3; Revenge 3; Behavioral Recovery 9; Execution Gap 3.
+- Status: `PASS_WITH_TWO_NARROW_REBUILDS_AND_ONE_ADDITIONAL_PSYCHOLOGY_CONSOLIDATION`.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-17-task23-8-cluster-intent-link-cannibalization-review/memory.md`
+
+### 23.9 — Final Validation and Workflow Sync
+- Full sequence: `pnpm build && pnpm check && pnpm seo:v2:workflow:check && git diff --check` — PASS after the final link repair and governance sync.
+- Manifest: 402 Blog posts; marketing content: 160 locale page assets.
+- Biome: 414 files; Vitest: 5/5 files and 13/13 tests PASS.
+- Custom Task23 owner audit: 12/12 core owners PASS; `OWNER_INTEGRITY_BAD 0`.
+- Expected Task23 numeric/duplicate redirects: 11/11 PASS and direct to final owners.
+- Global Task23 integrity: 0 body Blog links to redirect posts; 0 duplicate redirect-source definitions; 0 redirect chains.
+- Production remains pre-deployment for Task23.2–23.8; no new Task23 observation dates are created until fresh post-deployment verification.
+- GSC/Bing/IndexNow: no action; exact per-owner current GSC state remains `unknown_not_reverified` unless already explicitly recorded from user confirmation.
+- Status: `PASS_PENDING_DEPLOYMENT_VERIFICATION`.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-17-task23-9-final-validation/memory.md`

@@ -132,7 +132,8 @@
     "title": "Why 90% of Retail Traders Lose Money: Common Psychological Traps",
     "description": "Why 90% of Retail Traders Lose Money: Common Psychological Traps Expert insights, proven strategies, and practical tips to improve your trading performance.",
     "date": "2025-10-26",
-    "category": "Investing"
+    "category": "Investing",
+    "redirectTo": "/blog/trading-psychology-master-emotions"
   },
   {
     "slug": "the-art-of-stop-loss-how-to-set-protective-stops-like-a-pro-2026",
@@ -1117,10 +1118,11 @@
     "fileSlug": "2026010302",
     "contentKey": "chartmini-content/blog/2026010302.md",
     "locale": "en",
-    "title": "Trading Execution Gap 2026: How to Follow Your Trading Rules",
-    "description": "Learn how to close the trading execution gap in 2026 with rule compliance tracking, pre-trade checklists, cooling-off rules, position-size discipline, post-trade review, and ChartMini replay practice.",
+    "title": "Trading Discipline in 2026: How to Close the Execution Gap",
+    "metaTitle": "Trading Discipline: How to Follow Your Rules in 2026",
+    "description": "Learn how to improve trading discipline by turning vague intentions into testable rules, tracking rule compliance, reducing execution friction, and reviewing the decisions that break your plan.",
     "date": "2026-01-03",
-    "dateModified": "2026-06-02",
+    "dateModified": "2026-08-17",
     "category": "Trading Discipline",
     "categories": [
       "Trading Discipline",
@@ -1128,13 +1130,12 @@
       "Risk Management"
     ],
     "tags": [
-      "trading execution gap",
-      "trading discipline",
-      "rule compliance trading",
-      "trading checklist",
-      "follow trading rules",
-      "revenge trading",
-      "trading psychology"
+      "Trading Discipline",
+      "Trading Execution Gap",
+      "Rule Compliance",
+      "Trading Checklist",
+      "Trading Psychology",
+      "Trading Journal"
     ]
   },
   {
@@ -1191,12 +1192,19 @@
     "fileSlug": "2026010403",
     "contentKey": "chartmini-content/blog/2026010403.md",
     "locale": "en",
-    "title": "The Revenge Trading Trap: How to Stop the Spiral",
-    "description": "The Revenge Trading Trap: How to Stop the Spiral Step-by-step guide with proven strategies and expert tips. Learn from expert analysi in 2026.",
+    "title": "Revenge Trading: How to Stop the Loss-Chasing Spiral in 2026",
+    "metaTitle": "How to Stop Revenge Trading: A Practical 2026 Guide",
+    "description": "Learn how to identify revenge trading after a loss, separate a valid next trade from loss-chasing, use a post-loss decision gate, and review the pattern without relying on arbitrary cooldowns or trade-count rules.",
     "date": "2026-01-04",
-    "category": "Beginner Guides",
-    "tags": ["Trading"],
-    "redirectTo": "/blog/how-to-recover-from-trading-loss"
+    "dateModified": "2026-08-17",
+    "category": "Trading Psychology",
+    "tags": [
+      "Revenge Trading",
+      "Trading Psychology",
+      "Loss Chasing",
+      "Trading Discipline",
+      "Trading Journal"
+    ]
   },
   {
     "slug": "the-art-of-position-sizing-how-much-to-trade-2026",
@@ -1352,11 +1360,21 @@
     "fileSlug": "2026010703",
     "contentKey": "chartmini-content/blog/2026010703.md",
     "locale": "en",
-    "title": "The 5 Deadly Day Trading Mistakes That Will Blow Up Your Account in 2026",
-    "description": "The 5 Deadly Day Trading Mistakes That Will Blow Up Your Account in 2026 Expert insights and strategies to improve your trading performance.",
+    "title": "5 Day Trading Mistakes That Quietly Damage Your Account in 2026",
+    "metaTitle": "5 Day Trading Mistakes to Avoid in 2026",
+    "description": "Learn five common day trading process mistakes—unplanned risk, revenge trading, overtrading, execution assumptions, and inconsistent exits—and how to diagnose them in replay and a trading journal.",
     "date": "2026-01-07",
+    "dateModified": "2026-08-17",
     "category": "Trading Education",
-    "tags": ["Trading"]
+    "categories": ["Trading Education", "Day Trading", "Risk Management"],
+    "tags": [
+      "Day Trading Mistakes",
+      "Overtrading",
+      "Revenge Trading",
+      "Position Sizing",
+      "Stop Loss",
+      "Trading Discipline"
+    ]
   },
   {
     "slug": "technical-analysis-in-2026-what-actually-works-and-whats-a-waste-of-time-2026",
@@ -2911,17 +2929,19 @@
     "fileSlug": "2026021002",
     "contentKey": "chartmini-content/blog/2026021002.md",
     "locale": "en",
-    "title": "Is Swing Trading Still Effective in 2026? Complete Analysis",
-    "description": "Is swing trading still effective in 2026? Discover data-backed insights, evolved strategies, and why swing trading remains profitable when adapted to modern market conditions.",
+    "title": "Is Swing Trading Still Effective in 2026? What Actually Determines Viability",
+    "metaTitle": "Is Swing Trading Still Effective in 2026?",
+    "description": "Is swing trading still effective in 2026? The honest answer depends on the strategy, market, costs, overnight risk, execution assumptions, and whether the edge survives realistic out-of-sample testing.",
     "date": "2026-02-10",
+    "dateModified": "2026-08-17",
     "category": "Strategies",
     "categories": ["Strategies", "Swing Trading"],
     "tags": [
       "Swing Trading",
       "Trading Strategies",
-      "Technical Analysis",
+      "Backtesting",
       "Risk Management",
-      "Market Volatility"
+      "Market Structure"
     ]
   },
   {
@@ -3080,18 +3100,20 @@
     "fileSlug": "2026021402",
     "contentKey": "chartmini-content/blog/2026021402.md",
     "locale": "en",
-    "title": "Swing Trading Explained: The Ultimate Guide for 2026",
-    "description": "Master swing trading in 2026 with this comprehensive guide. Learn swing trading strategies, timeframe selection, entry and exit techniques, risk management rules, and how swing.",
+    "title": "Swing Trading Explained: How It Works, Risks, and Practice in 2026",
+    "metaTitle": "Swing Trading Explained: How It Works in 2026",
+    "description": "Learn what swing trading is, how multi-day trades work, how it differs from day trading, the risks of holding overnight, and how to practice it in 2026.",
     "date": "2026-02-14",
+    "dateModified": "2026-08-17",
     "category": "Trading Strategies",
     "categories": ["Trading Strategies", "Swing Trading", "Trading Education"],
     "tags": [
       "Swing Trading",
-      "Day Trading vs Swing Trading",
-      "Trading Strategy",
-      "Position Trading",
+      "Trading Styles",
+      "Multi-Day Trading",
+      "Trading Risk",
       "Trading Timeframes",
-      "Risk Management"
+      "Market Replay"
     ]
   },
   {
@@ -3209,21 +3231,22 @@
     "fileSlug": "2026021702",
     "contentKey": "chartmini-content/blog/2026021702.md",
     "locale": "en",
-    "title": "The Future of Trading Psychology in 2026 Market",
-    "description": "Discover the future of trading psychology in 2026's AI-driven markets. Learn how algorithmic trading, automation tools, and new technologies are reshaping trader psychology and.",
+    "title": "The Future of Trading Psychology in 2026: AI, Social Media, and Automation",
+    "metaTitle": "AI Trading Psychology in 2026: Risks, Biases & Habits",
+    "description": "How GenAI, social media, and automation are changing trading psychology in 2026—and how to use AI without outsourcing judgment, risk, or review.",
     "date": "2026-02-17",
+    "dateModified": "2026-08-17",
     "category": "Trading Psychology",
-    "categories": ["Trading Psychology", "Mental Game", "Trading Education"],
+    "categories": ["Trading Psychology", "Trading Education", "AI"],
     "tags": [
       "Trading Psychology",
-      "Emotional Control",
+      "Generative AI",
       "AI Trading",
-      "Mindset",
-      "Discipline",
-      "Trading Education",
-      "Risk Management"
-    ],
-    "redirectTo": "/blog/trading-psychology-master-emotions"
+      "Automation",
+      "Retail Investors",
+      "Social Media",
+      "Behavioral Finance"
+    ]
   },
   {
     "slug": "how-to-trade-fomo-like-a-pro-in-2026",
@@ -3734,7 +3757,8 @@
       "Mental Edge",
       "Trading Mindset",
       "Emotional Control"
-    ]
+    ],
+    "redirectTo": "/blog/the-execution-gap-why-traders-fail-to-follow-their-own-rules-2026"
   },
   {
     "slug": "best-day-trading-simulators-2026-honest-comparison",
@@ -3860,19 +3884,19 @@
     "fileSlug": "2026030302",
     "contentKey": "chartmini-content/blog/2026030302.md",
     "locale": "en",
-    "title": "Swing Trading Strategies: A Complete Guide for Part-Time Traders (2026)",
-    "description": "Master five proven swing trading strategies designed for traders who can't watch charts all day. Learn exact entry and exit rules, risk management, and how to backtest each strategy for free.",
+    "title": "Swing Trading for Part-Time Traders: A Practical Workflow for 2026",
+    "metaTitle": "Part-Time Swing Trading: A Practical 2026 Workflow",
+    "description": "A practical part-time swing trading workflow for 2026: how to structure research, entries, exits, event checks, risk planning, alerts, and replay practice when you cannot watch charts all day.",
     "date": "2026-03-03",
-    "dateModified": "2026-06-05",
+    "dateModified": "2026-08-17",
     "category": "Education",
     "categories": ["Education", "Trading Strategies", "Swing Trading"],
     "tags": [
       "Swing Trading",
-      "Price Action",
-      "Moving Average",
-      "Technical Analysis",
-      "Backtesting",
-      "Part-Time Trading"
+      "Part-Time Trading",
+      "Trading Routine",
+      "Risk Management",
+      "Market Replay"
     ]
   },
   {
@@ -4708,18 +4732,20 @@
     "fileSlug": "2026032401",
     "contentKey": "chartmini-content/blog/2026032401.md",
     "locale": "en",
-    "title": "Swing Trading Strategies: A Complete Guide for Beginners (2026)",
-    "description": "Learn swing trading from scratch — what it is, how it differs from day trading, and 4 proven strategies with step-by-step rules. Includes position sizing, holding periods, and the best markets for swing trading.",
+    "title": "Swing Trading Strategies: 4 Testable Setups for 2026",
+    "metaTitle": "Swing Trading Strategies: 4 Testable Setups for 2026",
+    "description": "Learn four swing-trading setup families for pullbacks, support and resistance, breakouts, and trend transitions, with clear rules for testing entries, invalidation, exits, and replay results.",
     "date": "2026-03-24",
+    "dateModified": "2026-08-17",
     "category": "Education",
-    "categories": ["Education", "Trading Strategies"],
+    "categories": ["Education", "Trading Strategies", "Swing Trading"],
     "tags": [
       "Swing Trading",
       "Swing Trading Strategies",
-      "Position Trading",
-      "Multi-Day Trading",
       "Pullback Strategy",
-      "Breakout Strategy"
+      "Breakout Strategy",
+      "Support and Resistance",
+      "Backtesting"
     ]
   },
   {
@@ -5109,6 +5135,7 @@
     "title": "Algorithmic Trading for Beginners: How to Automate Your Trading Strategy",
     "description": "A beginner's introduction to algorithmic trading. Learn what algo trading is, how to build your first bot, the languages and platforms used, and the realistic advantages and limitations of automation.",
     "date": "2026-04-03",
+    "dateModified": "2026-08-17",
     "category": "Education",
     "categories": ["Education", "Trading Strategies", "Tools"],
     "tags": [
@@ -7593,7 +7620,7 @@
     "title": "Day Trading Reddit: What Beginners Should Learn, Ignore, and Verify",
     "description": "Review day trading advice from Reddit, identify common red flags, verify community claims, and test price-action ideas with historical chart replay.",
     "date": "2026-07-12",
-    "dateModified": "2026-07-12",
+    "dateModified": "2026-08-17",
     "category": "Trading Education",
     "tags": [
       "Day Trading",

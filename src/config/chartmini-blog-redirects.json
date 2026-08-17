@@ -46,7 +46,12 @@
   },
   {
     "source": "/blog/2025102601",
-    "destination": "/blog/why-90-of-retail-traders-lose-money-common-psychological-traps-2026",
+    "destination": "/blog/trading-psychology-master-emotions",
+    "permanent": true
+  },
+  {
+    "source": "/blog/why-90-of-retail-traders-lose-money-common-psychological-traps-2026",
+    "destination": "/blog/trading-psychology-master-emotions",
     "permanent": true
   },
   {
@@ -381,12 +386,7 @@
   },
   {
     "source": "/blog/2026010403",
-    "destination": "/blog/how-to-recover-from-trading-loss",
-    "permanent": true
-  },
-  {
-    "source": "/blog/the-revenge-trading-trap-how-to-stop-the-spiral-2026",
-    "destination": "/blog/how-to-recover-from-trading-loss",
+    "destination": "/blog/the-revenge-trading-trap-how-to-stop-the-spiral-2026",
     "permanent": true
   },
   {
@@ -1046,12 +1046,7 @@
   },
   {
     "source": "/blog/2026021702",
-    "destination": "/blog/trading-psychology-master-emotions",
-    "permanent": true
-  },
-  {
-    "source": "/blog/the-future-of-trading-psychology-in-2026-market",
-    "destination": "/blog/trading-psychology-master-emotions",
+    "destination": "/blog/the-future-of-trading-psychology-in-2026-market",
     "permanent": true
   },
   {
@@ -1181,7 +1176,12 @@
   },
   {
     "source": "/blog/2026022703",
-    "destination": "/blog/the-truth-about-discipline-no-one-tells-you",
+    "destination": "/blog/the-execution-gap-why-traders-fail-to-follow-their-own-rules-2026",
+    "permanent": true
+  },
+  {
+    "source": "/blog/the-truth-about-discipline-no-one-tells-you",
+    "destination": "/blog/the-execution-gap-why-traders-fail-to-follow-their-own-rules-2026",
     "permanent": true
   },
   {
