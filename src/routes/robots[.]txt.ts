@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { getBaseUrl } from '@/lib/urls';
 
-const disallowedPaths = ['/api/', '/admin/', '/go/'];
+const disallowedPaths = ['/api/', '/admin/', '/go/', '/auth/'];
 
 function getDisallowRules() {
   return disallowedPaths.map((path) => `Disallow: ${path}`).join('\n');

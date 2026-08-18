@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { getSortedPosts, isIndexablePost } from '@/lib/blog';
 import { getBaseUrl } from '@/lib/urls';
 import { websiteConfig } from '@/config/website';
-import { chartMiniLocalePaths } from '@/lib/locale';
+import { baseLocale, chartMiniLocalePaths } from '@/lib/locale';
 
 const LOCALIZED_ROUTES = ['/', '/play', '/day-trading-simulator'] as const;
 const UNLOCALIZED_ROUTES = [
@@ -44,12 +44,7 @@ function alternateLinks(base: string, route: string): string {
 function urlEntry(
   base: string,
   path: string,
-  options?: {
-    alternateRoute?: string;
-    changefreq?: string;
-    lastmod?: string;
-    priority?: string;
-  }
+  options?: { alternateRoute?: string; lastmod?: string }
 ): string {
   const alternate = options?.alternateRoute
     ? alternateLinks(base, options.alternateRoute)
@@ -57,13 +52,7 @@ function urlEntry(
   const lastmod = options?.lastmod
     ? `\n    <lastmod>${escapeXml(options.lastmod)}</lastmod>`
     : '';
-  const changefreq = options?.changefreq
-    ? `\n    <changefreq>${options.changefreq}</changefreq>`
-    : '';
-  const priority = options?.priority
-    ? `\n    <priority>${options.priority}</priority>`
-    : '';
-  return `  <url>\n    <loc>${escapeXml(`${base}${path}`)}</loc>${alternate}${lastmod}${changefreq}${priority}\n  </url>`;
+  return `  <url>\n    <loc>${escapeXml(`${base}${path}`)}</loc>${alternate}${lastmod}\n  </url>`;
 }
 
 /**
@@ -92,11 +81,14 @@ export const Route = createFileRoute('/sitemap.xml')({
         }
 
         if (websiteConfig.blog?.enable) {
-          entries.push(urlEntry(base, '/blog', { changefreq: 'weekly' }));
-          for (const post of getSortedPosts('en').filter(isIndexablePost)) {
+          // Blog content currently exists only in the base locale. Keep the
+          // sitemap English-only instead of synthesizing locale fallbacks.
+          entries.push(urlEntry(base, '/blog'));
+          for (const post of getSortedPosts(baseLocale).filter(
+            isIndexablePost
+          )) {
             entries.push(
               urlEntry(base, `/blog/${post.slug}`, {
-                changefreq: 'weekly',
                 lastmod: new Date(post.dateModified ?? post.date)
                   .toISOString()
                   .slice(0, 10),
@@ -114,6 +106,7 @@ ${entries.join('\n')}
         return new Response(sitemap, {
           headers: {
             'Content-Type': 'application/xml',
+            'Cache-Control': 'public, max-age=3600, s-maxage=3600',
           },
         });
       },

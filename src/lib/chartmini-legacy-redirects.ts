@@ -6,6 +6,21 @@ const blogRedirectMap = new Map(
   blogRedirects.map((redirect) => [redirect.source, redirect.destination])
 );
 
+// Route-group names are source-file details, not public URLs. Keep any old
+// links that exposed them from becoming framework-level 404/1102 responses.
+const internalRouteGroupRedirects = new Map([
+  ['/(pages)/about', '/about'],
+  ['/(pages)/ai', '/ai'],
+  ['/(pages)/changelog', '/changelog'],
+  ['/(pages)/contact', '/contact'],
+  ['/(pages)/pricing', '/pricing'],
+  ['/(pages)/roadmap', '/roadmap'],
+  ['/(pages)/waitlist', '/waitlist'],
+  ['/(legals)/cookie', '/cookie'],
+  ['/(legals)/privacy', '/privacy'],
+  ['/(legals)/terms', '/terms'],
+]);
+
 function withoutTrailingSlash(pathname: string): string {
   if (pathname.length <= 1) return pathname;
   return pathname.replace(/\/+$/, '');
@@ -28,6 +43,11 @@ export function getChartMiniLegacyRedirect(request: Request): Response | null {
   const requestUrl = new URL(request.url);
   const pathname = withoutTrailingSlash(requestUrl.pathname);
 
+  const internalRouteGroup = internalRouteGroupRedirects.get(pathname);
+  if (internalRouteGroup) {
+    return redirectResponse(requestUrl, internalRouteGroup);
+  }
+
   if (pathname === '/en' || pathname.startsWith('/en/')) {
     const destinationPath = pathname.slice('/en'.length) || '/';
     return redirectResponse(requestUrl, destinationPath);
@@ -35,7 +55,9 @@ export function getChartMiniLegacyRedirect(request: Request): Response | null {
 
   // The original ChartMini site uses /zh-hans for Simplified Chinese.
   // Redirect the migration-only /zh alias so search engines keep one URL.
-  if (pathname === '/zh' || pathname.startsWith('/zh/')) {
+  const zhPath = pathname.slice('/zh'.length);
+  const isZhBlogPath = zhPath === '/blog' || zhPath.startsWith('/blog/');
+  if (!isZhBlogPath && (pathname === '/zh' || pathname.startsWith('/zh/'))) {
     const destinationPath = `/zh-hans${pathname.slice('/zh'.length) || ''}`;
     return redirectResponse(requestUrl, destinationPath);
   }
