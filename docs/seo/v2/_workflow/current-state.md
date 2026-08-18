@@ -373,6 +373,76 @@ The user explicitly confirmed manual GSC URL Inspection / Request Indexing for a
 
 Task23.2–23.8 now enter read-only observation with reviews on 2026-08-24 and 2026-08-31 and freeze through 2026-08-31 except for hard technical/material factual defects or explicit user override. Final closeout status: `DEPLOY_VERIFIED_GSC_RECORDED_OBSERVATION_ACTIVE`. Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-17-task23-deployment-gsc-closeout/memory.md`.
 
+## 2026-08-18 Task 24.1 — Beginner Trading Journal owner restored
+
+Fresh production preflight confirms `/blog/top-5-trading-journal-strategies-beginners` and `/blog/2026022103` currently 301 to the Broad Journal owner, while the Broad owner is 200 and the requested target is excluded from the sitemap. Current target GSC/Bing state is `unknown_not_reverified`.
+
+Fresh exact-intent search supports a distinct beginner first-journal / minimum-viable-starter task. Owner Gate: `retain_narrow + rebuild + reverse_recent_consolidation`. Task21.8 remains valid for the other three generic Journal redirects; only this URL is superseded by fresh evidence and explicit user authorization.
+
+The target is rebuilt to ~2,679 words as `Trading Journal for Beginners: 5 Simple Practices to Start in 2026`, `dateModified: 2026-08-18`. It focuses on minimum viable fields, plan-before-outcome evidence, process-vs-P&L, one visual/context record, simple format choice and a first-session workflow. Fabricated performance statistics, universal thresholds, fixed sample-size rules and manual Article JSON-LD were removed. Advanced metrics, habit maintenance, periodic review and deep single-trade review remain with their existing owners.
+
+Local routing restores the long URL as an owner and routes `/blog/2026022103` directly to it. Three current non-protected body-support sources were added. `pnpm build` PASS with 402 posts and 160 locale assets; `pnpm check` PASS with Biome 414 files and Vitest 5/5 files / 13/13 tests. Status: `RETAIN_NARROW_REBUILD_RESTORE_OWNER_COMPLETE_PENDING_DEPLOY`. Production remains on the old Task21.8 redirect state until deployment. Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-18-task24-1-beginner-trading-journal/memory.md`.
+
+## 2026-08-18 Task 24.2 — Trading Journal performance-analysis redirect revalidation
+
+Fresh production preflight confirms the requested long slug and `/blog/2026011201` currently direct 301 to the Broad Journal owner, while both Broad Journal and `/blog/trading-journal-review-system-2026` are live 200 and sitemap-listed. The requested redirect source has 0 current body inlinks. Current GSC/Bing state remains `unknown_not_reverified`.
+
+Fresh performance-analysis SERP centers on weekly/monthly review, grouping trades by setup/timeframe/market condition, separating process quality from outcome, finding recurring errors and turning grouped evidence into the next adjustment. That maps more precisely to the existing Review System owner than to the Broad Journal structure/fields/metrics/replay owner. The historical indexed snapshot of the requested page itself is dominated by the same analysis/review workflow.
+
+Owner Gate: `consolidate_redirect + retarget_owner`. The page remains a redirect source; Task24.2 only changes its canonical destination. Locally, both the long slug and `/blog/2026011201` now route directly to `/blog/trading-journal-review-system-2026`. No owner body was rewritten. Task24.1 beginner restoration remains intact. Status: `CONSOLIDATE_REDIRECT_RETARGET_REVIEW_OWNER_COMPLETE_PENDING_DEPLOY`. Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-18-task24-2-trading-journal-performance-analysis/memory.md`.
+
+## 2026-08-18 Task 24.3 — Trading Journal review-secrets redirect revalidation
+
+Fresh production preflight confirms `/blog/trading-journal-secrets-how-to-review-your-trades-for-maximum-improvement-2026` and `/blog/2026010503` currently direct 301 to Broad Journal. The redirect source has 0 current body inlinks. Current GSC/Bing state remains `unknown_not_reverified`.
+
+Fresh SERP separates `post-trade review` as a single closed-trade plan-vs-actual task from broader `how to review your trades / improve performance` intent, which centers on recurring weekly/monthly review, pattern detection, grouped performance and next-action selection. The historical Task24.3 source itself is explicitly structured as a Daily / Weekly / Monthly three-tier review system with performance-by-setup analysis and actionable pattern review.
+
+Owner Gate: `consolidate_redirect + retarget_owner`. The requested URL remains non-indexable. Locally, its long slug and `/blog/2026010503` now route directly to `/blog/trading-journal-review-system-2026`. Post-Trade Review remains the single-trade owner; Broad Journal remains journal construction/fields/advanced-metrics/replay. No owner body was rewritten. Final validation PASS: `pnpm build`, `pnpm check`, `pnpm seo:v2:workflow:check`, and `git diff --check`; manifest/redirect integrity confirms 0 duplicate redirect sources and 0 redirect chains. Status: `CONSOLIDATE_REDIRECT_RETARGET_REVIEW_OWNER_COMPLETE_PENDING_DEPLOY`. Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-18-task24-3-trading-journal-review-secrets/memory.md`.
+
+## 2026-08-18 Task 24.4 — Broad Trading Psychology redirect revalidation
+
+Fresh production revalidation confirms `/blog/trading-psychology-in-2026-master-your-mind-or-watch-your-account-die-2026` and `/blog/2026010705` are direct 301 to `/blog/trading-psychology-master-emotions`. The Broad Psychology owner is production 200, has an exact self-canonical and is present in the sitemap; the requested redirect sources are not sitemap owners. GSC/Bing state for the redirect source remains `unknown_not_reverified`.
+
+Fresh SERP for broad `trading psychology 2026 / master your mind / fear greed discipline` intent remains generic: fear/greed, overconfidence, loss aversion, FOMO/revenge as broad examples, discipline, pre-commitment/trading-plan structure, journaling and process-over-outcome. The requested old article covers the same broad territory and its `2026` framing does not create a durable separate task. Existing narrower v2 owners continue to own FOMO, Revenge Trading, Behavioral Recovery, Trading Discipline/Execution Gap and AI/automation/social-media psychology.
+
+Owner Gate: `preserve_consolidation_redirect + revalidate_owner`. No article, redirect-config, manifest or product-code change is required. Requested long + numeric sources remain direct 301 to Broad Psychology; no indexable/routable Blog owner currently links to the redirect source. Task24.4 therefore records governance/evidence only and does not restart the existing Task23 Broad Psychology observation window. Review dates remain 2026-08-24 and 2026-08-31. Status: `PRESERVE_CONSOLIDATION_REDIRECT_REVALIDATED_LIVE`. Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-18-task24-4-trading-psychology-broad-revalidation/memory.md`.
+
+## 2026-08-18 Task 24.5 — Broad Trading Psychology owner rebuild
+
+Fresh SERP, production and site-graph evidence retain `/blog/trading-psychology-master-emotions` as the broad Trading Psychology canonical. Production before the edit is 200/self-canonical/in sitemap with `/blog/2026041202` direct 301. Current GSC/Bing state remains `unknown_not_reverified`. Fresh SERP continues to reward broad fear/greed/bias/FOMO/revenge/discipline/journal content rather than a separate year-framed owner.
+
+Owner Gate: `retain_narrow + rebuild`. Explicit user authorization overrides the existing observation freeze because the live owner contained material factual/risk-quality defects: fixed `2x` loss-aversion framing, universal `1-2%` risk and `1.5%` daily-loss prescriptions, unsupported claims about professional-firm loss limits, a claim that real psychological growth requires live money, an unsupported first-person loss anecdote, and an empty execution-practice section.
+
+Rebuilt `content/blog/2026041202.md` to ~2,808 words as `Trading Psychology: Fear, Greed, Biases, and Better Execution in 2026`, `dateModified: 2026-08-18`. Added direct answer, five takeaways, a six-pattern decision table, bounded prospect-theory/disposition-effect explanation, observable execution controls, simulation/replay limitations, `not every bad trade is psychology`, specialist handoffs, FAQ, practical next step, and official Nobel/SEC/Investor.gov/FINRA source notes. Ten internal Blog destinations all resolve to final non-redirect owners; 21 effective non-redirecting body-support sources remain; seven broad psychology redirect posts remain consolidated here. Build/check passed. Status: `RETAIN_NARROW_REBUILD_COMPLETE_PENDING_DEPLOY`. Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-18-task24-5-broad-trading-psychology/memory.md`.
+
+## 2026-08-18 Task 24.6 — Fear / Greed / Revenge Psychology redirect revalidation
+
+Fresh production revalidation confirms `/blog/trading-psychology-mastery-how-to-conquer-fear-greed-and-revenge-trading-2026` and `/blog/2026011302` are direct 301 to `/blog/trading-psychology-master-emotions`. Fresh SERP continues to treat fear, greed, revenge, discipline, FOMO and process controls as components of the broad Trading Psychology intent rather than a durable combined specialist page. The requested old source is itself broad across fear, greed, revenge, FOMO, analysis paralysis, overconfidence, probability/process mindset, routines and journaling.
+
+Owner Gate: `preserve_consolidation_redirect + revalidate_owner`. The source remains non-indexable and is not restored or retargeted to the narrow Revenge Trading owner. Two Markdown references to `/blog/2026011302` exist only inside pages that are themselves redirect sources, so effective indexable/routable support is zero. The old source also contains universal fixed-risk examples, fabricated professional comparisons and a false ChartMini emotion-tracking/alert claim, strengthening the case for keeping it out of the index. No article, route, redirect-config or manifest-source change is required. Task24.5's rebuilt Broad Psychology owner remains the canonical destination pending deployment. Status: `PRESERVE_CONSOLIDATION_REDIRECT_REVALIDATED_LIVE`. Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-18-task24-6-fear-greed-revenge-psychology-revalidation/memory.md`.
+
+## 2026-08-18 Task 24.7 — Emotional Discipline Psychology redirect revalidation
+
+Fresh production revalidation confirms `/blog/trading-psychology-mastery-how-to-control-your-emotions-and-trade-with-discipline-in-2026-2026` and `/blog/2026010901` are direct 301 to `/blog/trading-psychology-master-emotions`. The requested source has two Markdown references, but both live only inside other redirect-source pages, so effective routable body support is 0. GSC/Bing remain `unknown_not_reverified`.
+
+Fresh SERP distinguishes broad `control emotions / fear / greed / revenge / FOMO / discipline` psychology content from the narrower `why traders break their own rules / how to follow written rules` execution-compliance task. The requested historical body is dominated by fear, greed, revenge, hope, FOMO, broad mindset and generic psychology rules; its hard 1% risk, three-trade/day, 3% daily-loss and 15-minute cooldown prescriptions are not a reason to restore it. Execution Gap remains the specialist for measurable rule compliance, trigger diagnosis and execution controls.
+
+Owner Gate: `preserve_consolidation_redirect + revalidate_owner`. Keep long + numeric direct 301 to Broad Psychology; do not restore the page and do not retarget it to Execution Gap. Task24.5's rebuilt Broad Psychology owner remains the sole broad owner locally and pending deployment. Task24.7 makes governance/evidence changes only. Status: `PRESERVE_CONSOLIDATION_REDIRECT_REVALIDATED_LIVE`. Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-18-task24-7-emotional-discipline-psychology-revalidation/memory.md`.
+
+## 2026-08-18 Task 24.8 — Journal + Trading Psychology cluster review
+
+Fresh cluster-wide SERP/site-graph review confirms the final Journal owner split: Beginner Journal, Broad Journal, Periodic Review System, Habit/Maintenance, Single-Trade Post-Trade Review, Forex-specific Journal Template, and Simulated/Replay Trade Log. Psychology remains split between Broad Psychology, FOMO, Revenge, Behavioral Recovery, Execution Gap/Rule Compliance, and AI Psychology. No additional indexable generic duplicate requires consolidation.
+
+Repository-wide routing/link audit found 0 indexable/routable pages linking to Task24 redirect sources and 0 checked Owner outbound links that resolve through redirects. One support gap was found: `/blog/forex-trading-journal-template` had only 2 effective body inlinks. Task24.8 changed the existing journal mention in `content/blog/2026030901.md` into a direct contextual link to the Forex Journal owner, raising effective support to 3. Simulated Trade Log has 13 effective body inlinks. Result: `PASS_AFTER_ONE_FOREX_SUPPORT_LINK_CORRECTION`. Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-18-task24-8-cluster-intent-internal-link-cannibalization-review/memory.md`.
+
+## 2026-08-18 Task 24.9 — Final validation / Workflow closeout
+
+Full local validation after Task24.8 passed: `pnpm build`, `pnpm check`, `pnpm seo:v2:workflow:check`, and `git diff --check`. Build generated 402 Blog posts and 160 locale assets; Biome checked 414 files; Vitest passed 5/5 files and 13/13 tests. Custom Task24 integrity audit reports `TASK24_OWNER_INTEGRITY_BAD 0`, 0 duplicate redirect sources, 0 redirect chains, 0 routable links to Task24 redirect sources, and >=3 effective body inlinks for every checked core Owner.
+
+Historical Markdown `Article` JSON-LD remains in Broad Journal, Forex Journal Template and Simulated Trade Log source, but the v2 route explicitly filters legacy Article/BlogPosting schema. Fresh production HTML for all three pages renders 0 `Article` and exactly 1 route-generated `BlogPosting`, so no protected owner body was changed merely to remove filtered source residue.
+
+Final local Task24 status: `TASK24_1_TO_24_9_COMPLETE_LOCAL_VALIDATION_PASS_PENDING_DEPLOY`. Task24.1, 24.2, 24.3, 24.5 and the Task24.8 support link require deployment; Task24.4/24.6/24.7 are already-correct live redirect revalidations. No push/deploy/GSC/Bing/IndexNow/R2 action was performed. Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-18-task24-9-final-validation-workflow-closeout/memory.md`.
+
 ## Validation baseline
 
 Initialization validation on 2026-08-14:

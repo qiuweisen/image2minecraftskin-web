@@ -1261,7 +1261,7 @@
     "category": "Beginner Guides",
     "categories": ["Beginner Guides", "Trading Tools", "Trading Education"],
     "tags": ["Journal", "Trading"],
-    "redirectTo": "/blog/trading-journal-mastery-how-to-review-analyze-and-improve-your-trading-in-2026-2026"
+    "redirectTo": "/blog/trading-journal-review-system-2026"
   },
   {
     "slug": "the-1-rule-why-most-traders-get-position-sizing-wrong-2026",
@@ -1794,7 +1794,7 @@
     "category": "Beginner Guides",
     "categories": ["Beginner Guides", "Trading Tools", "Trading Education"],
     "tags": ["Journal", "Trading"],
-    "redirectTo": "/blog/trading-journal-mastery-how-to-review-analyze-and-improve-your-trading-in-2026-2026"
+    "redirectTo": "/blog/trading-journal-review-system-2026"
   },
   {
     "slug": "momentum-trading-guide-2026",
@@ -3424,21 +3424,20 @@
     "fileSlug": "2026022103",
     "contentKey": "chartmini-content/blog/2026022103.md",
     "locale": "en",
-    "title": "Top 5 Trading Journal Strategies for Beginners",
-    "description": "Master trading journal strategies for beginners. Learn 5 proven methods to track trades, analyze performance, and improve trading results with systematic journaling.",
+    "title": "Trading Journal for Beginners: 5 Simple Practices to Start in 2026",
+    "metaTitle": "Trading Journal for Beginners: 5 Simple Practices",
+    "description": "A beginner trading journal does not need dozens of fields. Start with five simple practices for recording decisions, reviewing trades, and building a useful feedback loop.",
     "date": "2026-02-21",
+    "dateModified": "2026-08-18",
     "category": "Psychology & Risk",
     "categories": ["Psychology & Risk", "Trading Journal", "Beginner Trading"],
     "tags": [
       "Trading Journal",
       "Trade Logging",
-      "Performance Tracking",
-      "Trading Psychology",
       "Beginner Trading",
-      "Trading Strategy",
-      "Self-Improvement"
-    ],
-    "redirectTo": "/blog/trading-journal-mastery-how-to-review-analyze-and-improve-your-trading-in-2026-2026"
+      "Trading Routine",
+      "Trading Review"
+    ]
   },
   {
     "slug": "beginners-guide-to-altcoins-start-here",
@@ -5503,10 +5502,11 @@
     "fileSlug": "2026041202",
     "contentKey": "chartmini-content/blog/2026041202.md",
     "locale": "en",
-    "title": "Trading psychology: why smart people keep making the same bad trades",
-    "description": "The psychology behind why traders repeat mistakes. Covers FOMO, revenge trading, loss aversion, overconfidence, and concrete tactics for keeping emotions out of execution.",
+    "title": "Trading Psychology: Fear, Greed, Biases, and Better Execution in 2026",
+    "metaTitle": "Trading Psychology: Fear, Greed, Biases & Discipline",
+    "description": "Learn how fear, greed, loss aversion, overconfidence, anchoring, and FOMO affect trading decisions—and how to build rules that reduce emotional execution errors.",
     "date": "2026-04-12",
-    "dateModified": "2026-08-17",
+    "dateModified": "2026-08-18",
     "category": "Education",
     "categories": ["Education", "Trading Psychology", "Risk Management"],
     "tags": [
