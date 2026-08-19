@@ -1,5 +1,17 @@
 # ChartMini v2 SEO Agent Activity Log
 
+## 2026-08-19 — ChatGPT / DevSpace — Task25 deployment / GSC closeout
+
+- Fresh production verification confirms all seven recommended Task25 canonical owners are live as HTTP 200/self-canonical/sitemap-listed pages.
+- Checked Task25 numeric and duplicate redirect sources are direct 301s to final owners; no redirect-source GSC submission is recorded.
+- User confirmed successful manual GSC Request Indexing for all seven Task25 canonical URLs on 2026-08-19.
+- Task25 observation window established: 7-day 2026-08-26; 14-day 2026-09-02; freeze through 2026-09-02.
+- The same deployment confirms Task24.1 Beginner Journal and Task24.5 Broad Psychology rebuilt/restored owners are live; Task24.2/24.3 redirect retargets to Review System are live. Task24 GSC remains unknown_not_reverified.
+- Task24.1/24.5 fresh owner-body reviews: 2026-08-26 and 2026-09-02.
+- `content/blog/2026030502.md` remains unrelated and excluded from closeout staging.
+- Result: `DEPLOY_VERIFIED_GSC_RECORDED_OBSERVATION_ACTIVE`.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-19-task25-deploy-gsc-closeout/memory.md`.
+
 ## 2026-08-19 — ChatGPT / DevSpace — Task 25.9 final validation / Workflow closeout
 
 - Ran full post-Task25.8 validation: `pnpm build`, `pnpm check`, `pnpm seo:v2:workflow:check`, `git diff --check` — all PASS.

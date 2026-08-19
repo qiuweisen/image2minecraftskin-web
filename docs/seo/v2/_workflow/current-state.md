@@ -513,6 +513,12 @@ Full final validation after Task25.8 passed: `pnpm build`, `pnpm check`, `pnpm s
 
 The historical source-level Article schema in Broad Wyckoff Guide remains filtered by the route, which renders its own BlogPosting and only allows legacy FAQPage/ItemList/HowTo schemas. No owner was changed merely for filtered-source cleanup. `content/blog/2026030502.md` remains an unrelated pre-existing Robinhood Options internal-link modification and is excluded from Task25 scope. No commit, push, deployment, GSC, Bing/IndexNow or R2 action was performed; no deployment-based observation dates were invented. Final local status: `TASK25_1_TO_25_9_COMPLETE_LOCAL_VALIDATION_PASS_PENDING_DEPLOY`. Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-19-task25-9-final-validation-workflow-closeout/memory.md`.
 
+## 2026-08-19 Task25 deployment / GSC closeout
+
+Production now serves all seven recommended Task25 canonical URLs as HTTP 200/self-canonical pages with sitemap inclusion, and their checked numeric/duplicate sources are direct 301s. The user confirmed successful manual GSC Request Indexing for all seven recommended canonicals on 2026-08-19. Task25 enters read-only observation with reviews on 2026-08-26 and 2026-09-02. Redirect/numeric sources remain no-submit. Current result: `DEPLOY_VERIFIED_GSC_RECORDED_OBSERVATION_ACTIVE`. Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-19-task25-deploy-gsc-closeout/memory.md`.
+
+The same production deployment also confirms the previously pending Task24 changes are live: Beginner Journal is restored 200 with `/blog/2026022103` direct 301; the rebuilt Broad Psychology body is live 200 with `/blog/2026041202` direct 301; Task24.2/24.3 long+numeric sources now direct 301 to Review System. Task24 GSC submission remains `unknown_not_reverified`; fresh Task24.1/24.5 owner-body reviews are 2026-08-26 and 2026-09-02.
+
 ## Validation baseline
 
 Initialization validation on 2026-08-14:

@@ -7,8 +7,13 @@ Owner agent: none
 Target URL: none
 Task: none
 
-Last completed: Task 25.9 — Final validation / Workflow closeout
-Task25.9 result: `TASK25_1_TO_25_9_COMPLETE_LOCAL_VALIDATION_PASS_PENDING_DEPLOY`
+Last completed: Task25 — Deployment / GSC closeout
+Task25 closeout result: `DEPLOY_VERIFIED_GSC_RECORDED_OBSERVATION_ACTIVE`
+Task25 closeout evidence:
+- `docs/seo/v2/flowtrace/chartmini-2026-08-19-task25-deploy-gsc-closeout/memory.md`
+
+Previous completed: Task 25.9 — Final validation / Workflow closeout
+Task25.9 result: `TASK25_1_TO_25_9_COMPLETE_LOCAL_VALIDATION_PASS_PENDING_DEPLOY` (superseded by successful deployment verification)
 Task25.9 evidence:
 - `docs/seo/v2/flowtrace/chartmini-2026-08-19-task25-9-final-validation-workflow-closeout/memory.md`
 
@@ -105,4 +110,6 @@ Task23.9 result: `PASS_PENDING_DEPLOYMENT_VERIFICATION` (superseded by successfu
 Task23.8 result: `PASS_WITH_TWO_NARROW_REBUILDS_AND_ONE_ADDITIONAL_PSYCHOLOGY_CONSOLIDATION`
 
 Task 21.1–21.9 remains in observation with reviews on 2026-08-22 and 2026-08-29.
-Task23.1 remains in broad-risk redirect observation for 2026-08-24 and 2026-08-31. Task23.2–23.8 are deployed, GSC state is recorded for the user-confirmed eight submitted canonical owners, and the Task23 cluster is in read-only observation for 2026-08-24 and 2026-08-31. Task24.1–24.9 are now locally complete and final validation is PASS. Pending production changes are Task24.1–24.3, Task24.5, and the Task24.8 Forex support link; Task24.4/24.6/24.7 are already-correct live redirect revalidations. Establish fresh observation windows for Task24.1 and Task24.5 only after actual deployment. No commit/push/deploy/GSC/Bing/IndexNow/R2 action has been recorded for Task24. No Task24.10 target has been authorized.
+Task23.1 remains in broad-risk redirect observation for 2026-08-24 and 2026-08-31. Task23.2–23.8 are deployed, GSC state is recorded for the user-confirmed eight submitted canonical owners, and the Task23 cluster is in read-only observation for 2026-08-24 and 2026-08-31.
+Task24.1 Beginner Journal and Task24.5 Broad Psychology are production-verified with fresh reviews on 2026-08-26 and 2026-09-02; Task24.2/24.3 redirect retargets are live. Task24 GSC remains unknown_not_reverified.
+Task25.1–25.9 are deployed. The seven recommended Task25 canonical owners were user-confirmed submitted through GSC Request Indexing on 2026-08-19 and are protected through 2026-09-02, with reviews on 2026-08-26 and 2026-09-02. Numeric and redirect-source URLs remain no-submit. Bing/IndexNow remain unknown_not_reverified.

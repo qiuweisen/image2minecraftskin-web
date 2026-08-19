@@ -785,3 +785,13 @@ Task 21.1–21.9 is complete and in observation.
 - No commit/push/deploy/GSC/Bing/IndexNow/R2 action.
 - Status: `TASK25_1_TO_25_9_COMPLETE_LOCAL_VALIDATION_PASS_PENDING_DEPLOY`.
 - Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-19-task25-9-final-validation-workflow-closeout/memory.md`
+
+### Task25 deployment / GSC closeout
+- Production verification PASS for all seven submitted Task25 canonical owners: HTTP 200, self-canonical, sitemap-listed.
+- Checked Task25 numeric/duplicate sources are direct 301s to final owners; redirect sources remain no-submit.
+- User confirmed successful GSC Request Indexing for all seven recommended Task25 canonicals on 2026-08-19.
+- Task25 read-only reviews: 2026-08-26 and 2026-09-02; freeze through 2026-09-02.
+- Task24.1 Beginner Journal and Task24.5 Broad Psychology are also now production-verified; fresh reviews: 2026-08-26 and 2026-09-02. Task24.2/24.3 redirect retargets are live. Task24 GSC remains unknown_not_reverified.
+- Upcoming read-only schedule: 2026-08-22 Task20/21; 2026-08-24 Task22/23; 2026-08-26 Task24/25; 2026-08-29 Task20/21 14-day; 2026-08-31 Task22/23 14-day; 2026-09-02 Task24/25 14-day.
+- Result: `DEPLOY_VERIFIED_GSC_RECORDED_OBSERVATION_ACTIVE`.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-19-task25-deploy-gsc-closeout/memory.md`

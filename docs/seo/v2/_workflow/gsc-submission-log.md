@@ -79,3 +79,21 @@ Planned read-only reviews: 2026-08-24 and 2026-08-31.
 Production also verified the Task23 redirect sources as direct 301s to their final canonical owners, including Truth About Discipline -> Execution Gap and Why-90% Psychology -> Broad Psychology. Numeric legacy paths are direct 301s as designed. Redirect-source URLs were not part of the GSC submission list and remain no-submit URLs.
 
 `https://chartmini.com/blog/trading-psychology-master-emotions` remains a live 200 canonical destination for the Task23.8 broad-psychology consolidation, but no new Task23 GSC submission is claimed for that owner because the user-confirmed eight-URL submission set did not include it.
+
+## 2026-08-19 — Task25 deployment / GSC closeout
+
+Fresh production verification confirmed the seven recommended Task25 canonical owners are live as HTTP 200 pages with self-canonical URLs and sitemap inclusion. The user then confirmed successful manual GSC URL Inspection / Request Indexing submission for all seven:
+
+1. `https://chartmini.com/blog/trading-resolutions-for-2026-goals-that-actually-work-2026`
+2. `https://chartmini.com/blog/why-90-of-retail-traders-lose-money-common-psychological-traps-2026`
+3. `https://chartmini.com/blog/trading-patience-how-to-wait-for-high-probability-setups-2026`
+4. `https://chartmini.com/blog/why-practice-trading-matters-simulate-before-you-risk-real-money-2026`
+5. `https://chartmini.com/blog/wyckoff-method-explained-accumulation-and-distribution-phases-2026`
+6. `https://chartmini.com/blog/year-end-portfolio-rebalancing-start-2026-strong-2026`
+7. `https://chartmini.com/blog/algorithmic-trading-for-beginners`
+
+Submission source: user-confirmed manual GSC URL Inspection / Request Indexing.
+Submission date: 2026-08-19.
+Planned read-only reviews: 2026-08-26 and 2026-09-02.
+
+Numeric legacy paths and redirect-source long slugs were intentionally not submitted. Task25 redirect verification confirms direct 301 routing with no checked chain. Bing/IndexNow remain `unknown_not_reverified`.

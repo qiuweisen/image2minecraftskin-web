@@ -822,6 +822,28 @@ All Task20 owner protections below are now active post-deployment observations r
 - GSC rule: inspect/submit only selected canonical if justified after deploy; never submit redirect sources or numerics.
 - Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-19-task25-7-trading-patience-consolidation/memory.md`.
 
+## 2026-08-19 Task24 / Task25 deployment observation closeout
+
+Fresh production verification supersedes all Task24/Task25 `pending_deploy` notes where the deployed state was directly checked.
+
+Task25 submitted canonical owners are now protected in read-only observation through 2026-09-02, with reviews on 2026-08-26 and 2026-09-02:
+
+- `/blog/trading-resolutions-for-2026-goals-that-actually-work-2026`
+- `/blog/why-90-of-retail-traders-lose-money-common-psychological-traps-2026`
+- `/blog/trading-patience-how-to-wait-for-high-probability-setups-2026`
+- `/blog/why-practice-trading-matters-simulate-before-you-risk-real-money-2026`
+- `/blog/wyckoff-method-explained-accumulation-and-distribution-phases-2026`
+- `/blog/year-end-portfolio-rebalancing-start-2026-strong-2026`
+- `/blog/algorithmic-trading-for-beginners`
+
+The user confirmed GSC Request Indexing for those seven canonicals on 2026-08-19. Numeric and redirect-source URLs remain no-submit.
+
+Task24.1 Beginner Journal and Task24.5 Broad Psychology are also now production-verified rebuilt/restored owners. They enter fresh read-only observation through 2026-09-02 with reviews on 2026-08-26 and 2026-09-02. Task24.2/24.3 redirect retargets are production-verified direct 301s to Review System; they do not reset the unchanged Review System owner-body window. No Task24 GSC submission is claimed.
+
+Allowed exceptions during these windows: hard technical defect, material factual/regulatory/risk error, redirect/canonical defect, or explicit user override.
+
+Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-19-task25-deploy-gsc-closeout/memory.md`.
+
 Old-project protection windows are not inherited. A page enters this file only after a fresh v2 content change, deployment/submission event, or other explicitly verified v2 observation that creates a freeze window.
 
 ## Protection rule
