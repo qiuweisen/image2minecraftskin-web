@@ -46,12 +46,7 @@
   },
   {
     "source": "/blog/2025102601",
-    "destination": "/blog/trading-psychology-master-emotions",
-    "permanent": true
-  },
-  {
-    "source": "/blog/why-90-of-retail-traders-lose-money-common-psychological-traps-2026",
-    "destination": "/blog/trading-psychology-master-emotions",
+    "destination": "/blog/why-90-of-retail-traders-lose-money-common-psychological-traps-2026",
     "permanent": true
   },
   {
@@ -336,12 +331,7 @@
   },
   {
     "source": "/blog/2026010102",
-    "destination": "/blog/your-2026-trading-blueprint-setting-goals-that-actually-work-2026",
-    "permanent": true
-  },
-  {
-    "source": "/blog/trading-resolutions-for-2026-goals-that-actually-work-2026",
-    "destination": "/blog/your-2026-trading-blueprint-setting-goals-that-actually-work-2026",
+    "destination": "/blog/trading-resolutions-for-2026-goals-that-actually-work-2026",
     "permanent": true
   },
   {
@@ -986,7 +976,7 @@
   },
   {
     "source": "/blog/2026021202",
-    "destination": "/blog/why-patience-is-essential-for-every-trader-in-2026",
+    "destination": "/blog/trading-patience-how-to-wait-for-high-probability-setups-2026",
     "permanent": true
   },
   {
@@ -1091,7 +1081,7 @@
   },
   {
     "source": "/blog/2026022102",
-    "destination": "/blog/best-settings-for-patience-maximize-profits",
+    "destination": "/blog/trading-patience-how-to-wait-for-high-probability-setups-2026",
     "permanent": true
   },
   {
@@ -2022,6 +2012,16 @@
   {
     "source": "/blog/gap-trading-strategies-at-the-open",
     "destination": "/blog/gap-trading-strategies",
+    "permanent": true
+  },
+  {
+    "source": "/blog/best-settings-for-patience-maximize-profits",
+    "destination": "/blog/trading-patience-how-to-wait-for-high-probability-setups-2026",
+    "permanent": true
+  },
+  {
+    "source": "/blog/why-patience-is-essential-for-every-trader-in-2026",
+    "destination": "/blog/trading-patience-how-to-wait-for-high-probability-setups-2026",
     "permanent": true
   }
 ]

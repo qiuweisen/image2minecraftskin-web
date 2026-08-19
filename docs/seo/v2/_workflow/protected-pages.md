@@ -233,16 +233,35 @@ All Task20 owner protections below are now active post-deployment observations r
 - Canonical: `/blog/your-2026-trading-blueprint-setting-goals-that-actually-work-2026`
 - Source: `content/blog/2026010301.md`
 - Status: `protected_observation`
-- Reason: fresh 2026-08-15 production/SERP/site-graph Owner Gate found three live/self-canonical/sitemap-visible pages competing for the same beginner trading-goals/process-review intent; the search-visible Blueprint URL was selected and rebuilt as the single owner.
-- Owner boundary: process-vs-outcome goals, SMART/measurable goal construction, observable-weakness diagnosis, evidence and review-point design, missed-goal diagnosis, and mid-year/annual goal reset.
-- Consolidated duplicates: `/blog/how-to-set-trading-goals-for-2026-a-beginners-guide-2026` and `/blog/trading-resolutions-for-2026-goals-that-actually-work-2026` -> canonical owner.
-- Direct numeric redirects: `/blog/2026010701`, `/blog/2026010102`, and `/blog/2026010301` -> canonical owner.
-- Neighbor boundary: full trading-plan mechanics remain `/blog/how-to-build-trading-plan`; risk architecture remains `/blog/risk-management-position-sizing-guide`; journal maintenance/metrics and year-end performance review remain their existing owners.
+- Reason: fresh 2026-08-15 production/SERP/site-graph Owner Gate found three live/self-canonical/sitemap-visible pages competing around beginner trading goals and selected the search-visible Blueprint URL as the formal goal-setting owner. Task25.1 later revalidates the narrower seasonal Resolutions task without changing this owner's body.
+- Owner boundary: process-vs-outcome goals, SMART/measurable goal construction, observable-weakness diagnosis, evidence and review-point design, missed-goal diagnosis, and formal mid-year/annual goal reset.
+- Consolidated duplicate that remains: `/blog/how-to-set-trading-goals-for-2026-a-beginners-guide-2026` -> canonical owner.
+- Task25.1 explicitly supersedes the old consolidation only for `/blog/trading-resolutions-for-2026-goals-that-actually-work-2026`; fresh 2026-08-19 SERP supports a distinct New Year/annual resolution-list intent, so that URL is restored locally as a narrow owner.
+- Direct numeric redirects after Task25.1 deployment: `/blog/2026010701` and `/blog/2026010301` -> Trading Goals owner; `/blog/2026010102` -> restored Trading Resolutions owner.
+- Neighbor boundary: annual resolution-menu content belongs to `/blog/trading-resolutions-for-2026-goals-that-actually-work-2026`; full trading-plan mechanics remain `/blog/how-to-build-trading-plan`; risk architecture remains `/blog/risk-management-position-sizing-guide`; journal maintenance/metrics and year-end performance review remain their existing owners.
 - Freeze start: 2026-08-15 deployment closeout.
 - Review dates: 2026-08-22 and 2026-08-29.
 - Exit condition: complete read-only reviews on 2026-08-22 and 2026-08-29. Production verification passed; the user reported the canonical owner already indexed, so no GSC resubmission was made.
 - Exceptions: hard technical defect, redirect defect, material factual/risk error, broken owner boundary, or explicit user override only.
-- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-15-task21-7-trading-goals-consolidation/memory.md`.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-15-task21-7-trading-goals-consolidation/memory.md` and `docs/seo/v2/flowtrace/chartmini-2026-08-19-task25-1-trading-resolutions-2026/memory.md`.
+
+### Task 25.1 — Trading Resolutions 2026 owner restored
+
+- Canonical: `/blog/trading-resolutions-for-2026-goals-that-actually-work-2026`
+- Source: `content/blog/2026010102.md`
+- Status: `protected_pending_deploy`
+- Owner Gate: `retain_narrow + rebuild + reverse_recent_consolidation`.
+- Reason: fresh 2026-08-19 SERP exposes a distinct seasonal `trading resolutions / New Year trading resolutions` list-menu intent that differs from the formal `how to set trading goals` framework. The old generic body deserved consolidation, but the URL can own a narrower seasonal task after a full rebuild.
+- Owner boundary: annual/New Year trading resolution ideas; selecting a small number of behavior commitments; execution/risk/journal/psychology/review/practice resolution menu; mid-year reset; warnings against universal profit/risk/trade-count/cooldown prescriptions.
+- Neighbor boundary: Trading Goals Blueprint owns formal process-vs-outcome/SMART/evidence/review design; Trading Plan owns operating rules; Risk, Journal, FOMO, Revenge, Execution Gap and Year-End Review retain their specialist scopes.
+- Rebuild: ~2,753 words; title `Trading Resolutions for 2026: 12 Practical Commitments for Traders`; `dateModified: 2026-08-19`; no manual Article/BlogPosting schema.
+- Internal support: 3 effective direct body inlinks from Year-End Review, Trading Plan and Common Trading Mistakes; target has 8 unique Blog outlinks and none point to redirects.
+- Redirect architecture pending deploy: `/blog/2026010102` -> restored long canonical directly; long canonical is no longer a redirect source locally. `/blog/how-to-set-trading-goals-for-2026-a-beginners-guide-2026` remains consolidated to the Trading Goals owner.
+- Production still reflects the Task21.7 state until deployment: long and numeric Resolutions URLs currently 301 to Trading Goals.
+- Review dates: pending actual deployment and production verification.
+- GSC rule: after deployment inspect/submit only the restored canonical if appropriate; never submit `/blog/2026010102`; do not resubmit the unchanged Trading Goals owner solely because this specialist was restored.
+- Exit condition: verify 200/self-canonical/new title/body/dateModified/sitemap, numeric direct 301, three support links, Goals owner 200, and no chain; then establish 7-day and 14-day observation dates.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-19-task25-1-trading-resolutions-2026/memory.md`.
 
 ### Task 21.8 — Remaining generic Trading Journal redirect sources
 
@@ -437,11 +456,29 @@ All Task20 owner protections below are now active post-deployment observations r
 - Neighbor boundary: dedicated FOMO, immediate Revenge Trading, Behavioral Recovery, Trading Discipline/Execution Gap, AI/GenAI Psychology, and position-sizing/risk calculations remain separate specialist owners.
 - Task24.5 rebuild: ~2,808 words; title `Trading Psychology: Fear, Greed, Biases, and Better Execution in 2026`; `dateModified: 2026-08-18`; no manual Article/BlogPosting schema. Removed fixed `2x` loss-aversion framing, universal `1-2%` risk and `1.5%` daily-loss prescriptions, unsupported professional-firm claims, live-money-as-necessary-psychology-training claim, and unsupported first-person anecdote. Added official source notes, decision table, FAQ, practical next step, bounded replay guidance and `not every bad trade is psychology` diagnostic boundary.
 - Current local body support: 21 effective non-redirecting Markdown sources. Ten internal Blog destinations in the rebuilt owner all resolve to final non-redirecting owners.
-- Seven broad psychology redirect posts remain consolidated here. Task24.4 long + `/blog/2026010705`, Task24.6 long + `/blog/2026011302`, and Task24.7 long + `/blog/2026010901` are freshly verified production direct 301 sources. Task24.6 and Task24.7 have no effective routable body support because their source references occur only inside other redirect-source pages. `/blog/2026041202` remains the numeric direct redirect to the canonical owner.
+- Six generic broad psychology redirect posts remain consolidated here after Task25.2 locally restores `/blog/why-90-of-retail-traders-lose-money-common-psychological-traps-2026` as a distinct retail-loss-rate evidence/failure-mechanism owner. Task24.4 long + `/blog/2026010705`, Task24.6 long + `/blog/2026011302`, and Task24.7 long + `/blog/2026010901` remain broad-psychology redirect sources. Task25.2 does not take general fear/greed/bias/emotional-execution ownership away from this page. `/blog/2026041202` remains the numeric direct redirect to the canonical owner.
 - Production remains on the pre-Task24.5 body until deployment. The prior Task23 observation dates describe the currently deployed version only; after Task24.5 deployment, establish fresh 7-day and 14-day observation dates from the actual deployment date.
 - GSC rule: after deployment inspect the canonical owner first and Request Indexing only if the live indexed state is stale/unindexed and quota use is justified. Never submit broad redirect sources.
 - Exit condition: after deployment verify 200/self-canonical/new title/body/dateModified/schema/sitemap, numeric direct 301, all broad duplicate redirects direct with no chain, and FOMO/Revenge/Recovery/Execution Gap/AI Psychology remain independent 200 owners.
 - Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-17-task22-8-cluster-review/memory.md`, `docs/seo/v2/flowtrace/chartmini-2026-08-17-task23-5-ai-trading-psychology/memory.md`, `docs/seo/v2/flowtrace/chartmini-2026-08-18-task24-4-trading-psychology-broad-revalidation/memory.md`, `docs/seo/v2/flowtrace/chartmini-2026-08-18-task24-5-broad-trading-psychology/memory.md`, `docs/seo/v2/flowtrace/chartmini-2026-08-18-task24-6-fear-greed-revenge-psychology-revalidation/memory.md`, and `docs/seo/v2/flowtrace/chartmini-2026-08-18-task24-7-emotional-discipline-psychology-revalidation/memory.md`.
+
+### Task 25.2 — Retail trader loss-rate evidence owner restored
+
+- Canonical: `/blog/why-90-of-retail-traders-lose-money-common-psychological-traps-2026`
+- Source: `content/blog/2025102601.md`
+- Status: `protected_pending_deploy`
+- Owner Gate: `retain_narrow + rebuild + reverse_recent_consolidation`.
+- Reason: fresh 2026-08-19 SERP distinguishes the data-first `why 90% / why most retail traders lose money` question from generic Trading Psychology. Current results qualify the percentage and combine product-specific loss-rate evidence with edge, costs, leverage, excessive activity and behavior.
+- This explicitly supersedes Task23.8 only for this URL. The old seven-trap psychology body remains deprecated; the restored body is a new ~3,465-word evidence/failure-mechanism owner with `dateModified: 2026-08-19` and no manual Article/BlogPosting schema.
+- Evidence boundary: compare ESMA CFD, CFTC OTC forex, SEBI equity F&O and academic day-trading evidence without generalizing one percentage to all retail traders; diagnose edge -> friction -> risk/leverage -> execution behavior -> feedback.
+- Neighbor boundary: Broad Psychology remains general fear/greed/loss-aversion/overconfidence/anchoring/emotional execution; `/blog/common-trading-mistakes-beginners` remains the beginner mistake checklist; detailed risk, FOMO, Revenge, Recovery and Execution Gap remain specialist owners.
+- Current local body support: 4 effective non-redirecting sources after Task25.8 cluster routing. Target has 8 unique Blog outlinks and all resolve directly to final owners.
+- Redirect architecture pending deploy: `/blog/2025102601` -> restored long canonical directly; long canonical is no longer a redirect source locally. Duplicate redirect sources 0; redirect chains 0.
+- Production still reflects Task23.8 until deployment: long and numeric URLs currently 301 to Broad Psychology.
+- Review dates: pending actual deployment and production verification. Establish fresh 7-day/14-day observation from the deployment date.
+- GSC rule: after deployment inspect/request indexing only for the restored long canonical if needed; never submit `/blog/2025102601`.
+- Exceptions: hard technical defect, material factual/research error, broken intent boundary, redirect/canonical defect, or explicit user override only.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-19-task25-2-retail-trader-loss-rate-evidence/memory.md`.
 
 ### Task 23.5 — AI / Future Trading Psychology owner
 
@@ -698,6 +735,92 @@ All Task20 owner protections below are now active post-deployment observations r
 - GSC rule: never submit Task24 redirect/numeric sources. After deployment inspect only canonical owners and use Request Indexing selectively if their live state warrants it.
 - Observation: do not invent new dates before deployment. Start fresh 7-day/14-day windows for Task24.1 and Task24.5 after actual production verification; Task24.2/24.3 require redirect verification rather than owner-body window reset.
 - Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-18-task24-8-cluster-intent-internal-link-cannibalization-review/memory.md` and `docs/seo/v2/flowtrace/chartmini-2026-08-18-task24-9-final-validation-workflow-closeout/memory.md`.
+
+### Task 25.3 — Why Practice Trading Matters owner
+
+- Canonical: `/blog/why-practice-trading-matters-simulate-before-you-risk-real-money-2026`
+- Source: `content/blog/2025110301.md`
+- Status: `protected_pending_deploy`
+- Owner Gate: `retain_narrow + rebuild`.
+- Reason: fresh 2026-08-19 SERP confirms a durable explanatory intent around why simulated practice is useful before live capital, distinct from practice-path selection, the 30-day learning sequence, paper-trading workflow, direct paper-vs-live comparison and detailed simulation-limitations content.
+- Owner boundary: why practice before live capital; deliberate practice; rule clarity; decision-making without hindsight; no-trade/skip decisions; reviewable practice evidence; practice-vs-readiness distinction; and high-level live-execution limitations.
+- Neighbor boundary: `/blog/trading-simulator-for-beginners` owns path selection; `/blog/how-to-start-learning-trading-without-risking-real-money` owns the 30-day sequence; `/blog/paper-trading-guide` owns paper workflow; `/blog/paper-trading-vs-live-trading-benefits-of-risk-free-practice-2026` owns the direct comparison; `/blog/the-truth-about-paper-trading-no-one-tells-you` owns the detailed limitation audit; `/blog/what-is-a-trading-simulator` owns simulator taxonomy.
+- Rebuild: ~3,417 words; `dateModified: 2026-08-19`; no manual Article/BlogPosting schema; fixed 3-month/100-trade readiness thresholds and unsupported emotional-transfer/professional claims removed.
+- Current local body support: 4 effective owner sources after Task25.8 replaced the routable `/blog/2025110301` link in Trading Performance Metrics with the direct canonical; the original simulator support remains.
+- Redirect architecture: canonical remains an owner; `/blog/2025110301` remains a direct permanent redirect to it; no long-slug redirect and no chain.
+- Review dates: pending actual deployment and production verification.
+- GSC rule: after deployment inspect the canonical first and Request Indexing only if stale/unindexed and quota use is justified. Never submit `/blog/2025110301`.
+- Exit condition: after deployment verify 200/self-canonical/new title/meta/body/dateModified/schema/sitemap, numeric direct 301, then establish 7-day and 14-day observation dates.
+- Exceptions: hard technical defect, material factual/evidence error, broken owner boundary, redirect/canonical defect, or explicit user override only.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-19-task25-3-why-practice-trading/memory.md`.
+
+### Task 25.4 — Wyckoff accumulation/distribution schematic owner + broad-method boundary
+
+- Canonical schematic owner: `/blog/wyckoff-method-explained-accumulation-and-distribution-phases-2026` (`content/blog/2026020601.md`).
+- Broad methodology neighbor: `/blog/wyckoff-method-guide` (`content/blog/2026040801.md`).
+- Status: `protected_pending_deploy`.
+- Owner Gate: `retain_narrow + rebuild` for the schematic owner; scoped boundary correction for the broad guide.
+- Reason: fresh 2026-08-19 SERP supports separate broad `Wyckoff Method` and narrow accumulation/distribution schematic intents, but the two ChartMini bodies previously duplicated detailed A-E/event coverage.
+- Schematic owner boundary: accumulation/distribution Phases A-E; phase-vs-event distinction; PS/SC/AR/ST/Spring/SOS/LPS; PSY/BC/UT/UTAD/SOW/LPSY; spring-vs-breakdown and upthrust-vs-breakout failure rules; re-accumulation/redistribution; volume-data limits; no-hindsight replay labeling.
+- Broad-guide boundary: historical methodology context, Composite Man/Operator heuristic, three laws, overall market cycle, high-level accumulation/distribution role and relationship to other technical-analysis frameworks. It now hands detailed schematic work to the Task25.4 owner.
+- Target rebuild: ~3,565 words; title `Wyckoff Accumulation and Distribution: Phases A-E Explained`; `dateModified: 2026-08-19`; no manual Article/BlogPosting schema. Unsupported institutional-volume, deterministic smart-money, fixed-duration, win-rate, R:R, expectancy, RSI-confirmation and ChartMini auto-detection claims removed.
+- Broad guide: duplicate detailed accumulation/distribution tutorial was reduced to a methodology summary; `dateModified: 2026-08-19`.
+- Current local schematic body support: 5 direct owner sources after Task25.8 rerouted the specific Wyckoff spring/distribution event anchors from Market Structure and Short Selling to this schematic Owner. Broad Wyckoff Guide, Crypto Market Cycles and How to Read Trading Volume remain; Broad Guide still has 4 effective source files.
+- Redirect architecture: `/blog/2026020601` remains direct 301 -> schematic owner; both long URLs remain independent owners; no chain.
+- Review dates: pending actual deployment and production verification.
+- GSC rule: after deployment inspect the schematic canonical first and Request Indexing only if stale/unindexed and quota use is justified; never submit `/blog/2026020601`. Broad guide may be inspected because its boundary body changed, but do not automatically spend indexing quota if already current.
+- Exit condition: verify both owners 200/self-canonical/sitemap-visible with new bodies/dateModified, numeric direct 301, three target support links live, route-generated schema intact, then establish a 7-day/14-day Task25.4 observation window.
+- Exceptions: hard technical defect, material factual/evidence error, broken owner boundary, redirect/canonical defect, or explicit user override only.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-19-task25-4-wyckoff-accumulation-distribution/memory.md`.
+
+### Task 25.5 — Year-end portfolio rebalancing owner
+
+- Canonical: `/blog/year-end-portfolio-rebalancing-start-2026-strong-2026` (`content/blog/2026010101.md`).
+- Status: `protected_pending_deploy`.
+- Owner Gate: `retain_narrow + rebuild`.
+- Reason: fresh 2026-08-19 SERP and current Investor.gov/FINRA/Fidelity guidance support a durable year-end portfolio-rebalancing intent distinct from Holiday Trading/Santa seasonality, DCA contribution mechanics, Portfolio Correlation diagnostics and Active-vs-Passive strategy selection.
+- Owner boundary: target-vs-current allocation; rebalancing vs reallocating; percentage-point drift; calendar/threshold/cash-flow methods; general tax/cost/account constraints; concentration/fund-overlap review; and year-end 2026 checklist before 2027.
+- Rebuild: ~3,561 words; title `Year-End Portfolio Rebalancing 2026: A Practical Checklist`; `dateModified: 2026-08-19`; no manual Article/BlogPosting schema.
+- Removed stale `Start 2026 Strong` framing, universal model allocations, fixed 5% best-practice rule, tactical 2026 asset calls, over-directive tax-loss harvesting guidance and false ChartMini portfolio/rebalancing capabilities.
+- Current local body support: 3 effective owner sources after new contextual links from Holiday Trading and Active vs Passive plus the existing Portfolio Correlation link.
+- Redirect architecture: canonical remains an owner; `/blog/2026010101` remains direct 301 to it; no long-slug redirect and no chain.
+- Review dates: pending actual deployment and production verification.
+- GSC rule: after deployment inspect the canonical first and Request Indexing only if stale/unindexed and quota use is justified. Never submit `/blog/2026010101`.
+- Exit condition: after deployment verify 200/self-canonical/new title/meta/body/dateModified/schema/sitemap, numeric direct 301, three support links live, then establish 7-day and 14-day observation dates.
+- Exceptions: hard technical defect, material factual/tax/evidence error, broken owner boundary, redirect/canonical defect, or explicit user override only.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-19-task25-5-year-end-portfolio-rebalancing/memory.md`.
+
+### Task 25.6 — Algorithmic Trading for Beginners owner
+
+- Canonical: `/blog/algorithmic-trading-for-beginners` (`content/blog/2026040301.md`).
+- Status: `protected_pending_deploy`.
+- Owner Gate: `retain_narrow + rebuild`.
+- Reason: fresh 2026-08-19 SERP and FINRA/TradingView primary-source review support a durable beginner algorithmic-trading intent distinct from backtesting procedure/reliability, market-replay method selection, AI automation psychology and broad risk management.
+- Owner boundary: strategy specification; data/test/execution/control layers; rules-to-code workflow; backtest-to-forward-test handoff; platform/language roles; broker/API integration boundary; monitoring and operational controls; beginner first-project workflow.
+- Rebuild: ~3,423 words; title `Algorithmic Trading for Beginners: Rules, Backtesting, Automation, and Risk`; `dateModified: 2026-08-19`; no manual Article/BlogPosting schema.
+- Corrected: removed unsupported algo-volume share, fixed sample-size/profit-factor/data-window/slippage/readiness/scaling/risk prescriptions, simplistic psychology claims, stale platform pricing and the incorrect implication that Pine strategies natively autotrade broker accounts through TradingView.
+- Current local body support: 3 effective owner sources — AI-assisted trading research, How to Backtest a Trading Strategy, and Market Replay vs Backtesting vs Paper Trading.
+- Redirect architecture: canonical remains an Owner; `/blog/2026040301` remains direct 301; no long-slug redirect and no chain.
+- Review dates: pending actual deployment and production verification.
+- GSC rule: after deployment inspect canonical first and Request Indexing only if stale/unindexed and quota use is justified. Never submit `/blog/2026040301`.
+- Exit condition: verify 200/self-canonical/new title/meta/body/dateModified/sitemap, numeric direct 301, 3 support links live and route-generated schema intact, then establish 7-day/14-day observation dates.
+- Exceptions: hard technical defect, material factual/regulatory/risk error, broken owner boundary, redirect/canonical defect, or explicit user override only.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-19-task25-6-algorithmic-trading-beginners/memory.md`.
+
+### Task 25.7 — Trading Patience selected Owner + duplicate redirects
+
+- Selected canonical: `/blog/trading-patience-how-to-wait-for-high-probability-setups-2026` (`content/blog/2025121901.md`).
+- Redirect sources: `/blog/best-settings-for-patience-maximize-profits` (`content/blog/2026022102.md`) and `/blog/why-patience-is-essential-for-every-trader-in-2026` (`content/blog/2026021202.md`), plus their numeric paths.
+- Status: `protected_pending_deploy`.
+- Owner Gate: `consolidate_redirect + rebuild_owner + duplicate_consolidation`.
+- Owner boundary: valid-setup qualification, no-trade conditions, waiting vs chasing, strategy-relative overtrading, skip logging, patience vs hesitation, and replay practice.
+- Specialist boundaries preserved: FOMO owns missed-move chasing; Execution Gap owns rule-compliance failure; Revenge owns post-loss loss-chasing; Broad Psychology owns general fear/greed/biases.
+- Rebuild: ~3,236 words; `dateModified: 2026-08-19`; no manual Article/BlogPosting; fabricated performance statistics, fixed patience scores/timers/trade quotas and false ChartMini patience automation removed.
+- Current local support: 3 effective direct body inlinks.
+- Redirect architecture: both duplicate long URLs and `/blog/2026022102` + `/blog/2026021202` route directly to selected Owner; `/blog/2025121901` remains direct; no chain.
+- Review dates: pending actual deployment and production verification.
+- GSC rule: inspect/submit only selected canonical if justified after deploy; never submit redirect sources or numerics.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-19-task25-7-trading-patience-consolidation/memory.md`.
 
 Old-project protection windows are not inherited. A page enters this file only after a fresh v2 content change, deployment/submission event, or other explicitly verified v2 observation that creates a freeze window.
 

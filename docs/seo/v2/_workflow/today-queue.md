@@ -668,3 +668,120 @@ Task 21.1–21.9 is complete and in observation.
 - No push/deploy/GSC/Bing/IndexNow/R2 action.
 - Status: `TASK24_1_TO_24_9_COMPLETE_LOCAL_VALIDATION_PASS_PENDING_DEPLOY`.
 - Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-18-task24-9-final-validation-workflow-closeout/memory.md`
+
+### 25.2 — Retail trader loss-rate evidence owner restoration
+- Requested target: `/blog/why-90-of-retail-traders-lose-money-common-psychological-traps-2026` (`content/blog/2025102601.md`).
+- Fresh production: long + `/blog/2025102601` currently direct 301 to Broad Psychology; Broad Psychology remains 200.
+- Fresh SERP separates the data-first `why 90% / why most retail traders lose` task from generic Trading Psychology: qualify loss-rate statistics by product/population, then diagnose edge, costs, leverage/risk, activity and behavioral execution.
+- Owner Gate: `retain_narrow + rebuild + reverse_recent_consolidation`; this explicitly supersedes Task23.8 only for the Why-90% URL.
+- Rebuilt to ~3,465 words as `Why Retail Traders Lose Money: What the 90% Claim Actually Shows`, `dateModified: 2026-08-19`; removed universal 90%/2x-loss claims and manual Article schema; added ESMA/CFTC/SEBI/academic evidence and explicit sample boundaries.
+- Local routing: `/blog/2025102601` -> restored long canonical directly; long canonical no longer redirects.
+- Task25.8 final cluster audit confirms 4 effective direct body inlinks; target has 8 Blog outlinks, all final owners; residual numeric body links 0.
+- Broad Psychology keeps broad emotions/biases; Common Trading Mistakes keeps the beginner checklist; risk/FOMO/Revenge/Recovery/Execution Gap remain separate.
+- Validation PASS: build 402 posts / 160 locale assets; Biome 415; Vitest 6/6 files / 17/17 tests; workflow/diff PASS; 0 duplicate redirect sources; 0 chains.
+- GSC/Bing target state `unknown_not_reverified`; after deploy inspect/submit only the restored long canonical if needed, never `/blog/2025102601`.
+- Status: `RETAIN_NARROW_REBUILD_RESTORE_OWNER_COMPLETE_PENDING_DEPLOY`.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-19-task25-2-retail-trader-loss-rate-evidence/memory.md`
+
+### 25.1 — Trading Resolutions 2026 owner restoration
+- Requested target: `/blog/trading-resolutions-for-2026-goals-that-actually-work-2026` (`content/blog/2026010102.md`).
+- Fresh production: long + `/blog/2026010102` currently direct 301 to `/blog/your-2026-trading-blueprint-setting-goals-that-actually-work-2026`; Goals owner is 200.
+- Fresh SERP separates seasonal `trading resolutions / New Year trading resolutions` list-menu intent from formal `how to set trading goals` process/SMART/measurement intent.
+- Owner Gate: `retain_narrow + rebuild + reverse_recent_consolidation`; this explicitly supersedes Task21.7 only for the Resolutions URL.
+- Rebuilt to ~2,753 words as `Trading Resolutions for 2026: 12 Practical Commitments for Traders`, `dateModified: 2026-08-19`; removed universal risk/trade-count/cooldown/sample-size/profit prescriptions and manual Article schema.
+- Local routing: `/blog/2026010102` -> restored long canonical directly; long canonical no longer redirects. `/blog/how-to-set-trading-goals-for-2026-a-beginners-guide-2026` remains consolidated to the Trading Goals owner.
+- Added 3 effective contextual body links from Year-End Review, Trading Plan and Common Trading Mistakes; target has 8 Blog outlinks, all final owners.
+- Validation PASS: build 402 posts / 160 locale assets; Biome 415 files; Vitest 6/6 files / 17/17 tests; workflow/diff PASS; 0 duplicate redirect sources; 0 redirect chains.
+- GSC/Bing target state: `unknown_not_reverified`; after deployment inspect/submit only the restored canonical if appropriate, never numeric.
+- Status: `RETAIN_NARROW_REBUILD_RESTORE_OWNER_COMPLETE_PENDING_DEPLOY`.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-19-task25-1-trading-resolutions-2026/memory.md`
+
+### 25.3 — Why Practice Trading Matters owner rebuild
+- Target: `/blog/why-practice-trading-matters-simulate-before-you-risk-real-money-2026` (`content/blog/2025110301.md`).
+- Fresh production: canonical is already HTTP 200; `/blog/2025110301` is direct 301 to it.
+- Fresh SERP supports a distinct explanatory `why practice before live capital` intent separate from simulator-path selection, the 30-day learning plan, paper-trading workflow, paper-vs-live comparison and simulation-limitations owners.
+- Owner Gate: `retain_narrow + rebuild`.
+- Rebuilt to ~3,417 words as `Why Practice Trading Matters Before You Risk Real Money`, `dateModified: 2026-08-19`; removed fixed 3-month/100-trade readiness rules, unsupported emotional-transfer/professional generalizations and manual Article schema.
+- New body owns deliberate practice, rule clarity, hindsight control, no-trade decisions, reviewable evidence, practice-vs-readiness distinction and live-execution limitations.
+- Added one contextual canonical link from `/blog/what-is-a-trading-simulator`; Task25.8 later corrected the Trading Performance Metrics numeric link to the direct canonical, bringing final effective body support to 4.
+- Target has 8 Blog outlinks, all direct final owners. No redirect-config change required; numeric direct redirect remains correct.
+- Validation PASS: build 402 posts / 160 locale assets; Biome 415 files; Vitest 6/6 files / 17/17 tests; Workflow/diff PASS; duplicate redirect sources 0; chains 0.
+- GSC/Bing target state `unknown_not_reverified`; after deploy inspect/submit only canonical if needed, never numeric.
+- Status: `RETAIN_NARROW_REBUILD_COMPLETE_PENDING_DEPLOY`.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-19-task25-3-why-practice-trading/memory.md`
+
+### 25.4 — Wyckoff Accumulation / Distribution Schematics
+- Target: `/blog/wyckoff-method-explained-accumulation-and-distribution-phases-2026` (`content/blog/2026020601.md`).
+- Fresh production: target and `/blog/wyckoff-method-guide` are both 200/self-canonical/in sitemap; `/blog/2026020601` direct 301 to target.
+- Fresh SERP supports separate broad Wyckoff-methodology and narrow accumulation/distribution schematic intents.
+- Owner Gate: `retain_narrow + rebuild`.
+- Rebuilt target to ~3,565 words as `Wyckoff Accumulation and Distribution: Phases A-E Explained`, `dateModified: 2026-08-19`.
+- Corrected A-E phase vs event terminology; made spring/UTAD optional; removed unsupported institutional-volume, fixed-duration, success-rate, R:R, expectancy, RSI-confirmation and false ChartMini auto-detection claims.
+- Scoped cannibalization correction on `/blog/wyckoff-method-guide`: removed duplicate detailed A-E tutorials, retained broad methodology/composite/laws role, and handed detailed schematics to Task25.4; `dateModified: 2026-08-19`.
+- Target body support is now 5 direct owner sources after Task25.8 rerouted specific spring/distribution anchors from Market Structure and Short Selling; broad guide retains 4 support sources. Target Blog outlinks through redirects: 0.
+- No redirect-config change; `/blog/2026020601` remains direct 301; duplicate redirect sources 0; chains 0.
+- Validation PASS: build 402 posts / 160 locale assets; Biome 415 files; Vitest 6/6 files / 17/17 tests; Workflow/diff PASS.
+- GSC/Bing `unknown_not_reverified`; after deployment inspect target canonical first, never submit numeric URL.
+- Status: `RETAIN_NARROW_REBUILD_COMPLETE_PENDING_DEPLOY`.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-19-task25-4-wyckoff-accumulation-distribution/memory.md`
+
+### 25.7 — Trading Patience cluster consolidation
+- Requested target: `/blog/best-settings-for-patience-maximize-profits` (`content/blog/2026022102.md`).
+- Selected Owner: `/blog/trading-patience-how-to-wait-for-high-probability-setups-2026` (`content/blog/2025121901.md`).
+- Secondary duplicate: `/blog/why-patience-is-essential-for-every-trader-in-2026` (`content/blog/2026021202.md`).
+- Fresh SERP does not support a distinct Best Settings intent; all three Patience pages overlap on waiting/selectivity/overtrading.
+- Owner Gate: `consolidate_redirect + rebuild_owner + duplicate_consolidation`.
+- Selected Owner rebuilt to ~3,236 words; title `Trading Patience: How to Wait for Valid Setups Without Overtrading`; `dateModified: 2026-08-19`.
+- Both duplicate long/numeric sources route locally directly to selected Owner; `/blog/2025121901` remains direct; chains 0.
+- Effective body support increased from 0 to 3; Owner has 8 Blog outlinks, 0 redirect destinations.
+- Validation PASS: build 402 posts / 160 locale assets; Biome 415 files; Vitest 6/6 / 17/17; Workflow/diff PASS.
+- Status: `CONSOLIDATE_REDIRECT_REBUILD_OWNER_DUPLICATE_CONSOLIDATION_COMPLETE_PENDING_DEPLOY`.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-19-task25-7-trading-patience-consolidation/memory.md`
+
+### 25.5 — Year-End Portfolio Rebalancing 2026
+- Target: `/blog/year-end-portfolio-rebalancing-start-2026-strong-2026` (`content/blog/2026010101.md`).
+- Fresh production: canonical is HTTP 200/self-owned/in sitemap; `/blog/2026010101` is direct 301.
+- Fresh SERP plus current Investor.gov/FINRA/Fidelity guidance support a distinct year-end allocation-drift/rebalancing intent.
+- Owner Gate: `retain_narrow + rebuild`.
+- Rebuilt to ~3,561 words as `Year-End Portfolio Rebalancing 2026: A Practical Checklist`, `dateModified: 2026-08-19`.
+- Removed stale Start-2026 framing, universal model allocations, fixed 5% rule, tactical 2026 asset calls, over-directive tax-loss advice, false ChartMini portfolio features and manual Article schema.
+- New boundary: target/current/drift, rebalancing vs reallocating, calendar/threshold/cash-flow methods, general tax/cost/account constraints, concentration review and before-2027 checklist.
+- Effective body support increased from 1 to 3; 7 Blog outlinks, all direct final owners; no redirect-config change; chains 0.
+- Validation PASS: build 402 posts / 160 locale assets; Biome 415 files; Vitest 6/6 files / 17/17 tests; Workflow/diff PASS.
+- GSC/Bing `unknown_not_reverified`; after deployment inspect canonical only if needed, never submit `/blog/2026010101`.
+- Status: `RETAIN_NARROW_REBUILD_COMPLETE_PENDING_DEPLOY`.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-19-task25-5-year-end-portfolio-rebalancing/memory.md`
+
+### 25.6 — Algorithmic Trading for Beginners
+- Target: `/blog/algorithmic-trading-for-beginners` (`content/blog/2026040301.md`).
+- Fresh production: canonical 200/self-canonical/in sitemap; `/blog/2026040301` direct 301.
+- Fresh SERP + FINRA/TradingView primary sources support a distinct beginner algorithmic-trading workflow intent.
+- Owner Gate: `retain_narrow + rebuild`.
+- Rebuilt to ~3,423 words as `Algorithmic Trading for Beginners: Rules, Backtesting, Automation, and Risk`, `dateModified: 2026-08-19`.
+- New boundary: specification, data, backtesting, forward testing, execution integration, monitoring/controls, tool/language roles and first project.
+- Removed universal sample/performance/risk/slippage/timing rules and corrected Pine/TradingView native broker-autotrading limitation.
+- Effective body support increased from 1 to 3; target has 7 Blog outlinks, all direct final owners; no redirect-config change; chains 0.
+- Validation PASS: build 402 posts / 160 locale assets; Biome 415 files; Vitest 6/6 files / 17/17 tests; Workflow/diff PASS.
+- GSC/Bing `unknown_not_reverified`; after deployment inspect canonical only if needed; never submit `/blog/2026040301`.
+- Status: `RETAIN_NARROW_REBUILD_COMPLETE_PENDING_DEPLOY`.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-19-task25-6-algorithmic-trading-beginners/memory.md`
+
+### 25.8 — Task25 cluster intent / internal-link / cannibalization review
+- Fresh Task25-wide SERP and site-graph review confirms all final owner boundaries remain valid; no additional owner consolidation/restoration is required.
+- Corrected 3 specific Wyckoff spring/distribution/upthrust links from Market Structure/Short Selling to the A-E schematic Owner while retaining generic Wyckoff Method links to the Broad Guide.
+- Corrected Trading Performance Metrics from numeric `/blog/2025110301` to the direct Why Practice canonical.
+- Final effective support: Resolutions 3; Why-90% 4; Why Practice 4; Wyckoff schematic 5; Broad Wyckoff 4; Rebalancing 3; Algorithmic 3; Patience 3.
+- Routable links to checked Task25 redirect sources: 0; Task25 Owner outlinks through redirects: 0; duplicate redirect sources: 0; chains: 0.
+- Status: `PASS_AFTER_WYCKOFF_SEMANTIC_LINK_AND_TASK25_3_DIRECT_CANONICAL_CORRECTIONS_READY_FOR_TASK25_9`.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-19-task25-8-cluster-intent-internal-link-cannibalization-review/memory.md`
+
+### 25.9 — Final validation / Workflow closeout
+- `pnpm build` PASS: 402 Blog posts / 160 locale assets.
+- `pnpm check` PASS: Biome 415 files; Vitest 6/6 files / 17/17 tests.
+- `pnpm seo:v2:workflow:check` PASS; `git diff --check` PASS.
+- Custom final integrity: `TASK25_OWNER_INTEGRITY_BAD 0`; all 8 checked final Owners have >=3 effective body inlinks; 0 routable redirect-source links; 0 duplicate redirect sources; 0 redirect chains.
+- Task25.1–25.9 Flowtraces complete. Workflow synchronized without inventing deployment/observation dates.
+- `content/blog/2026030502.md` remains unrelated and must stay excluded from any Task25-only staging unless explicitly authorized.
+- No commit/push/deploy/GSC/Bing/IndexNow/R2 action.
+- Status: `TASK25_1_TO_25_9_COMPLETE_LOCAL_VALIDATION_PASS_PENDING_DEPLOY`.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-19-task25-9-final-validation-workflow-closeout/memory.md`

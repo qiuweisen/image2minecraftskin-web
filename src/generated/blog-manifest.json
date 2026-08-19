@@ -129,11 +129,25 @@
     "fileSlug": "2025102601",
     "contentKey": "chartmini-content/blog/2025102601.md",
     "locale": "en",
-    "title": "Why 90% of Retail Traders Lose Money: Common Psychological Traps",
-    "description": "Why 90% of Retail Traders Lose Money: Common Psychological Traps Expert insights, proven strategies, and practical tips to improve your trading performance.",
+    "title": "Why Retail Traders Lose Money: What the 90% Claim Actually Shows",
+    "metaTitle": "Why Retail Traders Lose Money: The 90% Claim Explained",
+    "description": "Do 90% of retail traders really lose money? Compare regulator and academic evidence, then learn how costs, leverage, overtrading, weak edges, and behavioral traps interact.",
     "date": "2025-10-26",
-    "category": "Investing",
-    "redirectTo": "/blog/trading-psychology-master-emotions"
+    "dateModified": "2026-08-19",
+    "category": "Trading Education",
+    "categories": [
+      "Trading Education",
+      "Trading Psychology",
+      "Risk Management"
+    ],
+    "tags": [
+      "Retail Traders",
+      "Trading Losses",
+      "Trading Psychology",
+      "Overtrading",
+      "Risk Management",
+      "Trading Costs"
+    ]
   },
   {
     "slug": "the-art-of-stop-loss-how-to-set-protective-stops-like-a-pro-2026",
@@ -177,13 +191,20 @@
     "fileSlug": "2025110301",
     "contentKey": "chartmini-content/blog/2025110301.md",
     "locale": "en",
-    "title": "Why Practice Trading Matters: Simulate Before You Risk Real Money",
-    "description": "Why Practice Trading Matters: Simulate Before You Risk Real Money Expert insights, proven strategies, and practical tips to improve your trading performance.",
+    "title": "Why Practice Trading Matters Before You Risk Real Money",
+    "metaTitle": "Why Practice Trading Before Risking Real Money",
+    "description": "Learn why simulated trading practice matters before risking real money, what skills it can build, what it cannot prove, and how to make practice sessions reviewable.",
     "date": "2025-11-03",
-    "dateModified": "2026-07-28",
-    "category": "Risk Management",
-    "categories": ["Risk Management", "Trading Education"],
-    "tags": ["Trading", "Risk"]
+    "dateModified": "2026-08-19",
+    "category": "Trading Education",
+    "categories": ["Trading Education", "Trading Practice", "Risk Management"],
+    "tags": [
+      "Practice Trading",
+      "Trading Simulator",
+      "Paper Trading",
+      "Chart Replay",
+      "Trading Education"
+    ]
   },
   {
     "slug": "a-complete-guide-to-us-stock-market-trading-hours-2026",
@@ -616,12 +637,20 @@
     "fileSlug": "2025121901",
     "contentKey": "chartmini-content/blog/2025121901.md",
     "locale": "en",
-    "title": "Trading Patience: How to Wait for High-Probability Setups",
-    "description": "Trading Patience: How to Wait for High-Probability Setups Step-by-step guide with proven strategies and expert tips. Learn from exper in 2026.",
+    "title": "Trading Patience: How to Wait for Valid Setups Without Overtrading",
+    "metaTitle": "Trading Patience: How to Wait for Valid Setups",
+    "description": "Learn how to build trading patience without arbitrary timers or profit promises. Define valid setups, no-trade conditions, skip rules, and a replay routine that helps reduce impulsive trading.",
     "date": "2025-12-19",
+    "dateModified": "2026-08-19",
     "category": "Trading Psychology",
     "categories": ["Trading Psychology", "Beginner Guides"],
-    "tags": ["Trading"]
+    "tags": [
+      "Trading Patience",
+      "Overtrading",
+      "Trading Discipline",
+      "Trade Selection",
+      "Trading Psychology"
+    ]
   },
   {
     "slug": "pattern-recognition-in-trading-how-practice-builds-intuition-2026",
@@ -1034,23 +1063,39 @@
     "fileSlug": "2026010101",
     "contentKey": "chartmini-content/blog/2026010101.md",
     "locale": "en",
-    "title": "Year-End Portfolio Rebalancing: Start 2026 Strong",
-    "description": "Year-End Portfolio Rebalancing: Start 2026 Strong Proven strategies to build wealth through intelligent investing. Learn from expert in 2026.",
+    "title": "Year-End Portfolio Rebalancing 2026: A Practical Checklist",
+    "metaTitle": "Year-End Portfolio Rebalancing 2026: Practical Checklist",
+    "description": "Review portfolio drift before year-end 2026. Learn when rebalancing may make sense, calendar vs threshold methods, taxes and costs to check, and a practical checklist before 2027.",
     "date": "2026-01-01",
+    "dateModified": "2026-08-19",
     "category": "Risk Management",
-    "tags": ["Portfolio"]
+    "tags": [
+      "Portfolio Rebalancing",
+      "Asset Allocation",
+      "Diversification",
+      "Year-End Investing"
+    ]
   },
   {
     "slug": "trading-resolutions-for-2026-goals-that-actually-work-2026",
     "fileSlug": "2026010102",
     "contentKey": "chartmini-content/blog/2026010102.md",
     "locale": "en",
-    "title": "Trading Resolutions for 2026: Goals That Actually Work",
-    "description": "Trading Resolutions for 2026: Goals That Actually Work Expert insights and strategies to improve your trading performance.",
+    "title": "Trading Resolutions for 2026: 12 Practical Commitments for Traders",
+    "metaTitle": "Trading Resolutions 2026: 12 Practical Commitments",
+    "description": "Choose practical trading resolutions for 2026 across execution, risk, journaling, psychology, review, and practice—without relying on arbitrary profit targets or universal risk rules.",
     "date": "2026-01-01",
+    "dateModified": "2026-08-19",
     "category": "Trading Education",
-    "tags": ["Trading"],
-    "redirectTo": "/blog/your-2026-trading-blueprint-setting-goals-that-actually-work-2026"
+    "categories": ["Trading Education", "Trading Goals", "Trading Psychology"],
+    "tags": [
+      "Trading Resolutions",
+      "Trading Goals",
+      "Trading Discipline",
+      "Trading Journal",
+      "Risk Management",
+      "Trading Habits"
+    ]
   },
   {
     "slug": "mastering-support-and-resistance-the-foundation-of-technical-analysis-2026",
@@ -2760,12 +2805,20 @@
     "fileSlug": "2026020601",
     "contentKey": "chartmini-content/blog/2026020601.md",
     "locale": "en",
-    "title": "Wyckoff Method Explained: Accumulation and Distribution Phases",
-    "description": "Master the Wyckoff Method to identify institutional accumulation and distribution phases. Learn to trade alongside smart money using price and volume analysis with proven.",
+    "title": "Wyckoff Accumulation and Distribution: Phases A-E Explained",
+    "metaTitle": "Wyckoff Accumulation & Distribution: Phases A-E",
+    "description": "Learn the Wyckoff accumulation and distribution schematics phase by phase, including PS, SC, AR, ST, springs, UTAD, SOS, LPS, SOW, and failure rules.",
     "date": "2026-02-06",
+    "dateModified": "2026-08-19",
     "category": "Technical Analysis",
     "categories": ["Technical Analysis", "Trading Strategies"],
-    "tags": ["Wyckoff Method", "Smart Money", "Market Cycles"]
+    "tags": [
+      "Wyckoff Method",
+      "Accumulation",
+      "Distribution",
+      "Market Structure",
+      "Volume Analysis"
+    ]
   },
   {
     "slug": "copy-trading-2026-best-platforms-for-social-trading-success-2026",
@@ -3023,7 +3076,8 @@
       "Emotional Control",
       "Risk Management",
       "Trading Mindset"
-    ]
+    ],
+    "redirectTo": "/blog/trading-patience-how-to-wait-for-high-probability-setups-2026"
   },
   {
     "slug": "how-to-trade-shooting-star-like-a-pro-in-2026",
@@ -3417,7 +3471,8 @@
       "Risk Management",
       "Trading Strategy",
       "Self-Control"
-    ]
+    ],
+    "redirectTo": "/blog/trading-patience-how-to-wait-for-high-probability-setups-2026"
   },
   {
     "slug": "top-5-trading-journal-strategies-beginners",
@@ -5131,10 +5186,11 @@
     "fileSlug": "2026040301",
     "contentKey": "chartmini-content/blog/2026040301.md",
     "locale": "en",
-    "title": "Algorithmic Trading for Beginners: How to Automate Your Trading Strategy",
-    "description": "A beginner's introduction to algorithmic trading. Learn what algo trading is, how to build your first bot, the languages and platforms used, and the realistic advantages and limitations of automation.",
+    "title": "Algorithmic Trading for Beginners: Rules, Backtesting, Automation, and Risk",
+    "metaTitle": "Algorithmic Trading for Beginners: A Practical 2026 Guide",
+    "description": "A practical beginner guide to algorithmic trading: what an algo does, how rules become code, how backtesting and forward testing fit, and what to check before live automation.",
     "date": "2026-04-03",
-    "dateModified": "2026-08-17",
+    "dateModified": "2026-08-19",
     "category": "Education",
     "categories": ["Education", "Trading Strategies", "Tools"],
     "tags": [
@@ -5333,6 +5389,7 @@
     "title": "The Wyckoff method: reading institutional footprints on a price chart",
     "description": "A practical introduction to the Wyckoff method. Learn how to read accumulation and distribution patterns, identify the composite operator's intent, and time entries using Wyckoff's price-volume framework.",
     "date": "2026-04-08",
+    "dateModified": "2026-08-19",
     "category": "Education",
     "categories": ["Education", "Technical Analysis", "Trading Strategies"],
     "tags": [
