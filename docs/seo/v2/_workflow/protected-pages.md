@@ -868,15 +868,15 @@ Old-project protection windows are not inherited. A page enters this file only a
 
 - Canonical: `/blog/chartmini-vs-candledojo-comparison`
 - Source: `content/blog/2026031603.md`
-- Status: `protected_pending_deploy`
+- Status: `protected_observation`
 - Owner Gate: `retain_narrow + rebuild`.
 - Reason: fresh 2026-08-20 production/SERP/site-graph review confirms a durable direct brand-comparison intent. CandleDojo currently owns a competing `/vs/chartmini` SERP result, while no other ChartMini page owns this exact comparison.
 - Owner boundary: ChartMini open-ended historical replay/simplified simulated decisions vs CandleDojo structured Long/Short chart-reading drills, scoring/feedback, scenario curation, timeframe/market/access differences, limitations and fit-by-practice-job.
 - Rebuild: new neutral comparison title/body, `dateModified: 2026-08-20`, current CandleDojo official methodology/access/data references, current ChartMini product boundaries, explicit publisher disclosure, no manual Article/BlogPosting schema.
 - Current local body support: 3 direct canonical source files from Simulator Evaluation, No-Signup Simulator and Free-vs-Paid Simulator.
 - Redirect architecture: `/blog/2026031603` remains direct 301 to canonical; no long-slug redirect and no chain.
-- Review dates: pending actual deployment and production verification; do not invent an observation window before deployment.
-- GSC rule: after deployment inspect the canonical first and Request Indexing only if stale/unindexed and quota use is justified. Never submit `/blog/2026031603`.
+- Review dates: 2026-08-27 and 2026-09-03; freeze through 2026-09-03.
+- Production/GSC closeout: owner is live 200/self-canonical/in sitemap with `dateModified: 2026-08-20`; user confirmed the unindexed pages from the five-URL Task26 canonical set were successfully submitted in GSC. Exact per-URL submitted-vs-already-indexed state was not enumerated. Never submit `/blog/2026031603`.
 - Exceptions: hard technical defect, material factual/product-access error, broken owner boundary, redirect/canonical defect, or explicit user override only.
 - Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-20-task26-1-chartmini-vs-candledojo/memory.md`.
 
@@ -884,15 +884,15 @@ Old-project protection windows are not inherited. A page enters this file only a
 
 - Canonical: `/blog/how-to-trade-the-news`
 - Source: `content/blog/2026041501.md`
-- Status: `protected_pending_deploy`
+- Status: `protected_observation`
 - Owner Gate: `consolidate_redirect + rebuild_owner + duplicate_consolidation`.
 - Reason: fresh 2026-08-20 production showed three overlapping 200/self-canonical/sitemap News Trading pages. Fresh SERP maps all three to the same broad event-reaction/execution intent; the selected Owner already had 10 body-support files versus 0 for the requested target and 1 for the second duplicate.
 - Owner boundary: event taxonomy, expectation-vs-actual interpretation, primary-source calendar verification, pre-event/stay-flat/post-release decision modes, FOMC/CPI/Employment Situation/earnings framework, breaking-news verification, fast-market execution risk, first-move uncertainty and replay/review limitations.
 - Rebuilt Owner: `How to Trade the News: A Risk-Aware News Trading Framework`, `dateModified: 2026-08-20`; current Fed/BLS/FINRA references; no manual Article/BlogPosting schema.
 - Consolidated sources: `/blog/how-to-trade-news-trading-like-a-pro-in-2026` + `/blog/2026021502` and `/blog/news-based-trading-practical-guide` + `/blog/2026032801` -> final Owner directly.
 - Current local body support: 11 source files; residual body links to the two redirect long URLs: 0.
-- Review dates: pending actual deployment and production verification; do not invent an observation window before deployment.
-- GSC rule: after deployment inspect/submit only `/blog/how-to-trade-the-news` if needed. Never submit either duplicate long URL or numeric source.
+- Review dates: 2026-08-27 and 2026-09-03; freeze through 2026-09-03.
+- Production/GSC closeout: owner is live 200/self-canonical/in sitemap with `dateModified: 2026-08-20`; both duplicate long URLs and numeric sources are direct 301s. User confirmed the unindexed pages from the five-URL Task26 canonical set were successfully submitted in GSC; exact per-URL submitted-vs-already-indexed state was not enumerated. Redirect sources remain no-submit.
 - Exceptions: hard technical defect, material factual/regulatory/execution-risk error, redirect/canonical defect, or explicit user override only.
 - Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-20-task26-3-news-trading-consolidation/memory.md`.
 
@@ -900,7 +900,7 @@ Old-project protection windows are not inherited. A page enters this file only a
 
 - Canonical: `/blog/market-structure-trading-guide`
 - Source: `content/blog/2026041001.md`
-- Status: `protected_pending_deploy`
+- Status: `protected_observation`
 - Owner Gate: `consolidate_redirect + rebuild_broad_owner + preserve_narrow_bos_choch_owner`.
 - Reason: fresh 2026-08-20 production had three simultaneous Market Structure 200/sitemap pages. Fresh SERP and current site graph map the requested `true direction` page into the broad HH/HL/LH/LL trend/range intent already owned by `/blog/market-structure-trading-guide`; requested source had 0 body inlinks versus 25 for the Broad Owner and 11 for the separate BOS/CHoCH verification Owner.
 - Broad Owner boundary: swing highs/lows, HH/HL/LH/LL, uptrend/downtrend/range/transition/unclear states, conditional directional bias, multi-timeframe context, high-level break interpretation, false-break/retest caution and no-hindsight practice.
@@ -908,8 +908,8 @@ Old-project protection windows are not inherited. A page enters this file only a
 - Rebuild: `Market Structure Trading: How to Read Trend, Range, and Trend Shifts`, `dateModified: 2026-08-20`; removed manual Article schema, unsupported win-rate/range-percentage/R:R claims and deterministic institution/liquidity narratives; current Fidelity/Schwab trend references added.
 - Consolidated sources: `/blog/market-structure-analysis-how-to-read-the-markets-true-direction-2026` + `/blog/2026011105` -> Broad Owner directly.
 - Current local support: Broad Owner 25 body-link source files; narrow BOS/CHoCH Owner 11; redirect source 0.
-- Review dates: pending actual deployment and production verification; do not invent an observation window before deployment.
-- GSC rule: after deployment inspect/submit only `/blog/market-structure-trading-guide` if needed. Never submit the redirect long URL or `/blog/2026011105`.
+- Review dates: 2026-08-27 and 2026-09-03; freeze through 2026-09-03.
+- Production/GSC closeout: Broad Owner is live 200/self-canonical/in sitemap with `dateModified: 2026-08-20`; requested long + `/blog/2026011105` are direct 301s and narrow BOS/CHoCH remains a distinct 200 owner. User confirmed the unindexed pages from the five-URL Task26 canonical set were successfully submitted in GSC; exact per-URL submitted-vs-already-indexed state was not enumerated. Redirect sources remain no-submit.
 - Exceptions: hard technical defect, material factual/product-boundary error, redirect/canonical defect, or explicit user override only.
 - Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-20-task26-5-market-structure-consolidation/memory.md`.
 
@@ -917,7 +917,7 @@ Old-project protection windows are not inherited. A page enters this file only a
 
 - Canonical: `/blog/volatility-trading-mastery-how-to-profit-from-market-chaos-and-uncertainty-in-2026-2026`
 - Source: `content/blog/2026011203.md`
-- Status: `protected_pending_deploy`
+- Status: `protected_observation`
 - Owner Gate: `consolidate_redirect + rebuild_broad_volatility_owner`.
 - Reason: fresh 2026-08-20 production exposed both the requested Survival Guide and the existing Volatility Trading guide as separate 200 pages. Fresh SERP already surfaces the selected Owner for ChartMini broad volatility intent; requested source had 0 body inlinks and no durable separate task.
 - Owner boundary: volatility vs direction, realized/implied volatility, VIX and ATR roles/limits, relative regime classification, volatility-aware size/stop/execution implications, strategy-fit questions, options/VIX-product boundaries, fast-market execution risk and no-hindsight replay.
@@ -926,8 +926,8 @@ Old-project protection windows are not inherited. A page enters this file only a
 - Consolidated sources: `/blog/mastering-market-volatility-the-adaptive-traders-survival-guide-2026` + `/blog/2026010303` -> final Owner directly.
 - Current local support after Task26.8: 6 file-level links to Owner; two source files are themselves redirects (`2026010303` and `2026011303`), leaving 4 effective non-redirecting canonical sources. Task26.8 added the Pre-Trade Checklist link after correcting the original support accounting.
 - Residual body links to requested redirect source: 0; duplicate redirect sources: 0; redirect chains: 0.
-- Review dates: pending actual deployment and production verification; do not create an observation window before deployment.
-- GSC rule: after deployment inspect/submit only the selected Owner if needed. Never submit the requested redirect long URL or `/blog/2026010303`.
+- Review dates: 2026-08-27 and 2026-09-03; freeze through 2026-09-03.
+- Production/GSC closeout: selected Owner is live 200/self-canonical/in sitemap with `dateModified: 2026-08-20`; requested long + `/blog/2026010303` are direct 301s. User confirmed the unindexed pages from the five-URL Task26 canonical set were successfully submitted in GSC; exact per-URL submitted-vs-already-indexed state was not enumerated. Redirect sources remain no-submit.
 - Exceptions: hard technical defect, material factual/regulatory/product-boundary error, redirect/canonical defect, or explicit user override only.
 - Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-20-task26-6-market-volatility-consolidation/memory.md`.
 
@@ -935,7 +935,7 @@ Old-project protection windows are not inherited. A page enters this file only a
 
 - Canonical: `/blog/pre-trade-checklist`
 - Source: `content/blog/2026032502.md`
-- Status: `protected_pending_deploy`
+- Status: `protected_observation`
 - Owner Gate: `retain_narrow + rebuild`.
 - Reason: fresh 2026-08-20 SERP supports a durable pre-trade-checklist task distinct from the broader Trading Plan, Risk Management, Execution Gap, Journal and Post-Trade Review intents. Production is 200/self-canonical/in sitemap; `/blog/2026032502` is direct 301.
 - Owner boundary: immediate pre-entry gate for setup/version, required context, entry trigger/order type, invalidation, planned loss, position size, exit logic, liquidity/spread/session/order conditions, event policy and decision-quality/P&L override checks.
@@ -943,19 +943,19 @@ Old-project protection windows are not inherited. A page enters this file only a
 - Current local body support: 11 file-level source files / 10 effective non-redirecting sources; one historical News Trading source now redirects. No additional inbound support is required. Task26.8 adds one outbound semantic link from the checklist's volatility-context gate to the Broad Market Volatility owner.
 - Target outbound Blog links through redirect config: 0.
 - Redirect architecture: `/blog/2026032502` remains direct 301 to the canonical; no redirect-config change required.
-- Review dates: pending actual deployment and production verification; do not invent an observation window before deployment.
-- GSC rule: after deployment inspect the canonical and Request Indexing only if justified. Never submit `/blog/2026032502`.
+- Review dates: 2026-08-27 and 2026-09-03; freeze through 2026-09-03.
+- Production/GSC closeout: owner is live 200/self-canonical/in sitemap with `dateModified: 2026-08-20`; `/blog/2026032502` remains direct 301. User confirmed the unindexed pages from the five-URL Task26 canonical set were successfully submitted in GSC; exact per-URL submitted-vs-already-indexed state was not enumerated. Never submit `/blog/2026032502`.
 - Exceptions: hard technical defect, material factual/regulatory/execution-risk error, owner-boundary defect, redirect/canonical defect, or explicit user override only.
 - Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-20-task26-7-pre-trade-checklist/memory.md`.
 
 ### Task 26.8 / 26.9 — Cluster graph and final-validation freeze
 
-- Status: `final_validation_pass_pending_deploy`.
+- Status: `deploy_verified_gsc_selective_submission_confirmed_observation_active`.
 - Task26.8 revalidated the full cluster intent map and corrected the Broad Market Volatility support accounting; all checked important owners now have at least 3 effective non-redirecting direct body sources.
 - Final effective support: CandleDojo comparison 3; FOMO 8; News Trading 13; Swing viability 4; Broad Market Structure 26; BOS/CHoCH verification 11; Broad Market Volatility 4; Pre-Trade Checklist 10.
 - Task26 Owner outbound links through redirects: 0; routable/indexable links to Task26 redirect sources: 0; duplicate redirect sources: 0; redirect chains: 0.
 - Full Task26.9 validation PASS: build 402 Blog posts / 160 locale assets; Biome 415 files; Vitest 6/6 files / 17/17 tests; Workflow and diff checks PASS; custom owner-integrity audit `OWNER_BAD 0`.
-- Do not create deployment-based observation dates until the pending Task26 changes are deployed and production-verified.
+- Deployment is production-verified on 2026-08-20. New/rewritten Task26 owners use read-only reviews on 2026-08-27 and 2026-09-03, freeze through 2026-09-03. Task26.2 FOMO and Task26.4 Swing viability retain their earlier observation clocks and are not reset.
 - Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-20-task26-8-cluster-intent-internal-link-cannibalization-review/memory.md` and `docs/seo/v2/flowtrace/chartmini-2026-08-20-task26-9-final-validation-workflow-closeout/memory.md`.
 
 ## Protection rule

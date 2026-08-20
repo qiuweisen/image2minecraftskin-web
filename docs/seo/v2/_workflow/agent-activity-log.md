@@ -1,5 +1,17 @@
 # ChartMini v2 SEO Agent Activity Log
 
+## 2026-08-20 — ChatGPT / DevSpace — Task26 deployment / selective GSC closeout
+
+- Fresh production verifies the five recommended Task26 canonical owners as 200/self-canonical/in sitemap with `dateModified: 2026-08-20`.
+- Checked News Trading, Market Structure and Market Volatility duplicate/numeric sources are live direct 301s to final owners.
+- User confirmed the unindexed pages from the five-URL Task26 canonical inspection set were successfully submitted through GSC on 2026-08-20; exact submitted-vs-already-indexed subset was not enumerated, so no fabricated per-URL Request Indexing claims were added.
+- Five newly deployed/rebuilt owners enter read-only observation on 2026-08-27 and 2026-09-03, freeze through 2026-09-03.
+- Task26.2 FOMO and Task26.4 Swing viability keep their earlier observation clocks; Swing was not resubmitted.
+- Redirect/numeric sources remain no-submit; Bing/IndexNow remain `unknown_not_reverified`.
+- Unrelated `content/blog/2026030502.md` remains outside Task26 scope.
+- Status: `DEPLOY_VERIFIED_SELECTIVE_GSC_RECORDED_OBSERVATION_ACTIVE`.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-20-task26-deploy-gsc-closeout/memory.md`.
+
 ## 2026-08-20 — ChatGPT / DevSpace — Task 26.9 final validation / Workflow closeout
 
 - Full validation PASS: build 402 Blog posts / 160 locale assets; Biome 415; Vitest 6/6 files / 17/17 tests; Workflow and diff checks PASS.

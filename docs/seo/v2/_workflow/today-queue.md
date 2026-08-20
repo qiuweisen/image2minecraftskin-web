@@ -915,3 +915,13 @@ Task 21.1–21.9 is complete and in observation.
 - Do not submit redirect/numeric sources; do not resubmit Swing viability solely for Task26.4.
 - Status: `TASK26_1_TO_26_9_COMPLETE_LOCAL_VALIDATION_PASS_PENDING_DEPLOY`.
 - Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-20-task26-9-final-validation-workflow-closeout/memory.md`
+
+### Task26 deployment / GSC closeout
+- Fresh production verifies all five recommended Task26 canonical owners as 200/self-canonical/in sitemap with `dateModified: 2026-08-20`.
+- News Trading duplicate long/numeric sources, Market Structure `true direction` long/numeric, and Market Volatility Survival Guide long/numeric are live direct 301s to final owners.
+- User confirmed the unindexed pages from the five-URL Task26 canonical inspection set were successfully submitted in GSC on 2026-08-20; exact submitted-vs-already-indexed subset was not enumerated.
+- New Task26 owner observation: 2026-08-27 and 2026-09-03; freeze through 2026-09-03.
+- Task26.2 FOMO and Task26.4 Swing viability keep their existing 2026-08-24 / 2026-08-31 observation schedule.
+- Redirect/numeric URLs remain no-submit. Bing/IndexNow remain `unknown_not_reverified`.
+- Status: `DEPLOY_VERIFIED_SELECTIVE_GSC_RECORDED_OBSERVATION_ACTIVE`.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-20-task26-deploy-gsc-closeout/memory.md`

@@ -593,6 +593,16 @@ Custom Task26 integrity audit reports `OWNER_BAD 0`: all eight checked owners ha
 
 Production remains pre-deployment for the pending Task26 content/redirect changes. No new observation windows are started. Post-deploy GSC candidates are the five changed canonical owners only: ChartMini vs CandleDojo, How to Trade the News, Broad Market Structure, Broad Market Volatility and Pre-Trade Checklist. Task26.4 Swing viability was already user-confirmed submitted on 2026-08-17 and should not be resubmitted solely for this task; redirect/numeric sources remain no-submit. Final local status: `TASK26_1_TO_26_9_COMPLETE_LOCAL_VALIDATION_PASS_PENDING_DEPLOY`. Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-20-task26-9-final-validation-workflow-closeout/memory.md`.
 
+## 2026-08-20 Task26 deployment / selective GSC closeout
+
+Fresh production verification confirms the five recommended Task26 canonical owners are live as HTTP 200/self-canonical pages, all five are in the sitemap, and all expose `dateModified: 2026-08-20`: ChartMini vs CandleDojo, How to Trade the News, Broad Market Structure, Broad Market Volatility, and Pre-Trade Checklist.
+
+Checked Task26 consolidation sources are now live direct 301s to their final owners: both News Trading duplicate long URLs plus `/blog/2026021502` and `/blog/2026032801`; Market Structure `true direction` plus `/blog/2026011105`; Market Volatility Survival Guide plus `/blog/2026010303`. No redirect-source URL is a GSC submission target.
+
+The user confirmed that the unindexed pages from the five-URL Task26 canonical inspection set were successfully submitted through GSC on 2026-08-20. The exact submitted-vs-already-indexed subset was not enumerated, so per-URL Request Indexing state is intentionally not fabricated. Task26.4 Swing viability retains its prior 2026-08-17 confirmed submission; Task26.2 FOMO retains its earlier observation clock.
+
+The five newly deployed/rebuilt Task26 owners enter read-only observation with reviews on 2026-08-27 and 2026-09-03, freeze through 2026-09-03. Bing/IndexNow remain `unknown_not_reverified`. Final closeout status: `DEPLOY_VERIFIED_SELECTIVE_GSC_RECORDED_OBSERVATION_ACTIVE`. Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-20-task26-deploy-gsc-closeout/memory.md`.
+
 ## Validation baseline
 
 Initialization validation on 2026-08-14:

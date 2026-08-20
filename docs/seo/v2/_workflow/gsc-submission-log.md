@@ -97,3 +97,21 @@ Submission date: 2026-08-19.
 Planned read-only reviews: 2026-08-26 and 2026-09-02.
 
 Numeric legacy paths and redirect-source long slugs were intentionally not submitted. Task25 redirect verification confirms direct 301 routing with no checked chain. Bing/IndexNow remain `unknown_not_reverified`.
+
+## 2026-08-20 — Task26 deployment / selective GSC closeout
+
+Fresh production verification confirms the five recommended Task26 canonical owners are live as HTTP 200 pages with self-canonical URLs, sitemap inclusion, and `dateModified: 2026-08-20`:
+
+1. `https://chartmini.com/blog/chartmini-vs-candledojo-comparison`
+2. `https://chartmini.com/blog/how-to-trade-the-news`
+3. `https://chartmini.com/blog/market-structure-trading-guide`
+4. `https://chartmini.com/blog/volatility-trading-mastery-how-to-profit-from-market-chaos-and-uncertainty-in-2026-2026`
+5. `https://chartmini.com/blog/pre-trade-checklist`
+
+The user confirmed that the unindexed pages from this five-URL set were successfully submitted through GSC URL Inspection / Request Indexing on 2026-08-20.
+
+The exact submitted-vs-already-indexed subset was not enumerated, so this log records a successful selective GSC action for the set without claiming per-URL Request Indexing where it was not explicitly confirmed.
+
+Planned read-only reviews for these five deployed owners: 2026-08-27 and 2026-09-03. Freeze through 2026-09-03.
+
+Task26.4 Swing viability retains its earlier user-confirmed 2026-08-17 Request Indexing event and was not resubmitted. Task26.2 FOMO retains its earlier observation clock. Numeric legacy paths and redirect-source long slugs were not submitted. Bing/IndexNow remain `unknown_not_reverified`.

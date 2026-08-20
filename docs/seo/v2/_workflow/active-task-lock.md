@@ -7,7 +7,12 @@ Owner agent: none
 Target URL: none
 Task: none
 
-Last completed: Task 26.9 — Final validation / Flowtrace / Workflow closeout
+Last completed: Task26 deployment / selective GSC closeout
+Task26 closeout result: `DEPLOY_VERIFIED_SELECTIVE_GSC_RECORDED_OBSERVATION_ACTIVE`
+Task26 closeout evidence:
+- `docs/seo/v2/flowtrace/chartmini-2026-08-20-task26-deploy-gsc-closeout/memory.md`
+
+Previous completed: Task 26.9 — Final validation / Flowtrace / Workflow closeout
 Task26.9 result: `TASK26_1_TO_26_9_COMPLETE_LOCAL_VALIDATION_PASS_PENDING_DEPLOY`
 Task26.9 evidence:
 - `docs/seo/v2/flowtrace/chartmini-2026-08-20-task26-9-final-validation-workflow-closeout/memory.md`
