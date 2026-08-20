@@ -1,5 +1,126 @@
 # ChartMini v2 SEO Agent Activity Log
 
+## 2026-08-20 — ChatGPT / DevSpace — Task 26.9 final validation / Workflow closeout
+
+- Full validation PASS: build 402 Blog posts / 160 locale assets; Biome 415; Vitest 6/6 files / 17/17 tests; Workflow and diff checks PASS.
+- Custom Task26 owner audit `OWNER_BAD 0`: one manifest entry per checked owner, >=3 effective non-redirecting support, manual Article/BlogPosting 0, owner outbound redirect links 0.
+- Expected Task26 redirect mismatches 0; routable/indexable links to Task26 redirect sources 0; duplicate redirect sources 0; redirect chains 0.
+- Task26.1–26.9 Flowtrace complete; pending production changes have not been deployed.
+- Post-deploy GSC candidates are five changed canonicals only: CandleDojo comparison, How to Trade the News, Broad Market Structure, Broad Market Volatility, Pre-Trade Checklist.
+- Swing viability keeps its 2026-08-17 user-confirmed GSC submission/observation schedule; redirect/numeric sources remain no-submit.
+- Unrelated `content/blog/2026030502.md` and legacy untracked docs remain outside Task26 scope.
+- No commit/push/deploy/GSC/Bing/IndexNow/R2 action performed.
+- Status: `TASK26_1_TO_26_9_COMPLETE_LOCAL_VALIDATION_PASS_PENDING_DEPLOY`.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-20-task26-9-final-validation-workflow-closeout/memory.md`.
+
+## 2026-08-20 — ChatGPT / DevSpace — Task 26.8 cluster intent / internal-link / cannibalization review
+
+- Fresh Task26-wide SERP review preserved all selected owner boundaries; no additional consolidation required.
+- Recomputed support using source-page redirect status rather than raw file count.
+- Found Task26.6 accounting defect: `2026011303` is itself a redirect source, so Broad Market Volatility had 3 effective sources before this audit rather than 4.
+- Added one direct canonical link from Pre-Trade Checklist's volatility-context gate to Broad Market Volatility; current Volatility support is 6 file-level / 4 effective non-redirecting sources.
+- Pre-Trade Checklist support is 11 file-level / 10 effective non-redirecting sources.
+- All checked Task26 owners meet >=3 effective canonical body sources.
+- Task26 Owner outbound links through redirects 0; routable/indexable links to Task26 redirect sources 0; duplicate redirect sources 0; redirect chains 0.
+- No redirect/slug/canonical/schema change; no commit/push/deploy/GSC/Bing/IndexNow/R2 action.
+- Status: `PASS_AFTER_VOLATILITY_SUPPORT_ACCOUNTING_AND_PRETRADE_CANONICAL_LINK_CORRECTION_READY_FOR_TASK26_9`.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-20-task26-8-cluster-intent-internal-link-cannibalization-review/memory.md`.
+
+## 2026-08-20 — ChatGPT / DevSpace — Task 26.7 Pre-Trade Checklist rebuild
+
+- Fresh production: `/blog/pre-trade-checklist` is 200/exact self-canonical/in sitemap with route BlogPosting; `/blog/2026032502` remains direct 301.
+- Fresh SERP supports a durable pre-trade-checklist task distinct from full Trading Plan, broad Risk Management, Execution Gap and after-trade Journal/Review intents.
+- Site graph: 11 current body-link source files support the canonical.
+- Owner Gate: `retain_narrow + rebuild`.
+- Rebuilt target into 10 strategy-neutral gates covering setup, context, trigger/order type, invalidation, planned loss, size, exit, execution conditions, event policy and P&L/emotion-driven rule overrides.
+- Removed universal 1% risk, fixed 1.5R/2R, fixed volume/news timing, mandatory higher-timeframe, fabricated performance-improvement/habit claims and manual Article schema.
+- Added current CME/FINRA/Investor.gov risk/order/execution notes; no redirect or additional support-link change required; target Blog outlinks through redirects 0.
+- Validation PASS: build 402 posts / 160 locale assets; Biome 415; Vitest 6/6 files / 17/17 tests; Workflow/diff PASS.
+- No commit/push/deploy/GSC/Bing/IndexNow/R2 action; exact GSC/Bing remain `unknown_not_reverified`.
+- Status: `RETAIN_NARROW_REBUILD_COMPLETE_PENDING_DEPLOY`.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-20-task26-7-pre-trade-checklist/memory.md`.
+
+## 2026-08-20 — ChatGPT / DevSpace — Task 26.6 Market Volatility consolidation
+
+- Fresh production found requested Survival Guide and existing broad Volatility Trading guide both live as 200 pages; requested numeric redirected to the requested long URL.
+- Fresh SERP already surfaces the existing Volatility Trading guide for ChartMini broad volatility intent; requested source had 0 body-support files.
+- Owner Gate: `consolidate_redirect + rebuild_broad_volatility_owner`.
+- Rebuilt selected Owner around volatility-vs-direction, realized/implied volatility, current Cboe VIX boundaries, ATR role/limits, relative regimes, risk/size/stop/execution implications, options/VIX-product limits and regime-aware replay.
+- Removed manual FAQ schema and deterministic fixed-VIX/universal-ATR/strategy-regime claims; removed fabricated ChartMini automatic regime detection and sizing recommendation claims.
+- Requested source now has `redirectTo` final Owner; requested long + `/blog/2026010303` both redirect locally directly to the final Owner.
+- Added canonical body support from Stock Screener and Bollinger Bands. Effective non-redirecting Owner support is 4; redirect-source body links 0.
+- Validation PASS: build 402 posts / 160 locale assets; Biome 415; Vitest 6/6 files / 17/17 tests; Workflow/diff PASS; duplicate redirect sources 0; chains 0.
+- No commit/push/deploy/GSC/Bing/IndexNow/R2 action; exact GSC/Bing remain `unknown_not_reverified`.
+- Status: `CONSOLIDATE_REDIRECT_REBUILD_BROAD_VOLATILITY_OWNER_COMPLETE_PENDING_DEPLOY`.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-20-task26-6-market-volatility-consolidation/memory.md`.
+
+## 2026-08-20 — ChatGPT / DevSpace — Task 26.5 Market Structure consolidation
+
+- Fresh production found three simultaneous Market Structure 200/sitemap pages: requested `true direction`, broad `/blog/market-structure-trading-guide`, and narrow BOS/CHoCH verification.
+- Fresh SERP maps the requested job into broad HH/HL/LH/LL trend/range/transition education; the requested URL had no durable separate intent.
+- Site graph: requested target 0 body-support files; Broad Owner 25; narrow BOS/CHoCH Owner 11.
+- Owner Gate: `consolidate_redirect + rebuild_broad_owner + preserve_narrow_bos_choch_owner`.
+- Rebuilt Broad Owner with conditional trend-state framing, comparable swing rules, delayed pivot confirmation, range/transition/unclear states, multi-timeframe context, high-level BOS/CHoCH, false-break caution and no-hindsight replay.
+- Removed manual Article schema and unsupported win-rate, 70%-range, fixed R:R, higher-timeframe-always-wins, market-maker-stop-location and strongest-liquidity-sweep claims; added current Fidelity/Schwab trend references.
+- Added requested-source `redirectTo`; requested long + `/blog/2026011105` now point directly to final Broad Owner. Residual redirect-source body links 0; duplicate redirect sources 0.
+- Validation PASS: build 402 posts / 160 locale assets; Biome 415; Vitest 6/6 files / 17/17 tests; Workflow/diff PASS.
+- No commit/push/deploy/GSC/Bing/IndexNow/R2 action; exact GSC/Bing remain `unknown_not_reverified`.
+- Status: `CONSOLIDATE_REDIRECT_REBUILD_BROAD_MARKET_STRUCTURE_OWNER_COMPLETE_PENDING_DEPLOY`.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-20-task26-5-market-structure-consolidation/memory.md`.
+
+## 2026-08-20 — ChatGPT / DevSpace — Task 26.4 Swing Trading current-viability revalidation
+
+- Fresh production: target remains 200/exact self-canonical/in sitemap with the Task23.8 rebuilt body and `dateModified: 2026-08-17`; `/blog/2026021002` remains direct 301.
+- Fresh exact-intent SERP still supports a distinct current-viability owner; current Schwab 2026 material also frames Swing Trading around strategy edge, risk management and execution rather than universal profitability.
+- Search result currently exposes stale pre-rebuild ChartMini claims while production is already corrected; treat as crawl/index-refresh lag, not a reason to rewrite.
+- Fresh FINRA/SEC checks confirm the live article's current intraday-margin transition and margin-risk framing.
+- Site graph: 4 current body-link source files continue to support the owner; concept, strategy, part-time and style-comparison neighbors remain distinct.
+- Owner Gate: `retain_narrow + preserve_observation + revalidate_live`.
+- No article/redirect/schema/internal-link change. User-confirmed GSC Request Indexing remains 2026-08-17; no resubmission; Bing remains `unknown_not_reverified`.
+- Existing reviews remain 2026-08-24 / 2026-08-31; freeze through 2026-08-31 is not reset.
+- Status: `RETAIN_NARROW_OWNER_REVALIDATED_LIVE_OBSERVATION_PRESERVED`.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-20-task26-4-swing-trading-viability-revalidation/memory.md`.
+
+## 2026-08-20 — ChatGPT / DevSpace — Task 26.3 News Trading cluster consolidation
+
+- Fresh production found three indexable News Trading pages live as 200/self-canonical/sitemap owners; fresh SERP maps them to the same broad intent.
+- Site graph selected `/blog/how-to-trade-the-news` as final Owner: 10 pre-task body-support files vs 0 for requested target and 1 for `/blog/news-based-trading-practical-guide`.
+- Owner Gate: `consolidate_redirect + rebuild_owner + duplicate_consolidation`.
+- Rebuilt Owner with current Fed/BLS event timing sources, FINRA fast-market/order-risk controls, expectation-vs-actual interpretation, no universal first-move reversal/fixed wait/directional rules, and accurate ChartMini replay limits.
+- Added `redirectTo` to both duplicate Markdown sources; long + numeric redirect config now points all four duplicate paths directly to final Owner.
+- Rerouted the only body link to the second duplicate; final Owner has 11 body-support source files; residual duplicate links 0; manual Article/BlogPosting in Owner 0.
+- Validation PASS before final Workflow sync: build 402 posts / 160 locale assets; Biome 415; Vitest 6/6 files / 17/17 tests; Workflow/diff PASS.
+- No commit/push/deploy/GSC/Bing/IndexNow/R2 action; GSC/Bing remain `unknown_not_reverified`.
+- Status: `CONSOLIDATE_REDIRECT_REBUILD_OWNER_DUPLICATE_CONSOLIDATION_COMPLETE_PENDING_DEPLOY`.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-20-task26-3-news-trading-consolidation/memory.md`.
+
+## 2026-08-20 — ChatGPT / DevSpace — Task 26.2 FOMO `like a pro` redirect revalidation
+
+- Fresh production: `/blog/how-to-trade-fomo-like-a-pro-in-2026` and `/blog/2026021801` direct 301 to the canonical FOMO owner; owner 200/self-canonical/in sitemap and serves the rebuilt Task22.2 body.
+- Fresh SERP: `like a pro` remains the same FOMO definition / fast-move and social trigger / momentum-vs-impulse / anti-chasing checklist intent; no durable separate owner task found.
+- Fresh regulator evidence remains aligned with the owner: FINRA warns against FOMO/social-media-driven decisions; Investor.gov's 2026 alert says not to make investment decisions solely from social-media information.
+- Site graph: 0 routable body links to the redirect source; 10 body-link source files to the canonical FOMO owner.
+- Owner Gate: `preserve_consolidation_redirect + revalidate_owner`.
+- No article/code/redirect change required. Historical redirect-source body has unsupported fabricated statistics, but rewriting a non-indexable duplicate would provide no SEO benefit and restoring it would recreate cannibalization.
+- Exact owner GSC state and Bing/IndexNow remain `unknown_not_reverified`; redirect long/numeric remain no-submit.
+- Task22/23 read-only schedule remains 2026-08-24 / 2026-08-31.
+- Status: `PRESERVE_CONSOLIDATION_REDIRECT_REVALIDATED_LIVE`.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-20-task26-2-fomo-like-a-pro-redirect-revalidation/memory.md`.
+
+## 2026-08-20 — ChatGPT / DevSpace — Task 26.1 ChartMini vs CandleDojo
+
+- Fresh production: canonical 200/self-canonical/in sitemap; `/blog/2026031603` direct 301; route renders BlogPosting.
+- Fresh SERP: CandleDojo's dedicated `/vs/chartmini` page is the dominant direct comparison result, confirming a durable brand-comparison intent; ChartMini target did not surface in the checked result set.
+- Owner Gate: `retain_narrow + rebuild`; exact owner intent is ChartMini open-ended replay vs CandleDojo structured/scored chart-reading drills.
+- Rebuilt `content/blog/2026031603.md` with a neutral job-based comparison, current CandleDojo methodology/access/data facts, current ChartMini product boundaries, explicit publisher disclosure, visible FAQ and source notes.
+- Corrected stale/unsupported claims: CandleDojo signup/paid-tier assumptions, `quiz-only` framing, ChartMini native stop/target claims, full-execution claims, fixed readiness thresholds and adversarial gamification/curation claims.
+- Removed manual Article schema; v2 route remains the BlogPosting owner.
+- Added 3 direct canonical body inlinks from Simulator Evaluation, No-Signup Simulator and Free-vs-Paid Simulator pages.
+- Full validation PASS: build 402 posts / 160 locale assets; Biome 415; Vitest 6/6 files / 17/17 tests; Workflow/diff PASS.
+- GSC/Bing: `unknown_not_reverified`; no commit/push/deploy/GSC/Bing/IndexNow/R2 action.
+- Status: `RETAIN_NARROW_REBUILD_COMPLETE_PENDING_DEPLOY`.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-20-task26-1-chartmini-vs-candledojo/memory.md`.
+
 ## 2026-08-19 — ChatGPT / DevSpace — Task25 deployment / GSC closeout
 
 - Fresh production verification confirms all seven recommended Task25 canonical owners are live as HTTP 200/self-canonical/sitemap-listed pages.

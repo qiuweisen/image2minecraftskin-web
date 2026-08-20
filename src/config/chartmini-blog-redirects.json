@@ -361,7 +361,12 @@
   },
   {
     "source": "/blog/2026010303",
-    "destination": "/blog/mastering-market-volatility-the-adaptive-traders-survival-guide-2026",
+    "destination": "/blog/volatility-trading-mastery-how-to-profit-from-market-chaos-and-uncertainty-in-2026-2026",
+    "permanent": true
+  },
+  {
+    "source": "/blog/mastering-market-volatility-the-adaptive-traders-survival-guide-2026",
+    "destination": "/blog/volatility-trading-mastery-how-to-profit-from-market-chaos-and-uncertainty-in-2026-2026",
     "permanent": true
   },
   {
@@ -581,7 +586,12 @@
   },
   {
     "source": "/blog/2026011105",
-    "destination": "/blog/market-structure-analysis-how-to-read-the-markets-true-direction-2026",
+    "destination": "/blog/market-structure-trading-guide",
+    "permanent": true
+  },
+  {
+    "source": "/blog/market-structure-analysis-how-to-read-the-markets-true-direction-2026",
+    "destination": "/blog/market-structure-trading-guide",
     "permanent": true
   },
   {
@@ -1016,7 +1026,12 @@
   },
   {
     "source": "/blog/2026021502",
-    "destination": "/blog/how-to-trade-news-trading-like-a-pro-in-2026",
+    "destination": "/blog/how-to-trade-the-news",
+    "permanent": true
+  },
+  {
+    "source": "/blog/how-to-trade-news-trading-like-a-pro-in-2026",
+    "destination": "/blog/how-to-trade-the-news",
     "permanent": true
   },
   {
@@ -1471,7 +1486,12 @@
   },
   {
     "source": "/blog/2026032801",
-    "destination": "/blog/news-based-trading-practical-guide",
+    "destination": "/blog/how-to-trade-the-news",
+    "permanent": true
+  },
+  {
+    "source": "/blog/news-based-trading-practical-guide",
+    "destination": "/blog/how-to-trade-the-news",
     "permanent": true
   },
   {

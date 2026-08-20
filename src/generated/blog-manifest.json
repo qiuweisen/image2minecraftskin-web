@@ -1193,7 +1193,8 @@
     "date": "2026-01-03",
     "dateModified": "2026-07-31",
     "category": "Trading Education",
-    "tags": ["Market", "Volatility"]
+    "tags": ["Market", "Volatility"],
+    "redirectTo": "/blog/volatility-trading-mastery-how-to-profit-from-market-chaos-and-uncertainty-in-2026-2026"
   },
   {
     "slug": "moving-averages-the-ultimate-guide-to-trend-following-2026",
@@ -1795,7 +1796,8 @@
     "date": "2026-01-11",
     "category": "Beginner Guides",
     "categories": ["Beginner Guides", "Trading Education"],
-    "tags": ["Market"]
+    "tags": ["Market"],
+    "redirectTo": "/blog/market-structure-trading-guide"
   },
   {
     "slug": "trading-performance-metrics-the-numbers-that-actually-matter-2026",
@@ -1863,20 +1865,25 @@
     "fileSlug": "2026011203",
     "contentKey": "chartmini-content/blog/2026011203.md",
     "locale": "en",
-    "title": "Volatility Trading Guide 2026: Risk, VIX, ATR, Options, and Replay Practice",
-    "description": "Learn how volatility affects risk, VIX regimes, ATR stops, implied volatility, options risk, and replay practice before risking real capital.",
+    "title": "Market Volatility Trading Guide: VIX, ATR, Risk, and Regime Changes",
+    "metaTitle": "Market Volatility Trading Guide: VIX, ATR & Risk",
+    "description": "Learn how market volatility changes trading risk, execution, position sizing, stops, VIX and ATR interpretation, options pricing, and replay practice without treating volatility as a buy or sell signal.",
     "date": "2026-01-12",
-    "dateModified": "2026-06-05",
-    "category": "Beginner Guides",
-    "categories": ["Beginner Guides", "Trading Education", "Risk Management"],
-    "tags": [
-      "Trading",
-      "Volatility",
+    "dateModified": "2026-08-20",
+    "category": "Trading Strategies",
+    "categories": [
+      "Trading Strategies",
       "Risk Management",
-      "Options",
-      "Chart Replay"
+      "Trading Education"
     ],
-    "image": "/opengraph-image.png"
+    "tags": [
+      "Market Volatility",
+      "Volatility Trading",
+      "VIX",
+      "ATR",
+      "Implied Volatility",
+      "Risk Management"
+    ]
   },
   {
     "slug": "position-sizing-mastery-the-secret-to-consistent-trading-profits-2026",
@@ -3208,7 +3215,8 @@
       "FOMC",
       "NFP",
       "CPI"
-    ]
+    ],
+    "redirectTo": "/blog/how-to-trade-the-news"
   },
   {
     "slug": "is-bull-flag-still-effective-in-2026",
@@ -4481,9 +4489,10 @@
     "fileSlug": "2026031603",
     "contentKey": "chartmini-content/blog/2026031603.md",
     "locale": "en",
-    "title": "ChartMini vs CandleDojo: Why Real Trading Practice Beats Gamified Quizzes",
-    "description": "An honest comparison between ChartMini and CandleDojo. We examine what real trading practice looks like vs gamified quiz-style pattern matching — and which approach actually prepares you for live markets.",
+    "title": "ChartMini vs CandleDojo: Replay Simulator vs Chart-Reading Drills",
+    "description": "Compare ChartMini and CandleDojo by practice style, feedback, markets, account requirements, replay controls, scoring, and limitations to choose the right trading practice tool.",
     "date": "2026-03-16",
+    "dateModified": "2026-08-20",
     "category": "Comparison",
     "categories": ["Comparison", "Tools", "Trading Basics"],
     "tags": [
@@ -4846,9 +4855,11 @@
     "fileSlug": "2026032502",
     "contentKey": "chartmini-content/blog/2026032502.md",
     "locale": "en",
-    "title": "The Ultimate Pre-Trade Checklist: 10 Questions to Ask Before Every Trade",
-    "description": "A 10-question pre-trade checklist that every trader should complete before entering a position. Covers trend, setup, risk, timing, and emotional readiness — the complete filter for high-quality trades.",
+    "title": "Pre-Trade Checklist: 10 Questions to Ask Before You Enter",
+    "metaTitle": "Pre-Trade Checklist: 10 Questions Before Every Trade",
+    "description": "Use this 10-question pre-trade checklist to verify setup rules, entry, invalidation, position size, execution conditions, event risk, and decision quality before placing a trade.",
     "date": "2026-03-25",
+    "dateModified": "2026-08-20",
     "category": "Education",
     "categories": ["Education", "Trading Basics", "Trading Strategies"],
     "tags": [
@@ -4958,7 +4969,8 @@
       "NFP",
       "Earnings Trading",
       "Economic Calendar"
-    ]
+    ],
+    "redirectTo": "/blog/how-to-trade-the-news"
   },
   {
     "slug": "risk-reward-ratio-explained",
@@ -5465,13 +5477,21 @@
     "fileSlug": "2026041001",
     "contentKey": "chartmini-content/blog/2026041001.md",
     "locale": "en",
-    "title": "Market structure: higher highs, lower lows, and how to read trend shifts",
-    "description": "Learn the broad market-structure framework for higher highs, higher lows, lower highs, lower lows, ranges, and trend transitions.",
+    "title": "Market Structure Trading: How to Read Trend, Range, and Trend Shifts",
+    "metaTitle": "Market Structure Trading Guide: HH, HL, LH & LL",
+    "description": "Learn market structure trading with higher highs, higher lows, lower highs, lower lows, ranges, trend shifts, multi-timeframe context, and a no-hindsight chart-reading workflow.",
     "date": "2026-04-10",
-    "dateModified": "2026-08-01",
+    "dateModified": "2026-08-20",
     "category": "Education",
     "categories": ["Education", "Technical Analysis", "Price Action"],
-    "tags": ["Market Structure", "Higher Highs", "Lower Lows", "Trend Analysis"]
+    "tags": [
+      "Market Structure",
+      "Higher Highs",
+      "Higher Lows",
+      "Lower Highs",
+      "Lower Lows",
+      "Trend Analysis"
+    ]
   },
   {
     "slug": "volume-profile-trading-guide",
@@ -5663,9 +5683,11 @@
     "fileSlug": "2026041501",
     "contentKey": "chartmini-content/blog/2026041501.md",
     "locale": "en",
-    "title": "How to trade the news: catalysts, reactions, and why the first move is usually wrong",
-    "description": "How to trade market-moving news events without getting whipsawed. Covers economic data releases, earnings reactions, how to position before and after news, and why the first 30 seconds of a news move is almost always a trap.",
+    "title": "How to Trade the News: A Risk-Aware News Trading Framework",
+    "metaTitle": "How to Trade the News: News Trading Guide for 2026",
+    "description": "Learn how news trading works around CPI, jobs data, FOMC decisions, earnings, and breaking headlines, with a risk-aware workflow for reaction, execution, and review.",
     "date": "2026-04-15",
+    "dateModified": "2026-08-20",
     "category": "Education",
     "categories": ["Education", "Day Trading", "Trading Strategies"],
     "tags": [
@@ -5674,7 +5696,7 @@
       "Earnings Trading",
       "Economic Data",
       "FOMC Trading",
-      "Buy the Rumor Sell the News"
+      "Economic Calendar"
     ]
   },
   {
