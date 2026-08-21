@@ -603,6 +603,84 @@ The user confirmed that the unindexed pages from the five-URL Task26 canonical i
 
 The five newly deployed/rebuilt Task26 owners enter read-only observation with reviews on 2026-08-27 and 2026-09-03, freeze through 2026-09-03. Bing/IndexNow remain `unknown_not_reverified`. Final closeout status: `DEPLOY_VERIFIED_SELECTIVE_GSC_RECORDED_OBSERVATION_ACTIVE`. Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-20-task26-deploy-gsc-closeout/memory.md`.
 
+## 2026-08-21 Task 27.1 — Profit-Taking owner rebuild
+
+Fresh production confirms `/blog/profit-taking-mastery-when-and-how-to-exit-winners-for-maximum-gains-in-2026-2026` is HTTP 200, exact self-canonical and sitemap-listed; `/blog/2026011003` is a direct 301. Pre-task production `dateModified` was 2026-01-10. Exact GSC/Bing states remain `unknown_not_reverified`.
+
+Fresh 2026-08-21 SERP research continues to support a dedicated `take profit / profit-taking strategy / exit winners` task centered on fixed targets, structure targets, partial exits, runners, trailing exits and time/event rules. The target had 0 body-support files before the task, while Trade Management had 5 and the Stop-Loss/Take-Profit Plan had 8, so the page required a strict boundary rather than a broad exit-management rewrite. Owner Gate: `retain_narrow + rebuild`.
+
+Rebuilt `content/blog/2026011003.md` as `Profit-Taking Strategies: How to Exit Winning Trades Without Guessing`, `dateModified: 2026-08-21`. Removed universal R-multiple quality labels, fixed 50/30/20 and other scale-out schedules, fixed session/news reduction rules, RSI/Bollinger/MACD universal exit commands, fabricated trader-performance examples, unsupported professional/amateur claims and the false ChartMini automatic-target/scale-out feature claim. New scope includes weighted realized R, MFE diagnostics with a hindsight warning, exit-version testing, order-execution limits, replay practice and current Fidelity/FINRA/Investor.gov references.
+
+Added three direct canonical body links from Trade Management, Stop-Loss/Take-Profit Plan and Trend Following. Target support is now 3 source files; target has 7 unique Blog outlinks and 0 redirect destinations; manual Article/BlogPosting schema 0. Full validation PASS: build 402 Blog posts / 160 locale assets; Biome 415 files; Vitest 6/6 files / 17/17 tests; Workflow and diff checks PASS. Status: `RETAIN_NARROW_REBUILD_COMPLETE_PENDING_DEPLOY`. Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-21-task27-1-profit-taking-owner-rebuild/memory.md`.
+
+## 2026-08-21 Task 27.2 — Scalping Strategies owner revalidation
+
+Fresh production, SERP, site-graph and current FINRA revalidation confirms `/blog/scalping-strategies-guide` remains the correct single broad Scalping owner. Production is HTTP 200/self-canonical/in sitemap with `dateModified: 2026-08-15`; `/blog/2026041502`, both consolidated beginner long slugs, and their numeric sources remain direct 301s to the owner.
+
+Fresh Google results currently surface the ChartMini canonical for `scalping strategies`, while the broader 2026 SERP still expects definition, setup families, timeframe context, costs, liquidity, slippage/execution, risk and validation. FINRA's June 4, 2026 intraday-margin framework and October 20, 2027 broker transition deadline remain current, so no material factual/regulatory correction is required.
+
+Current site support is 11 file-level body sources / 10 effective non-redirecting sources; target outbound Blog links through redirects are 0. The page remains inside its Task21.1 observation window (2026-08-22 and 2026-08-29; freeze through 2026-08-29). Owner Gate: `retain + preserve_observation + revalidate_live`. No article, title, meta, schema, redirect or internal-link change was made because rewriting an already indexed, currently ranking, technically healthy owner would reset the observation window without evidence of a problem. Status: `RETAIN_OWNER_REVALIDATED_LIVE_OBSERVATION_PRESERVED`. Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-21-task27-2-scalping-strategies-revalidation/memory.md`.
+
+## 2026-08-21 Task 27.3 — Future of FOMO redirect revalidation
+
+Fresh production confirms `/blog/the-future-of-fomo-in-2026-market-how-to-master-fear-of-missing-out` and `/blog/2026021001` remain direct HTTP 301 sources to the established FOMO owner. The owner is HTTP 200/self-canonical/in sitemap with `dateModified: 2026-08-16`; the redirect source is absent from the sitemap.
+
+Fresh 2026-08-21 SERP/current-source review does not support a separate `Future of FOMO / 2026 market` owner. Search demand still resolves to FOMO definition, social-media/missed-move triggers, chasing/impulsive entries, momentum-vs-FOMO distinction, anti-chasing decision gates and missed-trade review. The old redirect URL can still surface with cached historical text, which is treated as index-refresh lag rather than a restoration signal. Current site graph has 0 body links to the redirect source and 9 file-level / 8 effective non-redirecting links to the canonical owner.
+
+Owner Gate: `preserve_consolidation_redirect + revalidate_owner`. No article, redirect, schema or internal-link change was required. The existing FOMO observation schedule remains 2026-08-24 and 2026-08-31, freeze through 2026-08-31. Status: `PRESERVE_CONSOLIDATION_REDIRECT_REVALIDATED_LIVE_OBSERVATION_PRESERVED`. Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-21-task27-3-future-of-fomo-redirect-revalidation/memory.md`.
+
+## 2026-08-21 Task 27.4 — Trading for a Living owner rebuild
+
+Fresh production confirms `/blog/trading-for-a-living` is HTTP 200, exact self-canonical and sitemap-listed; `/blog/2026033101` remains a direct 301. Fresh SERP preserves a distinct `trading for a living / can you make a living trading / full-time trader` intent centered on career viability, capital, withdrawals, household cash flow and transition risk. Current exact GSC/Bing states remain `unknown_not_reverified`.
+
+Owner Gate: `retain_narrow + rebuild`. The old body contained material YMYL defects: unsupported 3-8% / 8-15% monthly-return bands, universal `$50K/$100K` capital claims, fixed 12-month/200-trade readiness rules, fixed living-expense runway/emergency-fund thresholds, universal withdrawal/tax claims and fixed prop-firm fee/split/failure-rate claims.
+
+Rebuilt `content/blog/2026033101.md` as `Trading for a Living: Can You Really Trade Full-Time in 2026?`, `dateModified: 2026-08-21`. The new owner uses FINRA/CFTC current risk and margin context plus explicitly bounded Brazilian day-trader evidence; frames full-time viability through risk-capital separation, annual household cash needs, net-return distribution, withdrawal/sequence risk, track-record quality, strategy capacity, transition options and predeclared retreat criteria. Tax and funded-account sections now avoid universal claims. Manual Article schema was removed.
+
+Task27.4 added direct canonical body links from Day Trading, Part-Time Swing Trading and Broad Risk Management, raising support from 1 to 4 effective non-redirecting sources. Target has 8 direct Blog outlinks and 0 redirect destinations. Validation PASS: build 402 posts / 160 locale assets; Biome 415; Vitest 6/6 files / 17/17 tests; Workflow/diff PASS. Status: `RETAIN_NARROW_REBUILD_COMPLETE_PENDING_DEPLOY`. Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-21-task27-4-trading-for-a-living-owner-rebuild/memory.md`.
+
+## 2026-08-21 Task 27.5 — Trading Patience owner revalidation
+
+Fresh production confirms `/blog/trading-patience-how-to-wait-for-high-probability-setups-2026` remains HTTP 200, exact self-canonical and sitemap-listed with `dateModified: 2026-08-19`; `/blog/2025121901`, Best Settings, Why Patience and both duplicate numeric paths remain direct 301 sources to the canonical.
+
+Fresh 2026-08-21 SERP review continues to map `trading patience / wait for setups / avoid overtrading` to the same task already owned by this page: define the setup before the move, use no-trade gates, wait without inventing activity, separate patience from hesitation, and review skipped/chased trades. FOMO, Execution Gap, Revenge and Broad Psychology remain adjacent specialist intents rather than replacement owners.
+
+Current site graph gives the owner 3 direct effective non-redirecting body-support files, 0 body links to the two consolidated patience long slugs, 0 outbound Blog links through redirect config, and 0 manual Article/BlogPosting schema in Markdown. Owner Gate: `retain + preserve_observation + revalidate_live`. No article/title/meta/schema/redirect/internal-link change was made because the page was rebuilt/deployed only on 2026-08-19 and remains inside observation. Reviews stay 2026-08-26 and 2026-09-02; freeze through 2026-09-02. Status: `RETAIN_OWNER_REVALIDATED_LIVE_OBSERVATION_PRESERVED`. Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-21-task27-5-trading-patience-owner-revalidation/memory.md`.
+
+## 2026-08-21 Task 27.6 — Trading Performance Metrics owner rebuild
+
+Fresh production confirms `/blog/trading-performance-metrics-the-numbers-that-actually-matter-2026` is HTTP 200, exact self-canonical and sitemap-listed; `/blog/2026011106` remains a direct 301. Fresh SERP preserves a distinct aggregate performance-analysis intent centered on win rate/payoff, expectancy, profit factor, R-multiples, maximum drawdown, Sharpe/Sortino, sample size and subgroup diagnostics. Exact GSC/Bing state remains `unknown_not_reverified`.
+
+Owner Gate: `retain_narrow + rebuild`. The old body contained material statistical/YMYL defects: universal win-rate bands by trading style, fixed R:R/profit-factor/drawdown/monthly-return/Sharpe thresholds, fabricated industry benchmarks and `real trader` examples, weak arithmetic annualization, deterministic positive-expectancy claims, hindsight `% max profit captured` commands, generic duration diagnoses and a false claim that ChartMini automatically calculates all 12 metrics and sends weekly reports.
+
+Rebuilt `content/blog/2026011106.md` as `Trading Performance Metrics: Expectancy, Profit Factor, Drawdown, and More`, `dateModified: 2026-08-21`. The new owner separates outcome, payoff/frequency, edge, path risk, risk-adjusted return, diagnostics and evidence quality; distinguishes planned R:R from realized payoff; treats expectancy/profit factor as sample statistics; freezes the R denominator; treats historical maximum drawdown as descriptive rather than a future ceiling; explains Sharpe using Stanford/CFA assumptions and limitations; adds sample-size/version/cost/cash-flow controls; limits MAE/MFE to datasets with intratrade path data; and warns against subgroup data mining. Manual Article schema was removed and ChartMini capabilities were narrowed accurately.
+
+Current local support is 5 effective non-redirecting body sources; target has 6 direct Blog outlinks and 0 redirect destinations. Validation PASS: build 402 posts / 160 locale assets; Biome 415; Vitest 6/6 files / 17/17 tests; Workflow/diff PASS. Status: `RETAIN_NARROW_REBUILD_COMPLETE_PENDING_DEPLOY`. Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-21-task27-6-trading-performance-metrics-owner-rebuild/memory.md`.
+
+## 2026-08-21 Task 27.7 — Trading Psychology FOMO/emotional redirect revalidation
+
+Fresh production confirms `/blog/trading-psychology-overcoming-fomo-and-emotional-trading-2026` and `/blog/2026020101` are direct HTTP 301 sources to `/blog/trading-psychology-master-emotions`. The Broad Psychology owner remains HTTP 200, exact self-canonical and sitemap-listed with `dateModified: 2026-08-18`; the requested redirect source is absent from the sitemap.
+
+Fresh 2026-08-21 SERP review preserves two useful layers rather than three overlapping owners: broad Trading Psychology resources cover multiple emotions/biases and emotional-execution controls, while dedicated FOMO resources focus on missed-move/social comparison triggers, chasing and anti-FOMO controls. The requested mixed FOMO/emotional page overlaps both layers and has no durable independent intent. Old search exposure of its historical body is treated as redirect/index-refresh lag, not a restoration signal.
+
+Current graph gives the Broad Psychology owner 23 file-level body sources / 19 effective non-redirecting sources, 10 direct Blog outlinks / 0 redirect destinations and no manual Article/BlogPosting schema. The requested redirect source has 0 effective body inlinks. Owner Gate: `preserve_consolidation_redirect + revalidate_owner + preserve_observation`. No article/title/meta/schema/redirect/internal-link change was made. Existing Broad Psychology reviews remain 2026-08-26 and 2026-09-02; freeze through 2026-09-02. Status: `PRESERVE_CONSOLIDATION_REDIRECT_REVALIDATED_LIVE_OBSERVATION_PRESERVED`. Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-21-task27-7-trading-psychology-fomo-emotional-redirect-revalidation/memory.md`.
+
+## 2026-08-21 Task 27.8 — Cluster intent / internal-link / cannibalization review
+
+Fresh Task27-wide production, same-day SERP and site-graph review preserves the seven-owner map: Profit-Taking, Scalping, FOMO, Trading for a Living, Trading Patience, Trading Performance Metrics and Broad Trading Psychology. No fresh evidence supports merging Profit-Taking into Trade Management, Performance Metrics into Journal/Backtesting, Trading for a Living into Day Trading, Patience into FOMO, or FOMO into Broad Psychology. The Task27.3 Future-of-FOMO source remains consolidated to the FOMO specialist; the Task27.7 mixed FOMO/emotional source remains consolidated to Broad Psychology.
+
+Effective non-redirecting body support is: Profit-Taking 3; Scalping 10; FOMO 8; Trading for a Living 4; Trading Patience 3; Trading Performance Metrics 5; Broad Psychology 19. All seven owners meet the >=3 effective-source rule. Canonical-owner Blog outlinks through redirect config are 0 across the checked set. Effective/indexable body links to Task27 redirect sources are 0; only non-effective residues inside Markdown sources that themselves redirect remain. Duplicate redirect source keys 0; Task27 redirect chains 0; each canonical owner has exactly one generated manifest entry.
+
+Task27.8 makes no article/title/meta/slug/redirect/internal-link change. Production still intentionally shows the old pre-deploy bodies for Task27.1 Profit-Taking, Task27.4 Trading for a Living and Task27.6 Trading Performance Metrics; their observation clocks remain unset until actual deployment verification. Existing live observations for Scalping, FOMO, Patience and Broad Psychology remain unchanged. Status: `PASS_NO_ADDITIONAL_CONTENT_OR_REDIRECT_CHANGE_REQUIRED`. Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-21-task27-8-cluster-intent-internal-link-cannibalization-review/memory.md`.
+
+## 2026-08-21 Task 27.9 — Final validation / Workflow closeout
+
+Task27.1–27.9 is locally complete. Full final validation after Task27.8 passed: `pnpm build`, `pnpm check`, `git diff --check`, and `pnpm seo:v2:workflow:check`. Build generated 402 Blog posts and 160 marketing locale assets; Biome checked 415 files; Vitest passed 6/6 files and 17/17 tests.
+
+Custom Task27 integrity audit reports `TASK27_OWNER_INTEGRITY_BAD=0`: all seven checked owners have exactly one manifest entry, >=3 effective non-redirecting direct body sources, zero manual Article/BlogPosting schema and zero outbound Blog links through configured redirects. Global duplicate redirect sources are 0; Task27 redirect chains are 0; effective/indexable links to Task27 redirect sources are 0.
+
+Three rebuilt canonical owners remain local pending deployment: Profit-Taking, Trading for a Living, and Trading Performance Metrics. No observation dates are created before deployment. After manual deployment, verify only these changed canonical owners first; numeric/redirect URLs remain no-submit. Existing Scalping/FOMO/Patience/Broad-Psychology observation clocks are preserved. No commit/push/deploy/GSC/Bing/IndexNow action was taken. Final local status: `TASK27_1_TO_27_9_COMPLETE_LOCAL_VALIDATION_PASS_PENDING_DEPLOY`. Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-21-task27-9-final-validation-workflow-closeout/memory.md`.
+
 ## Validation baseline
 
 Initialization validation on 2026-08-14:

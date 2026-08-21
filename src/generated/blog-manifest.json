@@ -1672,11 +1672,25 @@
     "fileSlug": "2026011003",
     "contentKey": "chartmini-content/blog/2026011003.md",
     "locale": "en",
-    "title": "Profit Taking Mastery: When and How to Exit Winners for Maximum Gains in 2026",
-    "description": "Profit Taking Mastery: When and How to Exit Winners for Maximum Gains in 2026 Practical guide with clear examples.",
+    "title": "Profit-Taking Strategies: How to Exit Winning Trades Without Guessing",
+    "metaTitle": "Profit-Taking Strategies: Targets, Partials & Trailing Exits",
+    "description": "Compare fixed targets, structure exits, partial profits, runners, trailing exits, and time or event rules for closing winning trades without relying on hindsight.",
     "date": "2026-01-10",
-    "category": "Beginner Guides",
-    "categories": ["Beginner Guides", "Trading Education"]
+    "dateModified": "2026-08-21",
+    "category": "Trading Strategies",
+    "categories": [
+      "Trading Strategies",
+      "Risk Management",
+      "Trading Education"
+    ],
+    "tags": [
+      "Profit Taking",
+      "Take Profit",
+      "Exit Strategy",
+      "Partial Profits",
+      "Trailing Stop",
+      "Trade Management"
+    ]
   },
   {
     "slug": "pre-market-routine-mastery-the-daily-checklist-that-consistent-traders-follow-in-2026-2026",
@@ -1804,11 +1818,23 @@
     "fileSlug": "2026011106",
     "contentKey": "chartmini-content/blog/2026011106.md",
     "locale": "en",
-    "title": "Trading Performance Metrics: The Numbers That Actually Matter",
-    "description": "Trading Performance Metrics: The Numbers That Actually Matter Expert insights and strategies to improve your trading performance.",
+    "title": "Trading Performance Metrics: Expectancy, Profit Factor, Drawdown, and More",
+    "metaTitle": "Trading Performance Metrics: Expectancy, PF & Drawdown",
+    "description": "Learn how to calculate and interpret trading performance metrics including win rate, payoff ratio, expectancy, profit factor, R-multiples, maximum drawdown, Sharpe ratio, MAE/MFE, and setup-level results.",
     "date": "2026-01-11",
+    "dateModified": "2026-08-21",
     "category": "Trading Education",
-    "tags": ["Trading"]
+    "categories": ["Trading Education", "Risk Management", "Trading Journal"],
+    "tags": [
+      "Trading Performance Metrics",
+      "Expectancy",
+      "Profit Factor",
+      "Maximum Drawdown",
+      "Win Rate",
+      "R-Multiple",
+      "Sharpe Ratio",
+      "Trading Journal"
+    ]
   },
   {
     "slug": "post-trade-review-mastery-how-to-learn-from-every-trade-2026",
@@ -5075,19 +5101,20 @@
     "fileSlug": "2026033101",
     "contentKey": "chartmini-content/blog/2026033101.md",
     "locale": "en",
-    "title": "Can You Make a Living Trading? What Full-Time Traders Won't Tell You",
-    "description": "An honest look at what it takes to trade for a living. Covers realistic income expectations, the capital you need, the transition plan from employment, and why most people should NOT quit their job to trade.",
+    "title": "Trading for a Living: Can You Really Trade Full-Time in 2026?",
+    "metaTitle": "Trading for a Living: Full-Time Trading Reality in 2026",
+    "description": "Can you really trade for a living? Use a realistic framework for trading capital, living costs, income volatility, track-record evidence, risk capital, taxes, and the transition from a job to full-time trading.",
     "date": "2026-03-31",
-    "dateModified": "2026-07-29",
+    "dateModified": "2026-08-21",
     "category": "Education",
-    "categories": ["Education", "Trading Basics"],
+    "categories": ["Education", "Trading Basics", "Risk Management"],
     "tags": [
       "Trading for a Living",
-      "Full Time Trading",
+      "Full-Time Trading",
       "Trading Career",
       "Trading Income",
-      "Professional Trader",
-      "Day Trading Income"
+      "Risk Capital",
+      "Trading Business"
     ]
   },
   {
