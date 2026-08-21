@@ -1,5 +1,16 @@
 # ChartMini v2 SEO Agent Activity Log
 
+## 2026-08-21 — ChatGPT / DevSpace — Task27 deployment / GSC closeout
+
+- Fresh production verifies Profit-Taking, Trading for a Living and Trading Performance Metrics as 200/self-canonical/in sitemap with `dateModified: 2026-08-21`; numeric sources remain direct 301s.
+- User explicitly confirmed successful GSC URL Inspection / Request Indexing for all three changed canonical owners on 2026-08-21.
+- New read-only observation window for those three owners: 2026-08-28 and 2026-09-04; freeze through 2026-09-04.
+- Existing observation clocks remain unchanged for Scalping, FOMO, Trading Patience and Broad Psychology. Redirect/numeric sources remain no-submit.
+- Bing/IndexNow remain `unknown_not_reverified`.
+- Workflow/Flowtrace closeout only; no article, redirect, schema, route or product change. `content/blog/2026030502.md` remains unrelated and excluded.
+- Status: `DEPLOY_VERIFIED_GSC_RECORDED_OBSERVATION_ACTIVE`.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-21-task27-deploy-gsc-closeout/memory.md`.
+
 ## 2026-08-21 — ChatGPT / DevSpace — Task 27.9 final validation / Workflow closeout
 
 - Full validation PASS after Task27.8: build 402 Blog posts / 160 locale assets; Biome 415 files; Vitest 6/6 files / 17/17 tests; `git diff --check` and v2 Workflow check PASS.

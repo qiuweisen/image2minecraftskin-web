@@ -681,6 +681,14 @@ Custom Task27 integrity audit reports `TASK27_OWNER_INTEGRITY_BAD=0`: all seven 
 
 Three rebuilt canonical owners remain local pending deployment: Profit-Taking, Trading for a Living, and Trading Performance Metrics. No observation dates are created before deployment. After manual deployment, verify only these changed canonical owners first; numeric/redirect URLs remain no-submit. Existing Scalping/FOMO/Patience/Broad-Psychology observation clocks are preserved. No commit/push/deploy/GSC/Bing/IndexNow action was taken. Final local status: `TASK27_1_TO_27_9_COMPLETE_LOCAL_VALIDATION_PASS_PENDING_DEPLOY`. Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-21-task27-9-final-validation-workflow-closeout/memory.md`.
 
+## 2026-08-21 Task27 deployment / GSC closeout
+
+Fresh production verification confirms the three rebuilt Task27 canonical owners are now live with the new bodies: Profit-Taking, Trading for a Living, and Trading Performance Metrics all return HTTP 200, exact self-canonical, appear once in the sitemap, and expose `dateModified: 2026-08-21`. Their numeric paths `/blog/2026011003`, `/blog/2026033101`, and `/blog/2026011106` remain direct HTTP 301s to the final owners.
+
+The user explicitly confirmed successful manual GSC URL Inspection / Request Indexing for all three changed canonical URLs on 2026-08-21. Unlike the Task26 selective batch, this is an enumerated three-URL submission set, so each owner is recorded as `user_confirmed_gsc_submission_2026-08-21`. Redirect/numeric sources remain no-submit. Bing/IndexNow remain `unknown_not_reverified`.
+
+The three newly deployed owners enter read-only observation with reviews on 2026-08-28 and 2026-09-04, freeze through 2026-09-04. Existing Task27 observation clocks are preserved: Scalping 2026-08-22/2026-08-29, FOMO 2026-08-24/2026-08-31, Trading Patience and Broad Psychology 2026-08-26/2026-09-02. Final closeout status: `DEPLOY_VERIFIED_GSC_RECORDED_OBSERVATION_ACTIVE`. Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-21-task27-deploy-gsc-closeout/memory.md`.
+
 ## Validation baseline
 
 Initialization validation on 2026-08-14:

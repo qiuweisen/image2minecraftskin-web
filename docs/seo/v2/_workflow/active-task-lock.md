@@ -7,6 +7,11 @@ Owner agent: none
 Target URL: none
 Task: none
 
+Last completed: Task27 deployment / GSC closeout
+Task27 closeout result: `DEPLOY_VERIFIED_GSC_RECORDED_OBSERVATION_ACTIVE`
+Task27 closeout evidence:
+- `docs/seo/v2/flowtrace/chartmini-2026-08-21-task27-deploy-gsc-closeout/memory.md`
+
 Last completed: Task 27.9 — Task27 final validation / Workflow closeout
 Task27.9 result: `TASK27_1_TO_27_9_COMPLETE_LOCAL_VALIDATION_PASS_PENDING_DEPLOY`
 Task27.9 evidence:

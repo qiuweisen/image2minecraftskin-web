@@ -1020,7 +1020,7 @@ Task 21.1–21.9 is complete and in observation.
 - Residual redirect-source links occur only inside Markdown pages that themselves redirect; no indexable cleanup is required.
 - Duplicate redirect sources: 0; Task27 redirect chains: 0; all seven canonical manifest counts: 1.
 - No additional article, title/meta, internal-link, redirect, slug, canonical or schema change required.
-- Pending-deploy Task27.1/27.4/27.6 remain without observation dates until verified live; existing observation clocks remain unchanged.
+- Task27.1/27.4/27.6 are now deployment-verified and enter observation on 2026-08-28 / 2026-09-04; existing observation clocks for other owners remain unchanged.
 - Status: `PASS_NO_ADDITIONAL_CONTENT_OR_REDIRECT_CHANGE_REQUIRED`.
 - Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-21-task27-8-cluster-intent-internal-link-cannibalization-review/memory.md`
 
@@ -1030,9 +1030,18 @@ Task 21.1–21.9 is complete and in observation.
 - `git diff --check` PASS; `pnpm seo:v2:workflow:check` PASS.
 - Custom integrity: `TASK27_OWNER_INTEGRITY_BAD=0`; all 7 checked Owners have manifest=1, >=3 effective body inlinks, 0 redirect outlinks and 0 manual Article/BlogPosting schema.
 - Duplicate redirect sources 0; Task27 redirect chains 0; effective/indexable links to Task27 redirect sources 0.
-- Pending deployment canonicals: Profit-Taking, Trading for a Living, Trading Performance Metrics. No observation dates until production verification.
+- Deployment verified 2026-08-21 for Profit-Taking, Trading for a Living and Trading Performance Metrics; all three are 200/self-canonical/in sitemap with `dateModified: 2026-08-21`, and numeric sources remain direct 301.
+- User confirmed GSC Request Indexing for all three changed canonicals on 2026-08-21. New reviews: 2026-08-28 and 2026-09-04; freeze through 2026-09-04.
 - Existing Scalping/FOMO/Patience/Broad-Psychology observation clocks remain unchanged; redirect/numeric sources remain no-submit.
 - `content/blog/2026030502.md` remains unrelated and must stay excluded from Task27-only exact staging.
-- No commit/push/deploy/GSC/Bing/IndexNow/R2 action.
-- Status: `TASK27_1_TO_27_9_COMPLETE_LOCAL_VALIDATION_PASS_PENDING_DEPLOY`.
-- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-21-task27-9-final-validation-workflow-closeout/memory.md`
+- Bing/IndexNow remain `unknown_not_reverified`.
+- Status: `DEPLOY_VERIFIED_GSC_RECORDED_OBSERVATION_ACTIVE`.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-21-task27-9-final-validation-workflow-closeout/memory.md` and `docs/seo/v2/flowtrace/chartmini-2026-08-21-task27-deploy-gsc-closeout/memory.md`
+
+### Task27 deployment / GSC closeout
+- Production verified the three changed canonicals as live 200/self-canonical/sitemap-listed pages with `dateModified: 2026-08-21`.
+- User-confirmed GSC Request Indexing: Profit-Taking, Trading for a Living, Trading Performance Metrics.
+- Observation: 2026-08-28 and 2026-09-04; freeze through 2026-09-04.
+- Numeric and redirect-source URLs remain no-submit; no new GSC event for Scalping or Trading Patience.
+- Final status: `DEPLOY_VERIFIED_GSC_RECORDED_OBSERVATION_ACTIVE`.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-21-task27-deploy-gsc-closeout/memory.md`
