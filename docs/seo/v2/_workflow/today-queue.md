@@ -1045,3 +1045,92 @@ Task 21.1–21.9 is complete and in observation.
 - Numeric and redirect-source URLs remain no-submit; no new GSC event for Scalping or Trading Patience.
 - Final status: `DEPLOY_VERIFIED_GSC_RECORDED_OBSERVATION_ACTIVE`.
 - Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-21-task27-deploy-gsc-closeout/memory.md`
+
+### 28.1 — What Are Market Makers owner rebuild
+- Target: `/blog/what-are-market-makers` (`content/blog/2026040701.md`).
+- Fresh production: 200/self-canonical/in sitemap; `/blog/2026040701` direct 301; pre-task `dateModified: 2026-04-07`.
+- Fresh SERP and current Investor.gov/SEC/FINRA/NYSE/Nasdaq evidence support a distinct broad market-maker explainer intent; no stronger ChartMini owner or duplicate broad market-maker page found.
+- Site graph: 3 effective non-redirecting body-support source pages / 5 file-level links.
+- Owner Gate: `retain_narrow + rebuild`.
+- Rebuilt around market-maker definition, liquidity/immediacy, spread/inventory/adverse-selection economics, exchange incentives, wholesale/PFOF/best execution, NYSE DMM role, stop-order mechanics, and stocks/options/FX/crypto distinctions.
+- Removed generalized stop-hunting/stop-visibility claims, universal price-improvement framing, fixed rebate/PFOF execution numbers, unsupported manipulation attribution, overbroad DMM information-access claims, and duplicate Article schema.
+- Target now has 4 direct canonical Blog outlinks / 0 redirect destinations; manifest count 1; manual Article/BlogPosting 0.
+- Validation PASS: build 402 posts / 160 locale assets; Biome 415 files; Vitest 6/6 files / 17/17 tests; Workflow/diff PASS.
+- GSC/Bing: `unknown_not_reverified`; no commit/push/deploy/submission action.
+- Status: `RETAIN_NARROW_REBUILD_COMPLETE_PENDING_DEPLOY`.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-22-task28-1-market-makers-owner-rebuild/memory.md`
+
+### 28.2 — Why Patience redirect revalidation
+- Requested URL: `/blog/why-patience-is-essential-for-every-trader-in-2026` (`content/blog/2026021202.md`).
+- Fresh production: long + `/blog/2026021202` are direct 301 to `/blog/trading-patience-how-to-wait-for-high-probability-setups-2026`; owner 200/self-canonical/in sitemap with `dateModified: 2026-08-19`; redirect source absent from sitemap.
+- Fresh SERP: `why patience is essential` remains the same setup-waiting/no-trade/avoid-chasing/overtrading intent; no separate durable owner.
+- Site graph: redirect source 0 body inlinks; owner 3 effective direct canonical body sources.
+- Owner Gate: `preserve_consolidation_redirect + revalidate_owner + preserve_observation`.
+- No article/title/meta/schema/internal-link/redirect change. **Do not restore the page; the redirect is the correct result.**
+- Preserve Trading Patience observation 2026-08-26 / 2026-09-02; freeze through 2026-09-02; no clock reset.
+- GSC: no new event; redirect/numeric sources no-submit. Bing/IndexNow `unknown_not_reverified`.
+- Status: `PRESERVE_CONSOLIDATION_REDIRECT_REVALIDATED_LIVE_OBSERVATION_PRESERVED`.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-22-task28-2-why-patience-redirect-revalidation/memory.md`
+
+### 28.3 — Trading Journal redirect revalidation + Broad Journal owner repair
+- Requested URL: `/blog/trading-journal-guide-track-and-improve-your-trading-performance-2026` (`content/blog/2025122101.md`).
+- Fresh production: requested long + `/blog/2025122101` direct 301 to Broad Journal; owner 200/self-canonical/in sitemap with pre-task `dateModified: 2026-07-06`; redirect source absent from sitemap.
+- Fresh SERP: generic trading-journal intent remains definition + fields + plan-vs-actual + process-vs-P&L + review/template; no durable separate intent for requested duplicate.
+- Site graph: requested redirect source 0 inlinks; Broad Journal has 23 effective non-redirecting source pages / 34 direct body links.
+- Scheduled 7-day owner review found material exceptions: unsupported `80% compliance`, fixed `30 simulated trades`/review cadence language, plus scope overlap with Task27.6 Trading Performance Metrics.
+- Owner Gate: `preserve_consolidation_redirect + retain_narrow + rebuild_owner_under_observation_exception`.
+- Rebuilt Broad Journal as `Trading Journal Guide: What to Record and How to Review It`, `dateModified: 2026-08-22`; detailed expectancy/profit-factor/drawdown/Sharpe/Sortino/MAE-MFE/sample-quality interpretation now hands off to Performance Metrics.
+- Removed manual Article/FAQ schema, universal thresholds and fixed readiness/review rules; retained journal fields, decision evidence, process-vs-outcome, review loop, minimum template, CME/Schwab sources and replay limitations.
+- Validation PASS: build 402 posts / 160 locale assets; Biome 415 files; Vitest 6/6 files / 17/17 tests; Workflow/diff PASS; owner outbound redirect links 0.
+- Status: `PRESERVE_REDIRECT_REBUILD_BROAD_JOURNAL_OWNER_MATERIAL_DEFECT_EXCEPTION_PENDING_DEPLOY`; no commit/push/deploy/GSC/Bing action.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-22-task28-3-trading-journal-redirect-owner-rebuild/memory.md`
+
+### 28.4 — How Much Money to Start Trading owner rebuild
+- Target: `/blog/how-much-money-to-start-trading` (`content/blog/2026032001.md`).
+- Fresh production: 200/self-canonical/in sitemap; `/blog/2026032001` direct 301; pre-task `dateModified: 2026-03-20`.
+- Fresh SERP/current sources: broad starting-capital intent remains distinct; FINRA new intraday margin requirements effective 2026-06-04 with broker transition through 2027-10-20 materially invalidate the old universal `$25,000 PDT` framing.
+- Site graph: 6 effective non-redirecting direct body-source pages.
+- Owner Gate: `retain_narrow + rebuild`.
+- Rebuilt around learning vs live capital, 2026 U.S. cash/margin rules, T+1/freeriding, trade-backward capital calculation, and scoped stocks/forex/futures/options/crypto constraints without universal dollar recommendations.
+- Removed fixed account-size tables, universal 1% risk, offshore-PDT workaround, fixed returns/full-time capital, unsupported tuition/readiness thresholds and duplicate Article schema.
+- Post-rebuild: manifest count 1; 9 direct Blog outlinks; 0 redirect outlinks; manual Article/BlogPosting 0.
+- Validation PASS: build 402 posts / 160 locale assets; Biome 415; Vitest 6/6 files / 17/17 tests; Workflow/diff PASS.
+- Status: `RETAIN_NARROW_REBUILD_COMPLETE_PENDING_DEPLOY`; no commit/push/deploy/GSC/Bing action.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-22-task28-4-how-much-money-start-trading-owner-rebuild/memory.md`
+
+### 28.5 — How to Build a Trading Plan owner rebuild
+- Target: `/blog/how-to-build-trading-plan` (`content/blog/2026031302.md`).
+- Fresh production: 200/self-canonical/in sitemap; `/blog/2026031302` direct 301; pre-task `dateModified: 2026-03-13`.
+- Fresh SERP/current CME/Schwab/Fidelity sources support the broad trading-plan/template task; no competing broad ChartMini owner exists.
+- Site graph: 27 body-link source files / 26 effective non-redirecting sources / 41 direct links.
+- Owner Gate: `retain_narrow + rebuild`.
+- Rebuilt around market/account mandate, context, setup vs trigger, execution assumptions, invalidation, planned-loss-to-size logic, management/exit, no-trade/stop-trading rules, change control and a copyable template.
+- Removed universal 1% risk, fixed -2%/-5%/-8% limits, fixed 1:2 R:R, fixed partial/breakeven rule, fixed 50-100/100-trade validation, fixed monthly review, profitability/discipline overclaims and manual Article schema.
+- Post-rebuild: 10 unique Blog outlinks; 0 redirect outlinks; 0 missing manifest destinations; 0 manual Article/BlogPosting.
+- Validation PASS: build 402 posts / 160 locale assets; Biome 415; Vitest 6/6 files / 17/17 tests; Workflow/diff PASS.
+- Status: `RETAIN_NARROW_REBUILD_COMPLETE_PENDING_DEPLOY`; no commit/push/deploy/GSC/Bing action.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-22-task28-5-how-to-build-trading-plan-owner-rebuild/memory.md`
+
+### 28.6 — Full 187-article coverage audit and gap repair
+- Reconstructed the 187 primary-target denominator from the historical backlog only as list evidence: 188 post-Task19 rows minus the Task19.2 final-owner counterpart `/blog/how-to-analyze-a-stock-fundamental-analysis` = 187 primary source articles.
+- Current role split: 180 active owners + 7 redirect sources -> 181 unique final owners.
+- Production sitemap coverage: all 180 active owners present; all 7 redirect sources absent.
+- Found 24 newer numeric legacy URLs returning 404 with no redirect config; added 24 permanent direct-to-final redirects.
+- Found 60 effective body links from indexable Markdown pages to configured redirect URLs across 30 source files; canonicalized all 60 to final owners.
+- Final integrity: 187/187 manifest and numeric-route mapping PASS; duplicate redirect sources 0; redirect chains 0; indexable body links to redirects 0.
+- Validation PASS: build 402 posts / 160 locale assets; Biome 415; Vitest 6/6 files / 17/17 tests; workflow/diff PASS.
+- Existing observation clocks are unchanged; no GSC/Bing/IndexNow action. Numeric redirects are no-submit.
+- Status: `FULL_187_COVERAGE_VERIFIED_GAPS_REPAIRED_PENDING_DEPLOY`.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-22-task28-6-full-187-coverage-audit/memory.md`
+
+### 28.7 — Full validation, Flowtrace and Workflow sync
+- Revalidated Task28.1/28.3/28.4/28.5 rebuilt-owner metadata/manifest/schema state; all remain pending deploy. Task28.2 redirect and its existing observation schedule remain unchanged.
+- Re-ran the 187-article integrity audit: 180 active owners + 7 redirect sources -> 181 unique final owners; target issues 0; duplicate redirect sources 0; redirect chains 0.
+- Executed the 24 Task28.6 numeric redirects through the actual legacy redirect helper: 24/24 return direct HTTP 301 to the intended final canonical.
+- Extended the audit to all 3,500 Blog body links from non-redirecting Markdown sources. Found and fixed one unmapped link in `content/blog/2025120501.md`: `/blog/best-day-trading-simulators-2026` -> `/blog/best-day-trading-simulators-2026-honest-comparison`.
+- Final Blog link graph: redirect-through links 0; missing/unmapped links 0.
+- Final validation PASS: build 402 posts / 160 locale assets; Biome 415; Vitest 6/6 files / 17/17 tests; workflow/diff PASS.
+- Git boundary: `main` = `chartminiv2/main` at `fb8b393`; Task28 still local/uncommitted. `content/blog/2026030502.md` remains an unrelated pre-existing one-line tracked modification and is excluded from Task28.
+- No commit/push/deploy/GSC/Bing/IndexNow action; no observation clock reset.
+- Status: `TASK28_FULL_LOCAL_VALIDATION_PASS_WORKFLOW_SYNCED_PENDING_GIT_SYNC_DEPLOY`.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-22-task28-7-full-validation-workflow-sync/memory.md`

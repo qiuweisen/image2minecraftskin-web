@@ -689,6 +689,74 @@ The user explicitly confirmed successful manual GSC URL Inspection / Request Ind
 
 The three newly deployed owners enter read-only observation with reviews on 2026-08-28 and 2026-09-04, freeze through 2026-09-04. Existing Task27 observation clocks are preserved: Scalping 2026-08-22/2026-08-29, FOMO 2026-08-24/2026-08-31, Trading Patience and Broad Psychology 2026-08-26/2026-09-02. Final closeout status: `DEPLOY_VERIFIED_GSC_RECORDED_OBSERVATION_ACTIVE`. Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-21-task27-deploy-gsc-closeout/memory.md`.
 
+## 2026-08-22 Task 28.1 — What Are Market Makers
+
+Task28.1 completed locally for `/blog/what-are-market-makers` (`content/blog/2026040701.md`). Fresh production preflight found HTTP 200, exact self-canonical, sitemap membership, `dateModified: 2026-04-07`, and a direct permanent `/blog/2026040701` legacy redirect. Current-v2 GSC/Bing remain `unknown_not_reverified`; no legacy metrics were imported.
+
+Fresh SERP and Investor.gov/SEC/FINRA/NYSE/Nasdaq source review support `retain_narrow + rebuild`. This URL is the single broad market-maker explainer owner for dealer/two-sided quoting, liquidity/immediacy, spread economics, inventory/adverse-selection risk, exchange incentives, wholesale market makers/PFOF/best execution, NYSE DMM distinctions, stop-order mechanics versus unsupported stop-hunting claims, and cross-market role differences. Order Types, Level 2, Broker Selection and Extended Hours remain separate neighboring owners.
+
+The old body contained material YMYL/factual issues: generalized stop-order visibility/"stop hunting" assertions, universal SEC price-improvement framing, fixed rebate and PFOF execution-difference numbers, overbroad DMM information-access claims, manipulation attribution without task-level evidence, and a duplicate manual Article schema. The rebuilt page removes those claims, adds a direct answer, 5 key takeaways, comparison tables, an execution checklist, current primary sources, and explicit ChartMini limitations. Existing effective direct canonical body support remains 3 source pages; target has 4 direct Blog outlinks, 0 redirect destinations, manifest count 1, and 0 manual Article/BlogPosting schema.
+
+Validation passed: `pnpm build` (402 Blog posts / 160 locale assets), `pnpm check` (Biome 415 files; Vitest 6/6 files / 17/17 tests), `pnpm seo:v2:workflow:check`, and `git diff --check`. Status: `RETAIN_NARROW_REBUILD_COMPLETE_PENDING_DEPLOY`; no commit, push, deploy, GSC or Bing submission. Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-22-task28-1-market-makers-owner-rebuild/memory.md`.
+
+## 2026-08-22 Task 28.2 — Why Patience redirect revalidation
+
+Task28.2 revalidated `/blog/why-patience-is-essential-for-every-trader-in-2026` (`content/blog/2026021202.md`) rather than restoring it. Fresh production confirms both the long URL and `/blog/2026021202` are direct HTTP 301s to `/blog/trading-patience-how-to-wait-for-high-probability-setups-2026`; the owner is HTTP 200, exact self-canonical, sitemap-listed, and still exposes `dateModified: 2026-08-19`. The redirect source is absent from the sitemap.
+
+Fresh SERP continues to map `why patience is essential` / trading-patience queries to waiting for strategy-valid setups, no-trade decisions, avoiding early entries/chasing and controlling overtrading. FINRA's current online-trading and excessive-trading guidance supports the cost/risk rationale but does not create a separate `why patience` search task. Current site graph gives the redirect source 0 body inlinks and the established owner 3 effective non-redirecting direct canonical body sources.
+
+Owner Gate: `preserve_consolidation_redirect + revalidate_owner + preserve_observation`. No article, title/meta, schema, internal-link or redirect change is justified. The Trading Patience observation dates remain 2026-08-26 and 2026-09-02, freeze through 2026-09-02; Task28.2 does not reset the clock. Redirect/numeric sources remain no-submit. GSC exact current index state was not re-read; the owner retains the previously user-confirmed 2026-08-19 Request Indexing event. Bing/IndexNow remain `unknown_not_reverified`. Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-22-task28-2-why-patience-redirect-revalidation/memory.md`.
+
+## 2026-08-22 Task 28.3 — Trading Journal redirect + Broad Journal owner repair
+
+Task28.3 revalidated `/blog/trading-journal-guide-track-and-improve-your-trading-performance-2026` (`content/blog/2025122101.md`). Fresh production confirms the requested long URL and `/blog/2025122101` are direct 301s to `/blog/trading-journal-mastery-how-to-review-analyze-and-improve-your-trading-in-2026-2026`; the owner is 200/self-canonical/in sitemap with pre-task `dateModified: 2026-07-06`, while the redirect source is absent from the sitemap. The requested duplicate has 0 body inlinks; the Broad Journal owner has 23 effective non-redirecting source pages.
+
+Fresh SERP keeps the generic journal intent centered on what to record, plan-vs-actual evidence, process-vs-P&L, review workflow and templates. The requested duplicate has no durable separate task. However, the scheduled 2026-08-22 Broad Journal review identified a protected-page exception: the owner still contained unsupported hard thresholds (`80% compliance`, fixed `30 simulated trades`, fixed review cadence) and still claimed detailed expectancy/drawdown metrics after Task27.6 established Trading Performance Metrics as the dedicated aggregate-metrics owner.
+
+Owner Gate therefore selected `preserve_consolidation_redirect + retain_narrow + rebuild_owner_under_observation_exception`. `content/blog/2026010904.md` was rebuilt as `Trading Journal Guide: What to Record and How to Review It`, `dateModified: 2026-08-22`, focused on journal fields, plan-vs-actual, process-vs-outcome, data completeness, review questions, minimum templates and replay limitations. Deep expectancy/profit-factor/drawdown/Sharpe/Sortino/MAE-MFE/sample-quality analysis now hands off to Trading Performance Metrics; periodic aggregation remains Review System; habit, beginner, single-trade, forex and simulated-log owners remain separate.
+
+Manual Article/FAQ schema and universal thresholds were removed. Validation passed: `pnpm build` (402 posts / 160 locale assets), `pnpm check` (Biome 415; Vitest 6/6 files / 17/17 tests), `pnpm seo:v2:workflow:check`, and `git diff --check`. Status: `PRESERVE_REDIRECT_REBUILD_BROAD_JOURNAL_OWNER_MATERIAL_DEFECT_EXCEPTION_PENDING_DEPLOY`; no commit, push, deploy or indexing action. Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-22-task28-3-trading-journal-redirect-owner-rebuild/memory.md`.
+
+## 2026-08-22 Task 28.4 — How Much Money to Start Trading
+
+Task28.4 completed locally for `/blog/how-much-money-to-start-trading` (`content/blog/2026032001.md`). Fresh production is HTTP 200, exact self-canonical, sitemap-listed, with pre-task `dateModified: 2026-03-20`; `/blog/2026032001` is a direct permanent 301 and absent from sitemap. Current-v2 GSC/Bing remain `unknown_not_reverified`.
+
+Fresh SERP and current FINRA/Investor.gov/NFA/CFTC/CME review support `retain_narrow + rebuild`. The page remains the single broad initial learning/live-account funding owner, distinct from Forex starting capital, Trading for a Living, How to Start Day Trading, Risk Management and Prop Trading. Six effective non-redirecting body-source pages support the canonical owner.
+
+The prior body was materially outdated after FINRA's new intraday margin requirements became effective 2026-06-04 with broker transition permitted through 2027-10-20. It also contained fixed account-size recommendations, universal 1% risk prescriptions, an offshore-broker PDT workaround, fixed return/living-capital assumptions, unsupported tuition/readiness statistics and duplicate Article schema. The rebuild replaces these with broker-specific transition guidance, cash/T+1 rules, a trade-backward capital framework, scoped forex/futures/options/crypto notes, primary sources and no universal dollar recommendations.
+
+Validation passed: `pnpm build` (402 Blog posts / 160 locale assets), `pnpm check` (Biome 415; Vitest 6/6 files / 17/17 tests), `pnpm seo:v2:workflow:check`, `git diff --check`; manifest count 1, 9 direct Blog outlinks, 0 redirect outlinks, 0 manual Article/BlogPosting. Status: `RETAIN_NARROW_REBUILD_COMPLETE_PENDING_DEPLOY`. Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-22-task28-4-how-much-money-start-trading-owner-rebuild/memory.md`.
+
+## 2026-08-22 Task 28.5 — How to Build a Trading Plan
+
+Task28.5 completed locally for `/blog/how-to-build-trading-plan` (`content/blog/2026031302.md`). Fresh production is HTTP 200, exact self-canonical and sitemap-listed with pre-task `dateModified: 2026-03-13`; `/blog/2026031302` is a direct permanent 301 to the owner and is absent from sitemap. Current-v2 GSC/Bing remain `unknown_not_reverified`.
+
+Fresh SERP plus current CME/Schwab/Fidelity guidance support `retain_narrow + rebuild`. This is the sole broad Trading Plan owner and has 26 effective non-redirecting body-source pages. Pre-Trade Checklist owns the immediate trade gate; Risk Management owns sizing architecture; Journal/Post-Trade Review own recorded evidence; Performance Metrics owns aggregate diagnostics; Execution Gap owns rule-following failure; Backtesting owns test methodology; Trading Goals owns improvement objectives.
+
+The old body contained universal 1% risk, -2%/-5%/-8% stop limits, fixed 1:2 R:R, fixed partial/breakeven management, fixed 50-100/100-trade validation thresholds, fixed monthly review and deterministic performance claims. It also overstated the ability of a plan to eliminate emotion/produce consistent profits and contained duplicate manual Article schema. The rebuilt page now focuses on market/account mandate, context, setup/trigger, order assumptions, invalidation, planned-loss-to-size logic, management/exit rules, no-trade/stop-trading rules, version/change control, a copyable plan template, evidence-aware testing and replay limitations without universal thresholds.
+
+Validation passed: `pnpm build` (402 Blog posts / 160 locale assets), `pnpm check` (Biome 415; Vitest 6/6 files / 17/17 tests), `pnpm seo:v2:workflow:check`, and `git diff --check`. Post-rebuild: 10 unique direct Blog outlinks, 0 redirect outlinks, 0 missing manifest destinations, 0 manual Article/BlogPosting. Status: `RETAIN_NARROW_REBUILD_COMPLETE_PENDING_DEPLOY`. Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-22-task28-5-how-to-build-trading-plan-owner-rebuild/memory.md`.
+
+## 2026-08-22 Task 28.6 — Full 187-Article Coverage Audit
+
+Task28.6 reconstructed the 187 primary-target universe from the legacy backlog strictly as historical list evidence: the old backlog had 188 rows after Task19, but one row (`content/blog/2026032602.md`, `/blog/how-to-analyze-a-stock-fundamental-analysis`) was the Task19.2 final-owner counterpart rather than a primary target. The resulting denominator is 187. No legacy GSC/Bing metrics, owner state or protection state was imported.
+
+Current-v2 coverage is now structurally closed: 180 active owners + 7 redirect sources resolve to 181 unique final owners; all 180 active owners are in the production sitemap and all 7 redirect sources are absent. Every one of the 187 source slugs occurs exactly once in the current manifest.
+
+Two omissions were repaired. First, 24 newer numeric `/blog/YYYYMMDDNN` legacy paths were confirmed production 404s and had no redirect config; all 24 now have permanent direct-to-final redirects. Second, a sitewide audit found 60 effective body links from indexable articles to configured redirect URLs, mostly numeric legacy paths. Those 60 destinations were canonicalized across 30 source files; the post-repair count is 0.
+
+Final custom audit: target integrity issues 0; global duplicate redirect sources 0; global redirect chains 0; indexable body links to redirects 0. Full validation passed: `pnpm build` (402 posts / 160 locale assets), `pnpm check` (Biome 415; Vitest 6/6 / 17/17), `pnpm seo:v2:workflow:check`, and `git diff --check`. This is infrastructure/link cleanup, so existing observation clocks are not reset. No commit/push/deploy/GSC/Bing/IndexNow action. Status: `FULL_187_COVERAGE_VERIFIED_GAPS_REPAIRED_PENDING_DEPLOY`. Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-22-task28-6-full-187-coverage-audit/memory.md`.
+
+## 2026-08-22 Task 28.7 — Full Validation and Workflow Sync
+
+Task28.7 completed the local closeout for Task28.1–28.6. Rebuilt owners for Market Makers, Broad Trading Journal, Starting Trading Capital and Trading Plan all retain `dateModified: 2026-08-22`, exactly one manifest entry and no manual Article/BlogPosting schema. The Task28.2 Why Patience redirect remains unchanged and its existing 2026-08-26 / 2026-09-02 observation schedule is preserved.
+
+The 187-article audit was rerun and remains clean: 180 active owners + 7 redirect sources -> 181 unique final owners; target integrity issues 0; duplicate redirect sources 0; redirect chains 0. The 24 numeric redirects added in Task28.6 were executed through `getChartMiniLegacyRedirect()` and all 24 returned direct HTTP 301 responses to their intended final canonical URLs.
+
+Task28.7 extended link validation to all 3,500 `/blog/...` body links from current non-redirecting Markdown sources. One previously unmapped link in `content/blog/2025120501.md` pointed to `/blog/best-day-trading-simulators-2026`; it was corrected to `/blog/best-day-trading-simulators-2026-honest-comparison`. Final link audit: 0 links through redirects and 0 missing/unmapped Blog links.
+
+Final validation after that repair passed: `pnpm build` (402 posts / 160 locale assets), `pnpm check` (Biome 415; Vitest 6/6 files / 17/17 tests), `pnpm seo:v2:workflow:check`, and `git diff --check`. Task28 remains uncommitted and undeployed. `main` and `chartminiv2/main` are still aligned at `fb8b393`; the pre-existing unrelated `content/blog/2026030502.md` one-line modification remains excluded from Task28. No GSC/Bing/IndexNow event and no observation-clock reset occurred. Status: `TASK28_FULL_LOCAL_VALIDATION_PASS_WORKFLOW_SYNCED_PENDING_GIT_SYNC_DEPLOY`. Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-22-task28-7-full-validation-workflow-sync/memory.md`.
+
 ## Validation baseline
 
 Initialization validation on 2026-08-14:

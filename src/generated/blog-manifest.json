@@ -1616,13 +1616,20 @@
     "fileSlug": "2026010904",
     "contentKey": "chartmini-content/blog/2026010904.md",
     "locale": "en",
-    "title": "Trading Journal Guide: Metrics, Review, and Replay",
-    "description": "Learn how to build a trading journal template with expectancy, R-multiple, drawdown, and rule compliance. Practice trade review step-by-step using chart replay.",
+    "title": "Trading Journal Guide: What to Record and How to Review It",
+    "metaTitle": "Trading Journal Guide: What to Record and Review",
+    "description": "Learn what to record in a trading journal, how to separate process from P&L, how to review entries consistently, and how journal data differs from performance metrics and backtesting.",
     "date": "2026-01-09",
-    "dateModified": "2026-07-06",
+    "dateModified": "2026-08-22",
     "category": "Beginner Guides",
     "categories": ["Beginner Guides", "Trading Tools", "Trading Education"],
-    "tags": ["Journal", "Trading"]
+    "tags": [
+      "Trading Journal",
+      "Trade Log",
+      "Trade Review",
+      "Trading Process",
+      "Replay Practice"
+    ]
   },
   {
     "slug": "stop-loss-mastery-how-to-set-the-perfect-stop-loss-on-every-trade-in-2026-2026",
@@ -4374,9 +4381,11 @@
     "fileSlug": "2026031302",
     "contentKey": "chartmini-content/blog/2026031302.md",
     "locale": "en",
-    "title": "How to Build a Trading Plan: Your Step-by-Step Blueprint for Consistent Profits",
-    "description": "A complete guide to creating a written trading plan that keeps you disciplined and profitable. Includes a downloadable template and real examples for every section.",
+    "title": "How to Build a Trading Plan: Rules, Risk, and Review",
+    "metaTitle": "How to Build a Trading Plan: Template & Checklist",
+    "description": "Learn how to build a trading plan with clear market, setup, entry, invalidation, position-size, exit, no-trade, operating, and review rules. Includes a copyable template.",
     "date": "2026-03-13",
+    "dateModified": "2026-08-22",
     "category": "Education",
     "categories": ["Education", "Trading Basics", "Risk Management"],
     "tags": [
@@ -4656,17 +4665,18 @@
     "fileSlug": "2026032001",
     "contentKey": "chartmini-content/blog/2026032001.md",
     "locale": "en",
-    "title": "How Much Money Do You Need to Start Trading? (Realistic Numbers for 2026)",
-    "description": "Realistic capital requirements for day trading, swing trading, forex, and crypto in 2026. Includes the PDT rule, broker minimums, and why starting too small can actually hurt you.",
+    "title": "How Much Money Do You Need to Start Trading?",
+    "metaTitle": "How Much Money Do You Need to Start Trading? 2026 Guide",
+    "description": "There is no universal trading-account minimum. Learn how account type, U.S. day-trading margin rules, product margin, position size, and loss limits determine how much capital you actually need.",
     "date": "2026-03-20",
+    "dateModified": "2026-08-22",
     "category": "Education",
     "categories": ["Education", "Trading Basics"],
     "tags": [
       "Start Trading",
       "Trading Capital",
       "Minimum Deposit",
-      "PDT Rule",
-      "How Much Money",
+      "Day Trading",
       "Beginner Trading"
     ]
   },
@@ -5385,9 +5395,11 @@
     "fileSlug": "2026040701",
     "contentKey": "chartmini-content/blog/2026040701.md",
     "locale": "en",
-    "title": "What market makers actually do (and why you should care)",
-    "description": "What market makers are, how they profit from the bid-ask spread, why they exist, and what retail traders should actually understand about them. Cuts through the conspiracy theories with real mechanics.",
+    "title": "What Are Market Makers? How They Provide Liquidity and Make Money",
+    "metaTitle": "What Are Market Makers? Role, Spreads & Liquidity",
+    "description": "Learn what market makers do, how bid-ask spreads and inventory risk work, how wholesale and exchange market makers differ, and what retail traders should know about execution.",
     "date": "2026-04-07",
+    "dateModified": "2026-08-22",
     "category": "Education",
     "categories": ["Education", "Trading Basics"],
     "tags": [
@@ -5396,7 +5408,7 @@
       "Liquidity",
       "Order Flow",
       "Designated Market Maker",
-      "Citadel"
+      "Trade Execution"
     ]
   },
   {

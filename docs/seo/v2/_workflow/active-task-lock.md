@@ -7,7 +7,42 @@ Owner agent: none
 Target URL: none
 Task: none
 
-Last completed: Task27 deployment / GSC closeout
+Last completed: Task 28.7 — Full validation, Flowtrace and Workflow sync
+Task28.7 result: `TASK28_FULL_LOCAL_VALIDATION_PASS_WORKFLOW_SYNCED_PENDING_GIT_SYNC_DEPLOY`
+Task28.7 evidence:
+- `docs/seo/v2/flowtrace/chartmini-2026-08-22-task28-7-full-validation-workflow-sync/memory.md`
+
+Last completed: Task 28.6 — Full 187-article coverage audit and gap repair
+Task28.6 result: `FULL_187_COVERAGE_VERIFIED_GAPS_REPAIRED_PENDING_DEPLOY`
+Task28.6 evidence:
+- `docs/seo/v2/flowtrace/chartmini-2026-08-22-task28-6-full-187-coverage-audit/memory.md`
+
+Last completed: Task 28.5 — How to Build a Trading Plan owner rebuild
+Task28.5 result: `RETAIN_NARROW_REBUILD_COMPLETE_PENDING_DEPLOY`
+Task28.5 evidence:
+- `docs/seo/v2/flowtrace/chartmini-2026-08-22-task28-5-how-to-build-trading-plan-owner-rebuild/memory.md`
+
+Last completed: Task 28.4 — How Much Money to Start Trading owner rebuild
+Task28.4 result: `RETAIN_NARROW_REBUILD_COMPLETE_PENDING_DEPLOY`
+Task28.4 evidence:
+- `docs/seo/v2/flowtrace/chartmini-2026-08-22-task28-4-how-much-money-start-trading-owner-rebuild/memory.md`
+
+Last completed: Task 28.3 — Trading Journal redirect + Broad Journal owner repair
+Task28.3 result: `PRESERVE_REDIRECT_REBUILD_BROAD_JOURNAL_OWNER_MATERIAL_DEFECT_EXCEPTION_PENDING_DEPLOY`
+Task28.3 evidence:
+- `docs/seo/v2/flowtrace/chartmini-2026-08-22-task28-3-trading-journal-redirect-owner-rebuild/memory.md`
+
+Last completed: Task 28.2 — Why Patience redirect revalidation
+Task28.2 result: `PRESERVE_CONSOLIDATION_REDIRECT_REVALIDATED_LIVE_OBSERVATION_PRESERVED`
+Task28.2 evidence:
+- `docs/seo/v2/flowtrace/chartmini-2026-08-22-task28-2-why-patience-redirect-revalidation/memory.md`
+
+Previous completed: Task 28.1 — What Are Market Makers owner rebuild
+Task28.1 result: `RETAIN_NARROW_REBUILD_COMPLETE_PENDING_DEPLOY`
+Task28.1 evidence:
+- `docs/seo/v2/flowtrace/chartmini-2026-08-22-task28-1-market-makers-owner-rebuild/memory.md`
+
+Previous completed: Task27 deployment / GSC closeout
 Task27 closeout result: `DEPLOY_VERIFIED_GSC_RECORDED_OBSERVATION_ACTIVE`
 Task27 closeout evidence:
 - `docs/seo/v2/flowtrace/chartmini-2026-08-21-task27-deploy-gsc-closeout/memory.md`

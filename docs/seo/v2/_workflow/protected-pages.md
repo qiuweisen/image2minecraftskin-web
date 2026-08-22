@@ -1080,6 +1080,97 @@ Old-project protection windows are not inherited. A page enters this file only a
 - Redirect/numeric sources remain no-submit. Bing/IndexNow remain `unknown_not_reverified`.
 - Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-21-task27-9-final-validation-workflow-closeout/memory.md` and `docs/seo/v2/flowtrace/chartmini-2026-08-21-task27-deploy-gsc-closeout/memory.md`.
 
+### Task 28.1 — Market Makers broad explainer owner
+
+- Canonical: `/blog/what-are-market-makers`
+- Source: `content/blog/2026040701.md`
+- Status: `protected_pending_deploy`
+- Reason: fresh 2026-08-22 production/SERP/primary-source/site-graph Owner Gate selected `retain_narrow + rebuild` because the URL is already the single broad market-maker owner but the old body contained material market-structure/YMYL inaccuracies.
+- Owner boundary: market-maker definition, two-sided liquidity, spread/inventory/adverse-selection economics, exchange incentives, wholesale market makers/PFOF/best execution, NYSE DMM distinction, stop-order mechanics versus unsupported stop-hunting claims, and cross-market role differences.
+- Neighbor boundary: Order Types owns order taxonomy; Level 2 owns displayed order-book interpretation; Broker Selection owns broker evaluation; Extended Hours owns pre/post-market liquidity conditions.
+- Effective direct canonical body support at Task28.1: 3 non-redirecting source pages / 5 file-level links.
+- Numeric source: `/blog/2026040701` remains a direct permanent redirect to the owner.
+- Freeze start: 2026-08-22 local completion.
+- Review dates: pending actual deployment / indexing event; do not create or reset an observation clock pre-deploy.
+- Exit condition: after verified deployment, create 7-day and 14-day observation dates from the real event.
+- Exceptions: hard technical defect, material factual/regulatory defect, canonical/redirect defect, clear intent-ownership error, or explicit user override.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-22-task28-1-market-makers-owner-rebuild/memory.md`.
+
+### Task 28.2 — Why Patience redirect revalidation override
+
+- Requested redirect source: `/blog/why-patience-is-essential-for-every-trader-in-2026` (`content/blog/2026021202.md`).
+- Canonical owner: `/blog/trading-patience-how-to-wait-for-high-probability-setups-2026` (`content/blog/2025121901.md`).
+- Status: `protected_observation`.
+- Owner Gate: `preserve_consolidation_redirect + revalidate_owner + preserve_observation`.
+- Fresh production 2026-08-22: requested long URL and `/blog/2026021202` are direct 301s to the owner; owner is 200/self-canonical/in sitemap with `dateModified: 2026-08-19`; redirect source is absent from sitemap.
+- Fresh SERP still maps the requested phrasing to the same valid-setup/no-trade/waiting-vs-chasing/overtrading task; no durable separate `why patience` owner is justified.
+- Site graph: requested redirect source 0 body inlinks; owner 3 effective non-redirecting direct canonical body sources.
+- No article, title/meta, schema, internal-link or redirect change. Do not restore the requested page as 200.
+- Observation remains 2026-08-26 and 2026-09-02; freeze through 2026-09-02. Task28.2 does not reset the clock.
+- GSC: no new event; owner retains user-confirmed 2026-08-19 Request Indexing. Redirect/numeric sources remain no-submit. Bing/IndexNow `unknown_not_reverified`.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-22-task28-2-why-patience-redirect-revalidation/memory.md`.
+
+### Task 28.3 — Broad Trading Journal owner material-defect exception
+
+- Requested redirect source: `/blog/trading-journal-guide-track-and-improve-your-trading-performance-2026` (`content/blog/2025122101.md`).
+- Canonical owner: `/blog/trading-journal-mastery-how-to-review-analyze-and-improve-your-trading-in-2026-2026` (`content/blog/2026010904.md`).
+- Status: `protected_pending_deploy_material_defect_exception`.
+- Fresh production: requested long + `/blog/2025122101` direct 301; owner 200/self-canonical/in sitemap; requested source absent from sitemap.
+- Scheduled review date: 2026-08-22 (the prior 7-day review date).
+- Exception reason: material unsupported YMYL thresholds in the owner plus a clear intent-ownership conflict with Task27.6 Trading Performance Metrics.
+- Repaired owner boundary: journal definition, fields, plan-vs-actual record, process-vs-P&L, completeness/tagging, review questions, minimum templates and replay-journaling limitations.
+- Neighbor boundary: Trading Performance Metrics owns detailed aggregate statistics; Review System owns periodic grouped review; Beginner Journal owns first setup; How to Keep a Trading Journal owns maintenance; Post-Trade Review owns one closed trade; Simulated Trade Log owns replay-specific logging.
+- Effective support: 23 non-redirecting body-source pages; requested redirect source has 0 body inlinks.
+- GSC rule: only the rebuilt canonical owner may be considered after deployment; requested long/numeric redirect sources remain no-submit.
+- Observation rule: because the owner was genuinely rebuilt under an allowed exception, after verified deployment establish a new 7-day/14-day observation window from the real deployment/indexing event. Do not treat this as a read-only clock reset.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-22-task28-3-trading-journal-redirect-owner-rebuild/memory.md`.
+
+### Task 28.4 — How Much Money to Start Trading owner
+
+- Canonical: `/blog/how-much-money-to-start-trading` (`content/blog/2026032001.md`).
+- Status: `protected_pending_deploy`.
+- Owner Gate: `retain_narrow + rebuild`.
+- Fresh production: owner 200/self-canonical/in sitemap with pre-task `dateModified: 2026-03-20`; `/blog/2026032001` direct 301; numeric source absent from sitemap.
+- Material-defect reason: FINRA's intraday-margin requirements became effective 2026-06-04 with broker transition permitted through 2027-10-20, making the old universal `$25,000 PDT` framing stale; the body also contained unsupported universal capital, risk, return and readiness thresholds plus an offshore-broker workaround.
+- Owner boundary: initial learning/live-account funding, cash-vs-margin distinction, 2026 U.S. intraday-margin transition, trade-backward capital calculation, and high-level market-specific capital constraints without universal dollar recommendations.
+- Neighbor boundary: Forex Starting Capital owns detailed forex sizing; Trading for a Living owns household cash-flow viability; How to Start Day Trading owns beginner workflow; Risk Management owns position sizing; Prop Trading owns funded-account mechanics.
+- Effective support: 6 non-redirecting body-source pages; target has 9 direct Blog outlinks / 0 redirect destinations.
+- GSC rule: after verified deployment, only the changed canonical owner may be considered for Request Indexing; `/blog/2026032001` remains no-submit.
+- Observation rule: create 7-day/14-day dates only after real deployment/indexing event.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-22-task28-4-how-much-money-start-trading-owner-rebuild/memory.md`.
+
+### Task 28.5 — How to Build a Trading Plan owner
+
+- Canonical: `/blog/how-to-build-trading-plan` (`content/blog/2026031302.md`).
+- Status: `protected_pending_deploy`.
+- Owner Gate: `retain_narrow + rebuild`.
+- Fresh production: owner 200/self-canonical/in sitemap with pre-task `dateModified: 2026-03-13`; `/blog/2026031302` direct 301; numeric source absent from sitemap.
+- Reason: fresh SERP/current primary-source review confirms the broad plan/template intent, while the old body contained unsupported universal risk/loss/R:R/sample-size/review thresholds, profitability/discipline overclaims and duplicate Article schema.
+- Owner boundary: market/account mandate, context, setup/trigger, entry/order assumptions, invalidation, planned-loss-to-size connection, management/exit, no-trade/stop-trading rules, operating rules, version/change control and plan testing.
+- Neighbor boundary: Pre-Trade Checklist owns the immediate gate; Risk Management owns position-sizing architecture; Journal/Post-Trade Review own evidence after the decision; Performance Metrics owns aggregate statistics; Backtesting owns test methodology; Execution Gap owns failure to follow defined rules; Trading Goals owns improvement objectives.
+- Effective support: 26 non-redirecting body-source pages / 41 direct links across 27 source files pre-rebuild.
+- Rebuilt target has 10 unique direct Blog outlinks, 0 redirect destinations and 0 manual Article/BlogPosting schema.
+- GSC rule: after verified deployment, only the changed canonical owner may be considered for Request Indexing; `/blog/2026031302` remains no-submit.
+- Observation rule: establish 7-day/14-day dates only after the real deployment/indexing event.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-22-task28-5-how-to-build-trading-plan-owner-rebuild/memory.md`.
+
+### Task 28.6 — 187-article coverage infrastructure note
+
+- Task28.6 does not create a new protected content owner and does not reset any existing observation window.
+- Scope was canonical/redirect/internal-link integrity only: 24 missing numeric legacy redirects were added and 60 effective indexable-to-redirect body links were canonicalized to final owners.
+- Link-target corrections on any already-protected source page are treated as technical/canonical maintenance, not a new content refresh or new observation start.
+- Final full-set checks: 187/187 mapped; global duplicate redirect sources 0; global redirect chains 0; indexable body links to redirect sources 0.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-22-task28-6-full-187-coverage-audit/memory.md`.
+
+### Task 28.7 — Final validation closeout note
+
+- Task28.7 creates no new protected owner and does not change observation dates.
+- Task28.1, Task28.3, Task28.4 and Task28.5 remain protected pending deployment; their 7-day/14-day windows start only after the real deployment/indexing event.
+- Task28.2 keeps its existing 2026-08-26 and 2026-09-02 review dates and freeze through 2026-09-02.
+- The single `content/blog/2025120501.md` broken-link correction is technical link maintenance only and does not create a new observation window.
+- Final Task28 graph validation: 187/187 primary targets mapped; 24/24 new numeric redirects direct 301 in the runtime helper; 3,500 Blog body links checked with 0 redirect-through and 0 missing/unmapped targets.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-22-task28-7-full-validation-workflow-sync/memory.md`.
+
 ## Protection rule
 
 When a v2 page is added, record:

@@ -956,3 +956,92 @@
 - Production remains pre-deploy; newly consolidated duplicates still return 200 until deployment. GSC/Bing remain `unknown_not_reverified`.
 - Result: `PASS_PENDING_DEPLOYMENT_VERIFICATION`; no commit, push, deploy, R2 sync, GSC, Bing or IndexNow submission.
 - Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-15-task20-9-final-validation/memory.md`.
+
+## 2026-08-22 — ChatGPT / DevSpace — Task 28.1 What Are Market Makers
+
+- Target: `/blog/what-are-market-makers` (`content/blog/2026040701.md`).
+- Fresh production/SERP/current-primary-source/site-graph gate completed; production was 200/self-canonical/in sitemap with direct `/blog/2026040701` 301. GSC/Bing remain `unknown_not_reverified`.
+- Owner decision: `retain_narrow + rebuild`; this remains the single broad market-maker explainer owner with 3 effective direct canonical support pages.
+- Rebuilt around dealer/two-sided quoting, liquidity/immediacy, spread and inventory/adverse-selection risk, venue incentives, wholesale market makers/PFOF/best execution, NYSE DMM distinctions, stop-order mechanics and cross-market role differences.
+- Removed unsupported stop-hunting/aggregate-stop-visibility claims, fixed rebate/PFOF execution numbers, universal price-improvement framing, unsourced manipulation attribution, overbroad DMM information-access claims and manual Article schema.
+- Post-rebuild: 4 direct Blog outlinks / 0 redirect destinations; manifest count 1; manual Article/BlogPosting 0.
+- Validation: `pnpm build` PASS; `pnpm check` PASS (Biome 415; Vitest 6/6 files / 17/17 tests); `pnpm seo:v2:workflow:check` PASS; `git diff --check` PASS.
+- Status: `RETAIN_NARROW_REBUILD_COMPLETE_PENDING_DEPLOY`; no commit, push, deploy, GSC, Bing or IndexNow action.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-22-task28-1-market-makers-owner-rebuild/memory.md`.
+
+## 2026-08-22 — ChatGPT / DevSpace — Task 28.2 Why Patience redirect revalidation
+
+- Requested target: `/blog/why-patience-is-essential-for-every-trader-in-2026` (`content/blog/2026021202.md`).
+- Fresh production: requested long and `/blog/2026021202` are direct 301s to `/blog/trading-patience-how-to-wait-for-high-probability-setups-2026`; owner is 200/self-canonical/in sitemap with `dateModified: 2026-08-19`.
+- Fresh SERP and FINRA current excessive/online-trading guidance preserve the same trading-patience task: valid setups, no-trade conditions, waiting vs chasing, strategy-relative overtrading and patience vs hesitation. No separate `why patience` owner is justified.
+- Site graph: requested redirect source 0 body inlinks; selected owner 3 effective non-redirecting direct canonical body sources.
+- Owner decision: `preserve_consolidation_redirect + revalidate_owner + preserve_observation`.
+- No article/title/meta/schema/internal-link/redirect change; requested source remains correctly consolidated and must not be restored as 200.
+- Observation remains 2026-08-26 / 2026-09-02, freeze through 2026-09-02; no clock reset. No new GSC/Bing/IndexNow action.
+- Status: `PRESERVE_CONSOLIDATION_REDIRECT_REVALIDATED_LIVE_OBSERVATION_PRESERVED`.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-22-task28-2-why-patience-redirect-revalidation/memory.md`.
+
+## 2026-08-22 — ChatGPT / DevSpace — Task 28.3 Trading Journal redirect + owner repair
+
+- Requested target: `/blog/trading-journal-guide-track-and-improve-your-trading-performance-2026` (`content/blog/2025122101.md`).
+- Fresh production confirms requested long + `/blog/2025122101` direct 301 to Broad Journal; owner is 200/self-canonical/in sitemap, requested source absent from sitemap.
+- Fresh SERP preserves one generic journal task; requested duplicate has 0 body inlinks while Broad Journal has 23 effective source pages.
+- Scheduled 7-day review found a permitted protected-page exception: unsupported hard thresholds/readiness rules and an intent overlap with Task27.6 Trading Performance Metrics.
+- Owner decision: `preserve_consolidation_redirect + retain_narrow + rebuild_owner_under_observation_exception`.
+- Rebuilt Broad Journal around what to record, plan-vs-actual evidence, process-vs-P&L, completeness/tagging, review questions, minimum templates and replay limitations; detailed aggregate metric interpretation now belongs to Performance Metrics.
+- Removed manual Article/FAQ schema, universal 80%/30-trade/fixed-cadence rules and other deterministic journal claims; added current CME/Schwab source notes.
+- Validation: `pnpm build` PASS (402 posts / 160 locale assets); `pnpm check` PASS (Biome 415; Vitest 6/6 files / 17/17 tests); Workflow/diff PASS; owner redirect outlinks 0.
+- Status: `PRESERVE_REDIRECT_REBUILD_BROAD_JOURNAL_OWNER_MATERIAL_DEFECT_EXCEPTION_PENDING_DEPLOY`; no commit, push, deploy, GSC, Bing or IndexNow action.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-22-task28-3-trading-journal-redirect-owner-rebuild/memory.md`.
+
+## 2026-08-22 — ChatGPT / DevSpace — Task 28.4 How Much Money to Start Trading
+
+- Target: `/blog/how-much-money-to-start-trading` (`content/blog/2026032001.md`).
+- Fresh production/SERP/current-regulatory/site-graph gate completed; owner is 200/self-canonical/in sitemap and `/blog/2026032001` is a direct 301. GSC/Bing remain `unknown_not_reverified`.
+- Owner decision: `retain_narrow + rebuild`; six effective direct canonical body-source pages support the broad initial-funding owner.
+- Current FINRA evidence confirms intraday-margin rules effective 2026-06-04 with broker transition through 2027-10-20, so the old universal $25k PDT answer was materially stale.
+- Rebuilt around practice-vs-live capital, broker/account rules, cash/T+1, trade-backward capital calculation and product-specific constraints without fixed recommended account sizes.
+- Removed universal dollar ranges, 1% prescription, offshore-PDT workaround, unsupported return/tuition/readiness claims, fixed allocation percentages and manual Article schema.
+- Post-rebuild integrity: manifest 1; effective inlink sources 6; Blog outlinks 9; redirect outlinks 0; manual Article/BlogPosting 0.
+- Validation: `pnpm build` PASS; `pnpm check` PASS (Biome 415; Vitest 6/6 files / 17/17 tests); `pnpm seo:v2:workflow:check` PASS; `git diff --check` PASS.
+- Status: `RETAIN_NARROW_REBUILD_COMPLETE_PENDING_DEPLOY`; no commit, push, deploy, GSC, Bing or IndexNow action.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-22-task28-4-how-much-money-start-trading-owner-rebuild/memory.md`.
+
+## 2026-08-22 — ChatGPT / DevSpace — Task 28.5 How to Build a Trading Plan
+
+- Target: `/blog/how-to-build-trading-plan` (`content/blog/2026031302.md`).
+- Fresh production: owner 200/self-canonical/in sitemap with pre-task `dateModified: 2026-03-13`; `/blog/2026031302` direct 301.
+- Fresh SERP plus current CME/Schwab/Fidelity guidance support one broad trading-plan/template owner.
+- Site graph: 27 direct body-link source files, 26 effective non-redirecting sources, 41 links; no second broad plan title/slug found.
+- Owner decision: `retain_narrow + rebuild`.
+- Rebuilt around market/account mandate, context, setup/trigger, entry/order assumptions, invalidation, planned loss/size, management/exit, no-trade/stop-trading, version control, copyable template and evidence-aware testing.
+- Removed universal 1%/-2%/-5%/-8%/1:2/50-100/100-trade prescriptions, fixed review cadence, deterministic profitability/discipline claims and manual Article schema.
+- Post-rebuild: 10 unique canonical Blog outlinks; 0 redirect outlinks; 0 missing manifest links; 0 manual Article/BlogPosting.
+- Validation: `pnpm build` PASS; `pnpm check` PASS (Biome 415; Vitest 6/6 files / 17/17 tests); `pnpm seo:v2:workflow:check` PASS; `git diff --check` PASS.
+- Status: `RETAIN_NARROW_REBUILD_COMPLETE_PENDING_DEPLOY`; no commit, push, deploy, GSC, Bing or IndexNow action.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-22-task28-5-how-to-build-trading-plan-owner-rebuild/memory.md`.
+
+## 2026-08-22 — ChatGPT / DevSpace — Task 28.6 Full 187-Article Coverage Audit
+
+- Reconstructed the exact 187 primary-target universe from legacy backlog list evidence without importing legacy SEO state: 188 post-Task19 rows minus the Task19.2 final-owner counterpart `/blog/how-to-analyze-a-stock-fundamental-analysis`.
+- Current-v2 role split is 180 active owners + 7 redirect sources -> 181 unique final owner paths. All 180 active owners are in the production sitemap; all 7 redirect sources are absent.
+- Found a persistent technical gap: 24 newer numeric legacy URLs had no redirect config and returned production 404. Added 24 permanent direct-to-final redirects in `src/config/chartmini-blog-redirects.json`.
+- Sitewide internal-link audit found 60 effective links from indexable pages to configured redirect URLs across 30 Markdown files. Canonicalized all 60 destinations to final owners; post-repair count is 0.
+- Final custom audit: 187 target integrity issues 0; global duplicate redirect sources 0; global redirect chains 0; indexable body links to redirects 0.
+- Validation PASS: `pnpm build` (402 posts / 160 locale assets), `pnpm check` (Biome 415; Vitest 6/6 files / 17/17 tests), `pnpm seo:v2:workflow:check`, `git diff --check`.
+- This is redirect/link infrastructure cleanup only; no observation clock reset and no GSC/Bing/IndexNow action. Numeric redirect sources remain no-submit.
+- Status: `FULL_187_COVERAGE_VERIFIED_GAPS_REPAIRED_PENDING_DEPLOY`.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-22-task28-6-full-187-coverage-audit/memory.md`.
+
+## 2026-08-22 — ChatGPT / DevSpace — Task 28.7 Full Validation and Workflow Sync
+
+- Revalidated all Task28 rebuilt owners plus the Task28.2 redirect/observation state; no pending-deploy page was mislabeled as deployed and no observation date was reset.
+- Re-ran the 187-article integrity audit: 180 active owners, 7 redirect sources, 181 unique final owners, target issues 0, duplicate redirect sources 0, redirect chains 0.
+- Executed the 24 new numeric routes through `getChartMiniLegacyRedirect()`; 24/24 returned direct 301 responses to their intended final canonical destinations.
+- Audited all 3,500 Blog body links from non-redirecting Markdown sources. Found one unmapped `/blog/best-day-trading-simulators-2026` link in `content/blog/2025120501.md` and changed it to the valid canonical `/blog/best-day-trading-simulators-2026-honest-comparison`.
+- Post-repair Blog graph: links through redirects 0; missing/unmapped links 0.
+- Final validation PASS: `pnpm build` (402 posts / 160 locale assets), `pnpm check` (Biome 415; Vitest 6/6 / 17/17), `pnpm seo:v2:workflow:check`, `git diff --check`.
+- Git remains at `fb8b393`, with `main` aligned to `chartminiv2/main`; Task28 is still local/uncommitted. Pre-existing unrelated `content/blog/2026030502.md` remains excluded.
+- No commit, push, deploy, R2 sync, GSC, Bing or IndexNow action.
+- Status: `TASK28_FULL_LOCAL_VALIDATION_PASS_WORKFLOW_SYNCED_PENDING_GIT_SYNC_DEPLOY`.
+- Evidence: `docs/seo/v2/flowtrace/chartmini-2026-08-22-task28-7-full-validation-workflow-sync/memory.md`.
