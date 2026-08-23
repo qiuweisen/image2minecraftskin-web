@@ -28,7 +28,26 @@
   // The ASSETS binding lets server functions read the requested locale without
   // bundling all 40 translations into the Worker script.
   "assets": {
-    "binding": "ASSETS"
+    "binding": "ASSETS",
+    // These five locale prefixes previously had stale CDN entries containing
+    // the English root document. Route them through the Worker first so the
+    // current version fetches the matching asset from the ASSETS binding.
+    "run_worker_first": [
+      "/zh-hans",
+      "/zh-hans/*",
+      "/es-419",
+      "/es-419/*",
+      "/fa",
+      "/fa/*",
+      "/ro",
+      "/ro/*",
+      "/ta",
+      "/ta/*"
+    ],
+    // A missing document must reach the Worker/404 path, never silently
+    // become the English SPA shell. This prevents incorrect 200/canonical
+    // responses from entering search-engine caches.
+    "not_found_handling": "none"
   },
 
   // Logpush is not enabled on this account; keep observability logs enabled below.

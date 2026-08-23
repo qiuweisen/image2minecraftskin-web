@@ -1,6 +1,7 @@
 // DO NOT DELETE THIS FILE!!!
 // This file is a good smoke test to make sure the custom server entry is working
 import handler from '@tanstack/react-start/server-entry';
+import { env } from 'cloudflare:workers';
 import { localeMiddleware } from '@/locale/middleware';
 import { getChartMiniLegacyRedirect } from '@/lib/chartmini-legacy-redirects';
 import { GeminiKeyPool } from '@/lib/gemini-key-pool';
@@ -286,8 +287,51 @@ function getBaseLocaleOnlyRedirect(request: Request): Response | null {
   return Response.redirect(url, 308);
 }
 
+const staleStaticLocalePrefixes = [
+  '/zh-hans',
+  '/es-419',
+  '/fa',
+  '/ro',
+  '/ta',
+] as const;
+
+function isStaleStaticLocalePath(pathname: string): boolean {
+  return staleStaticLocalePrefixes.some(
+    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`)
+  );
+}
+
+async function serveStaleStaticLocaleFromAssets(
+  request: Request
+): Promise<Response | null> {
+  const url = new URL(request.url);
+  if (
+    request.method !== 'GET' ||
+    !isStaleStaticLocalePath(url.pathname) ||
+    url.pathname.endsWith('/')
+  ) {
+    return null;
+  }
+
+  try {
+    const response = await env.ASSETS.fetch(request);
+    const contentType = response.headers.get('Content-Type') ?? '';
+    if (!response.ok || !contentType.includes('text/html')) return null;
+
+    // Return the binding response unchanged. In particular, do not rebuild
+    // it from `response.body`: local and edge asset bindings may reuse the
+    // stream for concurrent requests, and wrapping that stream can produce a
+    // false 200 with an empty body.
+    return response;
+  } catch {
+    // A binding failure should fall through to the normal route handler,
+    // which preserves the existing availability behavior.
+    return null;
+  }
+}
+
 export default {
-  fetch(request: Request) {
+  async fetch(request: Request) {
     // All historical ChartMini locale prefixes are now first-class Paraglide
     // locales. Keep the original request intact so middleware can select the
     // locale and canonical URL without changing public links.
@@ -304,6 +348,12 @@ export default {
     const trailingSlashRedirect = getTrailingSlashRedirect(request);
     if (trailingSlashRedirect) {
       return addStagingRobotsHeader(request, trailingSlashRedirect);
+    }
+
+    const staticLocaleDocument =
+      await serveStaleStaticLocaleFromAssets(request);
+    if (staticLocaleDocument) {
+      return addStagingRobotsHeader(request, staticLocaleDocument);
     }
 
     return localeMiddleware(request, () =>
