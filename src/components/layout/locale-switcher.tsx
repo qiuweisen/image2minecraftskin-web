@@ -8,6 +8,7 @@ import {
   deLocalizeHref,
   getCanonicalLocale,
   getLocale,
+  isLocalizedPath,
   localeConfig,
   localizeHref,
   selectableLocales,
@@ -47,13 +48,16 @@ export function useLocaleSwitcher({
     withUrlPartPrefix(location.hash, '#'),
   ].join('');
   const baseHref = deLocalizeHref(currentHref);
+  const basePathname = deLocalizeHref(location.pathname);
 
   function switchLocale(nextLocale: Locale) {
     if (nextLocale === currentLocale) {
       return;
     }
 
-    const nextHref = localizeHref(baseHref, { locale: nextLocale });
+    const nextHref = isLocalizedPath(basePathname)
+      ? localizeHref(baseHref, { locale: nextLocale })
+      : baseHref;
     setLocale(nextLocale, { reload: false });
     onLocaleChange?.();
     window.location.assign(nextHref);

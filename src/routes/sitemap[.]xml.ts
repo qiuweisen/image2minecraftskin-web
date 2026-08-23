@@ -3,19 +3,10 @@ import { getSortedPosts, isIndexablePost } from '@/lib/blog';
 import { getBaseUrl } from '@/lib/urls';
 import { websiteConfig } from '@/config/website';
 import { baseLocale, chartMiniLocalePaths } from '@/lib/locale';
-
-const LOCALIZED_ROUTES = ['/', '/play', '/day-trading-simulator'] as const;
-const UNLOCALIZED_ROUTES = [
-  '/crypto-trading-simulator',
-  '/forex-trading-simulator',
-  '/intraday-trading-practice',
-  '/market-replay',
-  '/resources',
-  '/about',
-  '/contact',
-  '/privacy-policy',
-  '/user-agreement',
-] as const;
+import {
+  SITEMAP_BASE_LOCALE_ROUTES,
+  SITEMAP_LOCALIZED_ROUTES,
+} from '@/lib/sitemap-routes';
 
 function localizedPath(prefix: string, route: string): string {
   if (prefix === '/') return route;
@@ -66,7 +57,7 @@ export const Route = createFileRoute('/sitemap.xml')({
         const base = getBaseUrl().replace(/\/$/, '');
         const entries: string[] = [];
 
-        for (const route of LOCALIZED_ROUTES) {
+        for (const route of SITEMAP_LOCALIZED_ROUTES) {
           for (const { prefix } of chartMiniLocalePaths) {
             entries.push(
               urlEntry(base, localizedPath(prefix, route), {
@@ -76,7 +67,7 @@ export const Route = createFileRoute('/sitemap.xml')({
           }
         }
 
-        for (const route of UNLOCALIZED_ROUTES) {
+        for (const route of SITEMAP_BASE_LOCALE_ROUTES) {
           entries.push(urlEntry(base, route));
         }
 

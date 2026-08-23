@@ -1,5 +1,4 @@
 import { m } from '@/locale/paraglide/messages';
-import { Link } from '@tanstack/react-router';
 export function BlogPagination({
   currentPage,
   totalPages,
@@ -16,13 +15,12 @@ export function BlogPagination({
       aria-label={m.blog_pagination()}
     >
       {currentPage > 1 ? (
-        <Link
-          to={prevPage <= 1 ? '/blog' : '/blog/p/$page'}
-          {...(prevPage <= 1 ? {} : { params: { page: String(prevPage) } })}
+        <a
+          href={prevPage <= 1 ? '/blog' : `/blog/p/${prevPage}`}
           className="inline-flex items-center rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
         >
           {m.blog_previous()}
-        </Link>
+        </a>
       ) : (
         <span className="inline-flex cursor-not-allowed items-center rounded-lg border border-border px-4 py-2 text-muted-foreground text-sm">
           {m.blog_previous()}
@@ -32,13 +30,12 @@ export function BlogPagination({
         {m.blog_page()} {currentPage} {m.blog_of()} {totalPages}
       </span>
       {currentPage < totalPages ? (
-        <Link
-          to="/blog/p/$page"
-          params={{ page: String(nextPage) }}
+        <a
+          href={`/blog/p/${nextPage}`}
           className="inline-flex items-center rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
         >
           {m.blog_next()}
-        </Link>
+        </a>
       ) : (
         <span className="inline-flex cursor-not-allowed items-center rounded-lg border border-border px-4 py-2 text-muted-foreground text-sm">
           {m.blog_next()}

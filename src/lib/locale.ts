@@ -7,6 +7,7 @@ import {
   type Locale,
 } from '@/locale/paraglide/runtime';
 import type { SupportedLang } from '@/lib/languages';
+import { isBaseLocaleOnlyPath } from '@/lib/sitemap-routes';
 
 export {
   baseLocale,
@@ -310,10 +311,8 @@ export function getCanonicalPathname(pathname: string) {
  */
 export const LOCALIZED_PATHS = new Set([
   '/',
-  '/about',
   '/ai',
   '/changelog',
-  '/contact',
   '/cookie',
   '/day-trading-simulator',
   '/market-replay',
@@ -322,8 +321,6 @@ export const LOCALIZED_PATHS = new Set([
   '/crypto-trading-simulator',
   '/resources',
   '/languages',
-  '/privacy-policy',
-  '/user-agreement',
   '/play',
   '/pricing',
   '/privacy',
@@ -339,4 +336,21 @@ export const LOCALIZED_PATHS = new Set([
  */
 export function isLocalizedPath(path: string): boolean {
   return LOCALIZED_PATHS.has(path);
+}
+
+/**
+ * Return the base-locale destination for an English-only public URL carrying
+ * a non-English locale prefix. Fully translated paths intentionally return
+ * null and remain first-class locale URLs.
+ */
+export function getBaseLocaleOnlyRedirectPath(pathname: string): string | null {
+  const localePrefix = chartMiniLocalePaths
+    .map(({ prefix }) => prefix)
+    .filter((prefix) => prefix !== '/')
+    .find((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
+
+  if (!localePrefix) return null;
+
+  const basePathname = pathname.slice(localePrefix.length) || '/';
+  return isBaseLocaleOnlyPath(basePathname) ? basePathname : null;
 }

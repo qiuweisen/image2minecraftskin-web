@@ -6,8 +6,8 @@ import { BlogPagination } from '@/components/blog/blog-pagination';
 import { loadBlogPage } from '@/api/blog';
 import { websiteConfig } from '@/config/website';
 import { seo } from '@/lib/seo';
-import { getCanonicalUrl } from '@/lib/urls';
-import { getCanonicalLocale, getLocale } from '@/lib/locale';
+import { getCanonicalUrlForLocale } from '@/lib/urls';
+import { baseLocale, getCanonicalLocale, getLocale } from '@/lib/locale';
 
 export const Route = createFileRoute('/blog/p/$page')({
   loader: async ({ params }) => {
@@ -31,17 +31,19 @@ export const Route = createFileRoute('/blog/p/$page')({
       title,
       description,
     });
+    const blogUrl = (path: string) =>
+      getCanonicalUrlForLocale(path, baseLocale);
     const links = [
       ...metadata.links.filter((link) => link.rel !== 'canonical'),
-      { rel: 'canonical', href: getCanonicalUrl(`/blog/p/${page}`) },
+      { rel: 'canonical', href: blogUrl(`/blog/p/${page}`) },
     ];
     if (page > 2) {
-      links.push({ rel: 'prev', href: getCanonicalUrl(`/blog/p/${page - 1}`) });
+      links.push({ rel: 'prev', href: blogUrl(`/blog/p/${page - 1}`) });
     } else {
-      links.push({ rel: 'prev', href: getCanonicalUrl('/blog') });
+      links.push({ rel: 'prev', href: blogUrl('/blog') });
     }
     if (loaderData && page < loaderData.totalPages) {
-      links.push({ rel: 'next', href: getCanonicalUrl(`/blog/p/${page + 1}`) });
+      links.push({ rel: 'next', href: blogUrl(`/blog/p/${page + 1}`) });
     }
     return { ...metadata, links };
   },

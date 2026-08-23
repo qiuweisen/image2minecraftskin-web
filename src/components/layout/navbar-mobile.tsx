@@ -176,6 +176,17 @@ export function NavbarMobile({ className, ...props }: NavbarMobileProps) {
                             </ul>
                           </CollapsibleContent>
                         </Collapsible>
+                      ) : item.baseLocaleOnly ? (
+                        <a
+                          href={item.href ?? '#'}
+                          onClick={() => setOpen(false)}
+                          className={cn(
+                            mobileLinkClass,
+                            active && mobileLinkActiveClass
+                          )}
+                        >
+                          {item.title}
+                        </a>
                       ) : (
                         <Link
                           to={item.href ?? '#'}

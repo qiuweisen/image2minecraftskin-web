@@ -145,17 +145,31 @@ export function Navbar({ scroll = true }: NavbarProps) {
                       </NavigationMenuItem>
                     ) : (
                       <NavigationMenuItem key={item.title}>
-                        <NavigationMenuLink
-                          render={<Link to={item.href ?? '#'} />}
-                          className={cn(
-                            navigationMenuTriggerStyle(),
-                            'bg-transparent',
-                            isLinkActive(item.href, pathname) &&
-                              'font-semibold text-primary'
-                          )}
-                        >
-                          {item.title}
-                        </NavigationMenuLink>
+                        {item.baseLocaleOnly ? (
+                          <a
+                            href={item.href ?? '#'}
+                            className={cn(
+                              navigationMenuTriggerStyle(),
+                              'bg-transparent',
+                              isLinkActive(item.href, pathname) &&
+                                'font-semibold text-primary'
+                            )}
+                          >
+                            {item.title}
+                          </a>
+                        ) : (
+                          <NavigationMenuLink
+                            render={<Link to={item.href ?? '#'} />}
+                            className={cn(
+                              navigationMenuTriggerStyle(),
+                              'bg-transparent',
+                              isLinkActive(item.href, pathname) &&
+                                'font-semibold text-primary'
+                            )}
+                          >
+                            {item.title}
+                          </NavigationMenuLink>
+                        )}
                       </NavigationMenuItem>
                     )
                   )}

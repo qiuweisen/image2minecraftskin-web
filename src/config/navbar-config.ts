@@ -43,7 +43,12 @@ export function getNavbarLinks(): MenuItemConfig[] {
         },
       ],
     },
-    { title: m.nav_blog(), href: Routes.Blog, external: false },
+    {
+      title: m.nav_blog(),
+      href: Routes.Blog,
+      external: false,
+      baseLocaleOnly: true,
+    },
     { title: m.nav_rewards(), href: '/resources', external: false },
   ];
 }

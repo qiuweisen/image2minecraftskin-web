@@ -7,6 +7,7 @@
     "dev": "vite dev --port 3000",
     "prebuild": "node scripts/build-blog-manifest.mjs && node scripts/build-marketing-content.mjs && biome format --write src/generated/blog-manifest.json",
     "build": "vite build",
+    "postbuild": "node scripts/prerender-public-pages.mjs",
     "e2e": "playwright test",
     "e2e:production": "playwright test --config playwright.production.config.ts",
     "e2e:stripe": "tsx scripts/run-stripe-e2e.ts",

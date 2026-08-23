@@ -44,6 +44,13 @@ export function Footer({ className }: React.HTMLAttributes<HTMLElement>) {
                           >
                             {item.title}
                           </a>
+                        ) : item.baseLocaleOnly ? (
+                          <a
+                            href={item.href}
+                            className="text-sm text-muted-foreground transition-colors duration-150 hover:text-primary focus-visible:text-primary"
+                          >
+                            {item.title}
+                          </a>
                         ) : (
                           <Link
                             to={item.href}

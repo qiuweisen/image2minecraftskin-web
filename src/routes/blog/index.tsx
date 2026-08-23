@@ -7,7 +7,7 @@ import { loadBlogPage } from '@/api/blog';
 import { websiteConfig } from '@/config/website';
 import { jsonLdScript, seo, siteStructuredData } from '@/lib/seo';
 import { getCanonicalUrlForLocale } from '@/lib/urls';
-import { getCanonicalLocale, getLocale } from '@/lib/locale';
+import { baseLocale, getCanonicalLocale, getLocale } from '@/lib/locale';
 
 export const Route = createFileRoute('/blog/')({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -38,15 +38,15 @@ export const Route = createFileRoute('/blog/')({
       title,
       description,
     });
-    // Pass the current locale explicitly so canonical/prev/next are stable
-    // across SSR + CSR regardless of any mid-render locale swap.
-    const localizedUrl = (page?: number) => {
+    // Blog content is English-only. Locale-prefixed fallbacks therefore point
+    // back to the base-locale canonical instead of creating duplicates.
+    const blogUrl = (page?: number) => {
       if (page && page > 1) {
-        return getCanonicalUrlForLocale(`/blog/p/${page}`, getLocale());
+        return getCanonicalUrlForLocale(`/blog/p/${page}`, baseLocale);
       }
-      return getCanonicalUrlForLocale(path, getLocale());
+      return getCanonicalUrlForLocale(path, baseLocale);
     };
-    const canonicalHref = localizedUrl(currentPage);
+    const canonicalHref = blogUrl(currentPage);
     const paginationLinks: Array<{
       rel: string;
       href: string;
@@ -54,13 +54,13 @@ export const Route = createFileRoute('/blog/')({
     if (currentPage > 1) {
       paginationLinks.push({
         rel: 'prev',
-        href: localizedUrl(currentPage - 1),
+        href: blogUrl(currentPage - 1),
       });
     }
     if (currentPage < totalPages) {
       paginationLinks.push({
         rel: 'next',
-        href: localizedUrl(currentPage + 1),
+        href: blogUrl(currentPage + 1),
       });
     }
     return {

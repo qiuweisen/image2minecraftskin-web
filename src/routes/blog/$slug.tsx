@@ -1,10 +1,10 @@
 import { m } from '@/locale/paraglide/messages';
-import { createFileRoute, Link, notFound } from '@tanstack/react-router';
+import { createFileRoute, notFound } from '@tanstack/react-router';
 import { loadBlogPost } from '@/api/blog';
 import Container from '@/components/layout/container';
 import { websiteConfig } from '@/config/website';
-import { getCanonicalUrl, getImageUrl } from '@/lib/urls';
-import { getCanonicalLocale, getLocale, localeConfig } from '@/lib/locale';
+import { getCanonicalUrlForLocale, getImageUrl } from '@/lib/urls';
+import { baseLocale } from '@/lib/locale';
 import { jsonLdScript, seo, siteStructuredData } from '@/lib/seo';
 import { IconArrowLeft } from '@tabler/icons-react';
 import { formatDate } from '@/lib/formatter';
@@ -59,7 +59,9 @@ export const Route = createFileRoute('/blog/$slug')({
     const description =
       post.description ?? websiteConfig.metadata?.description ?? '';
     const image = post.image ? getImageUrl(post.image) : undefined;
-    const canonicalUrl = getCanonicalUrl(path);
+    const baseCanonicalUrl = (canonicalPath: string) =>
+      getCanonicalUrlForLocale(canonicalPath, baseLocale);
+    const canonicalUrl = baseCanonicalUrl(path);
     const metadata = seo(path, {
       title,
       description,
@@ -71,7 +73,7 @@ export const Route = createFileRoute('/blog/$slug')({
       '@type': 'BlogPosting',
       headline: post.title,
       description,
-      inLanguage: localeConfig[getCanonicalLocale(getLocale())].hreflang,
+      inLanguage: 'en',
       ...(image && { image }),
       datePublished: new Date(post.date).toISOString(),
       dateModified: new Date(post.dateModified ?? post.date).toISOString(),
@@ -83,7 +85,7 @@ export const Route = createFileRoute('/blog/$slug')({
       author: {
         '@type': 'Person',
         name: 'Iven W.',
-        url: getCanonicalUrl('/about'),
+        url: baseCanonicalUrl('/about'),
       },
       publisher: {
         '@type': 'Organization',
@@ -104,13 +106,13 @@ export const Route = createFileRoute('/blog/$slug')({
           '@type': 'ListItem',
           position: 1,
           name: 'Home',
-          item: getCanonicalUrl('/'),
+          item: baseCanonicalUrl('/'),
         },
         {
           '@type': 'ListItem',
           position: 2,
           name: 'Blog',
-          item: getCanonicalUrl('/blog'),
+          item: baseCanonicalUrl('/blog'),
         },
         {
           '@type': 'ListItem',
@@ -124,7 +126,7 @@ export const Route = createFileRoute('/blog/$slug')({
       '@context': 'https://schema.org',
       '@type': 'Person',
       name: 'Iven W.',
-      url: getCanonicalUrl('/about'),
+      url: baseCanonicalUrl('/about'),
       jobTitle: 'Founder & Developer',
       description:
         'MBA and active trader since 2007 with nearly two decades of experience. Built ChartMini — a lightweight trading simulator for focused practice.',
@@ -132,7 +134,7 @@ export const Route = createFileRoute('/blog/$slug')({
       worksFor: {
         '@type': 'Organization',
         name: 'ChartMini',
-        url: getCanonicalUrl('/'),
+        url: baseCanonicalUrl('/'),
       },
     };
     const legacySchemas = (post.schemas ?? [])
@@ -186,14 +188,13 @@ function BlogPostPage() {
   return (
     <Container className="py-16 px-4">
       <div className="mx-auto max-w-4xl">
-        <Link
-          to="/blog"
-          search={{ page: 1 }}
+        <a
+          href="/blog"
           className="mb-6 inline-flex items-center gap-2 text-muted-foreground text-sm hover:text-foreground"
         >
           <IconArrowLeft className="size-4" />
           {m.blog_all_posts()}
-        </Link>
+        </a>
 
         <article>
           <div className="mb-4 flex flex-wrap items-center gap-2 text-muted-foreground text-sm">
@@ -215,9 +216,9 @@ function BlogPostPage() {
             <span aria-hidden="true">·</span>
             <span>
               By{' '}
-              <Link to="/about" className="font-medium hover:underline">
+              <a href="/about" className="font-medium hover:underline">
                 Iven W.
-              </Link>
+              </a>
             </span>
           </div>
 
@@ -248,14 +249,13 @@ function BlogPostPage() {
           </div>
 
           <div className="mt-10 pt-6 border-t border-border">
-            <Link
-              to="/blog"
-              search={{ page: 1 }}
+            <a
+              href="/blog"
               className="inline-flex items-center gap-2 text-muted-foreground text-sm hover:text-foreground"
             >
               <IconArrowLeft className="size-4" />
               {m.blog_all_posts()}
-            </Link>
+            </a>
           </div>
         </article>
       </div>

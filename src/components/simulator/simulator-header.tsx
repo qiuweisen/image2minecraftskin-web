@@ -50,13 +50,12 @@ export function SimulatorHeader() {
           >
             {m.simulator_nav_day_trading()}
           </Link>
-          <Link
-            to="/blog"
-            search={{ page: 1 }}
+          <a
+            href="/blog"
             className="hidden rounded-lg px-3 py-2 font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:inline-block"
           >
             {m.simulator_nav_blog()}
-          </Link>
+          </a>
           <div className="ml-1 flex items-center gap-1 sm:ml-2 sm:gap-2">
             <LocaleSwitcher />
             <ModeSwitcher />

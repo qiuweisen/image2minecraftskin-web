@@ -25,16 +25,24 @@ export function getFooterLinks(): MenuItemConfig[] {
     {
       title: m.footer_content(),
       items: [
-        { title: m.footer_blog(), href: '/blog' },
-        { title: m.footer_about(), href: '/about' },
-        { title: m.footer_contact(), href: '/contact' },
+        { title: m.footer_blog(), href: '/blog', baseLocaleOnly: true },
+        { title: m.footer_about(), href: '/about', baseLocaleOnly: true },
+        { title: m.footer_contact(), href: '/contact', baseLocaleOnly: true },
       ],
     },
     {
       title: m.footer_legal(),
       items: [
-        { title: m.footer_user_agreement(), href: '/user-agreement' },
-        { title: m.footer_privacy_policy(), href: '/privacy-policy' },
+        {
+          title: m.footer_user_agreement(),
+          href: '/user-agreement',
+          baseLocaleOnly: true,
+        },
+        {
+          title: m.footer_privacy_policy(),
+          href: '/privacy-policy',
+          baseLocaleOnly: true,
+        },
       ],
     },
   ];

@@ -31,9 +31,11 @@ export function seo(
     type?: 'website' | 'article';
   }
 ) {
-  const url = getCanonicalUrl(path);
-  const image = options.image ?? getOgImage();
   const localized = isLocalizedPath(path);
+  const url = localized
+    ? getCanonicalUrl(path)
+    : getCanonicalUrlForLocale(path, baseLocale);
+  const image = options.image ?? getOgImage();
   const alternateLinks = localized
     ? [
         ...selectableLocales.map((locale) => ({
