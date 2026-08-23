@@ -9,6 +9,26 @@ export const SITEMAP_LOCALIZED_ROUTES = [
   '/resources',
 ] as const;
 
+/**
+ * `/resources` is currently translated only for English and Simplified
+ * Chinese. Keep it in the localized route set so those two documents can
+ * share hreflang metadata, but do not synthesize the other locale variants.
+ * `null` means every canonical locale prefix is supported.
+ */
+export const SITEMAP_ROUTE_LOCALE_PREFIXES: Record<
+  (typeof SITEMAP_LOCALIZED_ROUTES)[number],
+  readonly string[] | null
+> = {
+  '/': null,
+  '/play': null,
+  '/day-trading-simulator': null,
+  '/crypto-trading-simulator': null,
+  '/forex-trading-simulator': null,
+  '/intraday-trading-practice': null,
+  '/market-replay': null,
+  '/resources': ['/', '/zh-hans'],
+};
+
 export const SITEMAP_BASE_LOCALE_ROUTES = [
   '/about',
   '/contact',

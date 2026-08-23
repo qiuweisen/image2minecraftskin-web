@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { getChartMiniLegacyRedirect } from '@/lib/chartmini-legacy-redirects';
-import { getBaseLocaleOnlyRedirectPath, isLocalizedPath } from '@/lib/locale';
+import {
+  getBaseLocaleOnlyRedirectPath,
+  getLocalizedLocalesForPath,
+  isLocalizedPath,
+} from '@/lib/locale';
 import {
   SITEMAP_BASE_LOCALE_ROUTES,
   SITEMAP_LOCALIZED_ROUTES,
@@ -68,9 +72,17 @@ describe('SEO sitemap locale contract', () => {
     expect(getBaseLocaleOnlyRedirectPath('/zh-hans/privacy-policy')).toBe(
       '/privacy-policy'
     );
+    expect(getBaseLocaleOnlyRedirectPath('/de/resources')).toBe('/resources');
+    expect(getBaseLocaleOnlyRedirectPath('/de/resources/')).toBe('/resources');
+    expect(getBaseLocaleOnlyRedirectPath('/zh-hans/resources')).toBeNull();
     expect(
       getBaseLocaleOnlyRedirectPath('/fr/crypto-trading-simulator')
     ).toBeNull();
     expect(getBaseLocaleOnlyRedirectPath('/blog/example-post')).toBeNull();
+  });
+
+  it('limits resource hreflang to locales with translated content', () => {
+    expect(getLocalizedLocalesForPath('/resources')).toEqual(['en', 'zh-hans']);
+    expect(getLocalizedLocalesForPath('/market-replay')).toContain('de');
   });
 });

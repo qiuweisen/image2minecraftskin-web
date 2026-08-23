@@ -185,6 +185,16 @@ export const selectableLocales = locales
       (commonLocalePriority.get(right) ?? Number.MAX_SAFE_INTEGER)
   );
 
+/**
+ * Return the locale set that has an actual translated document for a public
+ * SEO path. Most sitemap routes are translated for every canonical locale;
+ * resources currently has only English and Simplified Chinese content.
+ */
+export function getLocalizedLocalesForPath(path: string): Locale[] {
+  if (path === '/resources') return ['en', 'zh-hans'];
+  return [...selectableLocales];
+}
+
 export function getCanonicalLocale(locale: Locale): Locale {
   return locale === 'zh' ? 'zh-hans' : locale;
 }
@@ -305,8 +315,10 @@ export function getCanonicalPathname(pathname: string) {
 }
 
 /**
- * Paths that are fully translated and should get hreflang alternates
- * in sitemap / SEO metadata. Blog content currently falls back to the
+ * Paths that have localized SEO documents and should get hreflang alternates
+ * in sitemap / SEO metadata. Most paths are translated for every canonical
+ * locale; `/resources` is a deliberate partial-locale exception handled by
+ * `getLocalizedLocalesForPath`. Blog content currently falls back to the
  * English production article and is intentionally not marked as localized.
  */
 export const LOCALIZED_PATHS = new Set([
@@ -330,18 +342,18 @@ export const LOCALIZED_PATHS = new Set([
 ]);
 
 /**
- * True for any user-visible path that exists in every locale and therefore
- * needs hreflang alternates (English ↔ Chinese, x-default). Used by both
- * `seo()` metadata and the dynamic sitemap.
+ * True for any user-visible path with at least one localized SEO document and
+ * therefore needs hreflang alternates (English ↔ localized variants,
+ * x-default). Used by both `seo()` metadata and the dynamic sitemap.
  */
 export function isLocalizedPath(path: string): boolean {
   return LOCALIZED_PATHS.has(path);
 }
 
 /**
- * Return the base-locale destination for an English-only public URL carrying
- * a non-English locale prefix. Fully translated paths intentionally return
- * null and remain first-class locale URLs.
+ * Return the base-locale destination for a public URL whose locale does not
+ * have translated content. Fully translated paths intentionally return null
+ * and remain first-class locale URLs.
  */
 export function getBaseLocaleOnlyRedirectPath(pathname: string): string | null {
   const localePrefix = chartMiniLocalePaths
@@ -352,5 +364,14 @@ export function getBaseLocaleOnlyRedirectPath(pathname: string): string | null {
   if (!localePrefix) return null;
 
   const basePathname = pathname.slice(localePrefix.length) || '/';
+  const normalizedBasePathname = basePathname.replace(/\/+$/, '') || '/';
+
+  // Resources has a real `/zh-hans` document, but the other locale prefixes
+  // currently resolve to English fallback content and must not be indexable as
+  // translated pages.
+  if (normalizedBasePathname === '/resources') {
+    return localePrefix === '/zh-hans' ? null : '/resources';
+  }
+
   return isBaseLocaleOnlyPath(basePathname) ? basePathname : null;
 }

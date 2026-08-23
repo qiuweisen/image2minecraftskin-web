@@ -65,6 +65,15 @@ function localizeRoute(route, locale) {
   return route === '/' ? `/${locale}` : `/${locale}${route}`;
 }
 
+function localesForRoute(route, availableLocales) {
+  if (route === '/resources') {
+    return availableLocales.filter(
+      (locale) => locale === 'en' || locale === 'zh-hans'
+    );
+  }
+  return availableLocales;
+}
+
 function outputFileForPathname(pathname) {
   if (pathname === '/') return path.join(clientDirectory, 'index.html');
   const relativePath = pathname.replace(/^\/+/, '');
@@ -75,15 +84,17 @@ function outputFileForPathname(pathname) {
 }
 
 const pages = [
-  ...prerenderLocales.flatMap((locale) =>
-    localizedRoutes.map((route) => localizeRoute(route, locale))
+  ...localizedRoutes.flatMap((route) =>
+    localesForRoute(route, prerenderLocales).map((locale) =>
+      localizeRoute(route, locale)
+    )
   ),
   ...baseLocaleOnlyRoutes,
 ].filter((pathname, index, all) => all.indexOf(pathname) === index);
 
 const cleanupPages = [
-  ...locales.flatMap((locale) =>
-    localizedRoutes.map((route) => localizeRoute(route, locale))
+  ...localizedRoutes.flatMap((route) =>
+    locales.flatMap((locale) => localizeRoute(route, locale))
   ),
   ...baseLocaleOnlyRoutes,
 ].filter((pathname, index, all) => all.indexOf(pathname) === index);

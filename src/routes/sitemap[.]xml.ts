@@ -6,7 +6,10 @@ import { baseLocale, chartMiniLocalePaths } from '@/lib/locale';
 import {
   SITEMAP_BASE_LOCALE_ROUTES,
   SITEMAP_LOCALIZED_ROUTES,
+  SITEMAP_ROUTE_LOCALE_PREFIXES,
 } from '@/lib/sitemap-routes';
+
+type LocalePath = (typeof chartMiniLocalePaths)[number];
 
 function localizedPath(prefix: string, route: string): string {
   if (prefix === '/') return route;
@@ -22,8 +25,12 @@ function escapeXml(value: string): string {
     .replaceAll("'", '&apos;');
 }
 
-function alternateLinks(base: string, route: string): string {
-  const links = chartMiniLocalePaths
+function alternateLinks(
+  base: string,
+  route: string,
+  localePaths: readonly LocalePath[] = chartMiniLocalePaths
+): string {
+  const links = localePaths
     .map(
       ({ prefix, hreflang }) =>
         `\n    <xhtml:link rel="alternate" hreflang="${hreflang}" href="${escapeXml(`${base}${localizedPath(prefix, route)}`)}" />`
@@ -35,10 +42,14 @@ function alternateLinks(base: string, route: string): string {
 function urlEntry(
   base: string,
   path: string,
-  options?: { alternateRoute?: string; lastmod?: string }
+  options?: {
+    alternateRoute?: string;
+    alternateLocalePaths?: readonly LocalePath[];
+    lastmod?: string;
+  }
 ): string {
   const alternate = options?.alternateRoute
-    ? alternateLinks(base, options.alternateRoute)
+    ? alternateLinks(base, options.alternateRoute, options.alternateLocalePaths)
     : '';
   const lastmod = options?.lastmod
     ? `\n    <lastmod>${escapeXml(options.lastmod)}</lastmod>`
@@ -58,10 +69,18 @@ export const Route = createFileRoute('/sitemap.xml')({
         const entries: string[] = [];
 
         for (const route of SITEMAP_LOCALIZED_ROUTES) {
-          for (const { prefix } of chartMiniLocalePaths) {
+          const allowedPrefixes = SITEMAP_ROUTE_LOCALE_PREFIXES[route];
+          const localePaths = allowedPrefixes
+            ? chartMiniLocalePaths.filter(({ prefix }) =>
+                allowedPrefixes.includes(prefix)
+              )
+            : chartMiniLocalePaths;
+
+          for (const { prefix } of localePaths) {
             entries.push(
               urlEntry(base, localizedPath(prefix, route), {
                 alternateRoute: route,
+                alternateLocalePaths: localePaths,
               })
             );
           }

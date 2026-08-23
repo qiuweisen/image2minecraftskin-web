@@ -10,6 +10,7 @@ import {
   baseLocale,
   getCanonicalLocale,
   getLocale,
+  getLocalizedLocalesForPath,
   isLocalizedPath,
   localeConfig,
   selectableLocales,
@@ -32,13 +33,14 @@ export function seo(
   }
 ) {
   const localized = isLocalizedPath(path);
+  const localizedLocales = getLocalizedLocalesForPath(path);
   const url = localized
     ? getCanonicalUrl(path)
     : getCanonicalUrlForLocale(path, baseLocale);
   const image = options.image ?? getOgImage();
   const alternateLinks = localized
     ? [
-        ...selectableLocales.map((locale) => ({
+        ...localizedLocales.map((locale) => ({
           rel: 'alternate',
           hrefLang: localeConfig[locale].hreflang,
           href: getCanonicalUrlForLocale(path, locale),
