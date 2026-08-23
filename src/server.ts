@@ -287,13 +287,9 @@ function getBaseLocaleOnlyRedirect(request: Request): Response | null {
   return Response.redirect(url, 308);
 }
 
-const staleStaticLocalePrefixes = [
-  '/zh-hans',
-  '/es-419',
-  '/fa',
-  '/ro',
-  '/ta',
-] as const;
+const staleStaticLocalePrefixes = chartMiniLocalePaths
+  .map(({ prefix }) => prefix)
+  .filter((prefix) => prefix !== '/');
 
 function isStaleStaticLocalePath(pathname: string): boolean {
   return staleStaticLocalePrefixes.some(
@@ -314,15 +310,26 @@ async function serveStaleStaticLocaleFromAssets(
   }
 
   try {
-    const response = await env.ASSETS.fetch(request);
+    // Fetch the exact postbuild document. Asking the Assets binding for the
+    // extensionless route can fall through to an older `/index.html` shell on
+    // an edge that still has a legacy asset lookup cached.
+    const assetUrl = new URL(request.url);
+    assetUrl.pathname = `${url.pathname}.html`;
+    assetUrl.search = '';
+    const response = await env.ASSETS.fetch(
+      new Request(assetUrl, { method: 'GET', headers: request.headers })
+    );
     const contentType = response.headers.get('Content-Type') ?? '';
     if (!response.ok || !contentType.includes('text/html')) return null;
 
-    // Return the binding response unchanged. In particular, do not rebuild
-    // it from `response.body`: local and edge asset bindings may reuse the
-    // stream for concurrent requests, and wrapping that stream can produce a
-    // false 200 with an empty body.
-    return response;
+    const body = await response.arrayBuffer();
+    if (body.byteLength < 2048) return null;
+
+    return new Response(body, {
+      status: response.status,
+      statusText: response.statusText,
+      headers: response.headers,
+    });
   } catch {
     // A binding failure should fall through to the normal route handler,
     // which preserves the existing availability behavior.

@@ -161,6 +161,25 @@ async function renderNextPage() {
             );
           }
           html = await response.text();
+          const canonicalMatch = html.match(
+            /<link[^>]+rel=["']canonical["'][^>]+href=["']([^"']+)["']/i
+          );
+          const expectedPath = pathname.replace(/\/$/, '') || '/';
+          const canonicalPath = canonicalMatch
+            ? new URL(canonicalMatch[1], 'https://chartmini.com').pathname
+            : null;
+          const normalizedCanonicalPath =
+            canonicalPath?.replace(/\/$/, '') || '/';
+          if (
+            html.length < 2048 ||
+            !/<html[\s>]/i.test(html) ||
+            !canonicalMatch ||
+            normalizedCanonicalPath !== expectedPath
+          ) {
+            throw new Error(
+              `invalid HTML document (bytes=${html.length}, canonical=${canonicalPath ?? 'missing'}, expected=${pathname})`
+            );
+          }
           break;
         } catch (error) {
           lastError = error;
