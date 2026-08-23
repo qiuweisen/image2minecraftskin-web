@@ -20,6 +20,15 @@
     "global_fetch_strictly_public"
   ],
 
+  // Do not let the platform-level Worker cache answer before the request
+  // reaches the current version. Public HTML still uses the explicit
+  // Cache API below and static client assets remain asset-cached, while this
+  // prevents a superseded extensionless document from winning over the
+  // locale-aware Worker routing.
+  "cache": {
+    "enabled": false
+  },
+
   // https://developers.cloudflare.com/workers/wrangler/configuration
   // The path to the entrypoint of your Worker that will be executed
   "main": "./src/server.ts",
