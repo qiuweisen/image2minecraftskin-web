@@ -1,4 +1,5 @@
 import type { BlogPost } from '@/lib/blog';
+import { Link } from '@tanstack/react-router';
 import { formatDate } from '@/lib/formatter';
 import {
   Card,
@@ -12,7 +13,7 @@ export function BlogCard({ post }: { post: BlogPost }) {
   const { slug } = post;
 
   return (
-    <a href={`/blog/${slug}`} className="h-full">
+    <Link to="/blog/$slug" params={{ slug }} className="h-full">
       <Card className="h-full py-0 transition-[box-shadow,ring-color] hover:shadow-md dark:hover:ring-foreground/20">
         {post.image && (
           <div className="aspect-video w-full overflow-hidden rounded-t-xl bg-muted">
@@ -46,6 +47,6 @@ export function BlogCard({ post }: { post: BlogPost }) {
           )}
         </CardContent>
       </Card>
-    </a>
+    </Link>
   );
 }

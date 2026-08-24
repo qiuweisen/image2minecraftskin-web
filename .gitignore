@@ -8,19 +8,14 @@ count.txt
 .env.local
 .env.production
 .dev.vars
-.migration-source-export.json
-.migration-d1-import.sql
-.migration-d1-chunks/
 .nitro
 .tanstack
 .wrangler
 .output
 .vinxi
 .content-collections
-public/marketing-content/
 __unconfig*
 todos.json
-/tmp/
 
 # locale
 project.inlang/cache

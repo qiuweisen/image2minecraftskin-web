@@ -1,4 +1,5 @@
 import { m } from '@/locale/paraglide/messages';
+import { LoginForm } from '@/components/auth/login-form';
 import {
   Dialog,
   DialogContent,
@@ -9,15 +10,6 @@ import {
 import { Routes } from '@/lib/routes';
 import { useRouter } from '@tanstack/react-router';
 import React, { useEffect, useState } from 'react';
-
-// The login dialog is an interaction-only feature on marketing pages. Keep
-// the form, validation and auth UI out of the homepage entry until the user
-// actually opens the dialog.
-const LoginForm = React.lazy(() =>
-  import('@/components/auth/login-form').then(({ LoginForm: form }) => ({
-    default: form,
-  }))
-);
 interface LoginWrapperProps {
   children: React.ReactNode;
   mode?: 'modal' | 'redirect';
@@ -72,38 +64,14 @@ export function LoginWrapper({
           <DialogHeader className="sr-only">
             <DialogTitle>{m.auth_login_sign_in()}</DialogTitle>
           </DialogHeader>
-          <React.Suspense
-            fallback={
-              <div className="p-6 text-sm text-muted-foreground">
-                {m.auth_login_welcome_back()}
-              </div>
-            }
-          >
-            <LoginForm
-              callbackUrl={callbackUrl}
-              onSuccess={handleModalSuccess}
-              className="border-0 shadow-none"
-            />
-          </React.Suspense>
+          <LoginForm
+            callbackUrl={callbackUrl}
+            onSuccess={handleModalSuccess}
+            className="border-0 shadow-none"
+          />
         </DialogContent>
       </Dialog>
     );
-  }
-  if (
-    asChild &&
-    React.isValidElement<{
-      onClick?: React.MouseEventHandler<HTMLElement>;
-    }>(children)
-  ) {
-    const childOnClick = children.props.onClick;
-    return React.cloneElement(children, {
-      onClick: (event) => {
-        childOnClick?.(event);
-        if (!event.defaultPrevented) {
-          handleRedirect();
-        }
-      },
-    });
   }
   return (
     <button type="button" onClick={handleRedirect} className="inline">

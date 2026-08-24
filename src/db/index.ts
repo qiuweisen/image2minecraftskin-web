@@ -7,7 +7,5 @@ import { env } from "cloudflare:workers";
  * https://orm.drizzle.team/docs/connect-cloudflare-d1
  */
 export function getDb() {
-  // Better Auth's Drizzle adapter needs the complete schema to resolve its
-  // session, account, and verification models at runtime.
   return drizzle(env.DB, { schema });
 }

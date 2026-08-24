@@ -32,9 +32,12 @@ const priceIds = isPaymentEnabled
  */
 export const websiteConfig: WebsiteConfig = {
   ui: {
+    locale: {
+      enableSwitch: true,
+    },
     mode: {
       defaultMode: 'dark',
-      enableSwitch: true,
+      enableSwitch: false,
     },
   },
   metadata: {
@@ -48,44 +51,43 @@ export const websiteConfig: WebsiteConfig = {
       return m.site_description();
     },
     images: {
-      ogImage: '/chartmini-og.png',
-      logoLight: '/chartmini-logo.svg',
-      logoDark: '/chartmini-logo.svg',
+      ogImage: '/og-image2minecraftskin.png',
+      logoLight: '/brand/logo-mark.svg',
+      logoDark: '/brand/logo-mark.svg',
     },
   },
-  social: {},
+  social: {
+    github: 'https://github.com/qiuweisen/image2minecraftskin-web',
+  },
   auth: {
-    enable: true,
-    enableGoogleLogin: true,
-    enableCredentialLogin: true,
-    enableDeleteAccount: true,
+    enable: false,
+    enableGoogleLogin: false,
+    enableCredentialLogin: false,
+    enableDeleteAccount: false,
   },
   blog: {
-    enable: true,
-    // Keep the blog grid balanced at three columns on desktop.
-    paginationSize: 12,
+    enable: false,
+    paginationSize: 6,
   },
   mail: {
-    enable: true,
-    provider: 'resend',
-    fromEmail: 'ChartMini V2 <security@send.chartmini.com>',
-    supportEmail: 'ChartMini Support <security@send.chartmini.com>',
+    enable: false,
+    provider: 'cloudflare',
   },
   newsletter: {
-    enable: true,
+    enable: false,
     provider: 'resend',
     autoSubscribeAfterSignUp: true,
   },
   notification: {
-    enable: import.meta.env.MODE !== 'e2e',
+    enable: false,
     provider: 'discord',
   },
   cache: {
-    enable: true,
+    enable: false,
     provider: 'kv',
   },
   storage: {
-    enable: true,
+    enable: false,
     provider: 'r2',
     maxFileSize: DEFAULT_MAX_FILE_SIZE,
     allowedTypes: DEFAULT_ALLOWED_TYPES,

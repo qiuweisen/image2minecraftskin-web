@@ -1,8 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "chartmini-v2",
-  "account_id": "7135c35904ce735df4e1326f317e373d",
-  "compatibility_date": "2025-09-02",
+  "name": "ascii-image-web",
+  "compatibility_date": "2026-07-29",
   "compatibility_flags": [
     // Enable Node.js API
     // https://developers.cloudflare.com/workers/configuration/compatibility-flags/#nodejs-compatibility-flag
@@ -20,113 +19,16 @@
     "global_fetch_strictly_public"
   ],
 
-  // Do not let the platform-level Worker cache answer before the request
-  // reaches the current version. Public HTML still uses the explicit
-  // Cache API below and static client assets remain asset-cached, while this
-  // prevents a superseded extensionless document from winning over the
-  // locale-aware Worker routing.
-  "cache": {
-    "enabled": false
-  },
-
   // https://developers.cloudflare.com/workers/wrangler/configuration
   // The path to the entrypoint of your Worker that will be executed
   "main": "./src/server.ts",
 
-  // Keep long-form translated marketing content as CDN-served static assets.
-  // The ASSETS binding lets server functions read the requested locale without
-  // bundling all 40 translations into the Worker script.
-  "assets": {
-    "binding": "ASSETS",
-    // Every localized SEO page is an independent document. Route all locale
-    // prefixes through the Worker first so the current version can fetch the
-    // matching exact asset instead of inheriting an old CDN fallback document.
-    "run_worker_first": [
-      "/zh-hans",
-      "/zh-hans/*",
-      "/es-419",
-      "/es-419/*",
-      "/pt",
-      "/pt/*",
-      "/fr",
-      "/fr/*",
-      "/de",
-      "/de/*",
-      "/ru",
-      "/ru/*",
-      "/ja",
-      "/ja/*",
-      "/ko",
-      "/ko/*",
-      "/zh-hant",
-      "/zh-hant/*",
-      "/ar",
-      "/ar/*",
-      "/it",
-      "/it/*",
-      "/nl",
-      "/nl/*",
-      "/pl",
-      "/pl/*",
-      "/tr",
-      "/tr/*",
-      "/vi",
-      "/vi/*",
-      "/th",
-      "/th/*",
-      "/id",
-      "/id/*",
-      "/hi",
-      "/hi/*",
-      "/he",
-      "/he/*",
-      "/fa",
-      "/fa/*",
-      "/uk",
-      "/uk/*",
-      "/cs",
-      "/cs/*",
-      "/sv",
-      "/sv/*",
-      "/no",
-      "/no/*",
-      "/da",
-      "/da/*",
-      "/fi",
-      "/fi/*",
-      "/el",
-      "/el/*",
-      "/ro",
-      "/ro/*",
-      "/hu",
-      "/hu/*",
-      "/bg",
-      "/bg/*",
-      "/sk",
-      "/sk/*",
-      "/sl",
-      "/sl/*",
-      "/sr",
-      "/sr/*",
-      "/ms",
-      "/ms/*",
-      "/bn",
-      "/bn/*",
-      "/ur",
-      "/ur/*",
-      "/ta",
-      "/ta/*",
-      "/te",
-      "/te/*"
-    ],
-    // A missing document must reach the Worker/404 path, never silently
-    // become the English SPA shell. This prevents incorrect 200/canonical
-    // responses from entering search-engine caches.
-    "not_found_handling": "none"
+  "vars": {
+    "VITE_BASE_URL": "https://ascii-image-web.weisen-qiu.workers.dev"
   },
 
-  // Logpush is not enabled on this account; keep observability logs enabled below.
-  "logpush": false,
+  // Enables Workers Trace Events Logpush for a Worker
+  "logpush": true,
 
   // Whether Wrangler should keep variables configured in the dashboard on deploy
   "keep_vars": true,
@@ -140,39 +42,13 @@
     "traces": {
       "enabled": true,
       "persist": true,
-      "head_sampling_rate": 1
+      "head_sampling_rate": 0.1
     }
   },
 
-  // Pin the production analysis model explicitly; API keys remain secrets.
-  "vars": {
-    "GEMINI_API_MODEL": "gemma-4-31b-it"
-  },
-
-  // Route production traffic through the Worker while the existing Cloudflare
-  // DNS record remains the hostname entry point.
-  "routes": [
-    {
-      "pattern": "chartmini.com/*",
-      "zone_name": "chartmini.com"
-    }
-  ],
-
-  "durable_objects": {
-    "bindings": [
-      {
-        "name": "GEMINI_KEY_POOL",
-        "class_name": "GeminiKeyPool"
-      }
-    ]
-  },
-
-  "migrations": [
-    {
-      "tag": "v1",
-      "new_sqlite_classes": ["GeminiKeyPool"]
-    }
-  ],
+  // Custom domains
+  // https://developers.cloudflare.com/workers/configuration/routing/custom-domains/
+  "workers_dev": true,
 
   /**
    * Bindings
@@ -181,33 +57,33 @@
    * https://developers.cloudflare.com/workers/runtime-apis/bindings/
    */
   /**
-   * Isolated v2 D1 database. This is disposable test data and is not production.
+   * D1: create database with `npx wrangler d1 create mkfast-template`
    */
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "chartmini-v2",
-      "database_id": "a35cdf83-65c8-4427-b2f9-ef7780c1144b",
+      "database_name": "ascii-image-web",
+      "database_id": "ae69ab62-a228-4f64-9b38-cf0b25bea6e7",
       "migrations_dir": "./src/db/migrations"
     }
   ],
   /**
-   * Isolated v2 user-file bucket. Market data remains outside this bucket.
+   * R2: create bucket with `npx wrangler r2 bucket create mkfast-template`
    */
   "r2_buckets": [
     {
-      "bucket_name": "chartmini-v2-files",
+      "bucket_name": "ascii-image-web",
       "binding": "BUCKET"
     }
   ],
   /**
    * KV: server-side cache.
-   * Isolated v2 cache namespace.
+   * Create with `npx wrangler kv namespace create CACHE`, then replace the id.
    */
   "kv_namespaces": [
     {
       "binding": "CACHE",
-      "id": "fbdd07934bab44b6b7d356587653b796"
+      "id": "aa809283e8d3441b88379d426e1ca2db"
     }
   ]
 }

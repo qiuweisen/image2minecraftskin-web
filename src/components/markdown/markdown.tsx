@@ -9,28 +9,19 @@ import { renderMarkdown, type MarkdownResult } from '@/lib/markdown';
 import { useEffect, useState } from 'react';
 import { Link } from '@tanstack/react-router';
 type MarkdownProps = {
-  content?: string;
-  /** HTML rendered by the server for SEO and first paint. */
-  markup?: string;
+  content: string;
   className?: string;
 };
 /**
  * Renders markdown component
  * https://tanstack.dev/start/latest/docs/framework/react/guide/rendering-markdown
  */
-export function Markdown({ content = '', markup, className }: MarkdownProps) {
-  const [result, setResult] = useState<MarkdownResult | null>(() =>
-    markup === undefined ? null : { markup }
-  );
+export function Markdown({ content, className }: MarkdownProps) {
+  const [result, setResult] = useState<MarkdownResult | null>(null);
   useEffect(() => {
-    if (markup !== undefined) {
-      setResult({ markup });
-      return;
-    }
     renderMarkdown(content).then(setResult);
-  }, [content, markup]);
-  const renderedMarkup = markup ?? result?.markup;
-  if (renderedMarkup === undefined) {
+  }, [content]);
+  if (!result) {
     return <div className={className}>{m.common_loading()}</div>;
   }
   const options: HTMLReactParserOptions = {
@@ -91,5 +82,5 @@ export function Markdown({ content = '', markup, className }: MarkdownProps) {
       }
     },
   };
-  return <div className={className}>{parse(renderedMarkup, options)}</div>;
+  return <div className={className}>{parse(result.markup, options)}</div>;
 }

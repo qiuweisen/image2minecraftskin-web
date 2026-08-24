@@ -6,12 +6,10 @@ import {
 } from '@/components/ui/dropdown-menu';
 import {
   deLocalizeHref,
-  getCanonicalLocale,
   getLocale,
-  isLocalizedPath,
   localeConfig,
+  locales,
   localizeHref,
-  selectableLocales,
   type Locale,
 } from '@/lib/locale';
 import { cn } from '@/lib/utils';
@@ -41,23 +39,20 @@ export function useLocaleSwitcher({
   onLocaleChange,
 }: UseLocaleSwitcherOptions = {}) {
   const location = useLocation();
-  const currentLocale = getCanonicalLocale(getLocale());
+  const currentLocale = getLocale();
   const currentHref = [
     location.pathname,
     withUrlPartPrefix(location.searchStr, '?'),
     withUrlPartPrefix(location.hash, '#'),
   ].join('');
   const baseHref = deLocalizeHref(currentHref);
-  const basePathname = deLocalizeHref(location.pathname);
 
   function switchLocale(nextLocale: Locale) {
     if (nextLocale === currentLocale) {
       return;
     }
 
-    const nextHref = isLocalizedPath(basePathname)
-      ? localizeHref(baseHref, { locale: nextLocale })
-      : baseHref;
+    const nextHref = localizeHref(baseHref, { locale: nextLocale });
     setLocale(nextLocale, { reload: false });
     onLocaleChange?.();
     window.location.assign(nextHref);
@@ -74,7 +69,7 @@ export function LocaleSwitcher({
     onLocaleChange,
   });
 
-  if (selectableLocales.length <= 1) {
+  if (locales.length <= 1) {
     return null;
   }
 
@@ -91,15 +86,17 @@ export function LocaleSwitcher({
         <IconLanguage className="size-4" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        {selectableLocales.map((locale) => (
+        {locales.map((locale) => (
           <DropdownMenuItem
             key={locale}
             onClick={() => switchLocale(locale)}
             disabled={locale === currentLocale}
           >
-            <span aria-hidden="true" className="mr-2 text-base">
-              {localeConfig[locale].flag}
-            </span>
+            {localeConfig[locale].flag ? (
+              <span className="mr-2 text-base">
+                {localeConfig[locale].flag}
+              </span>
+            ) : null}
             <span>{localeConfig[locale].name}</span>
           </DropdownMenuItem>
         ))}

@@ -12,7 +12,7 @@ export function DefaultCatchBoundary({ error }: ErrorComponentProps) {
   const message = error?.message ?? m.catch_boundary_description();
   return (
     <div className="flex min-h-[60vh] flex-col items-center justify-center gap-8 px-4">
-      <Logo className="h-12 w-auto" />
+      <Logo className="size-12" />
       <h1 className="text-4xl font-bold">{m.catch_boundary_title()}</h1>
       <p className="text-balance text-center text-xl font-medium text-muted-foreground">
         {message}

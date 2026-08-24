@@ -9,91 +9,6 @@ import { cloudflare } from '@cloudflare/vite-plugin';
 import contentCollections from '@content-collections/vite';
 import { paraglideVitePlugin } from '@inlang/paraglide-js';
 
-// Keep localized root URLs identical to production (`/zh-hans`, not
-// `/zh-hans/`). Paraglide's default pattern uses `/:path(.*)?`, which leaves
-// the separator when the optional path is empty. The server canonicalizes
-// trailing slashes away, so that combination would create a redirect loop.
-const paraglideLocales = [
-  'en',
-  'zh',
-  'es-419',
-  'pt',
-  'fr',
-  'de',
-  'ru',
-  'ja',
-  'ko',
-  'zh-hans',
-  'zh-hant',
-  'ar',
-  'it',
-  'nl',
-  'pl',
-  'tr',
-  'vi',
-  'th',
-  'id',
-  'hi',
-  'he',
-  'fa',
-  'uk',
-  'cs',
-  'sv',
-  'no',
-  'da',
-  'fi',
-  'el',
-  'ro',
-  'hu',
-  'bg',
-  'sk',
-  'sl',
-  'sr',
-  'ms',
-  'bn',
-  'ur',
-  'ta',
-  'te',
-] as const;
-
-const paraglideUrlPatterns = [
-  // Keep localized homepages slashless (`/zh-hans`), matching the existing
-  // production URL contract. A separate root pattern is necessary because
-  // URLPattern's `:path*` form does not match an empty pathname.
-  {
-    pattern: ':protocol://:domain(.*)::port?/',
-    localized: [
-      ...paraglideLocales
-        .filter((locale) => locale !== 'en')
-        .map(
-          (locale) =>
-            [locale, `:protocol://:domain(.*)::port?/${locale}`] as [
-              string,
-              string,
-            ]
-        ),
-      ['en', ':protocol://:domain(.*)::port?/'] as [string, string],
-    ],
-  },
-  // All non-root paths retain the locale prefix and may contain any number
-  // of nested segments.
-  {
-    pattern: ':protocol://:domain(.*)::port?/:path+',
-    localized: [
-      ...paraglideLocales
-        .filter((locale) => locale !== 'en')
-        .map(
-          (locale) =>
-            [locale, `:protocol://:domain(.*)::port?/${locale}/:path+`] as [
-              string,
-              string,
-            ]
-        ),
-      ['en', ':protocol://:domain(.*)::port?/:path+'] as [string, string],
-    ],
-  },
-];
-
 const stripeE2EConfig =
   process.env.STRIPE_E2E_RUN === 'true'
     ? {
@@ -113,12 +28,6 @@ const stripeE2EConfig =
  * https://vite.dev/config/
  */
 const config = defineConfig({
-  // TanStack Start's SSR output is uploaded as separate Worker modules.
-  // Vite does not minify that output by default, so enable it explicitly to
-  // stay within Cloudflare Workers Free's 3 MiB compressed script limit.
-  build: {
-    minify: 'esbuild',
-  },
   server: {
     allowedHosts: ['.trycloudflare.com', '.tanstarter.dev'],
   },
@@ -139,7 +48,6 @@ const config = defineConfig({
       project: './project.inlang',
       outdir: './src/locale/paraglide',
       strategy: ['url', 'cookie', 'baseLocale'],
-      urlPatterns: paraglideUrlPatterns,
       routeStrategies: [
         { match: '/api/:path(.*)?', exclude: true },
         { match: '/robots.txt', exclude: true },
@@ -157,12 +65,7 @@ const config = defineConfig({
     tanstackStart({
       srcDirectory: 'src',
       start: { entry: './start.tsx' },
-      server: {
-        entry: './server.ts',
-        build: {
-          inlineCss: true,
-        },
-      },
+      server: { entry: './server.ts' },
     }),
     // react's vite plugin must come after start's vite plugin
     viteReact(),

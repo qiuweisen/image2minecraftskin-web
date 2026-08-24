@@ -1,58 +1,52 @@
 import { HomePage } from '@/components/blocks/homepage';
 import { websiteConfig } from '@/config/website';
-import {
-  faqStructuredData,
-  jsonLdScript,
-  seo,
-  siteStructuredData,
-} from '@/lib/seo';
-import { m } from '@/locale/paraglide/messages';
+import { seo } from '@/lib/seo';
+import { getCanonicalUrl } from '@/lib/urls';
+import { getLocale, localeConfig } from '@/lib/locale';
 import { createFileRoute } from '@tanstack/react-router';
+import { m } from '@/locale/paraglide/messages';
 
 export const Route = createFileRoute('/')({
   head: () => {
-    const title = websiteConfig.metadata?.title ?? '';
-    const description = websiteConfig.metadata?.description ?? '';
+    const name = websiteConfig.metadata?.name ?? '';
+    const title = m.site_title();
+    const description = m.site_description();
+    const url = getCanonicalUrl('/');
+    const inLanguage = localeConfig[getLocale()].hreflang;
+    const webSiteJsonLd = {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name,
+      description,
+      url,
+      inLanguage,
+    };
     const metadata = seo('/', { title, description });
-    const faqs = [
-      {
-        question: m.home_faqs_items_item_1_question(),
-        answer: m.home_faqs_items_item_1_answer(),
-      },
-      {
-        question: m.home_faqs_items_item_2_question(),
-        answer: m.home_faqs_items_item_2_answer(),
-      },
-      {
-        question: m.home_faqs_items_item_3_question(),
-        answer: m.home_faqs_items_item_3_answer(),
-      },
-      {
-        question: m.home_faqs_items_item_4_question(),
-        answer: m.home_faqs_items_item_4_answer(),
-      },
-      {
-        question: m.home_faqs_items_item_5_question(),
-        answer: m.home_faqs_items_item_5_answer(),
-      },
-      {
-        question: m.home_faqs_items_item_6_question(),
-        answer: m.home_faqs_items_item_6_answer(),
-      },
-      {
-        question: m.home_faqs_items_item_7_question(),
-        answer: m.home_faqs_items_item_7_answer(),
-      },
-      {
-        question: m.home_faqs_items_item_8_question(),
-        answer: m.home_faqs_items_item_8_answer(),
-      },
-    ];
+    const faqJsonLd = {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: [
+        [m.skin_faq_privacy_question(), m.skin_faq_privacy_answer()],
+        [m.skin_faq_formats_question(), m.skin_faq_formats_answer()],
+        [m.skin_faq_mobile_question(), m.skin_faq_mobile_answer()],
+        [m.skin_faq_free_question(), m.skin_faq_free_answer()],
+      ].map(([question, answer]) => ({
+        '@type': 'Question',
+        name: question,
+        acceptedAnswer: { '@type': 'Answer', text: answer },
+      })),
+    };
     return {
       ...metadata,
       scripts: [
-        jsonLdScript(faqStructuredData(faqs)),
-        jsonLdScript(siteStructuredData()),
+        {
+          type: 'application/ld+json',
+          children: JSON.stringify(webSiteJsonLd),
+        },
+        {
+          type: 'application/ld+json',
+          children: JSON.stringify(faqJsonLd),
+        },
       ],
     };
   },

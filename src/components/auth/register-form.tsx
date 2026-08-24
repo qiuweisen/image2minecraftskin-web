@@ -1,4 +1,4 @@
-import { getAuthErrorMessage } from '@/lib/auth-errors';
+import { getAuthErrorMessage } from '@/lib/locale';
 import { m } from '@/locale/paraglide/messages';
 import { AuthCard } from '@/components/auth/auth-card';
 import { FormError } from '@/components/shared/form-error';

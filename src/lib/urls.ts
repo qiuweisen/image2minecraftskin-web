@@ -2,7 +2,6 @@ import { clientEnv } from '@/env/client';
 import { websiteConfig } from '@/config/website';
 import {
   deLocalizeHref,
-  getCanonicalLocale,
   getLocale,
   localizeHref,
   type Locale,
@@ -16,11 +15,6 @@ export function getBaseUrl(): string {
   return clientEnv.VITE_BASE_URL;
 }
 
-function normalizeCanonicalPath(path: string): string {
-  if (path === '/') return '/';
-  return path.replace(/\/+$/, '') || '/';
-}
-
 /**
  * Build canonical URL for a path (e.g. /about -> https://example.com/about)
  * @param path - The path to build the canonical URL for
@@ -29,36 +23,26 @@ function normalizeCanonicalPath(path: string): string {
 export function getCanonicalUrl(path: string): string {
   const base = getBaseUrl().replace(/\/$/, '');
   const rawPath = path.startsWith('/') ? path : `/${path}`;
-  const p = normalizeCanonicalPath(
-    localizeHref(rawPath, {
-      locale: getCanonicalLocale(getLocale()),
-    })
-  );
+  const p = localizeHref(rawPath, { locale: getLocale() });
   return `${base}${p}`;
 }
 
 export function getCanonicalUrlForLocale(path: string, locale: Locale): string {
   const base = getBaseUrl().replace(/\/$/, '');
   const rawPath = path.startsWith('/') ? path : `/${path}`;
-  return `${base}${normalizeCanonicalPath(
-    localizeHref(rawPath, {
-      locale: getCanonicalLocale(locale),
-    })
-  )}`;
+  return `${base}${localizeHref(rawPath, { locale })}`;
 }
 
 /**
  * Get the path with the current or provided locale applied.
- * e.g. getPathWithLocale('/dashboard', 'zh-hans') => '/zh-hans/dashboard'
+ * e.g. getPathWithLocale('/dashboard', 'zh') => '/zh/dashboard'
  * e.g. getPathWithLocale('/dashboard', 'en') => '/dashboard'
  */
 export function getPathWithLocale(
   path: string,
   locale: Locale = getLocale()
 ): string {
-  return localizeHref(deLocalizeHref(path), {
-    locale: getCanonicalLocale(locale),
-  });
+  return localizeHref(deLocalizeHref(path), { locale });
 }
 
 /**

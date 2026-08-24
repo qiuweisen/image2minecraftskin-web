@@ -39,8 +39,6 @@ export const Routes = {
 
   // Dashboard routes
   Dashboard: '/dashboard',
-  Play: '/play',
-  DayTradingSimulator: '/day-trading-simulator',
 
   // Settings routes
   Settings: '/settings',

@@ -72,7 +72,7 @@ export default function Integration2Section() {
                   borderClassName="border-black/25 dark:border-white/25"
                   className="dark:bg-muted"
                 >
-                  <Logo className="h-8 w-auto" />
+                  <Logo />
                 </IntegrationCard>
                 <IntegrationCard>
                   <b3.Icon className="size-8" style={{ color: b3.color }} />

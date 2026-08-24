@@ -1,4 +1,5 @@
 import { m } from '@/locale/paraglide/messages';
+import { Link } from '@tanstack/react-router';
 export function BlogPagination({
   currentPage,
   totalPages,
@@ -15,12 +16,13 @@ export function BlogPagination({
       aria-label={m.blog_pagination()}
     >
       {currentPage > 1 ? (
-        <a
-          href={prevPage <= 1 ? '/blog' : `/blog/p/${prevPage}`}
+        <Link
+          to="/blog"
+          search={prevPage <= 1 ? { page: undefined } : { page: prevPage }}
           className="inline-flex items-center rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
         >
           {m.blog_previous()}
-        </a>
+        </Link>
       ) : (
         <span className="inline-flex cursor-not-allowed items-center rounded-lg border border-border px-4 py-2 text-muted-foreground text-sm">
           {m.blog_previous()}
@@ -30,12 +32,13 @@ export function BlogPagination({
         {m.blog_page()} {currentPage} {m.blog_of()} {totalPages}
       </span>
       {currentPage < totalPages ? (
-        <a
-          href={`/blog/p/${nextPage}`}
+        <Link
+          to="/blog"
+          search={{ page: nextPage }}
           className="inline-flex items-center rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
         >
           {m.blog_next()}
-        </a>
+        </Link>
       ) : (
         <span className="inline-flex cursor-not-allowed items-center rounded-lg border border-border px-4 py-2 text-muted-foreground text-sm">
           {m.blog_next()}

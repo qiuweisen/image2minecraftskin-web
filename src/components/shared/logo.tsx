@@ -1,15 +1,19 @@
-import type { SVGProps } from 'react';
-import LegacyLogo from '@/components/Logo';
+import { websiteConfig } from '@/config/website';
 import { cn } from '@/lib/utils';
 
-/** Theme-aware ChartMini wordmark shared by the TanStarter shell. */
-export function Logo({ className, ...props }: SVGProps<SVGSVGElement>) {
+export function Logo({ className }: { className?: string }) {
+  const name = websiteConfig.metadata?.name ?? 'ASCII Image';
+  const logo =
+    websiteConfig.metadata?.images?.logoDark ?? '/logo-generated.webp';
+
   return (
-    <LegacyLogo
-      {...props}
-      role={props.role ?? 'img'}
-      aria-label={props['aria-label'] ?? 'ChartMini'}
-      className={cn('h-8 w-auto shrink-0', className)}
+    <img
+      src={logo}
+      alt={`${name} logo`}
+      className={cn('size-8 shrink-0 rounded-md object-cover', className)}
+      width={32}
+      height={32}
+      decoding="async"
     />
   );
 }

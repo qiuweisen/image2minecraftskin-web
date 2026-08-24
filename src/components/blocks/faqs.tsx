@@ -1,8 +1,6 @@
 import { m } from '@/locale/paraglide/messages';
 import { HeaderSection } from '@/components/shared/header-section';
 import { ScrollReveal } from '@/components/shared/scroll-reveal';
-import Container from '@/components/layout/container';
-import { Card, CardContent } from '@/components/ui/card';
 import {
   Accordion,
   AccordionContent,
@@ -36,54 +34,38 @@ export default function FaqSection() {
       question: m.home_faqs_items_item_5_question(),
       answer: m.home_faqs_items_item_5_answer(),
     },
-    {
-      id: 'item-6',
-      question: m.home_faqs_items_item_6_question(),
-      answer: m.home_faqs_items_item_6_answer(),
-    },
-    {
-      id: 'item-7',
-      question: m.home_faqs_items_item_7_question(),
-      answer: m.home_faqs_items_item_7_answer(),
-    },
-    {
-      id: 'item-8',
-      question: m.home_faqs_items_item_8_question(),
-      answer: m.home_faqs_items_item_8_answer(),
-    },
   ];
   return (
     <section id="faqs" className="px-4 py-16 md:py-24">
-      <Container className="px-2">
+      <div className="mx-auto max-w-4xl">
         <ScrollReveal>
-          <HeaderSection titleAs="h2" title={m.home_faqs_title()} />
+          <HeaderSection
+            title={m.home_faqs_title()}
+            subtitle={m.home_faqs_subtitle()}
+          />
         </ScrollReveal>
 
-        <ScrollReveal delay={150} className="mx-auto mt-10 max-w-4xl">
-          <Card>
-            <CardContent className="px-4 py-3 sm:px-8">
-              <Accordion className="w-full">
-                {faqItems.map((item) => (
-                  <AccordionItem
-                    key={item.id}
-                    value={item.id}
-                    className="border-dashed"
-                  >
-                    <AccordionTrigger className="text-base hover:no-underline">
-                      {item.question}
-                    </AccordionTrigger>
-                    <AccordionContent>
-                      <p className="text-base leading-7 text-muted-foreground">
-                        {item.answer}
-                      </p>
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
-            </CardContent>
-          </Card>
+        <ScrollReveal delay={150} className="mx-auto mt-12 max-w-4xl">
+          <Accordion className="ring-primary/10 w-full rounded-2xl border border-primary/15 px-4 py-3 shadow-sm ring-4 dark:ring-primary/5 dark:border-primary/10 sm:px-8">
+            {faqItems.map((item) => (
+              <AccordionItem
+                key={item.id}
+                value={item.id}
+                className="border-dashed"
+              >
+                <AccordionTrigger className="text-base hover:no-underline">
+                  {item.question}
+                </AccordionTrigger>
+                <AccordionContent>
+                  <p className="text-base text-muted-foreground">
+                    {item.answer}
+                  </p>
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
         </ScrollReveal>
-      </Container>
+      </div>
     </section>
   );
 }

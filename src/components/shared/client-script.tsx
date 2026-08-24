@@ -3,16 +3,16 @@ import { useEffect } from 'react';
 /**
  * Injects a script into document.head on the client.
  *
- * IMPORTANT: injection waits until the initial window load has completed and
- * then runs during an idle period. This keeps analytics scripts from
- * competing with the LCP hero image, initial React hydration, and critical
- * CSS on content-heavy landing pages.
+ * IMPORTANT: injection is deferred until the browser is idle (via
+ * requestIdleCallback, with setTimeout fallback). This keeps analytics /
+ * chat scripts from competing with the LCP hero image and
+ * initial React hydration — critical for Core Web Vitals on a content-heavy
+ * landing page.
  */
 export function ClientScript({
   src,
   async: asyncAttr,
   defer,
-  crossOrigin,
   id,
   dataAttributes,
   inlineHtml,
@@ -20,7 +20,6 @@ export function ClientScript({
   src?: string;
   async?: boolean;
   defer?: boolean;
-  crossOrigin?: string;
   id?: string;
   dataAttributes?: Record<string, string>;
   inlineHtml?: string;
@@ -37,7 +36,6 @@ export function ClientScript({
       if (src) script.src = src;
       if (asyncAttr) script.async = true;
       if (defer) script.defer = true;
-      if (crossOrigin) script.crossOrigin = crossOrigin;
       if (inlineHtml) script.textContent = inlineHtml;
       if (dataAttributes) {
         for (const [key, value] of Object.entries(dataAttributes)) {
@@ -50,33 +48,24 @@ export function ClientScript({
       document.head.appendChild(script);
     };
 
-    const scheduleDuringIdle = () => {
-      // Prefer requestIdleCallback so injection happens after the critical
-      // rendering work; fall back to a short timeout for Safari.
-      type RIC = (cb: () => void, opts?: { timeout?: number }) => number;
-      const ric = (window as unknown as { requestIdleCallback?: RIC })
-        .requestIdleCallback;
-      if (typeof ric === 'function') {
-        const handle = ric(inject, { timeout: 3000 });
-        cancel = () => {
-          const cic = (
-            window as unknown as {
-              cancelIdleCallback?: (h: number) => void;
-            }
-          ).cancelIdleCallback;
-          cic?.(handle);
-        };
-      } else {
-        const handle = window.setTimeout(inject, 1000);
-        cancel = () => window.clearTimeout(handle);
-      }
-    };
-
-    if (document.readyState === 'complete') {
-      scheduleDuringIdle();
+    // Prefer requestIdleCallback so injection happens after LCP/FID budget;
+    // fall back to a short setTimeout for Safari which lacks the API.
+    type RIC = (cb: () => void, opts?: { timeout?: number }) => number;
+    const ric = (window as unknown as { requestIdleCallback?: RIC })
+      .requestIdleCallback;
+    if (typeof ric === 'function') {
+      const handle = ric(inject, { timeout: 3000 });
+      cancel = () => {
+        const cic = (
+          window as unknown as {
+            cancelIdleCallback?: (h: number) => void;
+          }
+        ).cancelIdleCallback;
+        cic?.(handle);
+      };
     } else {
-      window.addEventListener('load', scheduleDuringIdle, { once: true });
-      cancel = () => window.removeEventListener('load', scheduleDuringIdle);
+      const handle = window.setTimeout(inject, 1500);
+      cancel = () => window.clearTimeout(handle);
     }
 
     return () => {

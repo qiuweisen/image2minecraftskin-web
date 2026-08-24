@@ -1,6 +1,6 @@
 import { m } from '@/locale/paraglide/messages';
 import { getAvatarLinks } from '@/config/avatar-config';
-import { sessionClient } from '@/auth/session-client';
+import { authClient } from '@/auth/client';
 import { IconLogout } from '@tabler/icons-react';
 import { Link, useRouter } from '@tanstack/react-router';
 import {
@@ -13,16 +13,16 @@ import {
 import { UserAvatar } from './user-avatar';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import type { SessionUserIdentity } from '@/auth/types';
+import type { SessionUser } from '@/auth/types';
 interface UserButtonProps {
-  user: SessionUserIdentity;
+  user: SessionUser;
 }
 export function UserButton({ user }: UserButtonProps) {
   const router = useRouter();
   const avatarLinks = getAvatarLinks();
   const [open, setOpen] = useState(false);
   const handleSignOut = async () => {
-    await sessionClient.signOut({
+    await authClient.signOut({
       fetchOptions: {
         onSuccess: () => {
           router.navigate({ to: '/' });

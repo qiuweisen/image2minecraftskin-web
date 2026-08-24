@@ -2,6 +2,8 @@ import { m } from '@/locale/paraglide/messages';
 import {
   IconBell,
   IconCreditCard,
+  IconFileUpload,
+  IconKey,
   IconLayoutDashboard,
   IconLock,
   IconSettings2,
@@ -60,6 +62,18 @@ export function getSidebarLinks(): MenuItemConfig[] {
           title: m.dashboard_sidebar_security(),
           icon: IconLock,
           href: Routes.SettingsSecurity,
+          external: false,
+        },
+        {
+          title: m.dashboard_sidebar_files(),
+          icon: IconFileUpload,
+          href: Routes.SettingsFiles,
+          external: false,
+        },
+        {
+          title: m.dashboard_sidebar_api_keys(),
+          icon: IconKey,
+          href: Routes.SettingsApiKeys,
           external: false,
         },
         ...(websiteConfig.newsletter?.enable

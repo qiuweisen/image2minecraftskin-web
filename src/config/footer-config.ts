@@ -1,47 +1,34 @@
-import type { MenuItemConfig } from '../types';
 import { m } from '@/locale/paraglide/messages';
+import { Routes } from '@/lib/routes';
+import type { MenuItemConfig } from '../types';
 
-/** Original ChartMini public links, grouped for TanStarter's native Footer. */
+/** Focused MVP footer; template modules remain available behind feature flags. */
 export function getFooterLinks(): MenuItemConfig[] {
   return [
     {
-      title: m.footer_trading_practice_pages(),
+      title: m.nav_product(),
       items: [
-        {
-          title: m.footer_crypto_trading_simulator(),
-          href: '/crypto-trading-simulator',
-        },
-        {
-          title: m.footer_forex_trading_simulator(),
-          href: '/forex-trading-simulator',
-        },
-        { title: m.footer_market_replay(), href: '/market-replay' },
-        {
-          title: m.footer_intraday_practice(),
-          href: '/intraday-trading-practice',
-        },
+        { title: m.common_home(), href: Routes.Root, external: false },
+        { title: 'Generator', href: '/#generator', external: false },
       ],
     },
     {
-      title: m.footer_content(),
-      items: [
-        { title: m.footer_blog(), href: '/blog', baseLocaleOnly: true },
-        { title: m.footer_about(), href: '/about', baseLocaleOnly: true },
-        { title: m.footer_contact(), href: '/contact', baseLocaleOnly: true },
-      ],
-    },
-    {
-      title: m.footer_legal(),
+      title: m.nav_legal(),
       items: [
         {
-          title: m.footer_user_agreement(),
-          href: '/user-agreement',
-          baseLocaleOnly: true,
+          title: m.nav_privacy_policy_title(),
+          href: Routes.PrivacyPolicy,
+          external: false,
         },
         {
-          title: m.footer_privacy_policy(),
-          href: '/privacy-policy',
-          baseLocaleOnly: true,
+          title: m.nav_terms_of_service_title(),
+          href: Routes.TermsOfService,
+          external: false,
+        },
+        {
+          title: m.nav_cookie_policy_title(),
+          href: Routes.CookiePolicy,
+          external: false,
         },
       ],
     },

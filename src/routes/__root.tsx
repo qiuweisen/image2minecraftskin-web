@@ -7,37 +7,24 @@ import {
   useRouterState,
 } from '@tanstack/react-router';
 import { Analytics } from '@/components/analytics/analytics';
-import { GoogleAdSense } from '@/components/adsense/google-adsense';
 import { CrispChat } from '@/components/chatbox/crisp-chat';
 import { ThemeProvider } from '@/components/theme/theme-provider';
 import { Navbar } from '@/components/layout/navbar';
 import { Footer } from '@/components/layout/footer';
 import { DefaultNotFound } from '@/components/layout/default-not-found';
-import { DeferredToaster } from '@/components/shared/deferred-toaster';
+import { Toaster } from '@/components/shared/toaster';
 import { websiteConfig } from '@/config/website';
-import '../styles.css';
+import appCss from '../styles.css?url';
 import { DefaultCatchBoundary } from '@/components/layout/default-catch-boundary';
 import { Routes } from '@/lib/routes';
 import { getCanonicalUrl, getOgImage, twitterHandleFromUrl } from '@/lib/urls';
 import {
-  getCanonicalLocale,
   getCanonicalPathname,
   getLocale,
   localeConfig,
-  selectableLocales,
+  locales,
 } from '@/lib/locale';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import FeaturedBadgesSection from '@/components/blocks/featured-badges';
-import { lazy, Suspense } from 'react';
-
-// The simulator header is only used by the two interactive simulator routes.
-// Keep it out of the shared marketing bundle while preserving the same SSR
-// layout and header height when those routes render.
-const SimulatorHeader = lazy(() =>
-  import('@/components/simulator/simulator-header').then(
-    ({ SimulatorHeader: header }) => ({ default: header })
-  )
-);
 
 /**
  * https://github.com/backpine/tanstack-start-on-cloudflare/blob/main/src/routes/__root.tsx
@@ -50,13 +37,13 @@ export const Route = createRootRouteWithContext<{
     const twitterSite = websiteConfig.social?.twitter
       ? twitterHandleFromUrl(websiteConfig.social.twitter)
       : null;
-    const currentLocale = getCanonicalLocale(getLocale());
-    // OG locale uses a territory-style value (e.g. zh_CN), while the HTML lang
-    // and hreflang values use BCP 47 script/region tags such as zh-Hans.
-    const ogLocale = localeConfig[currentLocale].ogLocale;
-    const alternateOgLocales = selectableLocales
+    const currentLocale = getLocale();
+    // OG locale format uses underscore (e.g. en_US, zh_CN), unlike BCP 47 used
+    // for <html lang> / hreflang which uses hyphens.
+    const ogLocale = localeConfig[currentLocale].hreflang.replace('-', '_');
+    const alternateOgLocales = locales
       .filter((l) => l !== currentLocale)
-      .map((l) => localeConfig[l].ogLocale);
+      .map((l) => localeConfig[l].hreflang.replace('-', '_'));
     return {
       meta: [
         { charSet: 'utf-8' },
@@ -100,14 +87,7 @@ export const Route = createRootRouteWithContext<{
             ]
           : []),
       ],
-      links: [
-        {
-          rel: 'icon',
-          type: 'image/svg+xml',
-          href: '/chartmini-favicon.svg',
-        },
-        { rel: 'manifest', href: '/manifest.json' },
-      ],
+      links: [{ rel: 'stylesheet', href: appCss }],
     };
   },
   // shellComponent automatically wraps root component, errorComponent, and notFoundComponent
@@ -130,9 +110,6 @@ function RootComponent() {
     canonicalPathname.startsWith(Routes.Admin) ||
     canonicalPathname.startsWith(Routes.Dashboard) ||
     canonicalPathname.startsWith(Routes.Settings);
-  const isSimulatorPage =
-    canonicalPathname === '/play' ||
-    canonicalPathname === '/day-trading-simulator';
   // When no child route matches (e.g. /hello), only root is in matches; use minimal layout
   const isNotFound =
     canonicalPathname !== Routes.Root &&
@@ -149,27 +126,13 @@ function RootComponent() {
     );
   }
 
-  if (isSimulatorPage) {
-    return (
-      <div className="flex min-h-screen flex-col">
-        <Suspense fallback={<div aria-hidden="true" className="h-14" />}>
-          <SimulatorHeader />
-        </Suspense>
-        <main id="main-content" className="flex-1">
-          <Outlet />
-        </main>
-      </div>
-    );
-  }
-
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar scroll />
       <main id="main-content" className="flex-1">
         <Outlet />
       </main>
-      <FeaturedBadgesSection />
-      <Footer className="relative z-10 bg-background" />
+      <Footer />
     </div>
   );
 }
@@ -178,22 +141,16 @@ function RootComponent() {
  * Root document
  */
 function RootDocument({ children }: { children: React.ReactNode }) {
-  const pathname = useRouterState({ select: (s) => s.location.pathname }) ?? '';
-
   return (
-    <html
-      lang={localeConfig[getCanonicalLocale(getLocale())].hreflang}
-      suppressHydrationWarning
-    >
+    <html lang={localeConfig[getLocale()].hreflang} suppressHydrationWarning>
       <head>
         <HeadContent />
-        <GoogleAdSense pathname={pathname} />
       </head>
       <body>
         <ThemeProvider>
           <TooltipProvider>
             {children}
-            <DeferredToaster richColors position="top-right" offset={64} />
+            <Toaster richColors position="top-right" offset={64} />
           </TooltipProvider>
         </ThemeProvider>
         <Analytics />

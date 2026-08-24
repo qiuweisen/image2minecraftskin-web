@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title>image2minecraftskin</title>
+  <rect width="64" height="64" rx="8" fill="#081013"/>
+  <g fill="#72e5e0">
+    <rect x="10" y="10" width="11" height="11"/><rect x="23" y="10" width="11" height="11"/>
+    <rect x="10" y="23" width="11" height="11"/><rect x="23" y="23" width="11" height="11"/>
+    <rect x="10" y="36" width="11" height="11"/><rect x="23" y="36" width="11" height="11"/>
+  </g>
+  <g fill="#d9ebe5">
+    <rect x="37" y="17" width="7" height="7"/><rect x="46" y="17" width="7" height="7"/>
+    <rect x="37" y="26" width="7" height="7"/><rect x="46" y="26" width="7" height="7"/>
+    <rect x="37" y="35" width="7" height="7"/><rect x="46" y="35" width="7" height="7"/>
+    <rect x="37" y="44" width="7" height="7"/><rect x="46" y="44" width="7" height="7"/>
+  </g>
+  <rect x="23" y="23" width="11" height="11" fill="#c7f36b"/>
+</svg>

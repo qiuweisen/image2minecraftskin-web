@@ -2,18 +2,10 @@ import { defineCollection, defineConfig } from '@content-collections/core';
 import { z } from 'zod';
 
 function getLocaleSlug(path: string) {
-  const localeMatch = path.match(
-    /^(?<slug>.+)\.(?<locale>en|zh|zh-hans|zh-hant)$/
-  );
+  const localeMatch = path.match(/^(?<slug>.+)\.(?<locale>en|zh)$/);
   if (localeMatch?.groups) {
-    // Existing migrated legal/changelog files use `.zh.md`; keep those
-    // files attached to the original Simplified Chinese `/zh-hans` locale.
-    const locale =
-      localeMatch.groups.locale === 'zh'
-        ? 'zh-hans'
-        : localeMatch.groups.locale;
     return {
-      locale,
+      locale: localeMatch.groups.locale,
       slug: localeMatch.groups.slug,
     };
   }
@@ -59,8 +51,5 @@ const changelog = defineCollection({
 });
 
 export default defineConfig({
-  // Blog Markdown is uploaded to R2 during deployment. Keeping article bodies
-  // out of Content Collections prevents the Worker bundle from exceeding the
-  // Cloudflare free-plan 3 MiB script limit.
   collections: [pages, changelog],
 });
