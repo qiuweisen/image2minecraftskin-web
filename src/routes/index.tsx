@@ -21,6 +21,17 @@ export const Route = createFileRoute('/')({
       url,
       inLanguage,
     };
+    const webApplicationJsonLd = {
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name,
+      applicationCategory: 'MultimediaApplication',
+      operatingSystem: 'Web browser',
+      url,
+      description,
+      isAccessibleForFree: true,
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+    };
     const metadata = seo('/', { title, description });
     const faqJsonLd = {
       '@context': 'https://schema.org',
@@ -42,6 +53,10 @@ export const Route = createFileRoute('/')({
         {
           type: 'application/ld+json',
           children: JSON.stringify(webSiteJsonLd),
+        },
+        {
+          type: 'application/ld+json',
+          children: JSON.stringify(webApplicationJsonLd),
         },
         {
           type: 'application/ld+json',

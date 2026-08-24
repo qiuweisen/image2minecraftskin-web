@@ -20,9 +20,9 @@ export function HomePage() {
             <h1>{m.skin_hero_title()}</h1>
             <p>{m.skin_hero_text()}</p>
             <div className="skin-hero-meta">
-              <span>64x64 / 128x128</span>
-              <span>Local conversion</span>
-              <span>No signup</span>
+              <span>{m.skin_meta_sizes()}</span>
+              <span>{m.skin_meta_local()}</span>
+              <span>{m.skin_meta_signup()}</span>
             </div>
           </div>
           <div
@@ -62,8 +62,8 @@ export function HomePage() {
               }
             >
               <span className="skin-example-portrait" />
-              <strong>Portrait</strong>
-              <small>Photo to skin</small>
+              <strong>{m.skin_example_portrait()}</strong>
+              <small>{m.skin_example_portrait_hint()}</small>
             </button>
             <button
               type="button"
@@ -75,8 +75,8 @@ export function HomePage() {
               }
             >
               <span className="skin-example-character" />
-              <strong>Character art</strong>
-              <small>Map a favorite hero</small>
+              <strong>{m.skin_example_character()}</strong>
+              <small>{m.skin_example_character_hint()}</small>
             </button>
             <button
               type="button"
@@ -88,8 +88,8 @@ export function HomePage() {
               }
             >
               <span className="skin-example-pixels" />
-              <strong>Pixel art</strong>
-              <small>Keep hard edges</small>
+              <strong>{m.skin_example_pixel()}</strong>
+              <small>{m.skin_example_pixel_hint()}</small>
             </button>
           </div>
         </section>

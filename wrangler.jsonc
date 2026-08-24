@@ -24,7 +24,7 @@
   "main": "./src/server.ts",
 
   "vars": {
-    "VITE_BASE_URL": "https://image2minecraftskin-web.workers.dev"
+    "VITE_BASE_URL": "https://image2minecraftskin.com"
   },
 
   // Enables Workers Trace Events Logpush for a Worker
