@@ -46,9 +46,9 @@ derived from the same config as the visible FAQ.
 | Binding/value | Owner | Purpose | Location | Status |
 | --- | --- | --- | --- | --- |
 | `VITE_BASE_URL` | Product | Canonical origin | `wrangler.jsonc` | Set to custom domain |
-| `DB` | Cloudflare | Future relational data | D1 + `wrangler.jsonc` | To initialize, unused |
-| `BUCKET` | Cloudflare | Future private files | R2 + `wrangler.jsonc` | To initialize, disabled |
-| `CACHE` | Cloudflare | Future cache/rate state | KV + `wrangler.jsonc` | To initialize, disabled |
+| `DB` | Cloudflare | Future relational data | D1 + `wrangler.jsonc` | Created and bound, unused |
+| `BUCKET` | Cloudflare | Future private files | R2 + `wrangler.jsonc` | Created and bound, disabled |
+| `CACHE` | Cloudflare | Future cache/rate state | KV + `wrangler.jsonc` | Created and bound, disabled |
 | AI provider key/model | User/provider | Later AI conversion | Worker secret/config | Later |
 | Analytics ID | User | Product measurement | Environment/config | Later |
 | Legal contact | User | Legal/support pages | Config/messages | Later |
@@ -91,4 +91,3 @@ OG, WebApplication and FAQ metadata; run one local example conversion for Java
 and Bedrock; download both PNG sizes; confirm browser network logs contain no
 source upload or auth request; and verify `DB`, `BUCKET`, `CACHE` bindings in the
 deployed Worker when a later deployment is explicitly requested.
-

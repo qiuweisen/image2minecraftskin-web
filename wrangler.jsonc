@@ -50,5 +50,26 @@
   // https://developers.cloudflare.com/workers/configuration/routing/custom-domains/
   "workers_dev": true,
 
-  // Cloudflare bindings are intentionally deferred until an MVP feature needs them.
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "image2minecraftskin-web",
+      "database_id": "2c3ab668-8166-44a8-8f1a-f7eae5e96227",
+      "migrations_dir": "./src/db/migrations"
+    }
+  ],
+
+  "r2_buckets": [
+    {
+      "binding": "BUCKET",
+      "bucket_name": "image2minecraftskin-web"
+    }
+  ],
+
+  "kv_namespaces": [
+    {
+      "binding": "CACHE",
+      "id": "59e79b2cb0814a28a067abf4cd521532"
+    }
+  ]
 }
