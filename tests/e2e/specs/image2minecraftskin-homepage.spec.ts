@@ -20,6 +20,7 @@ test('converts an image locally and downloads a skin texture', async ({
 
   await page.getByRole('button', { name: /try an example/i }).click();
   await expect(page.getByText(/skin ready/i)).toBeVisible();
+  await expect(page.locator('.skin-preview-placeholder')).toHaveCount(0);
   const bedrockButton = page.getByRole('button', { name: /bedrock/i });
   await bedrockButton.click();
   await expect(bedrockButton).toHaveClass(/is-active/);

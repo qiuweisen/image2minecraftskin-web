@@ -6,7 +6,7 @@ import {
   type SkinTexture,
   textureOffset,
 } from './types';
-import { SKIN_REGIONS, type SkinRegion } from './layouts';
+import { getSkinRegions, type SkinPart, type SkinRegion } from './layouts';
 
 export function createBlankSkin(
   format: SkinFormat,
@@ -56,6 +56,27 @@ function paintRegion(
   }
 }
 
+function sourceCrop(source: ImageSource, part: SkinPart) {
+  const cropByPart: Record<
+    SkinPart,
+    { x: number; y: number; width: number; height: number }
+  > = {
+    head: { x: 0.2, y: 0, width: 0.6, height: 0.34 },
+    torso: { x: 0.24, y: 0.33, width: 0.52, height: 0.38 },
+    'right-arm': { x: 0, y: 0.33, width: 0.28, height: 0.38 },
+    'left-arm': { x: 0.72, y: 0.33, width: 0.28, height: 0.38 },
+    'right-leg': { x: 0.24, y: 0.66, width: 0.28, height: 0.34 },
+    'left-leg': { x: 0.48, y: 0.66, width: 0.28, height: 0.34 },
+  };
+  const crop = cropByPart[part];
+  return {
+    x: source.width * crop.x,
+    y: source.height * crop.y,
+    width: Math.max(1, source.width * crop.width),
+    height: Math.max(1, source.height * crop.height),
+  };
+}
+
 export function mapImageToSkin(
   source: ImageSource,
   format: SkinFormat,
@@ -65,18 +86,17 @@ export function mapImageToSkin(
     throw new Error('Image source must have positive dimensions');
   }
   const texture = createBlankSkin(format, model);
-  const regions = SKIN_REGIONS[format];
-  regions.forEach((region, index) => {
-    const sourceWidth = Math.max(1, source.width * (index === 0 ? 0.5 : 0.7));
-    const sourceHeight = Math.max(1, source.height * (index === 0 ? 0.5 : 0.8));
+  const regions = getSkinRegions(format, model);
+  regions.forEach((region) => {
+    const crop = sourceCrop(source, region.part);
     paintRegion(
       texture,
       source,
       region,
-      (source.width - sourceWidth) / 2,
-      (source.height - sourceHeight) / 2,
-      sourceWidth,
-      sourceHeight
+      crop.x,
+      crop.y,
+      crop.width,
+      crop.height
     );
   });
   return texture;

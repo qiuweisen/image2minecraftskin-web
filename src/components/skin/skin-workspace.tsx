@@ -27,13 +27,31 @@ function exampleSource(): ImageSource {
     return { width, height, pixels: new Uint8ClampedArray(width * height * 4) };
   context.fillStyle = '#0d252b';
   context.fillRect(0, 0, width, height);
-  context.fillStyle = '#c7f36b';
-  context.fillRect(50, 42, 140, 122);
+
+  context.fillStyle = '#2a1a20';
+  context.fillRect(70, 18, 100, 34);
+  context.fillStyle = '#d99a72';
+  context.fillRect(70, 48, 100, 52);
   context.fillStyle = '#081013';
-  context.fillRect(78, 78, 22, 22);
-  context.fillRect(140, 78, 22, 22);
+  context.fillRect(90, 66, 14, 12);
+  context.fillRect(136, 66, 14, 12);
   context.fillStyle = '#72e5e0';
-  context.fillRect(92, 122, 56, 18);
+  context.fillRect(104, 84, 32, 8);
+
+  context.fillStyle = '#d99a72';
+  context.fillRect(26, 104, 34, 68);
+  context.fillRect(180, 104, 34, 68);
+  context.fillStyle = '#174a52';
+  context.fillRect(60, 104, 120, 68);
+  context.fillStyle = '#c7f36b';
+  context.fillRect(72, 116, 96, 18);
+
+  context.fillStyle = '#26363f';
+  context.fillRect(70, 172, 46, 68);
+  context.fillRect(124, 172, 46, 68);
+  context.fillStyle = '#72e5e0';
+  context.fillRect(70, 214, 46, 10);
+  context.fillRect(124, 214, 46, 10);
   const image = context.getImageData(0, 0, width, height);
   return { width, height, pixels: image.data };
 }
