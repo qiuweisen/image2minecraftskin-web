@@ -56,6 +56,11 @@ export const websiteConfig: WebsiteConfig = {
       logoDark: '/brand/logo-mark.svg',
     },
   },
+  footer: {
+    get tagline() {
+      return m.skin_footer_tagline();
+    },
+  },
   social: {
     github: 'https://github.com/qiuweisen/image2minecraftskin-web',
   },

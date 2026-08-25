@@ -5,6 +5,7 @@ import type { PricePlan } from '@/payment/types';
 export interface WebsiteConfig {
   ui?: UiConfig;
   metadata?: MetadataConfig;
+  footer?: FooterConfig;
   social?: SocialConfig;
   auth?: AuthConfig;
   blog?: BlogConfig;
@@ -14,6 +15,10 @@ export interface WebsiteConfig {
   cache?: CacheConfig;
   storage?: StorageConfig;
   payment?: PaymentConfig;
+}
+
+export interface FooterConfig {
+  tagline?: string;
 }
 
 /** UI configuration */

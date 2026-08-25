@@ -9,7 +9,11 @@ export function getFooterLinks(): MenuItemConfig[] {
       title: m.nav_product(),
       items: [
         { title: m.common_home(), href: Routes.Root, external: false },
-        { title: 'Generator', href: '/#generator', external: false },
+        {
+          title: m.skin_nav_generator(),
+          href: '/#generator',
+          external: false,
+        },
       ],
     },
     {
