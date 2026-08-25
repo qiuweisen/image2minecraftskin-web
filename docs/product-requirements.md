@@ -4,13 +4,13 @@
 
 | State | Decision |
 | --- | --- |
-| Confirmed | English-first browser tool at `image2minecraftskin.com` |
+| Confirmed | English-only browser tool at `image2minecraftskin.com` |
 | Confirmed | Convert an image into Java 64x64 or Bedrock 128x128 PNG |
 | Confirmed | Free, no login, no payment, and no source-image upload in MVP |
-| Confirmed | Site customization is configuration-driven and localized |
+| Confirmed | Site customization is configuration-driven and English-localized |
 | Confirmed | Cloudflare D1, R2, and KV are initialized but initially unused |
 | Later | AI generation through a provider adapter |
-| Later | Additional translated locales beyond English and Chinese |
+| Later | Additional translated locales beyond English |
 
 ## Users And Value
 
@@ -97,9 +97,8 @@ editing Navbar, Footer, homepage, or tool components.
 - Navigation, Footer, homepage copy/ordering, tool options, and locale labels are
   changed through typed configuration/messages rather than product literals in
   components.
-- English and Chinese locale keys pass parity validation.
+- English locale keys pass validation.
 - D1 `DB`, R2 `BUCKET`, and KV `CACHE` bindings exist while their features remain
   disabled.
 - Unit tests, the public Playwright journey, production build, and Wrangler
   dry-run pass before release.
-

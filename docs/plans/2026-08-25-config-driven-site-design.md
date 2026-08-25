@@ -33,7 +33,7 @@ Use the same layered approach as `ascii-image-web`:
 
 Config functions may call Paraglide message getters so switching locale resolves
 the current language at render time. Components receive resolved configuration
-objects and must not embed English or Chinese product strings.
+objects and must not embed product strings.
 
 ## Component Boundaries
 
@@ -51,10 +51,8 @@ site customization.
 
 ## Locale Contract
 
-English remains the base locale. Chinese remains available as a proof that the
-architecture supports localization. Every config-owned label uses a Paraglide
-message getter. Locale validation must reject missing or extra keys in supported
-locale files.
+English is the only enabled locale. Every config-owned label uses a Paraglide
+message getter. Locale validation must reject empty keys in the enabled locale.
 
 Adding a future locale should require only:
 
@@ -107,4 +105,3 @@ feature providers fail during type checking/building.
 - Uploading source images to R2.
 - Introducing a CMS or JSON/YAML configuration layer.
 - Attaching the custom domain in this configuration refactor.
-

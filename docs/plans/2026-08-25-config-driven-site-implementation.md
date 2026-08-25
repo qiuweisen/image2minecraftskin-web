@@ -19,7 +19,7 @@
 
 **Step 1: Write the product contract**
 
-Document the English-first local converter journey, SEO owner keyword, MVP and
+Document the English-only local converter journey, SEO owner keyword, MVP and
 non-goals, privacy promise, configurable landing order, locale requirement,
 acceptance criteria, and later AI adapter.
 
@@ -122,7 +122,7 @@ rtk git commit -m "feat: add typed product configuration"
 **Step 1: Add failing assertions**
 
 Assert that navbar/footer entries contain no unresolved empty labels and that
-the configured Footer tagline differs correctly between English and Chinese.
+the configured Footer tagline resolves from the English message catalog.
 
 **Step 2: Run the narrow test**
 
@@ -344,4 +344,3 @@ rtk git push image2minecraft feat/image2minecraftskin-mvp
 
 Expected: GitHub branch updates successfully. Do not deploy or attach the custom
 domain unless separately requested after verification.
-

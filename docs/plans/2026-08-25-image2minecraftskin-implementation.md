@@ -2,7 +2,7 @@
 
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 
-**Goal:** Build and ship `image2minecraftskin.com`, an English-first free tool site that converts user images into downloadable Java 64x64 and Bedrock 128x128 Minecraft Skin PNGs with 2D/3D previews, localized architecture, and a polished editorial utility landing page.
+**Goal:** Build and ship `image2minecraftskin.com`, an English-only free tool site that converts user images into downloadable Java 64x64 and Bedrock 128x128 Minecraft Skin PNGs with 2D/3D previews, locale-ready architecture, and a polished editorial utility landing page.
 
 **Architecture:** Start from the proven `ascii-image-web` TanStack Start/Cloudflare template patterns, while keeping the new repository independent from ChartMini trading routes and SEO content. A browser-safe normalized Skin model feeds Java/Bedrock exporters and shared 2D/3D previews. The homepage owns the core image-to-skin intent; only differentiated supporting pages are indexable.
 
@@ -112,7 +112,7 @@ render `image2minecraftskin` as real text so it remains sharp and localizable.
 Use the generated OG art only as a background layer with exact title text
 overlaid by HTML/CSS or a deterministic image script.
 
-**Step 5: Add English-first locale messages**
+**Step 5: Add English locale messages**
 
 Create message keys for navigation, hero, upload states, format/model controls,
 preview states, download errors, examples, compatibility, FAQ, legal copy,

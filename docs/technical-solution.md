@@ -36,7 +36,7 @@ options. No parallel auth, storage, button, dialog, or upload protocol is added.
 - `homepage-config.ts`: hero facts, examples, compatibility, FAQ, section order.
 - `skin-tool-config.ts`: input limits, accepted MIME types, formats, models,
   defaults, status and accessibility labels.
-- `project.inlang/messages/en.json` and `zh.json`: user-facing strings.
+- `project.inlang/messages/en.json`: user-facing strings.
 
 Components render resolved config and own only interaction state. FAQ JSON-LD is
 derived from the same config as the visible FAQ.
@@ -72,7 +72,7 @@ Workflow/queue if provider latency or expiring URLs require it.
 ## Tests
 
 - Vitest validates config shapes/defaults and skin texture behavior.
-- Locale compilation/key parity validates English and Chinese.
+- Locale compilation/key validation validates the enabled English locale.
 - Playwright validates the real public conversion and download journey without
   auth/upload requests on desktop and mobile.
 - Production build and Wrangler dry-run validate Worker packaging and bindings.
