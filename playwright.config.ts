@@ -4,6 +4,19 @@ const port = Number(process.env.PORT ?? 3000);
 const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? `http://localhost:${port}`;
 const persistPath = './.wrangler/e2e-state';
 const browserChannel = process.env.PLAYWRIGHT_CHANNEL;
+const useDatabase = process.env.E2E_USE_DB === 'true';
+
+const databaseSetup = useDatabase
+  ? [
+      'pnpm exec tsx scripts/prepare-e2e-state.ts',
+      [
+        'pnpm exec wrangler d1 migrations apply',
+        '$(pnpm -s exec tsx scripts/get-db-name.ts)',
+        '--local',
+        `--persist-to ${persistPath}`,
+      ].join(' '),
+    ]
+  : [];
 
 export default defineConfig({
   testDir: './tests/e2e/specs',
@@ -17,13 +30,7 @@ export default defineConfig({
   },
   webServer: {
     command: [
-      'pnpm exec tsx scripts/prepare-e2e-state.ts',
-      [
-        'pnpm exec wrangler d1 migrations apply',
-        '$(pnpm -s exec tsx scripts/get-db-name.ts)',
-        '--local',
-        `--persist-to ${persistPath}`,
-      ].join(' '),
+      ...databaseSetup,
       [
         `E2E_PERSIST_PATH=${persistPath}`,
         `VITE_BASE_URL=${baseURL}`,
@@ -46,6 +53,13 @@ export default defineConfig({
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
+        ...(browserChannel ? { channel: browserChannel } : {}),
+      },
+    },
+    {
+      name: 'mobile-chromium',
+      use: {
+        ...devices['Pixel 5'],
         ...(browserChannel ? { channel: browserChannel } : {}),
       },
     },

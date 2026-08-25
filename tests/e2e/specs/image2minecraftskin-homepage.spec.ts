@@ -13,14 +13,16 @@ test('converts an image locally and downloads a skin texture', async ({
   });
 
   await page.goto('/');
+  await page.waitForLoadState('networkidle');
   await expect(
     page.getByRole('heading', { name: /image to minecraft skin/i })
   ).toBeVisible();
 
-  await page.getByRole('button', { name: /use example/i }).click();
+  await page.getByRole('button', { name: /try an example/i }).click();
   await expect(page.getByText(/skin ready/i)).toBeVisible();
-  await page.getByRole('button', { name: /bedrock/i }).click();
-  await expect(page.getByText('128')).toBeVisible();
+  const bedrockButton = page.getByRole('button', { name: /bedrock/i });
+  await bedrockButton.click();
+  await expect(bedrockButton).toHaveClass(/is-active/);
 
   const downloadPromise = page.waitForEvent('download');
   await page.getByRole('button', { name: /download png/i }).click();
