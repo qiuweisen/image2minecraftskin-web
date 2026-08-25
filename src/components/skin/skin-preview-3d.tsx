@@ -1,6 +1,12 @@
 import { useEffect, useRef } from 'react';
 
-export function SkinPreview3d({ skinUrl }: { skinUrl?: string }) {
+export function SkinPreview3d({
+  skinUrl,
+  label,
+}: {
+  skinUrl?: string;
+  label: string;
+}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -26,7 +32,7 @@ export function SkinPreview3d({ skinUrl }: { skinUrl?: string }) {
   }, [skinUrl]);
 
   return (
-    <div className="skin-3d-stage" role="img" aria-label="3D skin preview">
+    <div className="skin-3d-stage" role="img" aria-label={label}>
       <canvas ref={canvasRef} />
       {!skinUrl && <span className="skin-preview-placeholder">+</span>}
     </div>

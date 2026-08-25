@@ -22,6 +22,7 @@ export interface SkinToolConfig {
     previewEmpty: string;
     sourceAlt: string;
     textureLabel: string;
+    preview3dLabel: string;
     status: {
       idle: string;
       processing: string;
@@ -60,6 +61,7 @@ export function getSkinToolConfig(): SkinToolConfig {
       previewEmpty: m.skin_preview_empty(),
       sourceAlt: m.skin_source_alt(),
       textureLabel: m.skin_texture_label(),
+      preview3dLabel: m.skin_preview_3d_label(),
       status: {
         idle: m.skin_status_idle(),
         processing: m.skin_status_processing(),

@@ -1,34 +1,117 @@
 import { SkinWorkspace } from '@/components/skin/skin-workspace';
-import { m } from '@/locale/paraglide/messages';
+import {
+  getHomepageConfig,
+  type HomepageConfig,
+  type HomepageSectionId,
+} from '@/config/homepage-config';
 
-const faqs = [
-  [m.skin_faq_privacy_question, m.skin_faq_privacy_answer],
-  [m.skin_faq_formats_question, m.skin_faq_formats_answer],
-  [m.skin_faq_mobile_question, m.skin_faq_mobile_answer],
-  [m.skin_faq_free_question, m.skin_faq_free_answer],
-];
+function ExamplesSection({ config }: { config: HomepageConfig }) {
+  return (
+    <section className="skin-section" aria-labelledby="examples-title">
+      <div className="skin-section-heading">
+        <span>01</span>
+        <h2 id="examples-title">{config.sectionTitles.examples}</h2>
+      </div>
+      <div className="skin-example-grid">
+        {config.examples.map((example) => (
+          <button
+            key={example.title}
+            type="button"
+            className="skin-example-card"
+            onClick={() =>
+              document
+                .querySelector<HTMLButtonElement>('.skin-example-button')
+                ?.click()
+            }
+          >
+            <span className={example.visualClassName} />
+            <strong>{example.title}</strong>
+            <small>{example.description}</small>
+          </button>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function CompatibilitySection({ config }: { config: HomepageConfig }) {
+  return (
+    <section className="skin-section" aria-labelledby="compatibility-title">
+      <div className="skin-section-heading">
+        <span>02</span>
+        <h2 id="compatibility-title">{config.sectionTitles.compatibility}</h2>
+      </div>
+      <div className="skin-compat-grid">
+        {config.compatibility.map((item) => (
+          <article key={item.size}>
+            <span className="skin-compat-size">{item.size}</span>
+            <div>
+              <h3>{item.title}</h3>
+              <p>{item.description}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function FaqSection({ config }: { config: HomepageConfig }) {
+  return (
+    <section className="skin-section skin-faq" aria-labelledby="faq-title">
+      <div className="skin-section-heading">
+        <span>03</span>
+        <h2 id="faq-title">{config.sectionTitles.faq}</h2>
+      </div>
+      {config.faqs.map((faq) => (
+        <details key={faq.question}>
+          <summary>
+            {faq.question}
+            <span>+</span>
+          </summary>
+          <p>{faq.answer}</p>
+        </details>
+      ))}
+    </section>
+  );
+}
+
+function renderSection(id: HomepageSectionId, config: HomepageConfig) {
+  switch (id) {
+    case 'generator':
+      return <SkinWorkspace key={id} />;
+    case 'examples':
+      return <ExamplesSection key={id} config={config} />;
+    case 'compatibility':
+      return <CompatibilitySection key={id} config={config} />;
+    case 'faq':
+      return <FaqSection key={id} config={config} />;
+  }
+}
 
 export function HomePage() {
+  const config = getHomepageConfig();
+
   return (
     <div className="skin-site">
       <section className="skin-hero">
         <div className="skin-container skin-hero-grid">
           <div className="skin-hero-copy">
             <div className="skin-kicker">
-              <span className="skin-pulse" /> {m.skin_hero_kicker()}
+              <span className="skin-pulse" /> {config.hero.kicker}
             </div>
-            <h1>{m.skin_hero_title()}</h1>
-            <p>{m.skin_hero_text()}</p>
+            <h1>{config.hero.title}</h1>
+            <p>{config.hero.text}</p>
             <div className="skin-hero-meta">
-              <span>{m.skin_meta_sizes()}</span>
-              <span>{m.skin_meta_local()}</span>
-              <span>{m.skin_meta_signup()}</span>
+              {config.hero.facts.map((fact) => (
+                <span key={fact}>{fact}</span>
+              ))}
             </div>
           </div>
           <div
             className="skin-hero-proof"
             role="img"
-            aria-label="Photo to Minecraft skin preview"
+            aria-label={config.hero.proofLabel}
           >
             <div className="skin-proof-source">
               <div className="skin-proof-avatar" />
@@ -45,91 +128,9 @@ export function HomePage() {
         </div>
       </section>
       <main className="skin-container skin-main">
-        <SkinWorkspace />
-        <section className="skin-section" aria-labelledby="examples-title">
-          <div className="skin-section-heading">
-            <span>01</span>
-            <h2 id="examples-title">{m.skin_examples_title()}</h2>
-          </div>
-          <div className="skin-example-grid">
-            <button
-              type="button"
-              className="skin-example-card"
-              onClick={() =>
-                document
-                  .querySelector<HTMLButtonElement>('.skin-example-button')
-                  ?.click()
-              }
-            >
-              <span className="skin-example-portrait" />
-              <strong>{m.skin_example_portrait()}</strong>
-              <small>{m.skin_example_portrait_hint()}</small>
-            </button>
-            <button
-              type="button"
-              className="skin-example-card"
-              onClick={() =>
-                document
-                  .querySelector<HTMLButtonElement>('.skin-example-button')
-                  ?.click()
-              }
-            >
-              <span className="skin-example-character" />
-              <strong>{m.skin_example_character()}</strong>
-              <small>{m.skin_example_character_hint()}</small>
-            </button>
-            <button
-              type="button"
-              className="skin-example-card"
-              onClick={() =>
-                document
-                  .querySelector<HTMLButtonElement>('.skin-example-button')
-                  ?.click()
-              }
-            >
-              <span className="skin-example-pixels" />
-              <strong>{m.skin_example_pixel()}</strong>
-              <small>{m.skin_example_pixel_hint()}</small>
-            </button>
-          </div>
-        </section>
-        <section className="skin-section" aria-labelledby="compatibility-title">
-          <div className="skin-section-heading">
-            <span>02</span>
-            <h2 id="compatibility-title">{m.skin_compat_title()}</h2>
-          </div>
-          <div className="skin-compat-grid">
-            <article>
-              <span className="skin-compat-size">64</span>
-              <div>
-                <h3>{m.skin_java()}</h3>
-                <p>{m.skin_compat_java_body()}</p>
-              </div>
-            </article>
-            <article>
-              <span className="skin-compat-size">128</span>
-              <div>
-                <h3>{m.skin_bedrock()}</h3>
-                <p>{m.skin_compat_bedrock_body()}</p>
-              </div>
-            </article>
-          </div>
-        </section>
-        <section className="skin-section skin-faq" aria-labelledby="faq-title">
-          <div className="skin-section-heading">
-            <span>03</span>
-            <h2 id="faq-title">{m.skin_faq_title()}</h2>
-          </div>
-          {faqs.map(([question, answer]) => (
-            <details key={question()}>
-              <summary>
-                {question()}
-                <span>+</span>
-              </summary>
-              <p>{answer()}</p>
-            </details>
-          ))}
-        </section>
+        {config.sections
+          .filter((section) => section.enabled)
+          .map((section) => renderSection(section.id, config))}
       </main>
     </div>
   );

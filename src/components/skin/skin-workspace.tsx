@@ -1,6 +1,6 @@
 import { IconDownload, IconRefresh, IconUpload } from '@tabler/icons-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { m } from '@/locale/paraglide/messages';
+import { getSkinToolConfig } from '@/config/skin-tool-config';
 import {
   drawTexture,
   fileToImageSource,
@@ -15,8 +15,6 @@ import type {
   SkinTexture,
 } from '@/lib/skin/types';
 import { SkinPreview3d } from './skin-preview-3d';
-
-const ACCEPTED_TYPES = ['image/png', 'image/jpeg', 'image/webp'];
 
 function exampleSource(): ImageSource {
   const width = 240;
@@ -41,32 +39,39 @@ function exampleSource(): ImageSource {
 }
 
 export function SkinWorkspace() {
+  const config = getSkinToolConfig();
   const inputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [source, setSource] = useState<ImageSource>();
   const [sourcePreview, setSourcePreview] = useState<string>();
-  const [format, setFormat] = useState<SkinFormat>('java-64');
-  const [model, setModel] = useState<SkinModel>('classic');
+  const [format, setFormat] = useState<SkinFormat>(config.defaultFormat);
+  const [model, setModel] = useState<SkinModel>(config.defaultModel);
   const [texture, setTexture] = useState<SkinTexture>();
-  const [status, setStatus] = useState(() => m.skin_status_idle());
+  const [status, setStatus] = useState(config.copy.status.idle);
   const [error, setError] = useState(false);
 
   const generate = useCallback(
     (nextSource: ImageSource, nextFormat = format, nextModel = model) => {
-      setStatus(m.skin_status_processing());
+      setStatus(config.copy.status.processing);
       setError(false);
       requestAnimationFrame(() => {
         try {
           const mapped = mapImageToSkin(nextSource, nextFormat, nextModel);
           setTexture(mapped);
-          setStatus(m.skin_status_complete());
+          setStatus(config.copy.status.complete);
         } catch {
-          setStatus(m.skin_status_error());
+          setStatus(config.copy.status.error);
           setError(true);
         }
       });
     },
-    [format, model]
+    [
+      config.copy.status.complete,
+      config.copy.status.error,
+      config.copy.status.processing,
+      format,
+      model,
+    ]
   );
 
   useEffect(() => {
@@ -78,10 +83,10 @@ export function SkinWorkspace() {
     async (file?: File) => {
       if (
         !file ||
-        !ACCEPTED_TYPES.includes(file.type) ||
-        file.size > 10 * 1024 * 1024
+        !config.acceptedTypes.includes(file.type) ||
+        file.size > config.maxFileSizeBytes
       ) {
-        setStatus(m.skin_status_invalid());
+        setStatus(config.copy.status.invalid);
         setError(true);
         return;
       }
@@ -91,11 +96,17 @@ export function SkinWorkspace() {
         setSourcePreview(URL.createObjectURL(file));
         generate(nextSource);
       } catch {
-        setStatus(m.skin_status_error());
+        setStatus(config.copy.status.error);
         setError(true);
       }
     },
-    [generate]
+    [
+      config.acceptedTypes,
+      config.copy.status.error,
+      config.copy.status.invalid,
+      config.maxFileSizeBytes,
+      generate,
+    ]
   );
 
   const loadExample = () => {
@@ -131,11 +142,11 @@ export function SkinWorkspace() {
     <section
       id="generator"
       className="skin-workspace"
-      aria-label="Minecraft skin generator"
+      aria-label={config.copy.workspaceLabel}
     >
       <header className="skin-workspace-bar">
         <span>
-          <i className="skin-pulse" /> {m.skin_preview_title()}
+          <i className="skin-pulse" /> {config.copy.previewTitle}
         </span>
         <span className={error ? 'skin-status is-error' : 'skin-status'}>
           {status}
@@ -154,14 +165,14 @@ export function SkinWorkspace() {
             }}
           >
             <IconUpload />
-            <strong>{m.skin_upload_title()}</strong>
-            <span>{m.skin_upload_hint()}</span>
+            <strong>{config.copy.uploadTitle}</strong>
+            <span>{config.copy.uploadHint}</span>
           </button>
           <input
             ref={inputRef}
             hidden
             type="file"
-            accept={ACCEPTED_TYPES.join(',')}
+            accept={config.acceptedTypes.join(',')}
             onChange={(event) => void loadSource(event.target.files?.[0])}
           />
           <button
@@ -169,54 +180,46 @@ export function SkinWorkspace() {
             className="skin-example-button"
             onClick={loadExample}
           >
-            {m.skin_example_label()}
+            {config.copy.exampleLabel}
           </button>
           {sourcePreview && (
             <img
               className="skin-source-preview"
               src={sourcePreview}
-              alt="Uploaded source"
+              alt={config.copy.sourceAlt}
             />
           )}
           <fieldset className="skin-control-group">
-            <legend>{m.skin_format_label()}</legend>
+            <legend>{config.copy.formatLabel}</legend>
             <div className="skin-segmented">
-              <button
-                type="button"
-                className={format === 'java-64' ? 'is-active' : ''}
-                onClick={() => changeFormat('java-64')}
-              >
-                {m.skin_java()}
-              </button>
-              <button
-                type="button"
-                className={format === 'bedrock-128' ? 'is-active' : ''}
-                onClick={() => changeFormat('bedrock-128')}
-              >
-                {m.skin_bedrock()}
-              </button>
+              {config.formats.map((option) => (
+                <button
+                  key={option.value}
+                  type="button"
+                  className={format === option.value ? 'is-active' : ''}
+                  onClick={() => changeFormat(option.value)}
+                >
+                  {option.label}
+                </button>
+              ))}
             </div>
           </fieldset>
           <fieldset className="skin-control-group">
-            <legend>{m.skin_model_label()}</legend>
+            <legend>{config.copy.modelLabel}</legend>
             <div className="skin-segmented">
-              <button
-                type="button"
-                className={model === 'classic' ? 'is-active' : ''}
-                onClick={() => changeModel('classic')}
-              >
-                {m.skin_classic()}
-              </button>
-              <button
-                type="button"
-                className={model === 'slim' ? 'is-active' : ''}
-                onClick={() => changeModel('slim')}
-              >
-                {m.skin_slim()}
-              </button>
+              {config.models.map((option) => (
+                <button
+                  key={option.value}
+                  type="button"
+                  className={model === option.value ? 'is-active' : ''}
+                  onClick={() => changeModel(option.value)}
+                >
+                  {option.label}
+                </button>
+              ))}
             </div>
           </fieldset>
-          <p className="skin-privacy">{m.skin_local_note()}</p>
+          <p className="skin-privacy">{config.copy.localNote}</p>
           <div className="skin-actions">
             <button
               type="button"
@@ -224,7 +227,7 @@ export function SkinWorkspace() {
               disabled={!texture}
               onClick={download}
             >
-              <IconDownload /> {m.skin_download()}
+              <IconDownload /> {config.copy.download}
             </button>
             <button
               type="button"
@@ -233,9 +236,9 @@ export function SkinWorkspace() {
                 setSource(undefined);
                 setSourcePreview(undefined);
                 setTexture(undefined);
-                setStatus(m.skin_status_idle());
+                setStatus(config.copy.status.idle);
               }}
-              aria-label={m.skin_reset()}
+              aria-label={config.copy.reset}
             >
               <IconRefresh />
             </button>
@@ -243,18 +246,21 @@ export function SkinWorkspace() {
         </div>
         <div className="skin-output">
           <div className="skin-output-grid">
-            <SkinPreview3d skinUrl={skinUrl} />
+            <SkinPreview3d
+              skinUrl={skinUrl}
+              label={config.copy.preview3dLabel}
+            />
             <div className="skin-flat-preview">
-              <canvas ref={canvasRef} aria-label="2D unfolded skin texture" />
-              {!texture && <p>{m.skin_preview_empty()}</p>}
+              <canvas ref={canvasRef} aria-label={config.copy.textureLabel} />
+              {!texture && <p>{config.copy.previewEmpty}</p>}
             </div>
           </div>
           <div className="skin-output-meta">
             <span>
-              {format === 'java-64' ? m.skin_java() : m.skin_bedrock()}
+              {config.formats.find((option) => option.value === format)?.label}
             </span>
             <span>
-              {model === 'classic' ? m.skin_classic() : m.skin_slim()}
+              {config.models.find((option) => option.value === model)?.label}
             </span>
           </div>
         </div>

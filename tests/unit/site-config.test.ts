@@ -48,5 +48,26 @@ describe('site configuration', () => {
     ).toBe(true);
     expect(websiteConfig.footer?.tagline).toBeTruthy();
   });
-});
 
+  it('keeps product copy out of reusable components', () => {
+    const files = [
+      'src/components/blocks/homepage.tsx',
+      'src/components/skin/skin-workspace.tsx',
+      'src/components/layout/footer.tsx',
+    ];
+    const forbiddenCopy = [
+      'Local conversion',
+      'No signup',
+      'Portrait',
+      'Character art',
+      'Uploaded source',
+      'Turn images into ready-to-use',
+    ];
+
+    for (const file of files) {
+      const source = readFileSync(file, 'utf8');
+      for (const copy of forbiddenCopy) expect(source).not.toContain(copy);
+    }
+  });
+});
+import { readFileSync } from 'node:fs';

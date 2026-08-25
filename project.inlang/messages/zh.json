@@ -840,6 +840,8 @@
   "skin_workspace_label": "Minecraft 皮肤生成器",
   "skin_source_alt": "上传的原图",
   "skin_texture_label": "2D 展开皮肤纹理",
+  "skin_preview_3d_label": "3D 皮肤预览",
+  "skin_proof_label": "照片转 Minecraft 皮肤预览",
   "skin_hero_title": "Image to Minecraft Skin",
   "skin_hero_text": "在浏览器中把照片、人像或角色图转换成可下载的 Java 或 Bedrock 皮肤。",
   "skin_meta_sizes": "64x64 / 128x128",

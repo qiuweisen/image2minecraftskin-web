@@ -12,6 +12,7 @@ export interface HomepageConfig {
     title: string;
     text: string;
     facts: string[];
+    proofLabel: string;
   };
   sections: Array<{ id: HomepageSectionId; enabled: boolean }>;
   examples: Array<{
@@ -19,6 +20,11 @@ export interface HomepageConfig {
     title: string;
     description: string;
   }>;
+  sectionTitles: {
+    examples: string;
+    compatibility: string;
+    faq: string;
+  };
   compatibility: Array<{
     size: number;
     title: string;
@@ -33,11 +39,8 @@ export function getHomepageConfig(): HomepageConfig {
       kicker: m.skin_hero_kicker(),
       title: m.skin_hero_title(),
       text: m.skin_hero_text(),
-      facts: [
-        m.skin_meta_sizes(),
-        m.skin_meta_local(),
-        m.skin_meta_signup(),
-      ],
+      facts: [m.skin_meta_sizes(), m.skin_meta_local(), m.skin_meta_signup()],
+      proofLabel: m.skin_proof_label(),
     },
     sections: [
       { id: 'generator', enabled: true },
@@ -62,6 +65,11 @@ export function getHomepageConfig(): HomepageConfig {
         description: m.skin_example_pixel_hint(),
       },
     ],
+    sectionTitles: {
+      examples: m.skin_examples_title(),
+      compatibility: m.skin_compat_title(),
+      faq: m.skin_faq_title(),
+    },
     compatibility: [
       {
         size: 64,

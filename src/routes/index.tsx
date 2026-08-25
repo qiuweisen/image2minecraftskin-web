@@ -5,6 +5,7 @@ import { getCanonicalUrl } from '@/lib/urls';
 import { getLocale, localeConfig } from '@/lib/locale';
 import { createFileRoute } from '@tanstack/react-router';
 import { m } from '@/locale/paraglide/messages';
+import { getHomepageConfig } from '@/config/homepage-config';
 
 export const Route = createFileRoute('/')({
   head: () => {
@@ -13,6 +14,7 @@ export const Route = createFileRoute('/')({
     const description = m.site_description();
     const url = getCanonicalUrl('/');
     const inLanguage = localeConfig[getLocale()].hreflang;
+    const homepageConfig = getHomepageConfig();
     const webSiteJsonLd = {
       '@context': 'https://schema.org',
       '@type': 'WebSite',
@@ -36,12 +38,7 @@ export const Route = createFileRoute('/')({
     const faqJsonLd = {
       '@context': 'https://schema.org',
       '@type': 'FAQPage',
-      mainEntity: [
-        [m.skin_faq_privacy_question(), m.skin_faq_privacy_answer()],
-        [m.skin_faq_formats_question(), m.skin_faq_formats_answer()],
-        [m.skin_faq_mobile_question(), m.skin_faq_mobile_answer()],
-        [m.skin_faq_free_question(), m.skin_faq_free_answer()],
-      ].map(([question, answer]) => ({
+      mainEntity: homepageConfig.faqs.map(({ question, answer }) => ({
         '@type': 'Question',
         name: question,
         acceptedAnswer: { '@type': 'Answer', text: answer },
