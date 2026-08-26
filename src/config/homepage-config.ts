@@ -31,6 +31,24 @@ export interface HomepageConfig {
     description: string;
   }>;
   faqs: Array<{ question: string; answer: string }>;
+  landing: {
+    whatIs: { eyebrow: string; title: string; description: string };
+    features: Array<{ title: string; description: string }>;
+    featuresHeading: { eyebrow: string; title: string; description: string };
+    compatibilityHeading: {
+      eyebrow: string;
+      description: string;
+    };
+    faqHeading: { eyebrow: string; description: string };
+    howToUse: {
+      eyebrow: string;
+      title: string;
+      description: string;
+      steps: Array<{ number: string; title: string; description: string }>;
+    };
+    trust: { eyebrow: string; title: string; description: string };
+    cta: { eyebrow: string; title: string; button: string };
+  };
 }
 
 export function getHomepageConfig(): HomepageConfig {
@@ -100,5 +118,90 @@ export function getHomepageConfig(): HomepageConfig {
         answer: m.skin_faq_free_answer(),
       },
     ],
+    landing: {
+      whatIs: {
+        eyebrow: 'What is it?',
+        title: 'Turn an image into a Minecraft skin',
+        description:
+          'image2minecraftskin is a focused browser tool for turning portraits, character art, and pixel art into downloadable Minecraft skin textures.',
+      },
+      features: [
+        {
+          title: 'Local by default',
+          description:
+            'Your source image stays in the browser during standard conversion.',
+        },
+        {
+          title: 'Java and Bedrock',
+          description: 'Export Java 64x64 or Bedrock 128x128 PNG textures.',
+        },
+        {
+          title: '2D and 3D preview',
+          description:
+            'Inspect the unfolded texture and character before downloading.',
+        },
+        {
+          title: 'No account required',
+          description: 'Create a skin and download it without signup.',
+        },
+      ],
+      featuresHeading: {
+        eyebrow: 'Key features',
+        title: 'Everything needed for a usable skin',
+        description:
+          'A short path from source image to a texture you can use in Minecraft.',
+      },
+      compatibilityHeading: {
+        eyebrow: 'Output formats',
+        description:
+          'Choose the format that matches the edition and model you play.',
+      },
+      faqHeading: {
+        eyebrow: 'FAQ',
+        description:
+          'Clear answers about files, privacy, compatibility, and the download flow.',
+      },
+      howToUse: {
+        eyebrow: 'How to use',
+        title: 'Four steps, no learning curve',
+        description:
+          'The generator keeps the first result simple and leaves advanced editing out of the way.',
+        steps: [
+          {
+            number: '01',
+            title: 'Upload an image',
+            description: 'Choose a PNG, JPG, JPEG, or WEBP image up to 10 MB.',
+          },
+          {
+            number: '02',
+            title: 'Choose your output',
+            description:
+              'Select Java or Bedrock and choose the classic or slim model.',
+          },
+          {
+            number: '03',
+            title: 'Check the preview',
+            description:
+              'Review the generated texture and 3D character preview.',
+          },
+          {
+            number: '04',
+            title: 'Download the PNG',
+            description: 'Save the finished skin and import it into Minecraft.',
+          },
+        ],
+      },
+      trust: {
+        eyebrow: 'Built for the result',
+        title: 'A practical skin workflow',
+        description:
+          'No gallery, marketplace, or account layer gets in the way. The page is focused on making and exporting one usable skin.',
+      },
+      cta: {
+        eyebrow: 'Ready to create?',
+        title: 'Make your next Minecraft skin from an image.',
+        button: 'Open the generator',
+      },
+    },
   };
 }

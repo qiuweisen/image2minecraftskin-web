@@ -1,5 +1,7 @@
 import { IconDownload, IconRefresh, IconUpload } from '@tabler/icons-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import { getSkinToolConfig } from '@/config/skin-tool-config';
 import {
   drawTexture,
@@ -97,6 +99,13 @@ export function SkinWorkspace() {
       drawTexture(canvasRef.current, texture, format === 'java-64' ? 5 : 3);
   }, [texture, format]);
 
+  useEffect(() => {
+    if (source) return;
+    const nextSource = exampleSource();
+    setSource(nextSource);
+    generate(nextSource);
+  }, [generate, source]);
+
   const loadSource = useCallback(
     async (file?: File) => {
       if (
@@ -159,22 +168,20 @@ export function SkinWorkspace() {
   return (
     <section
       id="generator"
-      className="skin-workspace"
+      className="overflow-hidden rounded-lg border bg-zinc-950 text-zinc-100 shadow-xl"
       aria-label={config.copy.workspaceLabel}
     >
-      <header className="skin-workspace-bar">
-        <span>
-          <i className="skin-pulse" /> {config.copy.previewTitle}
-        </span>
-        <span className={error ? 'skin-status is-error' : 'skin-status'}>
+      <header className="flex min-h-12 items-center justify-between gap-4 border-b border-zinc-800 px-4 font-mono text-xs uppercase tracking-[0.08em] text-cyan-300 sm:px-6">
+        <span>{config.copy.previewTitle}</span>
+        <span className={error ? 'text-red-300' : 'text-zinc-500'}>
           {status}
         </span>
       </header>
-      <div className="skin-workspace-grid">
-        <div className="skin-controls">
+      <div className="grid lg:grid-cols-[minmax(280px,0.62fr)_minmax(0,1.38fr)]">
+        <div className="border-b border-zinc-800 p-4 sm:p-6 lg:border-b-0 lg:border-r">
           <button
             type="button"
-            className="skin-drop"
+            className="grid min-h-44 w-full place-items-center border border-dashed border-cyan-300/70 bg-cyan-300/5 p-5 text-center transition-colors hover:bg-cyan-300/10"
             onClick={() => inputRef.current?.click()}
             onDragOver={(event) => event.preventDefault()}
             onDrop={(event) => {
@@ -182,9 +189,13 @@ export function SkinWorkspace() {
               void loadSource(event.dataTransfer.files[0]);
             }}
           >
-            <IconUpload />
-            <strong>{config.copy.uploadTitle}</strong>
-            <span>{config.copy.uploadHint}</span>
+            <span className="grid justify-items-center gap-2">
+              <IconUpload className="size-7 text-cyan-300" />
+              <strong>{config.copy.uploadTitle}</strong>
+              <span className="text-xs text-zinc-400">
+                {config.copy.uploadHint}
+              </span>
+            </span>
           </button>
           <input
             ref={inputRef}
@@ -195,26 +206,28 @@ export function SkinWorkspace() {
           />
           <button
             type="button"
-            className="skin-example-button"
+            className="mt-3 h-9 w-full border border-zinc-700 bg-transparent px-3 text-sm text-zinc-300 hover:border-cyan-300 hover:text-cyan-200"
             onClick={loadExample}
           >
             {config.copy.exampleLabel}
           </button>
           {sourcePreview && (
             <img
-              className="skin-source-preview"
+              className="mt-4 aspect-video w-full object-cover"
               src={sourcePreview}
               alt={config.copy.sourceAlt}
             />
           )}
-          <fieldset className="skin-control-group">
-            <legend>{config.copy.formatLabel}</legend>
-            <div className="skin-segmented">
+          <fieldset className="mt-6 grid gap-2">
+            <legend className="text-xs uppercase tracking-[0.08em] text-zinc-500">
+              {config.copy.formatLabel}
+            </legend>
+            <div className="grid grid-cols-2 gap-2">
               {config.formats.map((option) => (
                 <button
                   key={option.value}
                   type="button"
-                  className={format === option.value ? 'is-active' : ''}
+                  className={`min-h-10 border px-2 text-sm ${format === option.value ? 'border-cyan-300 bg-cyan-300 text-zinc-950' : 'border-zinc-700 bg-transparent text-zinc-400 hover:border-zinc-400'}`}
                   onClick={() => changeFormat(option.value)}
                 >
                   {option.label}
@@ -222,14 +235,16 @@ export function SkinWorkspace() {
               ))}
             </div>
           </fieldset>
-          <fieldset className="skin-control-group">
-            <legend>{config.copy.modelLabel}</legend>
-            <div className="skin-segmented">
+          <fieldset className="mt-6 grid gap-2">
+            <legend className="text-xs uppercase tracking-[0.08em] text-zinc-500">
+              {config.copy.modelLabel}
+            </legend>
+            <div className="grid grid-cols-2 gap-2">
               {config.models.map((option) => (
                 <button
                   key={option.value}
                   type="button"
-                  className={model === option.value ? 'is-active' : ''}
+                  className={`min-h-10 border px-2 text-sm ${model === option.value ? 'border-cyan-300 bg-cyan-300 text-zinc-950' : 'border-zinc-700 bg-transparent text-zinc-400 hover:border-zinc-400'}`}
                   onClick={() => changeModel(option.value)}
                 >
                   {option.label}
@@ -237,19 +252,24 @@ export function SkinWorkspace() {
               ))}
             </div>
           </fieldset>
-          <p className="skin-privacy">{config.copy.localNote}</p>
-          <div className="skin-actions">
-            <button
+          <p className="mt-6 text-xs leading-5 text-zinc-500">
+            {config.copy.localNote}
+          </p>
+          <div className="mt-6 flex gap-2">
+            <Button
               type="button"
-              className="skin-download"
+              className="flex-1"
+              size="lg"
               disabled={!texture}
               onClick={download}
             >
               <IconDownload /> {config.copy.download}
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
-              className="skin-reset"
+              variant="outline"
+              size="icon-lg"
+              className="border-zinc-700 bg-transparent text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100"
               onClick={() => {
                 setSource(undefined);
                 setSourcePreview(undefined);
@@ -259,21 +279,29 @@ export function SkinWorkspace() {
               aria-label={config.copy.reset}
             >
               <IconRefresh />
-            </button>
+            </Button>
           </div>
         </div>
-        <div className="skin-output">
-          <div className="skin-output-grid">
+        <div className="min-w-0 p-4 sm:p-6">
+          <div className="grid gap-4 xl:grid-cols-[1fr_0.8fr]">
             <SkinPreview3d
               skinUrl={skinUrl}
               label={config.copy.preview3dLabel}
             />
-            <div className="skin-flat-preview">
-              <canvas ref={canvasRef} aria-label={config.copy.textureLabel} />
-              {!texture && <p>{config.copy.previewEmpty}</p>}
+            <div className="relative grid min-h-80 place-items-center overflow-auto border border-zinc-800 bg-zinc-900 p-4">
+              <canvas
+                ref={canvasRef}
+                className="max-w-full"
+                aria-label={config.copy.textureLabel}
+              />
+              {!texture && (
+                <p className="absolute text-sm text-zinc-500">
+                  {config.copy.previewEmpty}
+                </p>
+              )}
             </div>
           </div>
-          <div className="skin-output-meta">
+          <div className="mt-4 flex flex-wrap gap-4 font-mono text-xs text-zinc-500">
             <span>
               {config.formats.find((option) => option.value === format)?.label}
             </span>

@@ -32,9 +32,15 @@ export function SkinPreview3d({
   }, [skinUrl]);
 
   return (
-    <div className="skin-3d-stage" role="img" aria-label={label}>
-      <canvas ref={canvasRef} />
-      {!skinUrl && <span className="skin-preview-placeholder">+</span>}
+    <div
+      className="relative grid min-h-80 place-items-center overflow-hidden border border-zinc-800 bg-zinc-900"
+      role="img"
+      aria-label={label}
+    >
+      <canvas ref={canvasRef} className="max-h-full max-w-full" />
+      {!skinUrl && (
+        <span className="font-mono text-3xl text-cyan-300/60">+</span>
+      )}
     </div>
   );
 }
