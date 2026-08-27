@@ -11,6 +11,11 @@ export function getNavbarLinks(): MenuItemConfig[] {
       external: false,
     },
     {
+      title: 'Skin Viewer',
+      href: Routes.SkinViewer,
+      external: false,
+    },
+    {
       title: m.skin_nav_guides(),
       href: '/#compatibility-title',
       external: false,

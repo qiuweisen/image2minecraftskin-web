@@ -29,6 +29,19 @@ auth/storage suites.
 | 5 | Privacy boundary | Verify the journey sends no auth request and no POST/upload request. |
 | 6 | Responsive journey | Run the same journey on desktop and Pixel 5 without control overflow or blocked actions. |
 
+## Product: Minecraft Skin Viewer
+
+**Priority:** P0
+
+| # | Journey | Acceptance |
+| --- | --- | --- |
+| 1 | Viewer page renders | Open `/minecraft-skin-viewer`; verify the viewer H1 and upload workspace are visible. |
+| 2 | Example skin preview | Load the configured example; verify Java 64x64 metadata and a rendered 3D canvas. |
+| 3 | Model selection | Switch between Auto, Classic, and Slim without changing layout dimensions. |
+| 4 | Invalid texture | Uploading a non-PNG or unsupported dimensions shows a recoverable inline error. |
+| 5 | Privacy boundary | Verify the example and upload flow send no POST/upload request. |
+| 6 | Responsive journey | Run the viewer on desktop and Pixel 5 without horizontal overflow or blocked controls. |
+
 ## Manual Visual Acceptance
 
 - First viewport communicates image-to-skin transformation and exposes the real
@@ -55,4 +68,3 @@ remain reusable template infrastructure but are disabled in `websiteConfig`.
 Their old product-specific E2E suites are not part of the current release gate.
 They must be updated and re-enabled only when the corresponding feature is part
 of the product contract.
-

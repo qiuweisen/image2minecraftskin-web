@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ManifestDotjsonRouteImport } from './routes/manifest[.]json'
+import { Route as MinecraftSkinViewerRouteImport } from './routes/minecraft-skin-viewer'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as legalsCookieRouteImport } from './routes/(legals)/cookie'
@@ -25,6 +26,11 @@ const IndexRoute = IndexRouteImport.update({
 const ManifestDotjsonRoute = ManifestDotjsonRouteImport.update({
   id: '/manifest.json',
   path: '/manifest.json',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MinecraftSkinViewerRoute = MinecraftSkinViewerRouteImport.update({
+  id: '/minecraft-skin-viewer',
+  path: '/minecraft-skin-viewer',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
@@ -56,6 +62,7 @@ const legalsTermsRoute = legalsTermsRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/manifest.json': typeof ManifestDotjsonRoute
+  '/minecraft-skin-viewer': typeof MinecraftSkinViewerRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/cookie': typeof legalsCookieRoute
@@ -65,6 +72,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/manifest.json': typeof ManifestDotjsonRoute
+  '/minecraft-skin-viewer': typeof MinecraftSkinViewerRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/cookie': typeof legalsCookieRoute
@@ -75,6 +83,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/manifest.json': typeof ManifestDotjsonRoute
+  '/minecraft-skin-viewer': typeof MinecraftSkinViewerRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/(legals)/cookie': typeof legalsCookieRoute
@@ -86,6 +95,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/manifest.json'
+    | '/minecraft-skin-viewer'
     | '/robots.txt'
     | '/sitemap.xml'
     | '/cookie'
@@ -95,6 +105,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/manifest.json'
+    | '/minecraft-skin-viewer'
     | '/robots.txt'
     | '/sitemap.xml'
     | '/cookie'
@@ -104,6 +115,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/manifest.json'
+    | '/minecraft-skin-viewer'
     | '/robots.txt'
     | '/sitemap.xml'
     | '/(legals)/cookie'
@@ -114,6 +126,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ManifestDotjsonRoute: typeof ManifestDotjsonRoute
+  MinecraftSkinViewerRoute: typeof MinecraftSkinViewerRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   legalsCookieRoute: typeof legalsCookieRoute
@@ -135,6 +148,13 @@ declare module '@tanstack/react-router' {
       path: '/manifest.json'
       fullPath: '/manifest.json'
       preLoaderRoute: typeof ManifestDotjsonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/minecraft-skin-viewer': {
+      id: '/minecraft-skin-viewer'
+      path: '/minecraft-skin-viewer'
+      fullPath: '/minecraft-skin-viewer'
+      preLoaderRoute: typeof MinecraftSkinViewerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/robots.txt': {
@@ -178,6 +198,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ManifestDotjsonRoute: ManifestDotjsonRoute,
+  MinecraftSkinViewerRoute: MinecraftSkinViewerRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   legalsCookieRoute: legalsCookieRoute,

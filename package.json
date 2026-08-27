@@ -7,7 +7,7 @@
     "dev": "vite dev --port 3000",
     "build": "vite build",
     "e2e": "E2E_USE_DB=true playwright test",
-    "e2e:public": "playwright test tests/e2e/specs/image2minecraftskin-homepage.spec.ts",
+    "e2e:public": "playwright test tests/e2e/specs/image2minecraftskin-homepage.spec.ts tests/e2e/specs/minecraft-skin-viewer.spec.ts",
     "e2e:production": "playwright test --config playwright.production.config.ts",
     "e2e:stripe": "tsx scripts/run-stripe-e2e.ts",
     "e2e:install": "playwright install",

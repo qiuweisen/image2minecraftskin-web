@@ -18,15 +18,20 @@ test('converts an image locally and downloads a skin texture', async ({
     page.getByRole('heading', { name: /image to minecraft skin/i })
   ).toBeVisible();
 
-  await page.getByRole('button', { name: /try an example/i }).click();
-  await expect(page.getByText(/skin ready/i)).toBeVisible();
-  await expect(page.locator('.skin-preview-placeholder')).toHaveCount(0);
-  const bedrockButton = page.getByRole('button', { name: /bedrock/i });
+  const workspace = page.getByRole('region', {
+    name: /minecraft skin generator/i,
+  });
+  await workspace.getByRole('button', { name: /try an example/i }).click();
+  await expect(
+    workspace.getByText('Skin ready', { exact: true })
+  ).toBeVisible();
+  await expect(workspace.getByRole('img').locator('canvas')).toBeVisible();
+  const bedrockButton = workspace.getByRole('button', { name: /bedrock/i });
   await bedrockButton.click();
-  await expect(bedrockButton).toHaveClass(/is-active/);
+  await expect(bedrockButton).toHaveAttribute('aria-pressed', 'true');
 
   const downloadPromise = page.waitForEvent('download');
-  await page.getByRole('button', { name: /download png/i }).click();
+  await workspace.getByRole('button', { name: /download png/i }).click();
   const download = await downloadPromise;
   expect(download.suggestedFilename()).toMatch(/bedrock-128.*\.png$/);
   expect(authRequests).toEqual([]);

@@ -227,6 +227,7 @@ export function SkinWorkspace() {
                 <button
                   key={option.value}
                   type="button"
+                  aria-pressed={format === option.value}
                   className={`min-h-10 border px-2 text-sm ${format === option.value ? 'border-cyan-300 bg-cyan-300 text-zinc-950' : 'border-zinc-700 bg-transparent text-zinc-400 hover:border-zinc-400'}`}
                   onClick={() => changeFormat(option.value)}
                 >
@@ -244,6 +245,7 @@ export function SkinWorkspace() {
                 <button
                   key={option.value}
                   type="button"
+                  aria-pressed={model === option.value}
                   className={`min-h-10 border px-2 text-sm ${model === option.value ? 'border-cyan-300 bg-cyan-300 text-zinc-950' : 'border-zinc-700 bg-transparent text-zinc-400 hover:border-zinc-400'}`}
                   onClick={() => changeModel(option.value)}
                 >

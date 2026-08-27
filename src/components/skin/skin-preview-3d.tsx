@@ -3,9 +3,11 @@ import { useEffect, useRef } from 'react';
 export function SkinPreview3d({
   skinUrl,
   label,
+  model = 'auto-detect',
 }: {
   skinUrl?: string;
   label: string;
+  model?: 'auto-detect' | 'default' | 'slim';
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -20,6 +22,8 @@ export function SkinPreview3d({
         width: 420,
         height: 520,
         skin: skinUrl,
+        model,
+        enableControls: true,
       });
       next.autoRotate = true;
       next.animation = new WalkingAnimation();
@@ -29,11 +33,11 @@ export function SkinPreview3d({
       disposed = true;
       viewer?.dispose();
     };
-  }, [skinUrl]);
+  }, [model, skinUrl]);
 
   return (
     <div
-      className="relative grid min-h-80 place-items-center overflow-hidden border border-zinc-800 bg-zinc-900"
+      className="relative grid h-full min-h-80 w-full place-items-center overflow-hidden border border-zinc-800 bg-zinc-900"
       role="img"
       aria-label={label}
     >

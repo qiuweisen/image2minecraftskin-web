@@ -14,6 +14,11 @@ export function getFooterLinks(): MenuItemConfig[] {
           href: '/#generator',
           external: false,
         },
+        {
+          title: 'Minecraft Skin Viewer',
+          href: Routes.SkinViewer,
+          external: false,
+        },
       ],
     },
     {
