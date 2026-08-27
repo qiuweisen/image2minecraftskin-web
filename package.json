@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev --port 3000",
-    "build": "vite build",
+    "build": "tsx scripts/build.ts",
     "e2e": "E2E_USE_DB=true playwright test",
     "e2e:public": "playwright test tests/e2e/specs/image2minecraftskin-homepage.spec.ts tests/e2e/specs/minecraft-skin-viewer.spec.ts",
     "e2e:production": "playwright test --config playwright.production.config.ts",
