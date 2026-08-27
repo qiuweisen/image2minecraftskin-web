@@ -9,4 +9,10 @@ describe('production build', () => {
 
     expect(packageJson.scripts.build).toBe('tsx scripts/build.ts');
   });
+
+  it('runs the Vite CLI so every build environment is generated', () => {
+    const buildRunner = readFileSync('scripts/build.ts', 'utf8');
+
+    expect(buildRunner).toContain("['exec', 'vite', 'build']");
+  });
 });

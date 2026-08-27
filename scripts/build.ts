@@ -1,3 +1,4 @@
+import { spawnSync } from 'node:child_process';
 import { parseWranglerConfig } from './parse-wrangler';
 
 const wranglerConfig = parseWranglerConfig();
@@ -22,5 +23,14 @@ if (url.protocol !== 'https:' && url.protocol !== 'http:') {
 
 process.env.VITE_BASE_URL = url.toString().replace(/\/$/, '');
 
-const { build } = await import('vite');
-await build();
+const pnpmCommand = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm';
+const result = spawnSync(pnpmCommand, ['exec', 'vite', 'build'], {
+  env: process.env,
+  stdio: 'inherit',
+});
+
+if (result.error) {
+  throw result.error;
+}
+
+process.exit(result.status ?? 1);
