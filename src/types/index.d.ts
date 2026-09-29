@@ -5,6 +5,7 @@ import type { PricePlan } from '@/payment/types';
 export interface WebsiteConfig {
   ui?: UiConfig;
   metadata?: MetadataConfig;
+  footer?: FooterConfig;
   social?: SocialConfig;
   auth?: AuthConfig;
   blog?: BlogConfig;
@@ -16,8 +17,15 @@ export interface WebsiteConfig {
   payment?: PaymentConfig;
 }
 
+export interface FooterConfig {
+  tagline?: string;
+}
+
 /** UI configuration */
 export interface UiConfig {
+  locale?: {
+    enableSwitch?: boolean;                     // Whether to show locale controls
+  };
   mode?: {
     defaultMode?: 'light' | 'dark' | 'system';  // The default mode of the website
     enableSwitch?: boolean;                     // Whether to enable the mode switch

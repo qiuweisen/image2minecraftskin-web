@@ -12,26 +12,6 @@ function getLocaleSlug(path: string) {
   return { locale: 'en', slug: path };
 }
 
-const blog = defineCollection({
-  name: 'blog',
-  directory: 'content/blog',
-  include: '**/*.md',
-  schema: z.object({
-    title: z.string(),
-    description: z.string(),
-    date: z.string(),
-    category: z.string(),
-    content: z.string(),
-    image: z.url(),
-  }),
-  transform: (doc) => {
-    const { locale, slug } = getLocaleSlug(
-      (doc as { _meta: { path: string } })._meta.path
-    );
-    return { ...doc, locale, slug };
-  },
-});
-
 const pages = defineCollection({
   name: 'pages',
   directory: 'content/pages',
@@ -71,5 +51,5 @@ const changelog = defineCollection({
 });
 
 export default defineConfig({
-  collections: [blog, pages, changelog],
+  collections: [pages, changelog],
 });

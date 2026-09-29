@@ -29,11 +29,6 @@ export const localeConfig = {
     name: 'English',
     hreflang: 'en',
   },
-  zh: {
-    flag: '🇨🇳',
-    name: '中文',
-    hreflang: 'zh-CN',
-  },
 } satisfies Record<Locale, LocaleConfig>;
 
 export function parseMessageJson<T>(value: string, fallback: T): T {

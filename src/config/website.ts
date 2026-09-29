@@ -32,9 +32,12 @@ const priceIds = isPaymentEnabled
  */
 export const websiteConfig: WebsiteConfig = {
   ui: {
+    locale: {
+      enableSwitch: true,
+    },
     mode: {
       defaultMode: 'dark',
-      enableSwitch: true,
+      enableSwitch: false,
     },
   },
   metadata: {
@@ -48,48 +51,48 @@ export const websiteConfig: WebsiteConfig = {
       return m.site_description();
     },
     images: {
-      ogImage: '/og.png',
-      logoLight: '/logo.png',
-      logoDark: '/logo-dark.png',
+      ogImage: '/og-image2minecraftskin.png',
+      logoLight: '/brand/logo-mark.svg',
+      logoDark: '/brand/logo-mark.svg',
+    },
+  },
+  footer: {
+    get tagline() {
+      return m.skin_footer_tagline();
     },
   },
   social: {
-    github: 'https://github.com/MkFastHQ',
-    discord: 'https://mksaas.link/discord',
-    twitter: 'https://x.com/TanStarter',
-    youtube: 'https://www.youtube.com/@TanStarter',
+    github: 'https://github.com/qiuweisen/image2minecraftskin-web',
   },
   auth: {
-    enable: true,
-    enableGoogleLogin: true,
-    enableCredentialLogin: true,
-    enableDeleteAccount: true,
+    enable: false,
+    enableGoogleLogin: false,
+    enableCredentialLogin: false,
+    enableDeleteAccount: false,
   },
   blog: {
-    enable: true,
+    enable: false,
     paginationSize: 6,
   },
   mail: {
-    enable: true,
+    enable: false,
     provider: 'cloudflare',
-    fromEmail: 'TanStarter <support@tanstarter.dev>',
-    supportEmail: 'TanStarter <support@tanstarter.dev>',
   },
   newsletter: {
-    enable: true,
+    enable: false,
     provider: 'resend',
     autoSubscribeAfterSignUp: true,
   },
   notification: {
-    enable: import.meta.env.MODE !== 'e2e',
+    enable: false,
     provider: 'discord',
   },
   cache: {
-    enable: true,
+    enable: false,
     provider: 'kv',
   },
   storage: {
-    enable: true,
+    enable: false,
     provider: 'r2',
     maxFileSize: DEFAULT_MAX_FILE_SIZE,
     allowedTypes: DEFAULT_ALLOWED_TYPES,

@@ -3,6 +3,7 @@ export const Routes = {
 
   // Marketing routes
   Features: '/#features',
+  SkinViewer: '/minecraft-skin-viewer',
   Faqs: '/#faqs',
   Pricing: '/pricing',
   Blog: '/blog',

@@ -1,5 +1,5 @@
 import { ClientScript } from '@/components/shared/client-script';
-import { clientEnv } from '@/env/client';
+import { analyticsConfig } from '@/config/analytics-config';
 
 /**
  * Google Analytics (GA4)
@@ -7,7 +7,7 @@ import { clientEnv } from '@/env/client';
  */
 export function GoogleAnalytics() {
   if (!import.meta.env.PROD) return null;
-  const id = clientEnv.VITE_GOOGLE_ANALYTICS_ID;
+  const id = analyticsConfig.googleAnalyticsId;
   if (!id) return null;
 
   const inlineHtml = `

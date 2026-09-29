@@ -35,7 +35,7 @@ Values are read by Vite from `.env*` during `pnpm dev` / `pnpm build` and inline
 | `VITE_CREEM_PRODUCT_LIFETIME` | Creem Product ID (Lifetime) | No | |
 | **Analytics** | | | |
 | `VITE_GOOGLE_ANALYTICS_ID` | Google Analytics | No | |
-| `VITE_CLARITY_PROJECT_ID` | Microsoft Clarity | No | |
+| `VITE_CLARITY_PROJECT_ID` | Microsoft Clarity | No | Defaults to the site's Clarity project (`yoncymzurl`) if unset |
 | `VITE_PLAUSIBLE_SCRIPT` | Plausible script URL | No | |
 | `VITE_UMAMI_WEBSITE_ID` | Umami Analytics | No | |
 | `VITE_UMAMI_SCRIPT` | Umami script URL | No | |

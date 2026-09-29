@@ -1,5 +1,5 @@
 import { ClientScript } from '@/components/shared/client-script';
-import { clientEnv } from '@/env/client';
+import { analyticsConfig } from '@/config/analytics-config';
 
 /**
  * Microsoft Clarity
@@ -7,8 +7,7 @@ import { clientEnv } from '@/env/client';
  */
 export function ClarityAnalytics() {
   if (!import.meta.env.PROD) return null;
-  const projectId = clientEnv.VITE_CLARITY_PROJECT_ID;
-  if (!projectId) return null;
+  const projectId = analyticsConfig.clarityProjectId;
 
   const inlineHtml = `(function(c,l,a,r,i,t,y){
     c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
