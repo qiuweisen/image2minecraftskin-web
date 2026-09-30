@@ -50,3 +50,8 @@ logs/security/
 # Playwright
 playwright-report
 test-results
+
+# Local scratch output
+temp/
+output/
+.playwright-mcp/
