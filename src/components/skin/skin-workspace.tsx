@@ -4,9 +4,8 @@ import {
   IconRefresh,
   IconUpload,
 } from '@tabler/icons-react';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import { getSkinToolConfig } from '@/config/skin-tool-config';
 import { trackSkinEvent } from '@/lib/analytics-events';
 import {
@@ -15,8 +14,11 @@ import {
   textureToDataUrl,
 } from '@/lib/skin/browser';
 import { exportSkinTexture, skinFilename } from '@/lib/skin/export';
-import { mapImageToSkin } from '@/lib/skin/normalize';
-import { recommendAiSourceTransform } from '@/lib/skin/ai-improve';
+import { mapImageToSkin, type PartCrops } from '@/lib/skin/normalize';
+import {
+  detectPartCrops,
+  recommendAiSourceTransform,
+} from '@/lib/skin/ai-improve';
 import {
   applySourceTransform,
   IDENTITY_SOURCE_TRANSFORM,
@@ -31,7 +33,21 @@ import type {
 } from '@/lib/skin/types';
 import { SkinPreview3d } from './skin-preview-3d';
 
-function exampleSource(): ImageSource {
+const EXAMPLE_SOURCE_URL = '/examples/image-to-skin/portrait-source.webp';
+
+async function loadExampleSource(): Promise<ImageSource | null> {
+  try {
+    const response = await fetch(EXAMPLE_SOURCE_URL);
+    if (!response.ok) return null;
+    const blob = await response.blob();
+    const file = new File([blob], 'example.webp', { type: blob.type });
+    return await fileToImageSource(file);
+  } catch {
+    return null;
+  }
+}
+
+function fallbackExampleSource(): ImageSource {
   const width = 240;
   const height = 240;
   const canvas = document.createElement('canvas');
@@ -87,32 +103,70 @@ export function SkinWorkspace() {
     IDENTITY_SOURCE_TRANSFORM
   );
   const [aiImproving, setAiImproving] = useState(false);
-  const recommendedTransform = source
-    ? recommendSourceTransform(source)
-    : IDENTITY_SOURCE_TRANSFORM;
+  // Latest format/model for async callbacks that outlive a render.
+  const formatRef = useRef(format);
+  const modelRef = useRef(model);
+  formatRef.current = format;
+  modelRef.current = model;
+  // Analytics: where the current source came from, and per-source dedupe.
+  const originRef = useRef<'example' | 'upload'>('example');
+  const generationTrackedRef = useRef(false);
+  const adjustedAxesRef = useRef(new Set<string>());
+  // Bumped on new source or manual framing; stale pose results are dropped.
+  const framingTokenRef = useRef(0);
+  const startSource = (origin: 'example' | 'upload') => {
+    framingTokenRef.current += 1;
+    originRef.current = origin;
+    generationTrackedRef.current = false;
+    adjustedAxesRef.current.clear();
+  };
+  // Per-part crops from pose detection; cleared by any manual framing change.
+  const [partCrops, setPartCrops] = useState<PartCrops>();
+  // Full-pixel scan: memoize so slider drags don't rescan large photos.
+  const recommendedTransform = useMemo(
+    () =>
+      source ? recommendSourceTransform(source) : IDENTITY_SOURCE_TRANSFORM,
+    [source]
+  );
   const hasAutomaticImprovement =
     recommendedTransform.x !== IDENTITY_SOURCE_TRANSFORM.x ||
     recommendedTransform.y !== IDENTITY_SOURCE_TRANSFORM.y ||
     recommendedTransform.zoom !== IDENTITY_SOURCE_TRANSFORM.zoom;
 
   const generate = useCallback(
-    (nextSource: ImageSource, nextFormat = format, nextModel = model) => {
+    (
+      nextSource: ImageSource,
+      nextFormat = format,
+      nextModel = model,
+      crops?: PartCrops
+    ) => {
       setStatus(config.copy.status.processing);
       setError(false);
       requestAnimationFrame(() => {
         try {
-          const mapped = mapImageToSkin(nextSource, nextFormat, nextModel);
+          const mapped = mapImageToSkin(
+            nextSource,
+            nextFormat,
+            nextModel,
+            crops
+          );
           setTexture(mapped);
           setStatus(config.copy.status.complete);
-          trackSkinEvent({
-            name: 'skin_generation_completed',
-            payload: {
-              format: nextFormat,
-              model: nextModel,
-              sourceWidth: nextSource.width,
-              sourceHeight: nextSource.height,
-            },
-          });
+          // Once per source: slider drags and format toggles re-run this and
+          // previously inflated the count ~6x.
+          if (!generationTrackedRef.current) {
+            generationTrackedRef.current = true;
+            trackSkinEvent({
+              name: 'skin_generation_completed',
+              payload: {
+                origin: originRef.current,
+                format: nextFormat,
+                model: nextModel,
+                sourceWidth: nextSource.width,
+                sourceHeight: nextSource.height,
+              },
+            });
+          }
         } catch {
           setStatus(config.copy.status.error);
           setError(true);
@@ -139,9 +193,16 @@ export function SkinWorkspace() {
 
   useEffect(() => {
     if (source) return;
-    const nextSource = exampleSource();
-    setSource(nextSource);
-    generate(nextSource);
+    const loadInitialExample = async () => {
+      startSource('example');
+      const exampleSource = await loadExampleSource();
+      const nextSource = exampleSource || fallbackExampleSource();
+      setSource(nextSource);
+      setPartCrops(undefined);
+      setSourcePreview(exampleSource ? EXAMPLE_SOURCE_URL : undefined);
+      generate(nextSource);
+    };
+    void loadInitialExample();
   }, [generate, source]);
 
   const loadSource = useCallback(
@@ -165,11 +226,57 @@ export function SkinWorkspace() {
           payload: { mimeType: file.type, fileSize: file.size },
         });
         const nextSource = await fileToImageSource(file);
+        startSource('upload');
         setSource(nextSource);
-        setSourceTransform(IDENTITY_SOURCE_TRANSFORM);
-        setAdjustmentOpen(false);
+        setPartCrops(undefined);
         setSourcePreview(URL.createObjectURL(file));
-        generate(nextSource);
+
+        // Auto-apply recommended transform for better initial result
+        const recommended = recommendSourceTransform(nextSource);
+        const hasRecommendation =
+          recommended.x !== IDENTITY_SOURCE_TRANSFORM.x ||
+          recommended.y !== IDENTITY_SOURCE_TRANSFORM.y ||
+          recommended.zoom !== IDENTITY_SOURCE_TRANSFORM.zoom;
+
+        if (hasRecommendation) {
+          setSourceTransform(recommended);
+          setAdjustmentOpen(true);
+          generate(applySourceTransform(nextSource, recommended));
+          trackSkinEvent({
+            name: 'skin_source_improved',
+            payload: { ...recommended, trigger: 'auto_upload' },
+          });
+        } else {
+          setSourceTransform(IDENTITY_SOURCE_TRANSFORM);
+          setAdjustmentOpen(false);
+          generate(nextSource);
+        }
+
+        // Background pose detection: upgrade to per-part crops if a person
+        // is found and the user hasn't changed framing in the meantime.
+        const token = framingTokenRef.current;
+        void detectPartCrops(nextSource)
+          .then((crops) => {
+            if (!crops || token !== framingTokenRef.current) return;
+            setPartCrops(crops);
+            setSourceTransform(IDENTITY_SOURCE_TRANSFORM);
+            generate(nextSource, formatRef.current, modelRef.current, crops);
+            trackSkinEvent({
+              name: 'skin_ai_improve_completed',
+              payload: {
+                mode: 'pose_parts_auto',
+                ...IDENTITY_SOURCE_TRANSFORM,
+              },
+            });
+          })
+          .catch((error: unknown) => {
+            trackSkinEvent({
+              name: 'skin_ai_improve_failed',
+              payload: {
+                reason: `auto:${error instanceof Error ? error.message : 'unknown'}`,
+              },
+            });
+          });
       } catch {
         setStatus(config.copy.status.error);
         setError(true);
@@ -188,28 +295,51 @@ export function SkinWorkspace() {
     ]
   );
 
-  const loadExample = () => {
-    const nextSource = exampleSource();
+  const loadExample = async () => {
+    startSource('example');
+    const exampleSource = await loadExampleSource();
+    const nextSource = exampleSource || fallbackExampleSource();
     setSource(nextSource);
-    setSourcePreview(undefined);
+    setPartCrops(undefined);
+    setSourcePreview(exampleSource ? EXAMPLE_SOURCE_URL : undefined);
     setSourceTransform(IDENTITY_SOURCE_TRANSFORM);
     setAdjustmentOpen(false);
     generate(nextSource);
   };
 
+  // Re-run with current framing (pose crops win over the slider transform).
+  const regenerate = (nextFormat: SkinFormat, nextModel: SkinModel) => {
+    if (!source) return;
+    if (partCrops) generate(source, nextFormat, nextModel, partCrops);
+    else
+      generate(
+        applySourceTransform(source, sourceTransform),
+        nextFormat,
+        nextModel
+      );
+  };
+
   const adjustSource = (axis: keyof SourceTransform, value: number) => {
     if (!source) return;
+    framingTokenRef.current += 1;
+    setPartCrops(undefined);
     const nextTransform = { ...sourceTransform, [axis]: value };
     setSourceTransform(nextTransform);
     generate(applySourceTransform(source, nextTransform));
-    trackSkinEvent({
-      name: 'skin_source_adjusted',
-      payload: { axis, value },
-    });
+    // One event per axis per source; range inputs fire on every tick.
+    if (!adjustedAxesRef.current.has(axis)) {
+      adjustedAxesRef.current.add(axis);
+      trackSkinEvent({
+        name: 'skin_source_adjusted',
+        payload: { axis, value, origin: originRef.current },
+      });
+    }
   };
 
   const resetFraming = () => {
     if (!source) return;
+    framingTokenRef.current += 1;
+    setPartCrops(undefined);
     setSourceTransform(IDENTITY_SOURCE_TRANSFORM);
     generate(source);
     trackSkinEvent({ name: 'skin_source_adjustment_reset', payload: {} });
@@ -217,31 +347,48 @@ export function SkinWorkspace() {
 
   const improveResult = () => {
     if (!source) return;
+    framingTokenRef.current += 1;
+    setPartCrops(undefined);
     const recommendation = recommendSourceTransform(source);
     setSourceTransform(recommendation);
     setAdjustmentOpen(true);
     generate(applySourceTransform(source, recommendation));
     trackSkinEvent({
       name: 'skin_source_improved',
-      payload: recommendation,
+      payload: { ...recommendation, trigger: 'button' },
     });
   };
 
   const improveWithAi = async () => {
     if (!source || aiImproving) return;
+    framingTokenRef.current += 1;
     setAiImproving(true);
     trackSkinEvent({
       name: 'skin_ai_improve_clicked',
       payload: { format, model },
     });
     try {
+      // Preferred: per-part crops from the detected pose, applied to the
+      // untransformed source. Falls back to whole-subject framing.
+      const crops = await detectPartCrops(source);
+      if (crops) {
+        setPartCrops(crops);
+        setSourceTransform(IDENTITY_SOURCE_TRANSFORM);
+        generate(source, format, model, crops);
+        trackSkinEvent({
+          name: 'skin_ai_improve_completed',
+          payload: { mode: 'pose_parts', ...IDENTITY_SOURCE_TRANSFORM },
+        });
+        return;
+      }
       const recommendation = await recommendAiSourceTransform(source);
+      setPartCrops(undefined);
       setSourceTransform(recommendation);
       setAdjustmentOpen(true);
       generate(applySourceTransform(source, recommendation));
       trackSkinEvent({
         name: 'skin_ai_improve_completed',
-        payload: recommendation,
+        payload: { mode: 'framing', ...recommendation },
       });
     } catch (error) {
       trackSkinEvent({
@@ -261,13 +408,7 @@ export function SkinWorkspace() {
       name: 'skin_format_selected',
       payload: { format: nextFormat },
     });
-    if (source) {
-      generate(
-        applySourceTransform(source, sourceTransform),
-        nextFormat,
-        model
-      );
-    }
+    if (source) regenerate(nextFormat, model);
   };
 
   const changeModel = (nextModel: SkinModel) => {
@@ -276,13 +417,7 @@ export function SkinWorkspace() {
       name: 'skin_model_selected',
       payload: { model: nextModel },
     });
-    if (source) {
-      generate(
-        applySourceTransform(source, sourceTransform),
-        format,
-        nextModel
-      );
-    }
+    if (source) regenerate(format, nextModel);
   };
 
   const download = () => {
@@ -295,7 +430,12 @@ export function SkinWorkspace() {
     anchor.click();
     trackSkinEvent({
       name: 'skin_downloaded',
-      payload: { format, model },
+      payload: {
+        format,
+        model,
+        origin: originRef.current,
+        framing: partCrops ? 'pose_parts' : 'transform',
+      },
     });
   };
 
@@ -333,6 +473,15 @@ export function SkinWorkspace() {
               </span>
             </span>
           </button>
+          <div className="mt-3 rounded border border-cyan-300/20 bg-cyan-300/5 p-3 text-xs leading-relaxed text-zinc-400">
+            <p className="mb-1 font-semibold text-cyan-300">Best results:</p>
+            <ul className="space-y-0.5">
+              <li>✓ Front-facing portrait or character</li>
+              <li>✓ Transparent or solid background</li>
+              <li>✓ Subject centered in frame</li>
+              <li>✓ Square ratio (1:1) recommended</li>
+            </ul>
+          </div>
           <input
             ref={inputRef}
             hidden
@@ -540,9 +689,21 @@ export function SkinWorkspace() {
             </span>
           </div>
           {texture && (
-            <p className="mt-4 border-l-2 border-cyan-300 pl-3 text-sm leading-6 text-zinc-400">
-              {config.copy.inspectionHint}
-            </p>
+            <>
+              <p className="mt-4 border-l-2 border-green-400 bg-green-400/5 pl-3 py-2 text-sm leading-6 text-zinc-300">
+                <strong className="text-green-400">✓ Ready to download!</strong>{' '}
+                Rotate the 3D model to inspect all sides, then download below.
+              </p>
+              <Button
+                type="button"
+                className="mt-4 w-full"
+                size="lg"
+                disabled={!texture}
+                onClick={download}
+              >
+                <IconDownload /> {config.copy.download}
+              </Button>
+            </>
           )}
         </div>
       </div>

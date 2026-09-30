@@ -1,0 +1,118 @@
+# Image to Minecraft Skin
+
+> Convert any portrait, character art, or pixel art into a Minecraft skin texture in seconds. Free, browser-based, no account required.
+
+## What This Tool Does
+
+Transforms ordinary images (PNG, JPG, WEBP) into downloadable Minecraft skin textures with:
+- **Instant conversion**: Upload → Generate → Download in under 60 seconds
+- **Format support**: Java Edition 64×64 and Bedrock Edition 128×128
+- **Player models**: Classic (4px arms) and Slim (3px arms)
+- **Live preview**: Interactive 3D character viewer and unfolded texture map
+- **Privacy-first**: All processing runs in your browser. No uploads to servers, no accounts, no image storage.
+
+## Best Results With
+
+- **Portrait photos**: Front-facing selfies, character faces, profile pictures
+- **Character illustrations**: Anime characters, game avatars, pixel art
+- **Image requirements**:
+  - Transparent or solid background (recommended)
+  - Subject centered and front-facing
+  - Square ratio works best (1:1)
+  - Up to 10 MB (PNG, JPG, JPEG, WEBP)
+
+## Common Use Cases
+
+1. **Personal skins**: Convert your selfie into a Minecraft character
+2. **Character cosplay**: Transform your favorite anime/game character
+3. **Pixel art**: Turn existing pixel art into wearable skins
+4. **Pet skins**: Make your cat or dog a Minecraft skin
+5. **Logo/brand skins**: Corporate mascots or brand identities
+
+## Output Formats
+
+### Java Edition (64×64 PNG)
+- Standard Minecraft Java Edition format
+- Compatible with Minecraft PC, Mac, Linux
+- Classic model (4px arms) or Slim model (3px arms)
+
+### Bedrock Edition (128×128 PNG)
+- High-resolution format for Bedrock Edition
+- Compatible with Minecraft Mobile, Xbox, PlayStation, Nintendo Switch
+- Supports both model types
+
+## How to Use Your Generated Skin
+
+### Java Edition
+1. Download the skin PNG from this tool
+2. Go to minecraft.net → Profile → Skin
+3. Click "Choose File" and select your downloaded PNG
+4. Save changes
+5. Launch Minecraft Java Edition
+
+### Bedrock Edition
+1. Download the 128×128 skin PNG
+2. Open Minecraft Bedrock Edition
+3. Go to Profile → Edit Character → Classic Skins
+4. Import the downloaded PNG
+5. Apply and play
+
+## Additional Tools
+
+- [3D Minecraft Skin Viewer](https://image2minecraftskin.com/minecraft-skin-viewer): Preview and validate existing skin PNGs. Upload any 64×64 or 128×128 skin file to inspect it in 3D before importing into Minecraft. Rejects invalid textures instead of displaying them incorrectly.
+
+## Limitations
+
+- **Not a pixel editor**: This is a focused conversion tool, not Blockbench or a full skin editor
+- **Not username lookup**: Does not fetch skins from Minecraft usernames or UUIDs (use the separate Viewer for that workflow)
+- **Not AI generation**: Converts existing images using deterministic mapping, not generative AI models
+- **Best for portraits**: Full-body photos or complex scenes may require manual adjustment (zoom, crop, position controls available)
+
+## Technical Details
+
+- **Processing**: Client-side JavaScript (no server uploads)
+- **Browser requirements**: Modern browser with Canvas API support
+- **File limits**: 10 MB max per image
+- **Supported formats**: PNG, JPG, JPEG, WEBP input → PNG output
+- **Performance**: Typical conversion time <5 seconds on desktop, <10 seconds on mobile
+
+## Privacy & Terms
+
+- [Privacy Policy](https://image2minecraftskin.com/privacy): No image uploads, no storage, no tracking of uploaded content
+- [Terms of Service](https://image2minecraftskin.com/terms): Usage terms and limitations
+- **Analytics**: Only anonymized usage events (generation count, format selected, download count) are tracked. Image content is never logged.
+
+## Site Structure
+
+- Homepage: https://image2minecraftskin.com/ (generator tool)
+- Viewer: https://image2minecraftskin.com/minecraft-skin-viewer (skin inspector)
+- Sitemap: https://image2minecraftskin.com/sitemap.xml
+- Privacy: https://image2minecraftskin.com/privacy
+- Terms: https://image2minecraftskin.com/terms
+
+## FAQ
+
+**Q: Can I use any image?**
+A: Yes, but front-facing portraits with transparent or solid backgrounds work best. Complex full-body photos may need adjustment.
+
+**Q: Does this work on mobile?**
+A: Yes, fully functional on mobile browsers. Upload from camera roll or take a new photo.
+
+**Q: Do you store my images?**
+A: No. All processing happens in your browser. Images never leave your device.
+
+**Q: Java 64×64 or Bedrock 128×128?**
+A: Java 64×64 for PC/Mac Minecraft. Bedrock 128×128 for Mobile/Console editions. Check your Minecraft version if unsure.
+
+**Q: Classic or Slim model?**
+A: Classic has 4-pixel-wide arms (bulkier). Slim has 3-pixel-wide arms (thinner). Visual preference only.
+
+**Q: Can I edit the generated skin?**
+A: Yes. Download the PNG and open it in any image editor or dedicated skin editor like Blockbench.
+
+**Q: Why does my skin look weird?**
+A: Try the adjustment controls (zoom, horizontal/vertical position) or use a different source image. Portraits work better than full-body photos.
+
+## Last Updated
+
+2026-09-30
