@@ -29,6 +29,12 @@ export const localeConfig = {
     name: 'English',
     hreflang: 'en',
   },
+  zh: { flag: '🇨🇳', name: '简体中文', hreflang: 'zh-CN' },
+  ja: { flag: '🇯🇵', name: '日本語', hreflang: 'ja' },
+  es: { flag: '🇪🇸', name: 'Español', hreflang: 'es' },
+  'pt-BR': { flag: '🇧🇷', name: 'Português', hreflang: 'pt-BR' },
+  de: { flag: '🇩🇪', name: 'Deutsch', hreflang: 'de' },
+  fr: { flag: '🇫🇷', name: 'Français', hreflang: 'fr' },
 } satisfies Record<Locale, LocaleConfig>;
 
 export function parseMessageJson<T>(value: string, fallback: T): T {
@@ -97,6 +103,9 @@ export const LOCALIZED_PATHS = new Set([
   '/roadmap',
   '/terms',
   '/waitlist',
+  '/image-to-minecraft-skin',
+  '/minecraft-skin-formats',
+  '/minecraft-skin-viewer',
 ]);
 
 /**

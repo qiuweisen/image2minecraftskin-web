@@ -2,6 +2,7 @@ import { IconCube3dSphere, IconRefresh, IconUpload } from '@tabler/icons-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { trackSkinEvent } from '@/lib/analytics-events';
+import { m } from '@/locale/paraglide/messages';
 import {
   skinViewerConfig,
   type ViewerModel,
@@ -234,13 +235,13 @@ export function SkinViewerWorkspace() {
 
           <dl className="mt-6 divide-y divide-[#21464a] border-y border-[#21464a] text-sm">
             <div className="flex justify-between gap-4 py-3">
-              <dt className="text-[#8d9a9a]">File</dt>
+              <dt className="text-[#8d9a9a]">{m.viewer_file()}</dt>
               <dd className="max-w-40 truncate font-mono text-xs">
                 {fileName ?? '-'}
               </dd>
             </div>
             <div className="flex justify-between gap-4 py-3">
-              <dt className="text-[#8d9a9a]">Format</dt>
+              <dt className="text-[#8d9a9a]">{m.viewer_format()}</dt>
               <dd className="font-mono text-xs text-[#a8dd45]">
                 {info?.label ?? '-'}
               </dd>

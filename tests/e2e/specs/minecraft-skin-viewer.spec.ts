@@ -44,7 +44,7 @@ test('previews an existing Minecraft skin without uploading it', async ({
     );
   expect(schemaTypes).toEqual(
     expect.arrayContaining([
-      'WebApplication',
+      'SoftwareApplication',
       'BreadcrumbList',
       'HowTo',
       'FAQPage',

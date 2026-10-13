@@ -25,7 +25,7 @@ export const Route = createFileRoute('/')({
     };
     const webApplicationJsonLd = {
       '@context': 'https://schema.org',
-      '@type': 'WebApplication',
+      '@type': 'SoftwareApplication',
       name,
       applicationCategory: 'MultimediaApplication',
       operatingSystem: 'Web browser',

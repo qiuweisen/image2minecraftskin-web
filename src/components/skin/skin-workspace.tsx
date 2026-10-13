@@ -7,6 +7,7 @@ import {
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { getSkinToolConfig } from '@/config/skin-tool-config';
+import { m } from '@/locale/paraglide/messages';
 import { trackSkinEvent } from '@/lib/analytics-events';
 import {
   drawTexture,
@@ -474,12 +475,14 @@ export function SkinWorkspace() {
             </span>
           </button>
           <div className="mt-3 rounded border border-cyan-300/20 bg-cyan-300/5 p-3 text-xs leading-relaxed text-zinc-400">
-            <p className="mb-1 font-semibold text-cyan-300">Best results:</p>
+            <p className="mb-1 font-semibold text-cyan-300">
+              {m.skin_best_results()}
+            </p>
             <ul className="space-y-0.5">
-              <li>✓ Front-facing portrait or character</li>
-              <li>✓ Transparent or solid background</li>
-              <li>✓ Subject centered in frame</li>
-              <li>✓ Square ratio (1:1) recommended</li>
+              <li>✓ {m.skin_best_front_facing()}</li>
+              <li>✓ {m.skin_best_background()}</li>
+              <li>✓ {m.skin_best_centered()}</li>
+              <li>✓ {m.skin_best_square()}</li>
             </ul>
           </div>
           <input
@@ -691,8 +694,10 @@ export function SkinWorkspace() {
           {texture && (
             <>
               <p className="mt-4 border-l-2 border-green-400 bg-green-400/5 pl-3 py-2 text-sm leading-6 text-zinc-300">
-                <strong className="text-green-400">✓ Ready to download!</strong>{' '}
-                Rotate the 3D model to inspect all sides, then download below.
+                <strong className="text-green-400">
+                  ✓ {m.skin_ready_download()}
+                </strong>{' '}
+                {m.skin_inspect_before_download()}
               </p>
               <Button
                 type="button"

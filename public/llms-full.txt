@@ -1,0 +1,49 @@
+# image2minecraftskin.com — LLM reference
+
+## Canonical identity
+
+- Name: image2minecraftskin
+- Canonical URL: https://image2minecraftskin.com/
+- Category: free, browser-based image-to-Minecraft-skin converter
+- Primary audience: Minecraft Java and Bedrock players who want to turn an existing image into a skin
+
+## Product answer
+
+image2minecraftskin converts a portrait, character illustration, pixel-art image, pet photo, or logo into a downloadable Minecraft skin texture. The conversion runs locally in the browser: image pixels are not uploaded, stored, or used to train a model. No account is required.
+
+## Supported inputs and outputs
+
+| Input | Output | Notes |
+| --- | --- | --- |
+| PNG, JPG, JPEG, WEBP | Java Edition 64×64 PNG | Classic (4 px arms) or Slim (3 px arms) |
+| PNG, JPG, JPEG, WEBP | Bedrock Edition 128×128 PNG | Classic or Slim model |
+
+Images up to 10 MB are accepted. Front-facing, centered subjects with a square crop and a transparent or plain background produce the most reliable results. Full-body or busy scenes may need the built-in zoom and position adjustments.
+
+## How to use
+
+1. Open the generator at https://image2minecraftskin.com/.
+2. Upload a PNG, JPG, JPEG, or WEBP image.
+3. Choose Java 64×64 or Bedrock 128×128 and Classic or Slim.
+4. Adjust framing if needed, generate the skin, and download the PNG.
+5. Import the downloaded PNG in the Minecraft profile or character-creator skin menu.
+
+## Related tool
+
+The [Minecraft Skin Viewer](https://image2minecraftskin.com/minecraft-skin-viewer) validates existing 64×64 and 128×128 skin PNGs and previews them as a 3D character. It is useful for checking a generated file before importing it into Minecraft.
+
+## Privacy and limitations
+
+- Processing is client-side and image content never leaves the device.
+- This is a converter, not a pixel editor, username lookup service, or generative image model.
+- Downloaded PNGs can be edited in Blockbench or another image editor.
+
+## Stable links
+
+- Generator: https://image2minecraftskin.com/
+- Viewer: https://image2minecraftskin.com/minecraft-skin-viewer
+- Privacy: https://image2minecraftskin.com/privacy
+- Terms: https://image2minecraftskin.com/terms
+- Sitemap: https://image2minecraftskin.com/sitemap.xml
+
+Last updated: 2026-10-12

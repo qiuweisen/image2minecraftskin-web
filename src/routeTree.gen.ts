@@ -10,7 +10,9 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ImageToMinecraftSkinRouteImport } from './routes/image-to-minecraft-skin'
 import { Route as ManifestDotjsonRouteImport } from './routes/manifest[.]json'
+import { Route as MinecraftSkinFormatsRouteImport } from './routes/minecraft-skin-formats'
 import { Route as MinecraftSkinViewerRouteImport } from './routes/minecraft-skin-viewer'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
@@ -23,9 +25,19 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ImageToMinecraftSkinRoute = ImageToMinecraftSkinRouteImport.update({
+  id: '/image-to-minecraft-skin',
+  path: '/image-to-minecraft-skin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ManifestDotjsonRoute = ManifestDotjsonRouteImport.update({
   id: '/manifest.json',
   path: '/manifest.json',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MinecraftSkinFormatsRoute = MinecraftSkinFormatsRouteImport.update({
+  id: '/minecraft-skin-formats',
+  path: '/minecraft-skin-formats',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MinecraftSkinViewerRoute = MinecraftSkinViewerRouteImport.update({
@@ -61,7 +73,9 @@ const legalsTermsRoute = legalsTermsRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/image-to-minecraft-skin': typeof ImageToMinecraftSkinRoute
   '/manifest.json': typeof ManifestDotjsonRoute
+  '/minecraft-skin-formats': typeof MinecraftSkinFormatsRoute
   '/minecraft-skin-viewer': typeof MinecraftSkinViewerRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -71,7 +85,9 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/image-to-minecraft-skin': typeof ImageToMinecraftSkinRoute
   '/manifest.json': typeof ManifestDotjsonRoute
+  '/minecraft-skin-formats': typeof MinecraftSkinFormatsRoute
   '/minecraft-skin-viewer': typeof MinecraftSkinViewerRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -82,7 +98,9 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/image-to-minecraft-skin': typeof ImageToMinecraftSkinRoute
   '/manifest.json': typeof ManifestDotjsonRoute
+  '/minecraft-skin-formats': typeof MinecraftSkinFormatsRoute
   '/minecraft-skin-viewer': typeof MinecraftSkinViewerRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -94,7 +112,9 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/image-to-minecraft-skin'
     | '/manifest.json'
+    | '/minecraft-skin-formats'
     | '/minecraft-skin-viewer'
     | '/robots.txt'
     | '/sitemap.xml'
@@ -104,7 +124,9 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/image-to-minecraft-skin'
     | '/manifest.json'
+    | '/minecraft-skin-formats'
     | '/minecraft-skin-viewer'
     | '/robots.txt'
     | '/sitemap.xml'
@@ -114,7 +136,9 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/image-to-minecraft-skin'
     | '/manifest.json'
+    | '/minecraft-skin-formats'
     | '/minecraft-skin-viewer'
     | '/robots.txt'
     | '/sitemap.xml'
@@ -125,7 +149,9 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ImageToMinecraftSkinRoute: typeof ImageToMinecraftSkinRoute
   ManifestDotjsonRoute: typeof ManifestDotjsonRoute
+  MinecraftSkinFormatsRoute: typeof MinecraftSkinFormatsRoute
   MinecraftSkinViewerRoute: typeof MinecraftSkinViewerRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -143,11 +169,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/image-to-minecraft-skin': {
+      id: '/image-to-minecraft-skin'
+      path: '/image-to-minecraft-skin'
+      fullPath: '/image-to-minecraft-skin'
+      preLoaderRoute: typeof ImageToMinecraftSkinRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/manifest.json': {
       id: '/manifest.json'
       path: '/manifest.json'
       fullPath: '/manifest.json'
       preLoaderRoute: typeof ManifestDotjsonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/minecraft-skin-formats': {
+      id: '/minecraft-skin-formats'
+      path: '/minecraft-skin-formats'
+      fullPath: '/minecraft-skin-formats'
+      preLoaderRoute: typeof MinecraftSkinFormatsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/minecraft-skin-viewer': {
@@ -197,7 +237,9 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ImageToMinecraftSkinRoute: ImageToMinecraftSkinRoute,
   ManifestDotjsonRoute: ManifestDotjsonRoute,
+  MinecraftSkinFormatsRoute: MinecraftSkinFormatsRoute,
   MinecraftSkinViewerRoute: MinecraftSkinViewerRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,

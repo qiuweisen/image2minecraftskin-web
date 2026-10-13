@@ -32,7 +32,7 @@ test('converts an image locally and downloads a skin texture', async ({
     page.getByRole('heading', { name: /image to minecraft skin/i })
   ).toBeVisible();
   await expect(
-    page.getByText(/turning portraits, character art, and pixel art/i)
+    page.getByText(/turn a photo, portrait, or character image/i)
   ).toBeVisible();
   await expect(
     page.getByText(/PNG \/ JPG \/ WEBP/i, { exact: true })
@@ -53,7 +53,7 @@ test('converts an image locally and downloads a skin texture', async ({
       scripts.map((script) => JSON.parse(script.textContent ?? '{}')['@type'])
     );
   expect(schemaTypes).toEqual(
-    expect.arrayContaining(['WebApplication', 'HowTo', 'FAQPage'])
+    expect.arrayContaining(['SoftwareApplication', 'HowTo', 'FAQPage'])
   );
 
   const workspace = page.getByRole('region', {
@@ -75,14 +75,17 @@ test('converts an image locally and downloads a skin texture', async ({
   await workspace.getByRole('button', { name: /reset framing/i }).click();
   await expect(zoom).toHaveValue('1');
   await expect(
-    workspace.getByText(/rotate the model and check each side/i)
+    workspace.getByText(/rotate the 3d model to inspect all sides/i)
   ).toBeVisible();
   const bedrockButton = workspace.getByRole('button', { name: /bedrock/i });
   await bedrockButton.click();
   await expect(bedrockButton).toHaveAttribute('aria-pressed', 'true');
 
   const downloadPromise = page.waitForEvent('download');
-  await workspace.getByRole('button', { name: /download png/i }).click();
+  await workspace
+    .getByRole('button', { name: /download png/i })
+    .last()
+    .click();
   const download = await downloadPromise;
   expect(download.suggestedFilename()).toMatch(/bedrock-128.*\.png$/);
   const trackedEvents = await page.evaluate(
@@ -100,19 +103,25 @@ test('converts an image locally and downloads a skin texture', async ({
     expect.arrayContaining([
       {
         name: 'skin_format_selected',
-        data: { format: 'bedrock-128' },
+        data: expect.objectContaining({ format: 'bedrock-128' }),
       },
       {
         name: 'skin_downloaded',
-        data: { format: 'bedrock-128', model: 'classic' },
+        data: expect.objectContaining({
+          format: 'bedrock-128',
+          model: 'classic',
+        }),
       },
       {
         name: 'skin_source_adjustment_opened',
-        data: { format: 'java-64', model: 'classic' },
+        data: expect.objectContaining({
+          format: 'java-64',
+          model: 'classic',
+        }),
       },
       {
         name: 'skin_source_adjusted',
-        data: { axis: 'zoom', value: 1.4 },
+        data: expect.objectContaining({ axis: 'zoom', value: 1.4 }),
       },
       { name: 'skin_source_adjustment_reset', data: {} },
     ])

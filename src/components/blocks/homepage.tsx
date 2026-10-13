@@ -14,6 +14,7 @@ import { Link } from '@tanstack/react-router';
 import { getHomepageConfig } from '@/config/homepage-config';
 import { trackSkinEvent } from '@/lib/analytics-events';
 import { cn } from '@/lib/utils';
+import { m } from '@/locale/paraglide/messages';
 
 function TextSection({
   id,
@@ -69,13 +70,16 @@ function HomePage() {
               <p className="mt-6 max-w-2xl text-lg leading-8 text-[#8d9a9a]">
                 {config.hero.text}
               </p>
+              <p className="mt-5 max-w-2xl border-l-2 border-cyan-400 pl-4 text-base leading-7 text-[#d7e1dc]">
+                {m.landing_definition()}
+              </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
                   to="/"
                   hash="generator"
                   className={buttonVariants({ size: 'lg' })}
                 >
-                  Create a skin
+                  {m.landing_create_skin()}
                 </Link>
                 <Link
                   to="/"
@@ -85,7 +89,7 @@ function HomePage() {
                     'border-zinc-700 bg-transparent text-zinc-100 hover:bg-zinc-800 hover:text-zinc-100'
                   )}
                 >
-                  Learn how it works
+                  {m.landing_learn_how()}
                 </Link>
               </div>
               <div className="mt-7 flex flex-wrap gap-x-6 gap-y-2 font-mono text-xs text-[#8d9a9a]">
@@ -104,9 +108,11 @@ function HomePage() {
                 fetchPriority="high"
               />
               <div className="absolute inset-x-0 bottom-0 flex items-center justify-between border-t border-[#21464a] bg-[#0b1011]/90 px-4 py-3 font-mono text-[10px] uppercase text-[#8d9a9a]">
-                <span>Source image</span>
-                <span className="text-cyan-300">Skin ready</span>
-                <span>PNG texture</span>
+                <span>{m.landing_source_image()}</span>
+                <span className="text-cyan-300">
+                  {m.skin_status_complete()}
+                </span>
+                <span>{m.landing_png_texture()}</span>
               </div>
             </div>
           </div>
@@ -129,25 +135,24 @@ function HomePage() {
         <Container className="grid gap-10 px-2 lg:grid-cols-[0.7fr_1.3fr] lg:items-center">
           <div>
             <p className="font-mono text-xs uppercase text-cyan-300">
-              / Real generator output
+              / {m.landing_real_output()}
             </p>
             <h2
               id="verified-case-title"
               className="mt-4 text-3xl font-semibold sm:text-4xl"
             >
-              Verified conversion case
+              {m.landing_verified_case()}
             </h2>
             <p className="mt-4 max-w-xl leading-7 text-[#8d9a9a]">
-              This aligned pixel character was processed by the generator above.
-              The texture shown here is the actual downloaded Java 64x64 PNG.
+              {m.landing_verified_description()}
             </p>
             <dl className="mt-7 grid grid-cols-2 gap-px border border-[#21464a] bg-[#21464a] font-mono text-xs">
               <div className="bg-[#0b1011] p-4">
-                <dt className="text-[#8d9a9a]">Format</dt>
+                <dt className="text-[#8d9a9a]">{m.landing_format()}</dt>
                 <dd className="mt-2 text-[#f1f3ed]">Java 64x64</dd>
               </div>
               <div className="bg-[#0b1011] p-4">
-                <dt className="text-[#8d9a9a]">Model</dt>
+                <dt className="text-[#8d9a9a]">{m.skin_model_label()}</dt>
                 <dd className="mt-2 text-[#f1f3ed]">Classic</dd>
               </div>
             </dl>
@@ -165,7 +170,7 @@ function HomePage() {
                 />
               </div>
               <figcaption className="mt-3 font-mono text-[10px] uppercase text-[#8d9a9a]">
-                Source / 240x240
+                {m.landing_source_dimensions()}
               </figcaption>
             </figure>
             <span aria-hidden="true" className="font-mono text-cyan-300">
@@ -183,9 +188,54 @@ function HomePage() {
                 />
               </div>
               <figcaption className="mt-3 font-mono text-[10px] uppercase text-[#8d9a9a]">
-                Export / 64x64 PNG
+                {m.landing_export_dimensions()}
               </figcaption>
             </figure>
+          </div>
+        </Container>
+      </section>
+
+      <section className="border-b border-[#21464a] bg-[#11191b] px-4 py-12 text-[#f1f3ed] md:py-16">
+        <Container className="px-2">
+          <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
+            <div>
+              <p className="font-mono text-xs uppercase text-cyan-300">
+                / {m.landing_choose_edition()}
+              </p>
+              <h2 className="mt-3 text-2xl font-semibold sm:text-3xl">
+                {m.landing_edition_title()}
+              </h2>
+              <p className="mt-4 max-w-xl leading-7 text-[#8d9a9a]">
+                {m.landing_edition_description()}
+              </p>
+            </div>
+            <div className="overflow-hidden border border-[#21464a]">
+              <table className="w-full text-left text-sm">
+                <thead className="bg-[#0b1011] font-mono text-xs uppercase text-cyan-300">
+                  <tr>
+                    <th className="px-4 py-3">{m.landing_edition()}</th>
+                    <th className="px-4 py-3">{m.landing_texture()}</th>
+                    <th className="px-4 py-3">{m.landing_best_for()}</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#21464a] text-[#d7e1dc]">
+                  <tr>
+                    <td className="px-4 py-4 font-medium">Java</td>
+                    <td className="px-4 py-4 font-mono">64×64 PNG</td>
+                    <td className="px-4 py-4 text-[#8d9a9a]">
+                      {m.landing_desktop_platforms()}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="px-4 py-4 font-medium">Bedrock</td>
+                    <td className="px-4 py-4 font-mono">128×128 PNG</td>
+                    <td className="px-4 py-4 text-[#8d9a9a]">
+                      {m.landing_mobile_consoles()}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </Container>
       </section>
@@ -194,29 +244,22 @@ function HomePage() {
         <ScrollReveal delay={100} className="mt-12">
           <div className="grid border-y lg:grid-cols-[1.1fr_0.9fr]">
             <div className="py-8 pr-0 text-lg leading-8 text-[#8d9a9a] lg:border-r lg:border-[#21464a] lg:pr-12">
-              <p>
-                Start with a portrait, character illustration, or pixel artwork.
-                The generator maps the image into a skin texture you can inspect
-                before saving.
-              </p>
-              <p className="mt-5">
-                It is designed for a fast first result rather than a complex
-                pixel editor, so the conversion stays clear and approachable.
-              </p>
+              <p>{m.landing_what_paragraph1()}</p>
+              <p className="mt-5">{m.landing_what_paragraph2()}</p>
             </div>
             <dl className="divide-y divide-[#21464a] py-2 lg:pl-12">
               <div className="flex items-baseline justify-between gap-6 py-5">
-                <dt className="font-medium">Input</dt>
+                <dt className="font-medium">{m.landing_input()}</dt>
                 <dd className="font-mono text-sm text-[#8d9a9a]">
                   PNG / JPG / WEBP
                 </dd>
               </div>
               <div className="flex items-baseline justify-between gap-6 py-5">
-                <dt className="font-medium">Preview</dt>
+                <dt className="font-medium">{m.landing_preview()}</dt>
                 <dd className="font-mono text-sm text-[#8d9a9a]">2D + 3D</dd>
               </div>
               <div className="flex items-baseline justify-between gap-6 py-5">
-                <dt className="font-medium">Export</dt>
+                <dt className="font-medium">{m.landing_export()}</dt>
                 <dd className="font-mono text-sm text-[#8d9a9a]">
                   64x64 / 128x128
                 </dd>
@@ -346,16 +389,24 @@ function HomePage() {
           </div>
           <div className="grid grid-cols-3 divide-x divide-[#21464a] border border-[#21464a]">
             <div className="px-5 py-4 text-center">
-              <strong className="block font-mono text-cyan-300">LOCAL</strong>
-              <span className="text-xs text-[#8d9a9a]">processing</span>
+              <strong className="block font-mono text-cyan-300">
+                {m.landing_local()}
+              </strong>
+              <span className="text-xs text-[#8d9a9a]">
+                {m.landing_trust_processing()}
+              </span>
             </div>
             <div className="px-5 py-4 text-center">
               <strong className="block font-mono text-cyan-300">2</strong>
-              <span className="text-xs text-[#8d9a9a]">formats</span>
+              <span className="text-xs text-[#8d9a9a]">
+                {m.landing_trust_formats()}
+              </span>
             </div>
             <div className="px-5 py-4 text-center">
               <strong className="block font-mono text-cyan-300">0</strong>
-              <span className="text-xs text-[#8d9a9a]">signup</span>
+              <span className="text-xs text-[#8d9a9a]">
+                {m.landing_trust_signup()}
+              </span>
             </div>
           </div>
         </Container>

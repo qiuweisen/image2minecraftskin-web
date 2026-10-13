@@ -1,103 +1,68 @@
+import { m } from '@/locale/paraglide/messages';
+
 export type ViewerModel = 'auto-detect' | 'default' | 'slim';
 
 export const skinViewerConfig = {
   path: '/minecraft-skin-viewer',
   seo: {
-    title: 'Minecraft Skin Viewer - Preview Skins in 3D Online',
-    description:
-      'Upload a 64x64 or 128x128 Minecraft skin PNG and preview it online in 2D and 3D. Free, private, and no account required.',
+    title: m.viewer_seo_title(),
+    description: m.viewer_seo_description(),
   },
   hero: {
-    kicker: 'Minecraft Skin Viewer',
-    title: 'Preview your Minecraft skin in 3D',
-    description:
-      'Check an existing Java or Bedrock skin before using it in-game. Upload the PNG, rotate the model, and inspect the unfolded texture in your browser.',
-    facts: ['64x64 + 128x128', 'LOCAL PREVIEW', 'NO SIGNUP'],
+    kicker: m.viewer_hero_kicker(),
+    title: m.viewer_hero_title(),
+    description: m.viewer_hero_description(),
+    facts: [m.viewer_fact_sizes(), m.viewer_fact_local(), m.viewer_fact_no_signup()],
   },
   workspace: {
     maxFileSizeBytes: 2 * 1024 * 1024,
-    label: 'Minecraft skin preview workspace',
-    title: 'Skin viewer',
-    idle: 'Waiting for a skin',
-    ready: 'Skin ready',
-    uploadTitle: 'Drop a Minecraft skin PNG',
-    uploadHint: '64x64 or 128x128 PNG - up to 2 MB',
-    example: 'Try an example skin',
-    reset: 'Reset viewer',
-    localNote: 'Your skin is decoded and previewed in this browser.',
-    modelLabel: 'Arm model',
-    textureLabel: 'Unfolded skin texture',
-    previewLabel: 'Interactive 3D Minecraft skin preview',
-    emptyPreview: 'Upload a skin or try the example to start.',
+    label: m.viewer_workspace_label(), title: m.viewer_workspace_title(), idle: m.viewer_workspace_idle(), ready: m.viewer_workspace_ready(), uploadTitle: m.viewer_workspace_upload_title(), uploadHint: m.viewer_workspace_upload_hint(), example: m.viewer_workspace_example(), reset: m.viewer_workspace_reset(), localNote: m.viewer_workspace_local_note(), modelLabel: m.viewer_workspace_model(), textureLabel: m.viewer_workspace_texture(), previewLabel: m.viewer_workspace_preview(), emptyPreview: m.viewer_workspace_empty(),
     models: [
-      { value: 'auto-detect', label: 'Auto' },
-      { value: 'default', label: 'Classic' },
-      { value: 'slim', label: 'Slim' },
+      { value: 'auto-detect', label: m.viewer_model_auto() }, { value: 'default', label: m.viewer_model_classic() }, { value: 'slim', label: m.viewer_model_slim() },
     ] satisfies Array<{ value: ViewerModel; label: string }>,
   },
   explanation: {
-    eyebrow: 'What is a skin viewer?',
-    title: 'Inspect the texture before you equip it',
-    description:
-      'A Minecraft skin viewer renders the flat PNG texture on a player model, making it easier to catch incorrect dimensions, transparent areas, or the wrong arm style.',
+    eyebrow: m.viewer_explanation_eyebrow(), title: m.viewer_explanation_title(), description: m.viewer_explanation_description(),
   },
   steps: [
     {
       number: '01',
-      title: 'Choose a skin PNG',
-      description: 'Use an existing 64x64 Java or 128x128 Bedrock texture.',
+      title: m.viewer_step1_title(), description: m.viewer_step1_description(),
     },
     {
       number: '02',
-      title: 'Check the model',
-      description: 'Use automatic arm detection or select Classic or Slim.',
+      title: m.viewer_step2_title(), description: m.viewer_step2_description(),
     },
     {
       number: '03',
-      title: 'Rotate and inspect',
-      description:
-        'Drag the 3D model and compare it with the unfolded texture.',
+      title: m.viewer_step3_title(), description: m.viewer_step3_description(),
     },
   ],
   formats: [
     {
       size: '64',
-      title: 'Java 64x64',
-      description: 'The standard modern skin texture used by Java Edition.',
+      title: m.viewer_format_java_title(), description: m.viewer_format_java_description(),
     },
     {
       size: '128',
-      title: 'Bedrock 128x128',
-      description: 'A higher-resolution square texture supported by Bedrock.',
+      title: m.viewer_format_bedrock_title(), description: m.viewer_format_bedrock_description(),
     },
   ],
   faqs: [
     {
-      question: 'Which Minecraft skin files can I preview?',
-      answer:
-        'The viewer accepts PNG textures sized 64x64 or 128x128 pixels. Other image formats and dimensions are rejected so the preview remains accurate.',
+      question: m.viewer_faq1_q(), answer: m.viewer_faq1_a(),
     },
     {
-      question: 'Does the viewer upload my skin?',
-      answer:
-        'No. The standard viewer reads and renders the selected file in your browser without sending it to an upload endpoint.',
+      question: m.viewer_faq2_q(), answer: m.viewer_faq2_a(),
     },
     {
-      question: 'What is the difference between Classic and Slim arms?',
-      answer:
-        'Classic skins use four-pixel-wide arms, while Slim skins use three-pixel-wide arms. Auto mode asks the renderer to detect the model from the texture.',
+      question: m.viewer_faq3_q(), answer: m.viewer_faq3_a(),
     },
     {
-      question: 'Can I turn a normal photo into a skin here?',
-      answer:
-        'The viewer is for existing skin PNG files. Use the Image to Minecraft Skin generator on the homepage to convert a photo or character image first.',
+      question: m.viewer_faq4_q(), answer: m.viewer_faq4_a(),
     },
   ],
   cta: {
-    eyebrow: 'Need a new skin?',
-    title: 'Turn an image into a Minecraft skin.',
-    description:
-      'Use the generator to create a skin texture, then inspect the result in 2D and 3D.',
-    button: 'Create a skin from an image',
+    eyebrow: m.viewer_cta_eyebrow(), title: m.viewer_cta_title(), description: m.viewer_cta_description(), button: m.viewer_cta_button(),
   },
 } as const;

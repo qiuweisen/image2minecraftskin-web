@@ -126,94 +126,60 @@ export function getHomepageConfig(): HomepageConfig {
     ],
     landing: {
       whatIs: {
-        eyebrow: 'What is it?',
-        title: 'Turn an image into a Minecraft skin',
-        description:
-          'image2minecraftskin is a focused browser tool for turning portraits, character art, and pixel art into downloadable Minecraft skin textures.',
+        eyebrow: m.landing_what_eyebrow(), title: m.landing_what_title(), description: m.landing_what_description(),
       },
       features: [
         {
-          title: 'Local by default',
-          description:
-            'Your source image stays in the browser during standard conversion.',
+          title: m.landing_feature_local_title(), description: m.landing_feature_local_description(),
         },
         {
-          title: 'Java and Bedrock',
-          description: 'Export Java 64x64 or Bedrock 128x128 PNG textures.',
+          title: m.landing_feature_formats_title(), description: m.landing_feature_formats_description(),
         },
         {
-          title: '2D and 3D preview',
-          description:
-            'Inspect the unfolded texture and character before downloading.',
+          title: m.landing_feature_preview_title(), description: m.landing_feature_preview_description(),
         },
         {
-          title: 'No account required',
-          description: 'Create a skin and download it without signup.',
+          title: m.landing_feature_account_title(), description: m.landing_feature_account_description(),
         },
       ],
       featuresHeading: {
-        eyebrow: 'Key features',
-        title: 'Everything needed for a usable skin',
-        description:
-          'A short path from source image to a texture you can use in Minecraft.',
+        eyebrow: m.landing_features_eyebrow(), title: m.landing_features_title(), description: m.landing_features_description(),
       },
       compatibilityHeading: {
-        eyebrow: 'Output formats',
-        description:
-          'Choose the format that matches the edition and model you play.',
+        eyebrow: m.landing_formats_eyebrow(), description: m.landing_formats_description(),
       },
       faqHeading: {
-        eyebrow: 'FAQ',
-        description:
-          'Clear answers about files, privacy, compatibility, and the download flow.',
+        eyebrow: m.landing_faq_eyebrow(), description: m.landing_faq_description(),
       },
       howToUse: {
-        eyebrow: 'How to use',
-        title: 'Four steps, no learning curve',
-        description:
-          'The generator keeps the first result simple and leaves advanced editing out of the way.',
+        eyebrow: m.landing_how_eyebrow(), title: m.landing_how_title(), description: m.landing_how_description(),
         steps: [
           {
             number: '01',
-            title: 'Upload an image',
-            description: 'Choose a PNG, JPG, JPEG, or WEBP image up to 10 MB.',
+            title: m.landing_step1_title(), description: m.landing_step1_description(),
           },
           {
             number: '02',
-            title: 'Choose your output',
-            description:
-              'Select Java or Bedrock and choose the classic or slim model.',
+            title: m.landing_step2_title(), description: m.landing_step2_description(),
           },
           {
             number: '03',
-            title: 'Check the preview',
-            description:
-              'Review the generated texture and 3D character preview.',
+            title: m.landing_step3_title(), description: m.landing_step3_description(),
           },
           {
             number: '04',
-            title: 'Download the PNG',
-            description: 'Save the finished skin and import it into Minecraft.',
+            title: m.landing_step4_title(), description: m.landing_step4_description(),
           },
         ],
       },
       trust: {
-        eyebrow: 'Built for the result',
-        title: 'A practical skin workflow',
-        description:
-          'No gallery, marketplace, or account layer gets in the way. The page is focused on making and exporting one usable skin.',
+        eyebrow: m.landing_trust_eyebrow(), title: m.landing_trust_title(), description: m.landing_trust_description(),
       },
       viewerHandoff: {
-        eyebrow: 'Already have a skin PNG?',
-        title: 'Inspect a skin without changing it',
-        description:
-          'Use the separate viewer to validate a 64x64 or 128x128 skin, compare the flat texture, and rotate it on a 3D player model.',
-        button: 'Inspect a skin in the 3D viewer',
+        eyebrow: m.landing_viewer_eyebrow(), title: m.landing_viewer_title(), description: m.landing_viewer_description(), button: m.landing_viewer_button(),
       },
       cta: {
-        eyebrow: 'Ready to create?',
-        title: 'Make your next Minecraft skin from an image.',
-        button: 'Open the generator',
+        eyebrow: m.landing_cta_eyebrow(), title: m.landing_cta_title(), button: m.landing_cta_button(),
       },
     },
   };

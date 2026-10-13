@@ -3,6 +3,7 @@ import { SkinViewerPage } from '@/components/blocks/skin-viewer-page';
 import { skinViewerConfig } from '@/config/skin-viewer-config';
 import { seo } from '@/lib/seo';
 import { getCanonicalUrl } from '@/lib/urls';
+import { m } from '@/locale/paraglide/messages';
 
 export const Route = createFileRoute('/minecraft-skin-viewer')({
   head: () => {
@@ -15,8 +16,8 @@ export const Route = createFileRoute('/minecraft-skin-viewer')({
           type: 'application/ld+json',
           children: JSON.stringify({
             '@context': 'https://schema.org',
-            '@type': 'WebApplication',
-            name: 'Minecraft Skin Viewer',
+            '@type': 'SoftwareApplication',
+            name: m.viewer_hero_kicker(),
             applicationCategory: 'MultimediaApplication',
             operatingSystem: 'Web browser',
             url,
@@ -61,13 +62,13 @@ export const Route = createFileRoute('/minecraft-skin-viewer')({
               {
                 '@type': 'ListItem',
                 position: 1,
-                name: 'Home',
+                name: m.seo_breadcrumb_home(),
                 item: getCanonicalUrl('/'),
               },
               {
                 '@type': 'ListItem',
                 position: 2,
-                name: 'Minecraft Skin Viewer',
+                name: m.viewer_hero_kicker(),
                 item: url,
               },
             ],

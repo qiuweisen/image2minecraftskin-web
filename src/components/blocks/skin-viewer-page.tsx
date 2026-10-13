@@ -14,6 +14,7 @@ import { buttonVariants } from '@/components/ui/button';
 import { skinViewerConfig } from '@/config/skin-viewer-config';
 import { trackSkinEvent } from '@/lib/analytics-events';
 import { cn } from '@/lib/utils';
+import { m } from '@/locale/paraglide/messages';
 
 function ViewerSection({
   id,
@@ -75,7 +76,7 @@ export function SkinViewerPage() {
                   'mt-7 min-h-11 rounded-sm px-5'
                 )}
               >
-                Preview a skin <IconArrowRight />
+                {m.viewer_preview_skin()} <IconArrowRight />
               </a>
               <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 font-mono text-xs text-[#8d9a9a]">
                 {config.hero.facts.map((fact) => (
@@ -95,6 +96,42 @@ export function SkinViewerPage() {
           <SkinViewerWorkspace />
         </Container>
       </section>
+
+      <ViewerSection
+        id="validate-minecraft-skin-png"
+        eyebrow={m.viewer_direct_answer()}
+        title={m.viewer_validate_title()}
+        description={m.viewer_validate_description()}
+      >
+        <ScrollReveal className="mt-10">
+          <div className="grid border border-[#21464a] bg-[#11191b] md:grid-cols-3">
+            <div className="border-b border-[#21464a] p-6 md:border-b-0 md:border-r">
+              <p className="font-mono text-xs uppercase text-cyan-300">
+                01 / {m.viewer_validate()}
+              </p>
+              <p className="mt-3 leading-7 text-[#8d9a9a]">
+                {m.viewer_validate_step()}
+              </p>
+            </div>
+            <div className="border-b border-[#21464a] p-6 md:border-b-0 md:border-r">
+              <p className="font-mono text-xs uppercase text-cyan-300">
+                02 / {m.viewer_inspect()}
+              </p>
+              <p className="mt-3 leading-7 text-[#8d9a9a]">
+                {m.viewer_inspect_step()}
+              </p>
+            </div>
+            <div className="p-6">
+              <p className="font-mono text-xs uppercase text-cyan-300">
+                03 / {m.viewer_fix()}
+              </p>
+              <p className="mt-3 leading-7 text-[#8d9a9a]">
+                {m.viewer_fix_step()}
+              </p>
+            </div>
+          </div>
+        </ScrollReveal>
+      </ViewerSection>
 
       <ViewerSection {...config.explanation}>
         <ScrollReveal className="mt-12">
@@ -122,9 +159,9 @@ export function SkinViewerPage() {
 
       <ViewerSection
         id="formats"
-        eyebrow="Supported textures"
-        title="Java and Bedrock skin formats"
-        description="The viewer validates the image before rendering it so ordinary photos and unsupported textures do not produce a misleading model."
+        eyebrow={m.viewer_supported_textures()}
+        title={m.viewer_formats_title()}
+        description={m.viewer_formats_description()}
       >
         <ScrollReveal className="mt-12">
           <div className="grid border border-[#21464a] md:grid-cols-2">
@@ -146,18 +183,16 @@ export function SkinViewerPage() {
             ))}
           </div>
           <p className="mt-6 max-w-3xl leading-7 text-[#8d9a9a]">
-            Classic skins use four-pixel-wide arms, while Slim skins use
-            three-pixel-wide arms. Auto mode reads the texture and chooses the
-            closest model for the preview.
+            {m.viewer_arm_model_note()}
           </p>
         </ScrollReveal>
       </ViewerSection>
 
       <ViewerSection
         id="viewer-faq"
-        eyebrow="FAQ"
-        title="Before you preview a skin"
-        description="Answers about supported textures, privacy, arm models, and the difference between viewing and generating."
+        eyebrow={m.viewer_faq_eyebrow()}
+        title={m.viewer_faq_title()}
+        description={m.viewer_faq_description()}
       >
         <ScrollReveal className="mt-10">
           <Accordion className="w-full max-w-4xl border-y border-[#21464a]">

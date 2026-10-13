@@ -8,6 +8,8 @@ import {
 const publicPages = [
   { path: '/', name: 'home' },
   { path: '/minecraft-skin-viewer', name: 'Minecraft skin viewer' },
+  { path: '/image-to-minecraft-skin', name: 'image-to-skin guide' },
+  { path: '/minecraft-skin-formats', name: 'skin formats guide' },
   { path: '/privacy', name: 'privacy policy' },
   { path: '/terms', name: 'terms of service' },
 ] as const;
@@ -62,12 +64,32 @@ test.describe('public page smoke coverage', () => {
     const response = await request.get('/sitemap.xml');
     await expect(response).toBeOK();
     const sitemap = await response.text();
+    expect(sitemap).toContain('<loc>http://localhost:3000/</loc><lastmod>');
     expect(sitemap).toContain(
-      '<loc>https://image2minecraftskin.com/</loc><lastmod>'
+      '<loc>http://localhost:3000/minecraft-skin-viewer</loc><lastmod>'
     );
     expect(sitemap).toContain(
-      '<loc>https://image2minecraftskin.com/minecraft-skin-viewer</loc><lastmod>'
+      '<loc>http://localhost:3000/image-to-minecraft-skin</loc><lastmod>'
+    );
+    expect(sitemap).toContain('hreflang="ja"');
+    expect(sitemap).toContain(
+      'hreflang="pt-BR" href="http://localhost:3000/pt-BR/minecraft-skin-viewer"'
     );
     expect(sitemap).not.toContain('ascii-art-for-');
+  });
+
+  test('localized SEO guide renders translated SSR metadata and content', async ({
+    page,
+  }) => {
+    await page.goto('/ja/minecraft-skin-formats');
+    await expect(page.locator('html')).toHaveAttribute('lang', 'ja');
+    await expect(page).toHaveTitle(/Minecraftスキンのサイズと形式ガイド/);
+    await expect(
+      page.getByRole('heading', { name: /Minecraftスキンのサイズと形式ガイド/ })
+    ).toBeVisible();
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+      'href',
+      /\/ja\/minecraft-skin-formats$/
+    );
   });
 });
