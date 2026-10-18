@@ -1,0 +1,56 @@
+{
+ "full-body": {
+  "front_bbox": [
+   24,
+   50,
+   500,
+   948
+  ],
+  "back_bbox": [
+   24,
+   50,
+   488,
+   948
+  ],
+  "height_diff": 0.0,
+  "width_ratio_front": 1.06,
+  "layout_ok": true,
+  "skin": "skins/full-body.png"
+ },
+ "pet": {
+  "front_bbox": [
+   33,
+   70,
+   479,
+   948
+  ],
+  "back_bbox": [
+   33,
+   70,
+   479,
+   948
+  ],
+  "height_diff": 0.0,
+  "width_ratio_front": 1.02,
+  "layout_ok": true,
+  "skin": "skins/pet.png"
+ },
+ "portrait-selfie": {
+  "front_bbox": [
+   51,
+   76,
+   461,
+   973
+  ],
+  "back_bbox": [
+   51,
+   76,
+   461,
+   973
+  ],
+  "height_diff": 0.0,
+  "width_ratio_front": 0.91,
+  "layout_ok": true,
+  "skin": "skins/portrait-selfie.png"
+ }
+}

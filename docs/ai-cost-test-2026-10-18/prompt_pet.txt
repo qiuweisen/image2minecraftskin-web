@@ -1,0 +1,1 @@
+For a pet or non-human subject, make a humanoid Minecraft character wearing the animal's fur colors and pattern, with recognizable animal head features (ears, muzzle, horns, or beak) integrated on the cube head; keep the same two-panel front-left/back-right layout and all constraints above.
