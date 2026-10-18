@@ -336,6 +336,20 @@ export function mapImageToSkin(
       }
   }
 
+  // Lite / prod-like path for cutout art and faceless non-photo subjects:
+  // keep sampled colors, only ensure opacity — no hair flat-fill or back mirror.
+  const litePath =
+    isCutoutArt ||
+    (resolvedKind === 'character' && !options.face && !useMask);
+  if (litePath) {
+    if (resolvedKind === 'logo') {
+      paintTemplate(texture, maskedSource, 'logo');
+    }
+    const styleLite: SkinStyle = options.style ?? 'photo';
+    if (styleLite === 'pixel') applyPixelStyle(texture);
+    return texture;
+  }
+
   // Structural templates only for animal/logo cutouts. Portrait/character
   // keep mask-aware photo sampling — templates were wiping dress/statue color.
   if (resolvedKind === 'animal' || resolvedKind === 'logo') {

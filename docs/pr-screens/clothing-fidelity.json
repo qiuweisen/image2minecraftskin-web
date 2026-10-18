@@ -1,0 +1,178 @@
+[
+  {
+    "name": "portrait-selfie",
+    "clothes": [
+      255,
+      238,
+      221
+    ],
+    "newTorso": [
+      153,
+      187,
+      238
+    ],
+    "prodTorso": [
+      153,
+      187,
+      238
+    ],
+    "deltaE_new": 44.1,
+    "deltaE_prod": 44.1,
+    "prefer": "tie",
+    "passPeople": true
+  },
+  {
+    "name": "half-body",
+    "clothes": [
+      17,
+      34,
+      17
+    ],
+    "newTorso": [
+      153,
+      102,
+      68
+    ],
+    "prodTorso": [
+      119,
+      136,
+      0
+    ],
+    "deltaE_new": 49.9,
+    "deltaE_prod": 65.1,
+    "prefer": "new",
+    "passPeople": true
+  },
+  {
+    "name": "full-body",
+    "clothes": [
+      187,
+      187,
+      187
+    ],
+    "newTorso": [
+      17,
+      68,
+      68
+    ],
+    "prodTorso": [
+      17,
+      17,
+      17
+    ],
+    "deltaE_new": 52.9,
+    "deltaE_prod": 70.8,
+    "prefer": "new",
+    "passPeople": true
+  },
+  {
+    "name": "busy-background",
+    "clothes": [
+      0,
+      0,
+      0
+    ],
+    "newTorso": [
+      34,
+      51,
+      34
+    ],
+    "prodTorso": [
+      34,
+      51,
+      34
+    ],
+    "deltaE_new": 23.9,
+    "deltaE_prod": 23.9,
+    "prefer": "tie",
+    "passPeople": true
+  },
+  {
+    "name": "anime-character",
+    "clothes": [
+      85,
+      85,
+      136
+    ],
+    "newTorso": [
+      85,
+      85,
+      136
+    ],
+    "prodTorso": [
+      85,
+      85,
+      136
+    ],
+    "deltaE_new": 0,
+    "deltaE_prod": 0,
+    "prefer": "tie",
+    "passPeople": true
+  },
+  {
+    "name": "pet",
+    "clothes": [
+      102,
+      102,
+      119
+    ],
+    "newTorso": [
+      85,
+      51,
+      34
+    ],
+    "prodTorso": [
+      136,
+      136,
+      153
+    ],
+    "deltaE_new": 33.9,
+    "deltaE_prod": 13.5,
+    "prefer": "prod",
+    "passPeople": true
+  },
+  {
+    "name": "logo-transparent",
+    "clothes": [
+      0,
+      102,
+      153
+    ],
+    "newTorso": [
+      0,
+      102,
+      153
+    ],
+    "prodTorso": [
+      34,
+      119,
+      170
+    ],
+    "deltaE_new": 0,
+    "deltaE_prod": 6.8,
+    "prefer": "new",
+    "passPeople": true
+  },
+  {
+    "name": "pixel-sprite",
+    "clothes": [
+      255,
+      255,
+      255
+    ],
+    "newTorso": [
+      255,
+      255,
+      255
+    ],
+    "prodTorso": [
+      255,
+      255,
+      255
+    ],
+    "deltaE_new": 0,
+    "deltaE_prod": 0,
+    "prefer": "tie",
+    "passPeople": true
+  }
+]

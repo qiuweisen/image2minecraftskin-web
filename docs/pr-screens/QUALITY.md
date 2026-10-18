@@ -5,46 +5,43 @@ Total **21,899,976 bytes** (about **20.9 MiB**):
 - WASM + JS glue: 12,080,331 bytes
 - Models (pose / face / selfie / hair / deeplab): 9,818,823 bytes
 
-`deeplab_v3.tflite` loads only when no face is detected. First use pays the download cost; browser cache applies afterward. Images never leave the device.
+Images never leave the device.
 
-## Real acceptance (2026-10-18, Asia/Shanghai)
+## Real acceptance (2026-10-18, Asia/Shanghai) — fidelity pass
 
-Fixtures: eight Wikimedia Commons photos under `fixtures/real/` (licenses in `fixtures/LICENSES.md`).
+Fixtures: `fixtures/real/` + `fixtures/LICENSES.md` (Commons CC0/CC-BY/CC-BY-SA/PD).
 
-Method:
-1. Local Vite (`127.0.0.1:3015`) with self-hosted `/mediapipe` models loaded in headless Chromium.
-2. Same Playwright upload → wait for “Skin ready” → download PNG flow against production `https://image2minecraftskin.com`.
-3. Front/back 3D rendered from each skin PNG via skinview3d (WebGL).
-4. Contact sheets: `contact-real-*.png` = original | prod skin | new skin | prod/new front | prod/new back.
+Method: Playwright UI on local Vite (`:3015`) with self-hosted models, same flow on production, skinview3d front/back, contact sheets `contact-real-*.png`.
 
-### Background leak (primary goal)
-| Fixture | Prod sky/foliage in torso/arms | New after fixes |
-|---------|--------------------------------|-----------------|
-| portrait-selfie (bridge, light-blue dress/sky) | Yes — torso/arms ~sky blue | **No** — scrubbed; head front keeps skin tone |
-| half-body (leafy green backdrop) | Yes — green wash on body | **No** green/sky cells in base regions |
-| busy-background | Head top sky-blue on prod | New avoids sky; coverage weak (flat fills) |
+Automatic clothing check: `node scripts/clothing-fidelity-check.mjs` (photo mid-body dominant vs skin torso front, CIE76 ΔE). People fixtures must not be worse than prod; results in `clothing-fidelity.json`.
 
-Fixes that landed on this branch:
-- Copy MediaPipe category masks immediately (buffer reuse bug).
-- Hole-fill no longer samples DEFAULT_CROPS edges; head top/back use hair tone.
-- Face miss on landscape selfies → mid-coverage person mask treated as portrait; face retry on centered square; character limbs use portrait templates.
-- Final `isBackgroundLike` scrub (sky + foliage + bright outdoor wash).
+### Per-fixture verdict (human glance + ΔE)
 
-### What is still weak (honest)
-- **Face detector** still misses some landscape selfies; we compensate with mask-coverage heuristics and scrubbing, not a perfect face box.
-- **Head top** often falls back to flat gray (`0x888`) when hair segmenter yields empty bins — no sky, but not photoreal hair either.
-- **Back/side faces** remain low-detail (edge strips / solid fills). Side-profile sources (bridge selfie) leave large flat gray areas on the back.
-- **Busy crowd / full-body / pet / logo / pixel**: subject cutout and part crops are uneven; results are opaque and non-leaking but often posterized or template-heavy rather than recognizable.
-- **Anime**: better than prod holes, still not a faithful character map.
-- Synthetic geometry contact sheets (`contact-*.png` without `-real-`) are **not** valid acceptance; keep them only as mapping benchmarks.
+| Fixture | Verdict | Notes |
+|---------|---------|--------|
+| portrait-selfie | **prefer new** | Blue dress restored (was cream/gray). Head top cleaner than prod (less sky leak). ΔE tie with prod on torso blue. |
+| half-body | **prefer new** | Less green foliage wash than prod; subject browns kept. ΔE new better. |
+| full-body | **prefer prod** | Statue niche still hard; new flattens limbs more. Metric noisy (stone/teal). |
+| busy-background | **tie** | Both weak on crowds; no sky leak advantage clear. |
+| anime-character | **tie** (lean prod detail) | Gated to cutout/lite path; clothing ΔE matches prod. Prod keeps slightly more face/hair texture. |
+| pet | **prefer prod** | Fur mapping still weaker on new. |
+| logo-transparent | **prefer new** | Cutout lite path; logo blue ΔE better than prod. |
+| pixel-sprite | **tie** | Both preserve white/sprite blocks. |
 
-### UI screenshots
-Captured earlier from local Vite:
-- `ui-result-page.png`, `ui-generator-workspace.png`, `ui-ai-modal.png`, `ui-import-guide.png`
+### What changed after the fidelity regression
+- Stopped treating blue clothing as sky; masked dominant colors trusted.
+- Removed final color scrub that wiped dresses into cream.
+- Structural `paintTemplate` no longer overwrites photo-sampled people torsos.
+- Back faces mirror front colors (not flat gray).
+- **Gates:** transparent cutouts (anime/logo/pixel) and faceless non-photo `character` use a lite/prod-like path (opacity fill only). Selfie masks only when face or strong selfie portrait coverage.
 
-### Mapping benchmark (synthetic, Node only)
-Run `pnpm exec tsx scripts/skin-quality-bench.ts` for pure `mapImageToSkin` timings (no MediaPipe).
+### Still weak
+- Full-body statues / busy crowds / pets: recognition limited.
+- Faceless landscape selfies: blaze-face often misses; rely on selfie mask heuristics.
+- Hair top can still be flat cream when hair segmenter is empty.
+- Synthetic `contact-*.png` (no `-real-`) are mapping benchmarks only — not acceptance.
 
 ### Scripts
-- `scripts/real-skin-acceptance.mjs` — Playwright real UI vs local/prod
-- `scripts/render-skin-3d.mjs` — skinview3d front/back from skin PNGs
+- `scripts/real-skin-acceptance.mjs` — Playwright local/prod
+- `scripts/render-skin-3d.mjs` — 3D front/back
+- `scripts/clothing-fidelity-check.mjs` — ΔE clothing harness
