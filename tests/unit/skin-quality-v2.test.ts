@@ -54,4 +54,62 @@ describe('skin quality v2 mapping', () => {
     expect(skin.pixels.slice(chest, chest + 3)).not.toEqual([118, 113, 105]);
     expect(skin.pixels[arm + 3]).toBe(255);
   });
+
+  it('rejects sky-blue from portrait head-top and arm hole fills', () => {
+    const width = 80;
+    const height = 100;
+    const pixels = new Uint8ClampedArray(width * height * 4);
+    const sky = [135, 206, 235, 255] as const;
+    const skin = [210, 160, 120, 255] as const;
+    const shirt = [40, 90, 160, 255] as const;
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        const i = (y * width + x) * 4;
+        const color =
+          y < height * 0.12 ? sky : y < height * 0.45 ? skin : shirt;
+        pixels.set(color, i);
+      }
+    }
+    // Mask: subject is the middle band (face/torso), not the sky strip.
+    const mask = new Uint8Array(width * height);
+    for (let y = Math.floor(height * 0.12); y < height; y++)
+      for (let x = Math.floor(width * 0.2); x < Math.floor(width * 0.8); x++)
+        mask[y * width + x] = 1;
+    const skinTex = mapImageToSkin(
+      { width, height, pixels },
+      'java-64',
+      'classic',
+      {
+        kind: 'portrait',
+        mask,
+        face: { x: 0.3, y: 0.15, width: 0.4, height: 0.28 },
+      }
+    );
+    const regions = getSkinRegions('java-64', 'classic');
+    const headTop = regions.find((r, i) => r.part === 'head' && i % 6 === 0)!;
+    const sample = (region: (typeof regions)[number]) => {
+      const i = textureOffset(
+        region.x + Math.floor(region.width / 2),
+        region.y + Math.floor(region.height / 2),
+        skinTex.width
+      );
+      return [skinTex.pixels[i]!, skinTex.pixels[i + 1]!, skinTex.pixels[i + 2]!];
+    };
+    const topColor = sample(headTop);
+    // Sky blue is ~135,206,235 — hair/skin fallback must not be that close.
+    const distSky = Math.hypot(
+      topColor[0]! - sky[0],
+      topColor[1]! - sky[1],
+      topColor[2]! - sky[2]
+    );
+    expect(distSky).toBeGreaterThan(60);
+    const rightArm = regions.find((r) => r.part === 'right-arm')!;
+    const armColor = sample(rightArm);
+    const armDistSky = Math.hypot(
+      armColor[0]! - sky[0],
+      armColor[1]! - sky[1],
+      armColor[2]! - sky[2]
+    );
+    expect(armDistSky).toBeGreaterThan(60);
+  });
 });

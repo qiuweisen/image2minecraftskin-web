@@ -1,6 +1,56 @@
 import type { ImageSource } from './types';
 import type { PartCrops } from './normalize';
 
+
+/** Ensure mask is width*height bytes; treat as person=nonzero. */
+function normalizePersonMask(
+  raw: Uint8Array | undefined,
+  width: number,
+  height: number,
+  personCategories?: Set<number>
+): Uint8Array | undefined {
+  if (!raw || raw.length === 0) return undefined;
+  const expected = width * height;
+  let src = raw;
+  if (raw.length !== expected) {
+    // MediaPipe occasionally returns model-resolution masks; nearest upsample.
+    const side = Math.round(Math.sqrt(raw.length));
+    if (side * side !== raw.length) return undefined;
+    const scaled = new Uint8Array(expected);
+    for (let y = 0; y < height; y++) {
+      const sy = Math.min(side - 1, Math.floor((y / height) * side));
+      for (let x = 0; x < width; x++) {
+        const sx = Math.min(side - 1, Math.floor((x / width) * side));
+        scaled[y * width + x] = raw[sy * side + sx] ?? 0;
+      }
+    }
+    src = scaled;
+  }
+  const out = new Uint8Array(expected);
+  let subject = 0;
+  for (let i = 0; i < expected; i++) {
+    const v = src[i] ?? 0;
+    const isPerson = personCategories
+      ? personCategories.has(v)
+      : v > 0;
+    out[i] = isPerson ? 1 : 0;
+    if (isPerson) subject += 1;
+  }
+  // Corner heuristic: if three of four corners look like "person", polarity
+  // is likely inverted (seen on some selfie category dumps).
+  const corners = [
+    out[0],
+    out[width - 1],
+    out[(height - 1) * width],
+    out[height * width - 1],
+  ];
+  const cornerSubject = corners.filter((c) => c > 0).length;
+  if (cornerSubject >= 3 && subject > expected * 0.55) {
+    for (let i = 0; i < expected; i++) out[i] = out[i] ? 0 : 1;
+  }
+  return out;
+}
+
 export type VisionAnalysis = {
   kind: 'portrait' | 'full-body' | 'character' | 'animal' | 'logo';
   faceFound: boolean;
@@ -94,8 +144,8 @@ export async function analyzeSource(
         source.height
       )
     : undefined;
-  const hair = hairResult.categoryMask?.getAsUint8Array();
-  let finalMask = category;
+  const hairRaw = hairResult.categoryMask?.getAsUint8Array();
+  let finalMask = normalizePersonMask(category, source.width, source.height);
   if (!face) {
     deeplabPromise ??= (async () => {
       const { FilesetResolver, ImageSegmenter } = await import(
@@ -109,14 +159,22 @@ export async function analyzeSource(
       });
     })();
     try {
+      const deeplabRaw = (await deeplabPromise)
+        .segment(canvas)
+        .categoryMask?.getAsUint8Array();
+      // PASCAL VOC: 15 = person. Do not keep sky/ground as "subject".
       finalMask =
-        (await deeplabPromise)
-          .segment(canvas)
-          .categoryMask?.getAsUint8Array() ?? category;
+        normalizePersonMask(
+          deeplabRaw,
+          source.width,
+          source.height,
+          new Set([15])
+        ) ?? finalMask;
     } catch {
-      finalMask = category;
+      /* keep selfie mask */
     }
   }
+  const hairMask = normalizePersonMask(hairRaw, source.width, source.height);
   onProgress?.(100);
   return {
     kind: face
@@ -136,7 +194,7 @@ export async function analyzeSource(
         }
       : {}),
     ...(finalMask ? { mask: finalMask } : {}),
-    ...(hair ? { hairMask: hair } : {}),
+    ...(hairMask ? { hairMask } : {}),
     ...(poseCrops ? { poseCrops } : {}),
     loadMs: Math.round(performance.now() - started),
   };

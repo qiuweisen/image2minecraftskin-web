@@ -134,6 +134,18 @@ function faceCrop(
     case 'front':
       return { rect: crop, mirror: false };
     case 'top':
+      // Prefer the hairline band inside the head crop, not the absolute top
+      // which is often sky/background above a selfie.
+      if (part === 'head') {
+        return {
+          rect: {
+            ...crop,
+            y: crop.y + crop.height * 0.08,
+            height: Math.max(1, crop.height * 0.22),
+          },
+          mirror: false,
+        };
+      }
       return { rect: { ...crop, height: stripH }, mirror: false };
     case 'bottom':
       return {
@@ -149,11 +161,15 @@ function faceCrop(
         mirror: false,
       };
     case 'back':
-      // Head: the back of a head is hair, so reuse the top band.
+      // Head: hair from the upper face band, not sky above the crown.
       // Body and limbs: mirror the front so clothing wraps continuously.
       return part === 'head'
         ? {
-            rect: { ...crop, height: crop.height * 0.3 },
+            rect: {
+              ...crop,
+              y: crop.y + crop.height * 0.05,
+              height: Math.max(1, crop.height * 0.28),
+            },
             mirror: false,
           }
         : { rect: crop, mirror: true };
@@ -248,13 +264,55 @@ export function mapImageToSkin(
     paintRegion(texture, maskedSource, region, rect, mirror);
   });
   // Base regions must never contain transparent holes, even for cutout PNGs.
-  for (const region of regions) {
-    const fallback = dominantColor(maskedSource, {
-      x: DEFAULT_CROPS[region.part].x,
-      y: DEFAULT_CROPS[region.part].y,
-      width: DEFAULT_CROPS[region.part].width,
-      height: DEFAULT_CROPS[region.part].height,
-    });
+  // Fallbacks are taken from subject-heavy interior crops so sky/background
+  // that lives in DEFAULT_CROPS arm/head edges cannot re-enter the skin.
+  const skinTone = dominantColor(maskedSource, {
+    x: 0.34,
+    y: 0.18,
+    width: 0.32,
+    height: 0.22,
+  });
+  const shirtTone = dominantColor(maskedSource, {
+    x: 0.3,
+    y: 0.4,
+    width: 0.4,
+    height: 0.28,
+  });
+  const hairTone = options.hairMask
+    ? dominantColor(
+        { ...source, mask: options.hairMask },
+        { x: 0.2, y: 0.05, width: 0.6, height: 0.3 }
+      )
+    : dominantColor(maskedSource, {
+        x: 0.28,
+        y: 0.08,
+        width: 0.44,
+        height: 0.18,
+      });
+  for (let regionIndex = 0; regionIndex < regions.length; regionIndex += 1) {
+    const region = regions[regionIndex]!;
+    const face = FACE_ORDER[regionIndex % FACE_ORDER.length]!;
+    let fallback: readonly number[];
+    if (region.part === 'head' && (face === 'top' || face === 'back')) {
+      fallback = hairTone;
+    } else if (region.part === 'head') {
+      fallback = skinTone;
+    } else if (region.part === 'torso') {
+      fallback = shirtTone;
+    } else if (region.part.endsWith('arm')) {
+      // Upper limb cells lean shirt; lower lean skin. Avoid side-strip sky.
+      fallback = face === 'top' || face === 'bottom' ? skinTone : shirtTone;
+      if (resolvedKind === 'portrait' || resolvedKind === 'logo') {
+        fallback = face === 'top' || face === 'front' ? shirtTone : skinTone;
+      }
+    } else {
+      fallback = dominantColor(maskedSource, {
+        x: 0.3,
+        y: 0.7,
+        width: 0.4,
+        height: 0.25,
+      });
+    }
     for (let y = region.y; y < region.y + region.height; y++)
       for (let x = region.x; x < region.x + region.width; x++) {
         const i = textureOffset(x, y, texture.width);
@@ -268,11 +326,16 @@ export function mapImageToSkin(
   ) {
     paintTemplate(texture, maskedSource, resolvedKind);
   }
-  if (options.hairMask) {
-    const hair = dominantColor(
-      { ...source, mask: options.hairMask },
-      { x: 0.15, y: 0, width: 0.7, height: 0.35 }
-    );
+  // Always solid-fill head top/back with hair tone. Photo top strips (and
+  // DEFAULT_CROPS) commonly contain sky; leaving sampled pixels there is how
+  // light-blue backgrounds leaked into portrait skins.
+  {
+    const hair = options.hairMask
+      ? dominantColor(
+          { ...source, mask: options.hairMask },
+          { x: 0.15, y: 0, width: 0.7, height: 0.35 }
+        )
+      : hairTone;
     regions.forEach((region, index) => {
       if (region.part !== 'head') return;
       const face = FACE_ORDER[index % FACE_ORDER.length];
