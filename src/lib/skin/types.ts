@@ -17,6 +17,7 @@ export type GenerationOptions = {
   >;
   mask?: Uint8Array;
   hairMask?: Uint8Array;
+  maskSource?: 'selfie' | 'deeplab';
   face?: { x: number; y: number; width: number; height: number };
 };
 

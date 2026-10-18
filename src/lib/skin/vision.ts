@@ -58,6 +58,8 @@ export type VisionAnalysis = {
   poseCrops?: PartCrops;
   mask?: Uint8Array;
   hairMask?: Uint8Array;
+  /** selfie = person cutout; deeplab = generic labels (often wrong for art). */
+  maskSource?: 'selfie' | 'deeplab';
   loadMs: number;
 };
 let segmenterPromise:
@@ -188,7 +190,12 @@ export async function analyzeSource(
       )
     : undefined;
   let finalMask = normalizePersonMask(categoryRaw, source.width, source.height);
-  if (!face) {
+  let maskSource: 'selfie' | 'deeplab' | undefined = finalMask
+    ? 'selfie'
+    : undefined;
+  // Deeplab only as a last resort for true photos without a face; callers
+  // should prefer ignoring deeplab masks for anime/logo/pixel fidelity.
+  if (!face && !finalMask) {
     deeplabPromise ??= (async () => {
       const { FilesetResolver, ImageSegmenter } = await import(
         '@mediapipe/tasks-vision'
@@ -206,30 +213,29 @@ export async function analyzeSource(
         ? Uint8Array.from(deeplabResult.categoryMask.getAsUint8Array())
         : undefined;
       deeplabResult.categoryMask?.close?.();
-      // PASCAL VOC: 15 = person. Do not keep sky/ground as "subject".
-      finalMask =
-        normalizePersonMask(
-          deeplabRaw,
-          source.width,
-          source.height,
-          new Set([15])
-        ) ?? finalMask;
+      finalMask = normalizePersonMask(
+        deeplabRaw,
+        source.width,
+        source.height,
+        new Set([15])
+      );
+      if (finalMask) maskSource = 'deeplab';
     } catch {
-      /* keep selfie mask */
+      /* keep none */
     }
   }
   const hairMask = normalizePersonMask(hairRaw, source.width, source.height);
   onProgress?.(100);
-  const maskCoverage = finalMask
+  const selfieCoverage = maskSource === 'selfie' && finalMask
     ? finalMask.reduce((n, v) => n + (v > 0 ? 1 : 0), 0) / finalMask.length
     : 0;
-  // Selfie segmenter hit without a face box: still treat as portrait so limb
-  // templates run (landscape bridge selfies often miss blaze-face).
+  // Only promote faceless inputs to portrait when the selfie person mask
+  // looks like a real photo subject — not Deeplab on anime/art.
   const kind = face
     ? source.height > source.width * 1.35
       ? 'full-body'
       : 'portrait'
-    : maskCoverage > 0.04 && maskCoverage < 0.55
+    : selfieCoverage > 0.1 && selfieCoverage < 0.45
       ? 'portrait'
       : 'character';
   return {
@@ -245,7 +251,7 @@ export async function analyzeSource(
           },
         }
       : {}),
-    ...(finalMask ? { mask: finalMask } : {}),
+    ...(finalMask ? { mask: finalMask, maskSource } : {}),
     ...(hairMask ? { hairMask } : {}),
     ...(poseCrops ? { poseCrops } : {}),
     loadMs: Math.round(performance.now() - started),

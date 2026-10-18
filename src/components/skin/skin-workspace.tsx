@@ -211,6 +211,7 @@ export function SkinWorkspace() {
             faceDetails,
             mask: analysis?.mask,
             hairMask: analysis?.hairMask,
+            maskSource: analysis?.maskSource,
             face: analysis?.face,
           });
           setTexture(mapped);

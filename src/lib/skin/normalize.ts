@@ -14,7 +14,6 @@ import {
   dominantColor,
   subjectDominantColor,
   paintTemplate,
-  maskCoverage,
 } from './templates';
 import { applyPixelStyle } from './style';
 
@@ -248,15 +247,28 @@ export function mapImageToSkin(
       ? (cropsOrOptions as GenerationOptions)
       : { crops: cropsOrOptions as PartCrops | undefined };
   const kind: SubjectKind = options.kind ?? 'auto';
-  const maskedSource = options.mask
-    ? ({ ...source, mask: options.mask } as MaskedImageSource)
-    : source;
   const resolvedKind =
     kind === 'auto'
       ? source.height < source.width * 1.12
         ? 'portrait'
         : 'full-body'
       : kind;
+  // Transparent cutouts (anime/logo/sprites): keep prod-like unmasked sampling.
+  let transparent = 0;
+  for (let i = 3; i < source.pixels.length; i += 16) {
+    if ((source.pixels[i] ?? 255) < 16) transparent += 1;
+  }
+  const isCutoutArt = transparent > (source.pixels.length / 4) * 0.05;
+  // Gate: selfie/face masks on real photos only — never on cutout art.
+  const useMask =
+    Boolean(options.mask) &&
+    !isCutoutArt &&
+    resolvedKind !== 'logo' &&
+    (Boolean(options.face) ||
+      (options.maskSource === 'selfie' && resolvedKind === 'portrait'));
+  const maskedSource = useMask
+    ? ({ ...source, mask: options.mask } as MaskedImageSource)
+    : source;
   const partCrops = (options.crops ?? cropsOrOptions) as PartCrops | undefined;
   const regions = getSkinRegions(format, model);
   regions.forEach((region, index) => {
@@ -300,12 +312,6 @@ export function mapImageToSkin(
         height: 0.2,
       });
 
-  const torsoCoverage = maskCoverage(maskedSource, {
-    x: 0.28,
-    y: 0.38,
-    width: 0.44,
-    height: 0.32,
-  });
 
   // Fill only transparent cells (cutout holes / masked-out samples).
   for (let regionIndex = 0; regionIndex < regions.length; regionIndex += 1) {
@@ -330,19 +336,10 @@ export function mapImageToSkin(
       }
   }
 
-  // Structural templates only when the subject barely appears in the torso
-  // band (true cutouts / tiny sprites). Otherwise keep photo-sampled colors.
-  const needsStructure =
-    resolvedKind === 'animal' ||
-    resolvedKind === 'logo' ||
-    ((resolvedKind === 'portrait' || resolvedKind === 'character') &&
-      torsoCoverage < 0.08);
-  if (needsStructure) {
-    paintTemplate(
-      texture,
-      maskedSource,
-      resolvedKind === 'character' ? 'portrait' : resolvedKind
-    );
+  // Structural templates only for animal/logo cutouts. Portrait/character
+  // keep mask-aware photo sampling — templates were wiping dress/statue color.
+  if (resolvedKind === 'animal' || resolvedKind === 'logo') {
+    paintTemplate(texture, maskedSource, resolvedKind);
   }
 
   // Occluded head top/back: prefer hair, else copy from the head-front band
