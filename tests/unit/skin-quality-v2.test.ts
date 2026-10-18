@@ -185,4 +185,48 @@ describe('skin quality v2 mapping', () => {
     expect(Math.hypot(front[0]! - back[0]!, front[1]! - back[1]!, front[2]! - back[2]!)).toBeLessThan(30);
     expect(back[0]).not.toBe(136);
   });
+
+  it('leaves no near-black voids in base body regions', () => {
+    const width = 80;
+    const height = 100;
+    const pixels = new Uint8ClampedArray(width * height * 4);
+    const mask = new Uint8Array(width * height);
+    // Subject with intentional black speckles inside mask (should be filled)
+    for (let y = 0; y < height; y++)
+      for (let x = 0; x < width; x++) {
+        const i = (y * width + x) * 4;
+        const inSubject = x >= 20 && x < 60 && y >= 10 && y < 90;
+        mask[y * width + x] = inSubject ? 1 : 0;
+        if (!inSubject) {
+          pixels.set([40, 160, 50, 255], i);
+        } else if ((x + y) % 17 === 0) {
+          pixels.set([0, 0, 0, 255], i);
+        } else {
+          pixels.set([180, 120, 80, 255], i);
+        }
+      }
+    const skinTex = mapImageToSkin(
+      { width, height, pixels },
+      'java-64',
+      'classic',
+      {
+        kind: 'portrait',
+        mask,
+        face: { x: 0.3, y: 0.12, width: 0.4, height: 0.28 },
+      }
+    );
+    const regions = getSkinRegions('java-64', 'classic');
+    for (const region of regions) {
+      for (let y = region.y; y < region.y + region.height; y++)
+        for (let x = region.x; x < region.x + region.width; x++) {
+          const i = textureOffset(x, y, skinTex.width);
+          const r = skinTex.pixels[i]!;
+          const g = skinTex.pixels[i + 1]!;
+          const b = skinTex.pixels[i + 2]!;
+          const a = skinTex.pixels[i + 3]!;
+          expect(a).toBe(255);
+          expect(r + g + b).toBeGreaterThan(30);
+        }
+    }
+  });
 });

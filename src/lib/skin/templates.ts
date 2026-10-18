@@ -22,6 +22,22 @@ export function isSkyLike(color: readonly number[]) {
   return isBackgroundLike(color);
 }
 
+/** Unintended void texels in the base layer (not drawn eye pixels). */
+export function isNearBlack(color: readonly number[]) {
+  const [r, g, b, a = 255] = color;
+  if ((a ?? 255) < 255) return true;
+  return (r ?? 0) + (g ?? 0) + (b ?? 0) <= 30;
+}
+
+export function ensureNonBlack(
+  color: readonly number[],
+  fallback: readonly number[] = [210, 160, 120, 255]
+) {
+  if (!isNearBlack(color)) return color;
+  if (!isNearBlack(fallback)) return fallback;
+  return [210, 160, 120, 255] as const;
+}
+
 export function dominantColor(
   source: ImageSource & { mask?: Uint8Array },
   rect?: { x: number; y: number; width: number; height: number }

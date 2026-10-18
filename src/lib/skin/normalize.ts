@@ -14,6 +14,8 @@ import {
   dominantColor,
   subjectDominantColor,
   paintTemplate,
+  isNearBlack,
+  ensureNonBlack,
 } from './templates';
 import { applyPixelStyle } from './style';
 
@@ -313,49 +315,58 @@ export function mapImageToSkin(
       });
 
 
-  // Fill only transparent cells (cutout holes / masked-out samples).
+  const safeSkin = ensureNonBlack(skinTone);
+  const safeShirt = ensureNonBlack(shirtTone, safeSkin);
+  const safePants = ensureNonBlack(pantsTone, safeShirt);
+  const safeHair = ensureNonBlack(hairTone, safeSkin);
+
+  // Fill transparent OR near-black voids in every base region (never leave
+  // pure-black holes). Intentional face-detail eyes are painted later.
   for (let regionIndex = 0; regionIndex < regions.length; regionIndex += 1) {
     const region = regions[regionIndex]!;
     const face = FACE_ORDER[regionIndex % FACE_ORDER.length]!;
     let fallback: readonly number[];
     if (region.part === 'head' && (face === 'top' || face === 'back')) {
-      fallback = hairTone;
+      fallback = safeHair;
     } else if (region.part === 'head') {
-      fallback = skinTone;
+      fallback = safeSkin;
     } else if (region.part === 'torso') {
-      fallback = shirtTone;
+      fallback = safeShirt;
     } else if (region.part.endsWith('arm')) {
-      fallback = shirtTone;
+      fallback = safeShirt;
     } else {
-      fallback = pantsTone;
+      fallback = safePants;
     }
     for (let y = region.y; y < region.y + region.height; y++)
       for (let x = region.x; x < region.x + region.width; x++) {
         const i = textureOffset(x, y, texture.width);
-        if ((texture.pixels[i + 3] ?? 0) < 255) texture.pixels.set(fallback, i);
+        const color = [
+          texture.pixels[i] ?? 0,
+          texture.pixels[i + 1] ?? 0,
+          texture.pixels[i + 2] ?? 0,
+          texture.pixels[i + 3] ?? 0,
+        ] as const;
+        if (isNearBlack(color)) texture.pixels.set(fallback, i);
       }
   }
 
-  // Lite / prod-like path for cutout art and faceless non-photo subjects:
-  // keep sampled colors, only ensure opacity — no hair flat-fill or back mirror.
+  // Lite / prod-like: faceless non-selfie-portrait (statues, missed detections)
+  // and cutouts. Skip hair/back post-process so we stay close to prod sampling.
   const litePath =
     isCutoutArt ||
-    (resolvedKind === 'character' && !options.face && !useMask);
-  if (litePath) {
-    if (resolvedKind === 'logo') {
-      paintTemplate(texture, maskedSource, 'logo');
-    }
-    const styleLite: SkinStyle = options.style ?? 'photo';
-    if (styleLite === 'pixel') applyPixelStyle(texture);
-    return texture;
-  }
+    (!options.face &&
+      !(
+        options.maskSource === 'selfie' &&
+        resolvedKind === 'portrait' &&
+        useMask
+      ));
 
-  // Structural templates only for animal/logo cutouts. Portrait/character
-  // keep mask-aware photo sampling — templates were wiping dress/statue color.
+  // Structural templates only for animal/logo cutouts.
   if (resolvedKind === 'animal' || resolvedKind === 'logo') {
     paintTemplate(texture, maskedSource, resolvedKind);
   }
 
+  if (!litePath) {
   // Occluded head top/back: prefer hair, else copy from the head-front band
   // (not flat gray).
   {
@@ -439,6 +450,8 @@ export function mapImageToSkin(
     }
   }
 
+  }
+
   if (
     options.faceDetails &&
     resolvedKind !== 'animal' &&
@@ -454,6 +467,25 @@ export function mapImageToSkin(
     pixel(11, 15, [113, 63, 57, 255]);
     pixel(12, 15, [113, 63, 57, 255]);
   }
+  // Final base-layer integrity: no transparent / near-black voids.
+  // Intentional face-detail eyes use [31,42,49] (sum>30) so they survive.
+  {
+    const fallback = ensureNonBlack(safeShirt, safeSkin);
+    for (const region of regions) {
+      for (let y = region.y; y < region.y + region.height; y++)
+        for (let x = region.x; x < region.x + region.width; x++) {
+          const i = textureOffset(x, y, texture.width);
+          const color = [
+            texture.pixels[i] ?? 0,
+            texture.pixels[i + 1] ?? 0,
+            texture.pixels[i + 2] ?? 0,
+            texture.pixels[i + 3] ?? 0,
+          ] as const;
+          if (isNearBlack(color)) texture.pixels.set(fallback, i);
+        }
+    }
+  }
+
   const style: SkinStyle = options.style ?? 'photo';
   if (style === 'pixel') applyPixelStyle(texture);
   return texture;
