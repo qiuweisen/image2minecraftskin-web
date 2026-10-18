@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { mapImageToSkin } from '@/lib/skin/normalize';
 import { getSkinRegions } from '@/lib/skin/layouts';
 import { textureOffset } from '@/lib/skin/types';
+import { isBackgroundLike, dominantColor } from '@/lib/skin/templates';
 
 function source(width = 64, height = 96, alpha = 255) {
   const pixels = new Uint8ClampedArray(width * height * 4);
@@ -12,6 +13,15 @@ function source(width = 64, height = 96, alpha = 255) {
     pixels[i + 3] = alpha;
   }
   return { width, height, pixels };
+}
+
+function at(
+  skin: ReturnType<typeof mapImageToSkin>,
+  x: number,
+  y: number
+) {
+  const i = textureOffset(x, y, skin.width);
+  return [skin.pixels[i]!, skin.pixels[i + 1]!, skin.pixels[i + 2]!, skin.pixels[i + 3]!];
 }
 
 describe('skin quality v2 mapping', () => {
@@ -30,10 +40,12 @@ describe('skin quality v2 mapping', () => {
     );
     expect(alphas.every((alpha) => alpha === 255)).toBe(true);
   });
+
   it('keeps slim arms narrow and supports Bedrock dimensions', () => {
     expect(mapImageToSkin(source(), 'bedrock-128', 'slim').width).toBe(128);
     expect(mapImageToSkin(source(), 'java-64', 'slim').width).toBe(64);
   });
+
   it('paints explicit face details and makes pixel style distinct', () => {
     const plain = mapImageToSkin(source(), 'java-64');
     const face = mapImageToSkin(source(), 'java-64', 'classic', {
@@ -45,6 +57,7 @@ describe('skin quality v2 mapping', () => {
     expect(face.pixels).not.toEqual(plain.pixels);
     expect(pixel.pixels).not.toEqual(plain.pixels);
   });
+
   it('keeps a logo kind chest-centered rather than stretching it across limbs', () => {
     const skin = mapImageToSkin(source(), 'java-64', 'classic', {
       kind: 'logo',
@@ -55,26 +68,26 @@ describe('skin quality v2 mapping', () => {
     expect(skin.pixels[arm + 3]).toBe(255);
   });
 
-  it('rejects sky-blue from portrait head-top and arm hole fills', () => {
+  it('preserves blue dress clothing under a person mask (not scrubbed as sky)', () => {
     const width = 80;
     const height = 100;
     const pixels = new Uint8ClampedArray(width * height * 4);
     const sky = [135, 206, 235, 255] as const;
     const skin = [210, 160, 120, 255] as const;
-    const shirt = [40, 90, 160, 255] as const;
-    for (let y = 0; y < height; y++) {
+    const dress = [70, 120, 200, 255] as const;
+    const mask = new Uint8Array(width * height);
+    for (let y = 0; y < height; y++)
       for (let x = 0; x < width; x++) {
         const i = (y * width + x) * 4;
-        const color =
-          y < height * 0.12 ? sky : y < height * 0.45 ? skin : shirt;
+        const inSubject = x >= 20 && x < 60 && y >= 10 && y < 90;
+        mask[y * width + x] = inSubject ? 1 : 0;
+        let color = sky;
+        if (inSubject && y < 40) color = skin;
+        else if (inSubject) color = dress;
         pixels.set(color, i);
       }
-    }
-    // Mask: subject is the middle band (face/torso), not the sky strip.
-    const mask = new Uint8Array(width * height);
-    for (let y = Math.floor(height * 0.12); y < height; y++)
-      for (let x = Math.floor(width * 0.2); x < Math.floor(width * 0.8); x++)
-        mask[y * width + x] = 1;
+    // Clothing blue must not be treated as background when masked.
+    expect(isBackgroundLike(dress)).toBe(false);
     const skinTex = mapImageToSkin(
       { width, height, pixels },
       'java-64',
@@ -82,86 +95,94 @@ describe('skin quality v2 mapping', () => {
       {
         kind: 'portrait',
         mask,
-        face: { x: 0.3, y: 0.15, width: 0.4, height: 0.28 },
+        face: { x: 0.3, y: 0.12, width: 0.4, height: 0.25 },
       }
     );
-    const regions = getSkinRegions('java-64', 'classic');
-    const headTop = regions.find((r, i) => r.part === 'head' && i % 6 === 0)!;
-    const sample = (region: (typeof regions)[number]) => {
-      const i = textureOffset(
-        region.x + Math.floor(region.width / 2),
-        region.y + Math.floor(region.height / 2),
-        skinTex.width
-      );
-      return [skinTex.pixels[i]!, skinTex.pixels[i + 1]!, skinTex.pixels[i + 2]!];
-    };
-    const topColor = sample(headTop);
-    // Sky blue is ~135,206,235 — hair/skin fallback must not be that close.
-    const distSky = Math.hypot(
-      topColor[0]! - sky[0],
-      topColor[1]! - sky[1],
-      topColor[2]! - sky[2]
+    const torso = at(skinTex, 24, 26);
+    const distDress = Math.hypot(
+      torso[0]! - dress[0],
+      torso[1]! - dress[1],
+      torso[2]! - dress[2]
     );
-    expect(distSky).toBeGreaterThan(60);
-    const rightArm = regions.find((r) => r.part === 'right-arm')!;
-    const armColor = sample(rightArm);
-    const armDistSky = Math.hypot(
-      armColor[0]! - sky[0],
-      armColor[1]! - sky[1],
-      armColor[2]! - sky[2]
+    const distCream = Math.hypot(
+      torso[0]! - 210,
+      torso[1]! - 160,
+      torso[2]! - 120
     );
-    expect(armDistSky).toBeGreaterThan(60);
+    expect(distDress).toBeLessThan(80);
+    expect(distDress).toBeLessThan(distCream);
   });
 
-  it('scrubs sky-like torso/arm pixels even when kind is character', () => {
+  it('keeps green foliage outside the mask from dominating torso', () => {
     const width = 80;
-    const height = 64;
-    const pixels = new Uint8ClampedArray(width * height * 4);
-    const sky = [135, 206, 235, 255] as const;
-    const skin = [210, 160, 120, 255] as const;
-    for (let y = 0; y < height; y++)
-      for (let x = 0; x < width; x++) {
-        const i = (y * width + x) * 4;
-        // Entire frame sky except a small face patch
-        const isFace = x > 30 && x < 50 && y > 10 && y < 30;
-        pixels.set(isFace ? skin : sky, i);
-      }
-    const skinTex = mapImageToSkin(
-      { width, height, pixels },
-      'java-64',
-      'classic',
-      { kind: 'character' }
-    );
-    const arm = textureOffset(46, 26, skinTex.width);
-    const torso = textureOffset(24, 26, skinTex.width);
-    const armRGB = [skinTex.pixels[arm]!, skinTex.pixels[arm + 1]!, skinTex.pixels[arm + 2]!];
-    const torsoRGB = [skinTex.pixels[torso]!, skinTex.pixels[torso + 1]!, skinTex.pixels[torso + 2]!];
-    const skyDist = (c: number[]) =>
-      Math.hypot(c[0]! - sky[0], c[1]! - sky[1], c[2]! - sky[2]);
-    expect(skyDist(armRGB)).toBeGreaterThan(60);
-    expect(skyDist(torsoRGB)).toBeGreaterThan(60);
-  });
-
-  it('scrubs green foliage from character limbs', () => {
-    const width = 80;
-    const height = 64;
+    const height = 100;
     const pixels = new Uint8ClampedArray(width * height * 4);
     const leaf = [40, 160, 50, 255] as const;
-    const skin = [200, 150, 120, 255] as const;
+    const shirt = [180, 40, 40, 255] as const;
+    const mask = new Uint8Array(width * height);
     for (let y = 0; y < height; y++)
       for (let x = 0; x < width; x++) {
         const i = (y * width + x) * 4;
-        const isFace = x > 30 && x < 50 && y > 8 && y < 28;
-        pixels.set(isFace ? skin : leaf, i);
+        const inSubject = x >= 25 && x < 55 && y >= 15 && y < 85;
+        mask[y * width + x] = inSubject ? 1 : 0;
+        pixels.set(inSubject ? shirt : leaf, i);
       }
     const skinTex = mapImageToSkin(
       { width, height, pixels },
       'java-64',
       'classic',
-      { kind: 'character' }
+      { kind: 'portrait', mask }
     );
-    const arm = textureOffset(46, 26, skinTex.width);
-    const c = [skinTex.pixels[arm]!, skinTex.pixels[arm + 1]!, skinTex.pixels[arm + 2]!];
-    expect(Math.hypot(c[0]! - leaf[0], c[1]! - leaf[1], c[2]! - leaf[2])).toBeGreaterThan(60);
+    const torso = at(skinTex, 24, 26);
+    const distShirt = Math.hypot(
+      torso[0]! - shirt[0],
+      torso[1]! - shirt[1],
+      torso[2]! - shirt[2]
+    );
+    const distLeaf = Math.hypot(
+      torso[0]! - leaf[0],
+      torso[1]! - leaf[1],
+      torso[2]! - leaf[2]
+    );
+    expect(distShirt).toBeLessThan(distLeaf);
+  });
+
+  it('does not fall back to neutral gray when masked pixels exist', () => {
+    const width = 40;
+    const height = 40;
+    const pixels = new Uint8ClampedArray(width * height * 4);
+    const mask = new Uint8Array(width * height);
+    for (let i = 0; i < pixels.length; i += 4) {
+      pixels.set([90, 40, 30, 255], i);
+    }
+    mask.fill(1);
+    const color = dominantColor({ width, height, pixels, mask });
+    expect(color[0]).not.toBe(136);
+    expect(color[1]).not.toBe(136);
+    expect(color[2]).not.toBe(136);
+  });
+
+  it('mirrors front torso colors onto the back instead of flat gray', () => {
+    const width = 64;
+    const height = 96;
+    const pixels = new Uint8ClampedArray(width * height * 4);
+    const mask = new Uint8Array(width * height);
+    for (let y = 0; y < height; y++)
+      for (let x = 0; x < width; x++) {
+        const i = (y * width + x) * 4;
+        pixels.set([30, 80, 180, 255], i);
+        mask[y * width + x] = 1;
+      }
+    const skinTex = mapImageToSkin(
+      { width, height, pixels },
+      'java-64',
+      'classic',
+      { kind: 'full-body', mask }
+    );
+    // torso front (20,20) vs back (32,20) in classic layout
+    const front = at(skinTex, 24, 26);
+    const back = at(skinTex, 36, 26);
+    expect(Math.hypot(front[0]! - back[0]!, front[1]! - back[1]!, front[2]! - back[2]!)).toBeLessThan(30);
+    expect(back[0]).not.toBe(136);
   });
 });

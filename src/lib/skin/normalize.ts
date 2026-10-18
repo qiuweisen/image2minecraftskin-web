@@ -14,7 +14,7 @@ import {
   dominantColor,
   subjectDominantColor,
   paintTemplate,
-  isSkyLike,
+  maskCoverage,
 } from './templates';
 import { applyPixelStyle } from './style';
 
@@ -268,20 +268,25 @@ export function mapImageToSkin(
     );
     paintRegion(texture, maskedSource, region, rect, mirror);
   });
-  // Base regions must never contain transparent holes, even for cutout PNGs.
-  // Fallbacks are taken from subject-heavy interior crops so sky/background
-  // that lives in DEFAULT_CROPS arm/head edges cannot re-enter the skin.
+  // Subject tones for hole-fill / occluded faces — trust the mask so clothing
+  // blues/greens are kept. Never emit flat 0x888 gray.
   const skinTone = subjectDominantColor(maskedSource, {
     x: 0.34,
-    y: 0.22,
+    y: 0.18,
     width: 0.32,
-    height: 0.2,
+    height: 0.22,
   });
   const shirtTone = subjectDominantColor(maskedSource, {
+    x: 0.28,
+    y: 0.38,
+    width: 0.44,
+    height: 0.32,
+  });
+  const pantsTone = subjectDominantColor(maskedSource, {
     x: 0.3,
-    y: 0.4,
+    y: 0.66,
     width: 0.4,
-    height: 0.28,
+    height: 0.26,
   });
   const hairTone = options.hairMask
     ? dominantColor(
@@ -290,10 +295,19 @@ export function mapImageToSkin(
       )
     : dominantColor(maskedSource, {
         x: 0.28,
-        y: 0.08,
+        y: 0.05,
         width: 0.44,
-        height: 0.18,
+        height: 0.2,
       });
+
+  const torsoCoverage = maskCoverage(maskedSource, {
+    x: 0.28,
+    y: 0.38,
+    width: 0.44,
+    height: 0.32,
+  });
+
+  // Fill only transparent cells (cutout holes / masked-out samples).
   for (let regionIndex = 0; regionIndex < regions.length; regionIndex += 1) {
     const region = regions[regionIndex]!;
     const face = FACE_ORDER[regionIndex % FACE_ORDER.length]!;
@@ -305,18 +319,9 @@ export function mapImageToSkin(
     } else if (region.part === 'torso') {
       fallback = shirtTone;
     } else if (region.part.endsWith('arm')) {
-      // Upper limb cells lean shirt; lower lean skin. Avoid side-strip sky.
-      fallback = face === 'top' || face === 'bottom' ? skinTone : shirtTone;
-      if (resolvedKind === 'portrait' || resolvedKind === 'logo') {
-        fallback = face === 'top' || face === 'front' ? shirtTone : skinTone;
-      }
+      fallback = shirtTone;
     } else {
-      fallback = dominantColor(maskedSource, {
-        x: 0.3,
-        y: 0.7,
-        width: 0.4,
-        height: 0.25,
-      });
+      fallback = pantsTone;
     }
     for (let y = region.y; y < region.y + region.height; y++)
       for (let x = region.x; x < region.x + region.width; x++) {
@@ -324,30 +329,58 @@ export function mapImageToSkin(
         if ((texture.pixels[i + 3] ?? 0) < 255) texture.pixels.set(fallback, i);
       }
   }
-  if (
-    resolvedKind === 'portrait' ||
-    resolvedKind === 'character' ||
+
+  // Structural templates only when the subject barely appears in the torso
+  // band (true cutouts / tiny sprites). Otherwise keep photo-sampled colors.
+  const needsStructure =
     resolvedKind === 'animal' ||
-    resolvedKind === 'logo'
-  ) {
-    // character: face detector often misses landscape selfies; still need limb
-    // templates so sky sampled into DEFAULT arm/torso crops cannot remain.
+    resolvedKind === 'logo' ||
+    ((resolvedKind === 'portrait' || resolvedKind === 'character') &&
+      torsoCoverage < 0.08);
+  if (needsStructure) {
     paintTemplate(
       texture,
       maskedSource,
       resolvedKind === 'character' ? 'portrait' : resolvedKind
     );
   }
-  // Always solid-fill head top/back with hair tone. Photo top strips (and
-  // DEFAULT_CROPS) commonly contain sky; leaving sampled pixels there is how
-  // light-blue backgrounds leaked into portrait skins.
+
+  // Occluded head top/back: prefer hair, else copy from the head-front band
+  // (not flat gray).
   {
-    const hair = options.hairMask
-      ? dominantColor(
-          { ...source, mask: options.hairMask },
-          { x: 0.15, y: 0, width: 0.7, height: 0.35 }
-        )
-      : hairTone;
+    const headFront = regions.find(
+      (region, index) =>
+        region.part === 'head' && FACE_ORDER[index % FACE_ORDER.length] === 'front'
+    );
+    let hair = hairTone;
+    if (headFront) {
+      // Average top two rows of the front face as a hairline proxy.
+      let r = 0,
+        g = 0,
+        b = 0,
+        n = 0;
+      for (let y = headFront.y; y < headFront.y + Math.min(2, headFront.height); y++)
+        for (let x = headFront.x; x < headFront.x + headFront.width; x++) {
+          const i = textureOffset(x, y, texture.width);
+          r += texture.pixels[i] ?? 0;
+          g += texture.pixels[i + 1] ?? 0;
+          b += texture.pixels[i + 2] ?? 0;
+          n += 1;
+        }
+      if (n > 0) {
+        const fromFront = [
+          Math.round(r / n),
+          Math.round(g / n),
+          Math.round(b / n),
+          255,
+        ] as const;
+        // If hairTone looks like the empty-bin warm default AND front has signal, use front.
+        const hairIsWeak =
+          Math.abs(hair[0] - 120) + Math.abs(hair[1] - 100) + Math.abs(hair[2] - 85) <
+          40;
+        if (hairIsWeak) hair = fromFront;
+      }
+    }
     regions.forEach((region, index) => {
       if (region.part !== 'head') return;
       const face = FACE_ORDER[index % FACE_ORDER.length];
@@ -358,43 +391,41 @@ export function mapImageToSkin(
     });
   }
 
-  // Final guard: any remaining sky-like base pixels (bad mask / no face) are
-  // replaced with part-appropriate subject tones so background never leaks.
+  // Back faces of body/limbs: mirror the front face of the same part so we
+  // never leave occluded sides as empty gray when the front has subject color.
   {
-    const scrubSkin = subjectDominantColor(maskedSource, {
-      x: 0.34,
-      y: 0.22,
-      width: 0.32,
-      height: 0.2,
-    });
-    const scrubShirt = subjectDominantColor(maskedSource, {
-      x: 0.3,
-      y: 0.4,
-      width: 0.4,
-      height: 0.28,
-    });
+    const byPart = new Map<string, { front?: (typeof regions)[number]; back?: (typeof regions)[number] }>();
     regions.forEach((region, index) => {
-      const face = FACE_ORDER[index % FACE_ORDER.length]!;
-      const replacement =
-        region.part === 'head'
-          ? face === 'top' || face === 'back'
-            ? hairTone
-            : scrubSkin
-          : region.part === 'torso' || region.part.endsWith('arm')
-            ? scrubShirt
-            : scrubSkin;
-      for (let y = region.y; y < region.y + region.height; y += 1)
-        for (let x = region.x; x < region.x + region.width; x += 1) {
-          const i = textureOffset(x, y, texture.width);
-          const color = [
-            texture.pixels[i] ?? 0,
-            texture.pixels[i + 1] ?? 0,
-            texture.pixels[i + 2] ?? 0,
-            texture.pixels[i + 3] ?? 0,
-          ] as const;
-          if (isSkyLike(color)) texture.pixels.set(replacement, i);
-        }
+      const face = FACE_ORDER[index % FACE_ORDER.length];
+      if (face !== 'front' && face !== 'back') return;
+      if (region.part === 'head') return; // head back already handled via hair
+      const entry = byPart.get(region.part) ?? {};
+      if (face === 'front') entry.front = region;
+      else entry.back = region;
+      byPart.set(region.part, entry);
     });
+    for (const { front, back } of byPart.values()) {
+      if (!front || !back) continue;
+      const h = Math.min(front.height, back.height);
+      const w = Math.min(front.width, back.width);
+      for (let y = 0; y < h; y += 1)
+        for (let x = 0; x < w; x += 1) {
+          const src = textureOffset(
+            front.x + x,
+            front.y + y,
+            texture.width
+          );
+          const dst = textureOffset(
+            back.x + (w - 1 - x),
+            back.y + y,
+            texture.width
+          );
+          texture.pixels.set(
+            texture.pixels.subarray(src, src + 4),
+            dst
+          );
+        }
+    }
   }
 
   if (
