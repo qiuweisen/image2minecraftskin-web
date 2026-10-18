@@ -141,4 +141,27 @@ describe('skin quality v2 mapping', () => {
     expect(skyDist(armRGB)).toBeGreaterThan(60);
     expect(skyDist(torsoRGB)).toBeGreaterThan(60);
   });
+
+  it('scrubs green foliage from character limbs', () => {
+    const width = 80;
+    const height = 64;
+    const pixels = new Uint8ClampedArray(width * height * 4);
+    const leaf = [40, 160, 50, 255] as const;
+    const skin = [200, 150, 120, 255] as const;
+    for (let y = 0; y < height; y++)
+      for (let x = 0; x < width; x++) {
+        const i = (y * width + x) * 4;
+        const isFace = x > 30 && x < 50 && y > 8 && y < 28;
+        pixels.set(isFace ? skin : leaf, i);
+      }
+    const skinTex = mapImageToSkin(
+      { width, height, pixels },
+      'java-64',
+      'classic',
+      { kind: 'character' }
+    );
+    const arm = textureOffset(46, 26, skinTex.width);
+    const c = [skinTex.pixels[arm]!, skinTex.pixels[arm + 1]!, skinTex.pixels[arm + 2]!];
+    expect(Math.hypot(c[0]! - leaf[0], c[1]! - leaf[1], c[2]! - leaf[2])).toBeGreaterThan(60);
+  });
 });

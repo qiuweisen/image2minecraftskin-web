@@ -1,8 +1,20 @@
 import type { ImageSource, SkinTexture } from './types';
 
 export function isSkyLike(color: readonly number[]) {
+  return isBackgroundLike(color);
+}
+
+/** Blue sky / green foliage / bright outdoor wash that should not tint limbs. */
+export function isBackgroundLike(color: readonly number[]) {
   const [r, g, b] = color;
-  return b > 150 && b > r + 25 && b >= g - 5;
+  const sky = b > 150 && b > r + 25 && b >= g - 5;
+  const foliage = g > 90 && g > r + 20 && g > b + 15;
+  const wash =
+    Math.max(r, g, b) > 170 &&
+    Math.min(r, g, b) > 110 &&
+    Math.max(r, g, b) - Math.min(r, g, b) < 45 &&
+    b >= r - 5;
+  return sky || foliage || wash;
 }
 
 /** Dominant color that skips sky-like bins when better options exist. */
@@ -11,7 +23,7 @@ export function subjectDominantColor(
   rect?: { x: number; y: number; width: number; height: number }
 ) {
   const color = dominantColor(source, rect);
-  if (!isSkyLike(color)) return color;
+  if (!isBackgroundLike(color)) return color;
   // Retry on a tighter interior crop to escape edge sky.
   const tight = rect
     ? {
@@ -22,7 +34,7 @@ export function subjectDominantColor(
       }
     : { x: 0.3, y: 0.25, width: 0.4, height: 0.4 };
   const retry = dominantColor(source, tight);
-  return isSkyLike(retry) ? ([210, 160, 120, 255] as const) : retry;
+  return isBackgroundLike(retry) ? ([210, 160, 120, 255] as const) : retry;
 }
 
 export function dominantColor(
