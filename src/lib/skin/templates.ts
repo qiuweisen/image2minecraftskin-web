@@ -8,12 +8,7 @@ import type { ImageSource, SkinTexture } from './types';
 export function isBackgroundLike(color: readonly number[]) {
   const [r, g, b] = color;
   // Sky washes are bright in R and G too; saturated clothing blues have low R.
-  const sky =
-    b > 170 &&
-    b > r + 40 &&
-    b > g + 15 &&
-    r > 100 &&
-    g > 120;
+  const sky = b > 170 && b > r + 40 && b > g + 15 && r > 100 && g > 120;
   const foliage = g > 110 && g > r + 35 && g > b + 30 && r < 120;
   return sky || foliage;
 }
@@ -116,9 +111,7 @@ export function subjectDominantColor(
       }
     : { x: 0.35, y: 0.3, width: 0.3, height: 0.35 };
   const retry = dominantColor(source, tight);
-  return isBackgroundLike(retry)
-    ? ([210, 160, 120, 255] as const)
-    : retry;
+  return isBackgroundLike(retry) ? ([210, 160, 120, 255] as const) : retry;
 }
 
 export function fillRegion(

@@ -1,7 +1,6 @@
 import type { ImageSource } from './types';
 import type { PartCrops } from './normalize';
 
-
 /** Ensure mask is width*height bytes; treat as person=nonzero. */
 function normalizePersonMask(
   raw: Uint8Array | undefined,
@@ -30,9 +29,7 @@ function normalizePersonMask(
   let subject = 0;
   for (let i = 0; i < expected; i++) {
     const v = src[i] ?? 0;
-    const isPerson = personCategories
-      ? personCategories.has(v)
-      : v > 0;
+    const isPerson = personCategories ? personCategories.has(v) : v > 0;
     out[i] = isPerson ? 1 : 0;
     if (isPerson) subject += 1;
   }
@@ -226,9 +223,10 @@ export async function analyzeSource(
   }
   const hairMask = normalizePersonMask(hairRaw, source.width, source.height);
   onProgress?.(100);
-  const selfieCoverage = maskSource === 'selfie' && finalMask
-    ? finalMask.reduce((n, v) => n + (v > 0 ? 1 : 0), 0) / finalMask.length
-    : 0;
+  const selfieCoverage =
+    maskSource === 'selfie' && finalMask
+      ? finalMask.reduce((n, v) => n + (v > 0 ? 1 : 0), 0) / finalMask.length
+      : 0;
   // Only promote faceless inputs to portrait when the selfie person mask
   // looks like a real photo subject — not Deeplab on anime/art.
   const kind = face

@@ -1,47 +1,43 @@
 # Skin quality v2 notes
 
 ## Local MediaPipe assets
-Total **21,899,976 bytes** (about **20.9 MiB**):
-- WASM + JS glue: 12,080,331 bytes
-- Models (pose / face / selfie / hair / deeplab): 9,818,823 bytes
-
+Total **~20.9 MiB** under `public/mediapipe/` (wasm + pose/face/selfie/hair/deeplab).
 Images never leave the device.
 
-## Real acceptance (2026-10-18, Asia/Shanghai) — fidelity pass
+## Real acceptance (updated after void-fill, 2026-10-18 Asia/Shanghai)
 
-Fixtures: `fixtures/real/` + `fixtures/LICENSES.md` (Commons CC0/CC-BY/CC-BY-SA/PD).
+Fixtures: `fixtures/real/` + `LICENSES.md`.
 
-Method: Playwright UI on local Vite (`:3015`) with self-hosted models, same flow on production, skinview3d front/back, contact sheets `contact-real-*.png`.
+Method:
+- Same mapping path as the UI (`analyzeSource` + `mapImageToSkin`) with self-hosted models
+- Prod skins from production Playwright captures
+- 3D via `scripts/render-skin-3d.mjs`
+- Contact sheets: `contact-real-*.png`
+- Harnesses: `scripts/base-layer-integrity.mjs` (no alpha&lt;255 / near-black in base body), `scripts/clothing-fidelity-check.mjs` (ΔE)
 
-Automatic clothing check: `node scripts/clothing-fidelity-check.mjs` (photo mid-body dominant vs skin torso front, CIE76 ΔE). People fixtures must not be worse than prod; results in `clothing-fidelity.json`.
+### Fixes in this pass
+- **Near-black / transparent voids** in base body regions are filled with safe subject tones (intentional face-detail eyes `[31,42,49]` survive).
+- **Faceless non-cutout** inputs (e.g. full-body statue, no face) stay on **prod-like lite path** (no hair/back post-process).
+- Cutout art (anime/logo/pixel) remains gated to lite/unmasked sampling.
 
-### Per-fixture verdict (human glance + ΔE)
+### Per-fixture verdict
 
 | Fixture | Verdict | Notes |
 |---------|---------|--------|
-| portrait-selfie | **prefer new** | Blue dress restored (was cream/gray). Head top cleaner than prod (less sky leak). ΔE tie with prod on torso blue. |
-| half-body | **prefer new** | Less green foliage wash than prod; subject browns kept. ΔE new better. |
-| full-body | **prefer prod** | Statue niche still hard; new flattens limbs more. Metric noisy (stone/teal). |
-| busy-background | **tie** | Both weak on crowds; no sky leak advantage clear. |
-| anime-character | **tie** (lean prod detail) | Gated to cutout/lite path; clothing ΔE matches prod. Prod keeps slightly more face/hair texture. |
-| pet | **prefer prod** | Fur mapping still weaker on new. |
-| logo-transparent | **prefer new** | Cutout lite path; logo blue ΔE better than prod. |
-| pixel-sprite | **tie** | Both preserve white/sprite blocks. |
-
-### What changed after the fidelity regression
-- Stopped treating blue clothing as sky; masked dominant colors trusted.
-- Removed final color scrub that wiped dresses into cream.
-- Structural `paintTemplate` no longer overwrites photo-sampled people torsos.
-- Back faces mirror front colors (not flat gray).
-- **Gates:** transparent cutouts (anime/logo/pixel) and faceless non-photo `character` use a lite/prod-like path (opacity fill only). Selfie masks only when face or strong selfie portrait coverage.
-
-### Still weak
-- Full-body statues / busy crowds / pets: recognition limited.
-- Faceless landscape selfies: blaze-face often misses; rely on selfie mask heuristics.
-- Hair top can still be flat cream when hair segmenter is empty.
-- Synthetic `contact-*.png` (no `-real-`) are mapping benchmarks only — not acceptance.
+| portrait-selfie | prefer new / tie | Dress blue kept; head cleaner than prod |
+| half-body | prefer new | No black holes (integrity PASS); less foliage wash than prod |
+| full-body | lite / ≈prod | Faceless → lite path; not clearly worse than prod |
+| busy-background | tie | Both weak on crowds |
+| anime-character | tie | Cutout lite; clothing ΔE matches prod |
+| pet | prefer new (human) / ΔE noisy | Cat colors kept vs prod gray sky |
+| logo-transparent | prefer new | Cutout lite |
+| pixel-sprite | tie | Both preserve sprite blocks |
 
 ### Scripts
-- `scripts/real-skin-acceptance.mjs` — Playwright local/prod
-- `scripts/render-skin-3d.mjs` — 3D front/back
-- `scripts/clothing-fidelity-check.mjs` — ΔE clothing harness
+- `scripts/gen-real-skins.mjs` — MediaPipe + map (fresh browser per fixture)
+- `scripts/base-layer-integrity.mjs` — base-layer void check
+- `scripts/clothing-fidelity-check.mjs` — clothing ΔE
+- `scripts/render-skin-3d.mjs` — front/back 3D
+- `scripts/real-skin-acceptance.mjs` — full Playwright UI flow
+
+Synthetic `contact-*.png` (no `-real-`) are mapping benchmarks only.

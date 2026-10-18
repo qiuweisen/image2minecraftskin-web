@@ -15,13 +15,14 @@ function source(width = 64, height = 96, alpha = 255) {
   return { width, height, pixels };
 }
 
-function at(
-  skin: ReturnType<typeof mapImageToSkin>,
-  x: number,
-  y: number
-) {
+function at(skin: ReturnType<typeof mapImageToSkin>, x: number, y: number) {
   const i = textureOffset(x, y, skin.width);
-  return [skin.pixels[i]!, skin.pixels[i + 1]!, skin.pixels[i + 2]!, skin.pixels[i + 3]!];
+  return [
+    skin.pixels[i]!,
+    skin.pixels[i + 1]!,
+    skin.pixels[i + 2]!,
+    skin.pixels[i + 3]!,
+  ];
 }
 
 describe('skin quality v2 mapping', () => {
@@ -182,7 +183,13 @@ describe('skin quality v2 mapping', () => {
     // torso front (20,20) vs back (32,20) in classic layout
     const front = at(skinTex, 24, 26);
     const back = at(skinTex, 36, 26);
-    expect(Math.hypot(front[0]! - back[0]!, front[1]! - back[1]!, front[2]! - back[2]!)).toBeLessThan(30);
+    expect(
+      Math.hypot(
+        front[0]! - back[0]!,
+        front[1]! - back[1]!,
+        front[2]! - back[2]!
+      )
+    ).toBeLessThan(30);
     expect(back[0]).not.toBe(136);
   });
 

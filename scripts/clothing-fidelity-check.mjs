@@ -20,14 +20,28 @@ const FIXTURES = [
 function readRgba(path) {
   const probe = execFileSync(
     'ffprobe',
-    ['-v','error','-select_streams','v:0','-show_entries','stream=width,height','-of','csv=p=0:s=x', path],
+    [
+      '-v',
+      'error',
+      '-select_streams',
+      'v:0',
+      '-show_entries',
+      'stream=width,height',
+      '-of',
+      'csv=p=0:s=x',
+      path,
+    ],
     { encoding: 'utf8' }
   ).trim();
   const [width, height] = probe.split('x').map(Number);
   const pixels = new Uint8ClampedArray(
-    execFileSync('ffmpeg', ['-v','error','-i', path, '-f','rawvideo','-pix_fmt','rgba','-'], {
-      maxBuffer: 64 << 20,
-    })
+    execFileSync(
+      'ffmpeg',
+      ['-v', 'error', '-i', path, '-f', 'rawvideo', '-pix_fmt', 'rgba', '-'],
+      {
+        maxBuffer: 64 << 20,
+      }
+    )
   );
   return { width, height, pixels };
 }
@@ -37,18 +51,25 @@ function srgbToLab([r, g, b]) {
     c /= 255;
     return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
   };
-  const R = lin(r), G = lin(g), B = lin(b);
+  const R = lin(r),
+    G = lin(g),
+    B = lin(b);
   let x = R * 0.4124 + G * 0.3576 + B * 0.1805;
   let y = R * 0.2126 + G * 0.7152 + B * 0.0722;
   let z = R * 0.0193 + G * 0.1192 + B * 0.9505;
-  x /= 0.95047; y /= 1; z /= 1.08883;
+  x /= 0.95047;
+  y /= 1;
+  z /= 1.08883;
   const f = (t) => (t > 0.008856 ? t ** (1 / 3) : 7.787 * t + 16 / 116);
-  const fx = f(x), fy = f(y), fz = f(z);
+  const fx = f(x),
+    fy = f(y),
+    fz = f(z);
   return [116 * fy - 16, 500 * (fx - fy), 200 * (fy - fz)];
 }
 
 function deltaE(a, b) {
-  const A = srgbToLab(a), B = srgbToLab(b);
+  const A = srgbToLab(a),
+    B = srgbToLab(b);
   return Math.hypot(A[0] - B[0], A[1] - B[1], A[2] - B[2]);
 }
 
@@ -62,7 +83,10 @@ function dominantInBand(img, y0, y1, x0 = 0.2, x1 = 0.8) {
     for (let x = X0; x < X1; x += 2) {
       const i = (y * img.width + x) * 4;
       if ((img.pixels[i + 3] ?? 255) < 16) continue;
-      const key = ((img.pixels[i] >> 4) << 8) | ((img.pixels[i + 1] >> 4) << 4) | (img.pixels[i + 2] >> 4);
+      const key =
+        ((img.pixels[i] >> 4) << 8) |
+        ((img.pixels[i + 1] >> 4) << 4) |
+        (img.pixels[i + 2] >> 4);
       bins.set(key, (bins.get(key) ?? 0) + 1);
     }
   const key = [...bins].sort((a, b) => b[1] - a[1])[0]?.[0] ?? 0x888;
@@ -77,7 +101,10 @@ function skinTorso(path) {
   for (let y = Math.floor(20 * s); y < Math.floor(32 * s); y++)
     for (let x = Math.floor(20 * s); x < Math.floor(28 * s); x++) {
       const i = (y * img.width + x) * 4;
-      const key = ((img.pixels[i] >> 4) << 8) | ((img.pixels[i + 1] >> 4) << 4) | (img.pixels[i + 2] >> 4);
+      const key =
+        ((img.pixels[i] >> 4) << 8) |
+        ((img.pixels[i + 1] >> 4) << 4) |
+        (img.pixels[i + 2] >> 4);
       bins.set(key, (bins.get(key) ?? 0) + 1);
     }
   const key = [...bins].sort((a, b) => b[1] - a[1])[0]?.[0] ?? 0x888;
@@ -101,11 +128,11 @@ for (const name of FIXTURES) {
   const p = skinTorso(prodSkin);
   const dNew = deltaE(clothes, n);
   const dProd = deltaE(clothes, p);
-  const prefer =
-    dNew + 3 < dProd ? 'new' : dProd + 3 < dNew ? 'prod' : 'tie';
+  const prefer = dNew + 3 < dProd ? 'new' : dProd + 3 < dNew ? 'prod' : 'tie';
   const passPeople =
     !['portrait-selfie', 'half-body', 'full-body'].includes(name) ||
-    (dNew <= 35 || dNew <= dProd + 5);
+    dNew <= 35 ||
+    dNew <= dProd + 5;
   rows.push({
     name,
     clothes,

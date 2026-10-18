@@ -12,7 +12,8 @@ const browser = await chromium.launch({ headless: true });
 const page = await browser.newPage({ viewport: { width: 900, height: 420 } });
 
 async function renderOne(skinPath, outDir) {
-  const dataUrl = 'data:image/png;base64,' + readFileSync(skinPath).toString('base64');
+  const dataUrl =
+    'data:image/png;base64,' + readFileSync(skinPath).toString('base64');
   await page.setContent(`<!doctype html><html><body style="margin:0;background:#18181b;display:flex;gap:8px;padding:8px">
 <canvas id="front" width="420" height="380" style="background:#27272a"></canvas>
 <canvas id="back" width="420" height="380" style="background:#27272a"></canvas>
@@ -42,7 +43,9 @@ async function renderOne(skinPath, outDir) {
     window.__vf.render();
     window.__vb.render();
   }, dataUrl);
-  await page.locator('#front').screenshot({ path: join(outDir, 'front3d.png') });
+  await page
+    .locator('#front')
+    .screenshot({ path: join(outDir, 'front3d.png') });
   await page.locator('#back').screenshot({ path: join(outDir, 'back3d.png') });
   await page.evaluate(() => {
     window.__vf?.dispose?.();
@@ -53,7 +56,9 @@ async function renderOne(skinPath, outDir) {
 const targets = process.argv.slice(2);
 const bases = targets.length
   ? targets
-  : ['docs/pr-screens/real-runs/new', 'docs/pr-screens/real-runs/prod'].filter(existsSync);
+  : ['docs/pr-screens/real-runs/new', 'docs/pr-screens/real-runs/prod'].filter(
+      existsSync
+    );
 
 for (const base of bases) {
   for (const name of readdirSync(base)) {

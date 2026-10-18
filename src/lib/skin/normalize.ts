@@ -314,7 +314,6 @@ export function mapImageToSkin(
         height: 0.2,
       });
 
-
   const safeSkin = ensureNonBlack(skinTone);
   const safeShirt = ensureNonBlack(shirtTone, safeSkin);
   const safePants = ensureNonBlack(pantsTone, safeShirt);
@@ -367,89 +366,91 @@ export function mapImageToSkin(
   }
 
   if (!litePath) {
-  // Occluded head top/back: prefer hair, else copy from the head-front band
-  // (not flat gray).
-  {
-    const headFront = regions.find(
-      (region, index) =>
-        region.part === 'head' && FACE_ORDER[index % FACE_ORDER.length] === 'front'
-    );
-    let hair = hairTone;
-    if (headFront) {
-      // Average top two rows of the front face as a hairline proxy.
-      let r = 0,
-        g = 0,
-        b = 0,
-        n = 0;
-      for (let y = headFront.y; y < headFront.y + Math.min(2, headFront.height); y++)
-        for (let x = headFront.x; x < headFront.x + headFront.width; x++) {
-          const i = textureOffset(x, y, texture.width);
-          r += texture.pixels[i] ?? 0;
-          g += texture.pixels[i + 1] ?? 0;
-          b += texture.pixels[i + 2] ?? 0;
-          n += 1;
+    // Occluded head top/back: prefer hair, else copy from the head-front band
+    // (not flat gray).
+    {
+      const headFront = regions.find(
+        (region, index) =>
+          region.part === 'head' &&
+          FACE_ORDER[index % FACE_ORDER.length] === 'front'
+      );
+      let hair = hairTone;
+      if (headFront) {
+        // Average top two rows of the front face as a hairline proxy.
+        let r = 0,
+          g = 0,
+          b = 0,
+          n = 0;
+        for (
+          let y = headFront.y;
+          y < headFront.y + Math.min(2, headFront.height);
+          y++
+        )
+          for (let x = headFront.x; x < headFront.x + headFront.width; x++) {
+            const i = textureOffset(x, y, texture.width);
+            r += texture.pixels[i] ?? 0;
+            g += texture.pixels[i + 1] ?? 0;
+            b += texture.pixels[i + 2] ?? 0;
+            n += 1;
+          }
+        if (n > 0) {
+          const fromFront = [
+            Math.round(r / n),
+            Math.round(g / n),
+            Math.round(b / n),
+            255,
+          ] as const;
+          // If hairTone looks like the empty-bin warm default AND front has signal, use front.
+          const hairIsWeak =
+            Math.abs(hair[0] - 120) +
+              Math.abs(hair[1] - 100) +
+              Math.abs(hair[2] - 85) <
+            40;
+          if (hairIsWeak) hair = fromFront;
         }
-      if (n > 0) {
-        const fromFront = [
-          Math.round(r / n),
-          Math.round(g / n),
-          Math.round(b / n),
-          255,
-        ] as const;
-        // If hairTone looks like the empty-bin warm default AND front has signal, use front.
-        const hairIsWeak =
-          Math.abs(hair[0] - 120) + Math.abs(hair[1] - 100) + Math.abs(hair[2] - 85) <
-          40;
-        if (hairIsWeak) hair = fromFront;
+      }
+      regions.forEach((region, index) => {
+        if (region.part !== 'head') return;
+        const face = FACE_ORDER[index % FACE_ORDER.length];
+        if (face !== 'top' && face !== 'back') return;
+        for (let y = region.y; y < region.y + region.height; y += 1)
+          for (let x = region.x; x < region.x + region.width; x += 1)
+            texture.pixels.set(hair, textureOffset(x, y, texture.width));
+      });
+    }
+
+    // Back faces of body/limbs: mirror the front face of the same part so we
+    // never leave occluded sides as empty gray when the front has subject color.
+    {
+      const byPart = new Map<
+        string,
+        { front?: (typeof regions)[number]; back?: (typeof regions)[number] }
+      >();
+      regions.forEach((region, index) => {
+        const face = FACE_ORDER[index % FACE_ORDER.length];
+        if (face !== 'front' && face !== 'back') return;
+        if (region.part === 'head') return; // head back already handled via hair
+        const entry = byPart.get(region.part) ?? {};
+        if (face === 'front') entry.front = region;
+        else entry.back = region;
+        byPart.set(region.part, entry);
+      });
+      for (const { front, back } of byPart.values()) {
+        if (!front || !back) continue;
+        const h = Math.min(front.height, back.height);
+        const w = Math.min(front.width, back.width);
+        for (let y = 0; y < h; y += 1)
+          for (let x = 0; x < w; x += 1) {
+            const src = textureOffset(front.x + x, front.y + y, texture.width);
+            const dst = textureOffset(
+              back.x + (w - 1 - x),
+              back.y + y,
+              texture.width
+            );
+            texture.pixels.set(texture.pixels.subarray(src, src + 4), dst);
+          }
       }
     }
-    regions.forEach((region, index) => {
-      if (region.part !== 'head') return;
-      const face = FACE_ORDER[index % FACE_ORDER.length];
-      if (face !== 'top' && face !== 'back') return;
-      for (let y = region.y; y < region.y + region.height; y += 1)
-        for (let x = region.x; x < region.x + region.width; x += 1)
-          texture.pixels.set(hair, textureOffset(x, y, texture.width));
-    });
-  }
-
-  // Back faces of body/limbs: mirror the front face of the same part so we
-  // never leave occluded sides as empty gray when the front has subject color.
-  {
-    const byPart = new Map<string, { front?: (typeof regions)[number]; back?: (typeof regions)[number] }>();
-    regions.forEach((region, index) => {
-      const face = FACE_ORDER[index % FACE_ORDER.length];
-      if (face !== 'front' && face !== 'back') return;
-      if (region.part === 'head') return; // head back already handled via hair
-      const entry = byPart.get(region.part) ?? {};
-      if (face === 'front') entry.front = region;
-      else entry.back = region;
-      byPart.set(region.part, entry);
-    });
-    for (const { front, back } of byPart.values()) {
-      if (!front || !back) continue;
-      const h = Math.min(front.height, back.height);
-      const w = Math.min(front.width, back.width);
-      for (let y = 0; y < h; y += 1)
-        for (let x = 0; x < w; x += 1) {
-          const src = textureOffset(
-            front.x + x,
-            front.y + y,
-            texture.width
-          );
-          const dst = textureOffset(
-            back.x + (w - 1 - x),
-            back.y + y,
-            texture.width
-          );
-          texture.pixels.set(
-            texture.pixels.subarray(src, src + 4),
-            dst
-          );
-        }
-    }
-  }
-
   }
 
   if (

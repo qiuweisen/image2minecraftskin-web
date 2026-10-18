@@ -67,7 +67,9 @@ for (const file of FIXTURES) {
     const pngB64 = await page.evaluate(
       async ({ width, height, rgba }) => {
         const t = Date.now();
-        const { analyzeSource } = await import(`/src/lib/skin/vision.ts?t=${t}`);
+        const { analyzeSource } = await import(
+          `/src/lib/skin/vision.ts?t=${t}`
+        );
         const { mapImageToSkin } = await import(
           `/src/lib/skin/normalize.ts?t=${t}`
         );

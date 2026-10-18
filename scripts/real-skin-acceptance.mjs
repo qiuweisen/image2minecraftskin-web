@@ -4,7 +4,13 @@
  * compare local (new) vs production, rebuild contact sheets.
  */
 import { chromium } from '@playwright/test';
-import { mkdirSync, writeFileSync, readFileSync, existsSync, readdirSync } from 'fs';
+import {
+  mkdirSync,
+  writeFileSync,
+  readFileSync,
+  existsSync,
+  readdirSync,
+} from 'fs';
 import { join, basename } from 'path';
 import { execFileSync } from 'child_process';
 
@@ -54,23 +60,33 @@ async function captureRun(page, baseUrl, label, fixturePath) {
   await fileInput.setInputFiles(fixturePath);
 
   // Wait for models + generation. Prefer "Skin ready"; also accept localized variants.
-  await workspace.getByText(/skin ready/i).first().waitFor({ state: 'visible', timeout: 90000 });
+  await workspace
+    .getByText(/skin ready/i)
+    .first()
+    .waitFor({ state: 'visible', timeout: 90000 });
   // Wait until 3D canvases have painted (non-empty pixels)
-  await page.waitForFunction(() => {
-    const canvases = [...document.querySelectorAll('[role="region"] canvas')];
-    const painted = canvases.filter((c) => {
-      try {
-        const ctx = c.getContext('2d');
-        if (!ctx || c.width < 8) return false;
-        const d = ctx.getImageData(c.width >> 1, c.height >> 1, 1, 1).data;
-        return d[3] > 0 && (d[0] + d[1] + d[2] > 0);
-      } catch {
-        // WebGL canvas — assume ready if sized
-        return c.width > 64 && c.height > 64;
-      }
-    });
-    return painted.length >= 2;
-  }, { timeout: 30000 }).catch(() => {});
+  await page
+    .waitForFunction(
+      () => {
+        const canvases = [
+          ...document.querySelectorAll('[role="region"] canvas'),
+        ];
+        const painted = canvases.filter((c) => {
+          try {
+            const ctx = c.getContext('2d');
+            if (!ctx || c.width < 8) return false;
+            const d = ctx.getImageData(c.width >> 1, c.height >> 1, 1, 1).data;
+            return d[3] > 0 && d[0] + d[1] + d[2] > 0;
+          } catch {
+            // WebGL canvas — assume ready if sized
+            return c.width > 64 && c.height > 64;
+          }
+        });
+        return painted.length >= 2;
+      },
+      { timeout: 30000 }
+    )
+    .catch(() => {});
   await page.waitForTimeout(1500);
 
   // Download skin PNG
@@ -85,20 +101,30 @@ async function captureRun(page, baseUrl, label, fixturePath) {
 
   // WebGL canvases often yield blank toDataURL without preserveDrawingBuffer.
   // Screenshot the Front/Back columns instead.
-  const preview = workspace.locator('[role="img"]').filter({ has: page.locator('canvas') }).first();
+  const preview = workspace
+    .locator('[role="img"]')
+    .filter({ has: page.locator('canvas') })
+    .first();
   const cols = preview.locator('div.grid > div');
   const colCount = await cols.count();
   if (colCount >= 2) {
     await cols.nth(0).screenshot({ path: join(destDir, 'front3d.png') });
     await cols.nth(1).screenshot({ path: join(destDir, 'back3d.png') });
   } else {
-    await preview.screenshot({ path: join(destDir, 'preview.png') }).catch(() => {});
+    await preview
+      .screenshot({ path: join(destDir, 'preview.png') })
+      .catch(() => {});
   }
-  await preview.screenshot({ path: join(destDir, 'preview.png') }).catch(() => {});
+  await preview
+    .screenshot({ path: join(destDir, 'preview.png') })
+    .catch(() => {});
 
   // Copy original
   const origBuf = readFileSync(fixturePath);
-  writeFileSync(join(destDir, 'original' + fixturePath.slice(fixturePath.lastIndexOf('.'))), origBuf);
+  writeFileSync(
+    join(destDir, 'original' + fixturePath.slice(fixturePath.lastIndexOf('.'))),
+    origBuf
+  );
 
   return { name, destDir, skinPath };
 }
@@ -116,8 +142,15 @@ function composeContact(name) {
   const newBack = join(OUT_DIR, 'new', name, 'back3d.png');
   const out = join(CONTACT_DIR, `contact-real-${name}.png`);
 
-  const inputs = [original, prodSkin, newSkin, prodFront, newFront, prodBack, newBack]
-    .filter((p) => p && existsSync(p));
+  const inputs = [
+    original,
+    prodSkin,
+    newSkin,
+    prodFront,
+    newFront,
+    prodBack,
+    newBack,
+  ].filter((p) => p && existsSync(p));
   if (inputs.length < 3) {
     console.warn('skip contact', name, 'missing inputs', inputs.length);
     return null;
@@ -128,8 +161,13 @@ function composeContact(name) {
   const scaled = inputs.map((p, i) => {
     const tmp = join(OUT_DIR, `_s${i}-${name}.png`);
     execFileSync('ffmpeg', [
-      '-v', 'error', '-y', '-i', p,
-      '-vf', 'scale=-1:256',
+      '-v',
+      'error',
+      '-y',
+      '-i',
+      p,
+      '-vf',
+      'scale=-1:256',
       tmp,
     ]);
     return tmp;
@@ -140,10 +178,14 @@ function composeContact(name) {
     execFileSync('montage', [
       ...scaled.slice(0, 3),
       ...scaled.slice(3),
-      '-tile', '3x',
-      '-geometry', '+4+4',
-      '-background', '#1a1a1a',
-      '-label', '%t',
+      '-tile',
+      '3x',
+      '-geometry',
+      '+4+4',
+      '-background',
+      '#1a1a1a',
+      '-label',
+      '%t',
       out,
     ]);
   } catch {
@@ -154,7 +196,9 @@ function composeContact(name) {
       execFileSync('cp', [row1Inputs[0], row1]);
     } else {
       execFileSync('ffmpeg', [
-        '-v', 'error', '-y',
+        '-v',
+        'error',
+        '-y',
         ...row1Inputs.flatMap((p) => ['-i', p]),
         '-filter_complex',
         `hstack=inputs=${row1Inputs.length}`,
@@ -165,15 +209,24 @@ function composeContact(name) {
       const row2 = join(OUT_DIR, `_row2-${name}.png`);
       const row2Inputs = scaled.slice(3);
       execFileSync('ffmpeg', [
-        '-v', 'error', '-y',
+        '-v',
+        'error',
+        '-y',
         ...row2Inputs.flatMap((p) => ['-i', p]),
         '-filter_complex',
         `hstack=inputs=${row2Inputs.length}`,
         row2,
       ]);
       execFileSync('ffmpeg', [
-        '-v', 'error', '-y', '-i', row1, '-i', row2,
-        '-filter_complex', 'vstack=inputs=2',
+        '-v',
+        'error',
+        '-y',
+        '-i',
+        row1,
+        '-i',
+        row2,
+        '-filter_complex',
+        'vstack=inputs=2',
         out,
       ]);
     } else {
@@ -187,7 +240,9 @@ function composeContact(name) {
 async function runAgainst(label, baseUrl) {
   console.log(`\n=== ${label} @ ${baseUrl} ===`);
   const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport: { width: 1400, height: 1100 } });
+  const page = await browser.newPage({
+    viewport: { width: 1400, height: 1100 },
+  });
   const results = [];
   for (const file of FIXTURES) {
     const path = join(FIXTURE_DIR, file);
@@ -202,10 +257,12 @@ async function runAgainst(label, baseUrl) {
       results.push(r);
     } catch (err) {
       console.error('FAIL', file, err.message || err);
-      await page.screenshot({
-        path: join(OUT_DIR, `${label}-${slug(file)}-error.png`),
-        fullPage: true,
-      }).catch(() => {});
+      await page
+        .screenshot({
+          path: join(OUT_DIR, `${label}-${slug(file)}-error.png`),
+          fullPage: true,
+        })
+        .catch(() => {});
     }
   }
   await browser.close();
