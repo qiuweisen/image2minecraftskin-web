@@ -734,8 +734,8 @@ export function SkinWorkspace() {
               }}
               className="min-h-11 border border-zinc-700 bg-zinc-900 px-3 text-sm normal-case text-zinc-100"
             >
-              <option value="photo">Photo</option>
-              <option value="pixel">Pixel</option>
+              <option value="photo">{m.skin_style_photo()}</option>
+              <option value="pixel">{m.skin_style_pixel()}</option>
             </select>
           </label>
           <label className="mt-4 flex min-h-11 items-center gap-3 text-sm text-zinc-300">
@@ -747,7 +747,7 @@ export function SkinWorkspace() {
                 if (source) generate(source, format, model, partCrops);
               }}
             />{' '}
-            Face details
+            {m.skin_face_details()}
           </label>
           <Button
             type="button"
@@ -758,7 +758,7 @@ export function SkinWorkspace() {
               setWaitlistOpen(true);
             }}
           >
-            AI HD version — looks more like you
+            {m.skin_ai_hd_button()}
           </Button>
           <fieldset className="mt-6 grid gap-2">
             <legend className="text-xs uppercase tracking-[0.08em] text-zinc-500">
@@ -854,7 +854,7 @@ export function SkinWorkspace() {
               </p>
               <Button
                 type="button"
-                className="mt-4 w-full"
+                className="sticky bottom-4 z-10 mt-4 w-full shadow-lg shadow-black/40"
                 size="lg"
                 disabled={!texture}
                 onClick={download}
