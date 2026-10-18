@@ -16,6 +16,8 @@ export type GenerationOptions = {
     Record<string, { x: number; y: number; width: number; height: number }>
   >;
   mask?: Uint8Array;
+  hairMask?: Uint8Array;
+  face?: { x: number; y: number; width: number; height: number };
 };
 
 export type SkinTexture = {

@@ -1,7 +1,7 @@
 import type { ImageSource, SkinTexture } from './types';
 
 export function dominantColor(
-  source: ImageSource,
+  source: ImageSource & { mask?: Uint8Array },
   rect?: { x: number; y: number; width: number; height: number }
 ) {
   const bins = new Map<number, number>();
@@ -12,6 +12,7 @@ export function dominantColor(
   for (let y = y0; y < y1; y += 2)
     for (let x = x0; x < x1; x += 2) {
       const i = (y * source.width + x) * 4;
+      if (source.mask && source.mask[y * source.width + x] === 0) continue;
       if ((source.pixels[i + 3] ?? 255) < 16) continue;
       const key =
         ((source.pixels[i]! >> 4) << 8) |

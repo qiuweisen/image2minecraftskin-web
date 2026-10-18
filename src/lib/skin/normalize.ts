@@ -27,6 +27,10 @@ export type PartCrops = Partial<Record<SkinPart, PartBounds>>;
 // Max samples per axis for one target pixel. Bounds cost on large photos.
 const MAX_SAMPLES_PER_AXIS = 6;
 const ALPHA_CUTOFF = 16;
+type MaskedImageSource = ImageSource & {
+  mask?: Uint8Array;
+  hairMask?: Uint8Array;
+};
 
 const DEFAULT_CROPS: Record<SkinPart, PartBounds> = {
   head: { x: 0.2, y: 0, width: 0.6, height: 0.34 },
@@ -58,7 +62,7 @@ export function createBlankSkin(
  * premultiplied) RGBA, matching PNG.
  */
 function sampleArea(
-  source: ImageSource,
+  source: MaskedImageSource,
   x0: number,
   y0: number,
   x1: number,
@@ -83,7 +87,10 @@ function sampleArea(
         Math.max(0, Math.floor(x0 + ((i + 0.5) / stepsX) * spanX))
       );
       const offset = textureOffset(sx, sy, source.width);
-      const alpha = source.pixels[offset + 3] ?? 255;
+      const mask = source.mask?.[sy * source.width + sx];
+      const alpha =
+        (source.pixels[offset + 3] ?? 255) *
+        (mask === undefined ? 1 : mask > 0 ? 1 : 0);
       r += (source.pixels[offset] ?? 0) * alpha;
       g += (source.pixels[offset + 1] ?? 0) * alpha;
       b += (source.pixels[offset + 2] ?? 0) * alpha;
@@ -178,7 +185,19 @@ function paintRegion(
   }
 }
 
-function sourceCrop(source: ImageSource, part: SkinPart, crops?: PartCrops) {
+function sourceCrop(
+  source: ImageSource,
+  part: SkinPart,
+  crops?: PartCrops,
+  face?: GenerationOptions['face']
+) {
+  if (part === 'head' && face)
+    return {
+      x: source.width * Math.max(0, face.x - face.width * 0.35),
+      y: source.height * Math.max(0, face.y - face.height * 0.45),
+      width: Math.max(1, source.width * face.width * 1.7),
+      height: Math.max(1, source.height * face.height * 2.1),
+    };
   const crop = crops?.[part] ?? DEFAULT_CROPS[part];
   return {
     x: source.width * crop.x,
@@ -208,6 +227,9 @@ export function mapImageToSkin(
       ? (cropsOrOptions as GenerationOptions)
       : { crops: cropsOrOptions as PartCrops | undefined };
   const kind: SubjectKind = options.kind ?? 'auto';
+  const maskedSource = options.mask
+    ? ({ ...source, mask: options.mask } as MaskedImageSource)
+    : source;
   const resolvedKind =
     kind === 'auto'
       ? source.height < source.width * 1.12
@@ -219,15 +241,15 @@ export function mapImageToSkin(
   regions.forEach((region, index) => {
     const face = FACE_ORDER[index % FACE_ORDER.length];
     const { rect, mirror } = faceCrop(
-      sourceCrop(source, region.part, partCrops),
+      sourceCrop(maskedSource, region.part, partCrops, options.face),
       face,
       region.part
     );
-    paintRegion(texture, source, region, rect, mirror);
+    paintRegion(texture, maskedSource, region, rect, mirror);
   });
   // Base regions must never contain transparent holes, even for cutout PNGs.
   for (const region of regions) {
-    const fallback = dominantColor(source, {
+    const fallback = dominantColor(maskedSource, {
       x: DEFAULT_CROPS[region.part].x,
       y: DEFAULT_CROPS[region.part].y,
       width: DEFAULT_CROPS[region.part].width,
@@ -244,7 +266,21 @@ export function mapImageToSkin(
     resolvedKind === 'animal' ||
     resolvedKind === 'logo'
   ) {
-    paintTemplate(texture, source, resolvedKind);
+    paintTemplate(texture, maskedSource, resolvedKind);
+  }
+  if (options.hairMask) {
+    const hair = dominantColor(
+      { ...source, mask: options.hairMask },
+      { x: 0.15, y: 0, width: 0.7, height: 0.35 }
+    );
+    regions.forEach((region, index) => {
+      if (region.part !== 'head') return;
+      const face = FACE_ORDER[index % FACE_ORDER.length];
+      if (face !== 'top' && face !== 'back') return;
+      for (let y = region.y; y < region.y + region.height; y += 1)
+        for (let x = region.x; x < region.x + region.width; x += 1)
+          texture.pixels.set(hair, textureOffset(x, y, texture.width));
+    });
   }
   if (
     options.faceDetails &&

@@ -1,10 +1,11 @@
 import type { ImageSource } from './types';
+import type { PartCrops } from './normalize';
 
 export type VisionAnalysis = {
   kind: 'portrait' | 'full-body' | 'character' | 'animal' | 'logo';
   faceFound: boolean;
   face?: { x: number; y: number; width: number; height: number };
-  poseCrops?: undefined;
+  poseCrops?: PartCrops;
   mask?: Uint8Array;
   hairMask?: Uint8Array;
   loadMs: number;
@@ -15,11 +16,19 @@ let segmenterPromise:
 let detectorPromise:
   | Promise<import('@mediapipe/tasks-vision').FaceDetector>
   | undefined;
+let posePromise:
+  | Promise<import('@mediapipe/tasks-vision').PoseLandmarker>
+  | undefined;
+let hairPromise:
+  | Promise<import('@mediapipe/tasks-vision').ImageSegmenter>
+  | undefined;
+let deeplabPromise:
+  | Promise<import('@mediapipe/tasks-vision').ImageSegmenter>
+  | undefined;
 
 async function loadVision() {
-  const { FilesetResolver, ImageSegmenter, FaceDetector } = await import(
-    '@mediapipe/tasks-vision'
-  );
+  const { FilesetResolver, ImageSegmenter, FaceDetector, PoseLandmarker } =
+    await import('@mediapipe/tasks-vision');
   const files = await FilesetResolver.forVisionTasks('/mediapipe/wasm');
   segmenterPromise ??= ImageSegmenter.createFromOptions(files, {
     baseOptions: {
@@ -34,7 +43,24 @@ async function loadVision() {
     },
     runningMode: 'IMAGE',
   });
-  return Promise.all([segmenterPromise, detectorPromise]);
+  posePromise ??= PoseLandmarker.createFromOptions(files, {
+    baseOptions: {
+      modelAssetPath: '/mediapipe/models/pose_landmarker_lite.task',
+    },
+    runningMode: 'IMAGE',
+    numPoses: 1,
+  });
+  hairPromise ??= ImageSegmenter.createFromOptions(files, {
+    baseOptions: { modelAssetPath: '/mediapipe/models/hair_segmenter.tflite' },
+    runningMode: 'IMAGE',
+    outputCategoryMask: true,
+  });
+  return Promise.all([
+    segmenterPromise,
+    detectorPromise,
+    posePromise,
+    hairPromise,
+  ]);
 }
 
 export async function analyzeSource(
@@ -51,12 +77,46 @@ export async function analyzeSource(
   const image = context.createImageData(source.width, source.height);
   image.data.set(source.pixels);
   context.putImageData(image, 0, 0);
-  const [segmenter, detector] = await loadVision();
+  const [segmenter, detector, poseLandmarker, hairSegmenter] =
+    await loadVision();
   onProgress?.(70);
   const segmentation = segmenter.segment(canvas);
   const detection = detector.detect(canvas);
+  const poseResult = poseLandmarker.detect(canvas);
+  const hairResult = hairSegmenter.segment(canvas);
   const category = segmentation.categoryMask?.getAsUint8Array();
   const face = detection.detections[0]?.boundingBox;
+  const pose = poseResult.landmarks?.[0];
+  const poseCrops = pose
+    ? (await import('./ai-improve')).derivePartCrops(
+        pose,
+        source.width,
+        source.height
+      )
+    : undefined;
+  const hair = hairResult.categoryMask?.getAsUint8Array();
+  let finalMask = category;
+  if (!face) {
+    deeplabPromise ??= (async () => {
+      const { FilesetResolver, ImageSegmenter } = await import(
+        '@mediapipe/tasks-vision'
+      );
+      const files = await FilesetResolver.forVisionTasks('/mediapipe/wasm');
+      return ImageSegmenter.createFromOptions(files, {
+        baseOptions: { modelAssetPath: '/mediapipe/models/deeplab_v3.tflite' },
+        runningMode: 'IMAGE',
+        outputCategoryMask: true,
+      });
+    })();
+    try {
+      finalMask =
+        (await deeplabPromise)
+          .segment(canvas)
+          .categoryMask?.getAsUint8Array() ?? category;
+    } catch {
+      finalMask = category;
+    }
+  }
   onProgress?.(100);
   return {
     kind: face
@@ -75,7 +135,9 @@ export async function analyzeSource(
           },
         }
       : {}),
-    ...(category ? { mask: category } : {}),
+    ...(finalMask ? { mask: finalMask } : {}),
+    ...(hair ? { hairMask: hair } : {}),
+    ...(poseCrops ? { poseCrops } : {}),
     loadMs: Math.round(performance.now() - started),
   };
 }

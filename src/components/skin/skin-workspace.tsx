@@ -48,6 +48,7 @@ import type {
 } from '@/lib/skin/types';
 import type { SubjectKind, SkinStyle } from '@/lib/skin/types';
 import { SkinPreview3d } from './skin-preview-3d';
+import { analyzeSource, type VisionAnalysis } from '@/lib/skin/vision';
 
 const EXAMPLE_SOURCE_URL = '/examples/image-to-skin/portrait-source.webp';
 
@@ -127,6 +128,8 @@ export function SkinWorkspace() {
   const [waitlistEmail, setWaitlistEmail] = useState('');
   const [honeypot, setHoneypot] = useState('');
   const [importGuideOpen, setImportGuideOpen] = useState(false);
+  const [visionProgress, setVisionProgress] = useState<number>();
+  const analysisRef = useRef<VisionAnalysis | undefined>(undefined);
   // Latest format/model for async callbacks that outlive a render.
   const formatRef = useRef(format);
   const modelRef = useRef(model);
@@ -158,24 +161,71 @@ export function SkinWorkspace() {
     recommendedTransform.zoom !== IDENTITY_SOURCE_TRANSFORM.zoom;
 
   const generate = useCallback(
-    (
+    async (
       nextSource: ImageSource,
       nextFormat = format,
       nextModel = model,
       crops?: PartCrops
     ) => {
-      setStatus(config.copy.status.processing);
+      setStatus(m.skin_models_loading({ percent: visionProgress ?? 0 }));
       setError(false);
+      const started = performance.now();
+      let analysis: VisionAnalysis | undefined = analysisRef.current;
+      if (!analysis) {
+        try {
+          analysis = await Promise.race([
+            analyzeSource(nextSource, (percent) => {
+              setVisionProgress(percent);
+              setStatus(m.skin_models_loading({ percent }));
+            }),
+            new Promise<never>((_, reject) =>
+              setTimeout(() => reject(new Error('vision_timeout')), 15000)
+            ),
+          ]);
+          analysisRef.current = analysis;
+          setVisionProgress(undefined);
+          trackSkinEvent({
+            name: 'skin_models_load',
+            payload: { duration_ms: analysis.loadMs },
+          });
+        } catch (visionError) {
+          setVisionProgress(undefined);
+          trackSkinEvent({
+            name: 'skin_models_failed',
+            payload: {
+              reason:
+                visionError instanceof Error ? visionError.message : 'unknown',
+            },
+          });
+          analysis = undefined;
+        }
+      }
       requestAnimationFrame(() => {
         try {
+          const resolvedKind =
+            subjectKind === 'auto' ? analysis?.kind : subjectKind;
           const mapped = mapImageToSkin(nextSource, nextFormat, nextModel, {
-            crops,
-            kind: subjectKind,
+            crops: crops ?? analysis?.poseCrops,
+            kind: resolvedKind ?? subjectKind,
             style: skinStyle,
             faceDetails,
+            mask: analysis?.mask,
+            hairMask: analysis?.hairMask,
+            face: analysis?.face,
           });
           setTexture(mapped);
           setStatus(config.copy.status.complete);
+          trackSkinEvent({
+            name: 'skin_generate_done',
+            payload: {
+              subject_kind: resolvedKind ?? subjectKind,
+              variant: skinStyle,
+              format: nextFormat,
+              model: nextModel,
+              face_found: Boolean(analysis?.faceFound),
+              duration_ms: Math.round(performance.now() - started),
+            },
+          });
           // Once per source: slider drags and format toggles re-run this and
           // previously inflated the count ~6x.
           if (!generationTrackedRef.current) {
@@ -216,8 +266,6 @@ export function SkinWorkspace() {
       config.copy.status.complete,
       config.copy.status.error,
       config.copy.status.processing,
-      format,
-      model,
       subjectKind,
       skinStyle,
       faceDetails,
@@ -236,6 +284,7 @@ export function SkinWorkspace() {
       const exampleSource = await loadExampleSource();
       const nextSource = exampleSource || fallbackExampleSource();
       setSource(nextSource);
+      analysisRef.current = undefined;
       setPartCrops(undefined);
       setSourcePreview(exampleSource ? EXAMPLE_SOURCE_URL : undefined);
       generate(nextSource);
@@ -266,6 +315,7 @@ export function SkinWorkspace() {
         const nextSource = await fileToImageSource(file);
         startSource('upload');
         setSource(nextSource);
+        analysisRef.current = undefined;
         setPartCrops(undefined);
         setSourcePreview(URL.createObjectURL(file));
 
@@ -338,6 +388,7 @@ export function SkinWorkspace() {
     const exampleSource = await loadExampleSource();
     const nextSource = exampleSource || fallbackExampleSource();
     setSource(nextSource);
+    analysisRef.current = undefined;
     setPartCrops(undefined);
     setSourcePreview(exampleSource ? EXAMPLE_SOURCE_URL : undefined);
     setSourceTransform(IDENTITY_SOURCE_TRANSFORM);
@@ -585,9 +636,7 @@ export function SkinWorkspace() {
                     onClick={() => void improveWithAi()}
                     disabled={aiImproving}
                   >
-                    {aiImproving
-                      ? 'Analyzing image...'
-                      : 'AI Improve (experimental)'}
+                    {aiImproving ? m.skin_ai_analyzing() : m.skin_ai_improve()}
                   </button>
                   {hasAutomaticImprovement && (
                     <button
@@ -740,7 +789,10 @@ export function SkinWorkspace() {
               disabled={!texture}
               onClick={download}
             >
-              <IconDownload /> {config.copy.download}
+              <IconDownload />{' '}
+              {format === 'java-64'
+                ? m.skin_download_java()
+                : m.skin_download_bedrock()}
             </Button>
             <Button
               type="button"
@@ -768,6 +820,8 @@ export function SkinWorkspace() {
             <SkinPreview3d
               skinUrl={skinUrl}
               label={config.copy.preview3dLabel}
+              frontLabel={m.skin_preview_front()}
+              backLabel={m.skin_preview_back()}
             />
             <div className="relative grid min-h-80 place-items-center overflow-auto border border-zinc-800 bg-zinc-900 p-4">
               <canvas
@@ -805,7 +859,10 @@ export function SkinWorkspace() {
                 disabled={!texture}
                 onClick={download}
               >
-                <IconDownload /> {config.copy.download}
+                <IconDownload />{' '}
+                {format === 'java-64'
+                  ? m.skin_download_java()
+                  : m.skin_download_bedrock()}
               </Button>
             </>
           )}
@@ -813,20 +870,19 @@ export function SkinWorkspace() {
       </div>
       <Dialog open={waitlistOpen} onOpenChange={setWaitlistOpen}>
         <DialogContent className="border border-cyan-300/30 bg-zinc-950 text-zinc-100">
-          <DialogTitle>AI HD version — coming soon</DialogTitle>
+          <DialogTitle>{m.skin_ai_hd_title()}</DialogTitle>
           <DialogDescription>
-            Join the waitlist. Planned pricing from $
-            {aiHdFromPriceUsd.toFixed(2)}. Images stay on your device.
+            {m.skin_ai_hd_description({ price: aiHdFromPriceUsd.toFixed(2) })}
           </DialogDescription>
           {waitlistDone ? (
-            <output>You’re on the waitlist.</output>
+            <output>{m.skin_waitlist_done()}</output>
           ) : (
             <form
               className="grid gap-3"
               onSubmit={(event) => void submitWaitlist(event)}
             >
               <label className="grid gap-1 text-sm">
-                Email
+                {m.skin_waitlist_email()}
                 <input
                   required
                   type="email"
@@ -845,20 +901,15 @@ export function SkinWorkspace() {
                   onChange={(event) => setHoneypot(event.target.value)}
                 />
               </label>
-              <Button type="submit">Join waitlist</Button>
+              <Button type="submit">{m.skin_waitlist_join()}</Button>
             </form>
           )}
         </DialogContent>
       </Dialog>
       <Dialog open={importGuideOpen} onOpenChange={setImportGuideOpen}>
         <DialogContent className="border border-cyan-300/30 bg-zinc-950 text-zinc-100">
-          <DialogTitle>Import your skin</DialogTitle>
-          <DialogDescription>
-            Java Edition: place the PNG in your skins folder or upload it from
-            the Launcher’s Skins tab. Bedrock: Dressing Room → Edit Character →
-            Classic Skins → Owned → Import → Choose New Skin, then select
-            Classic or Slim.
-          </DialogDescription>
+          <DialogTitle>{m.skin_import_title()}</DialogTitle>
+          <DialogDescription>{m.skin_import_description()}</DialogDescription>
         </DialogContent>
       </Dialog>
     </section>
