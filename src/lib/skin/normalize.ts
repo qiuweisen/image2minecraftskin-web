@@ -10,7 +10,7 @@ import {
   textureOffset,
 } from './types';
 import { getSkinRegions, type SkinPart, type SkinRegion } from './layouts';
-import { dominantColor, paintTemplate } from './templates';
+import { dominantColor, subjectDominantColor, paintTemplate } from './templates';
 import { applyPixelStyle } from './style';
 
 /** Normalized (0-1) crop rectangle inside the source image. */
@@ -266,13 +266,13 @@ export function mapImageToSkin(
   // Base regions must never contain transparent holes, even for cutout PNGs.
   // Fallbacks are taken from subject-heavy interior crops so sky/background
   // that lives in DEFAULT_CROPS arm/head edges cannot re-enter the skin.
-  const skinTone = dominantColor(maskedSource, {
+  const skinTone = subjectDominantColor(maskedSource, {
     x: 0.34,
-    y: 0.18,
+    y: 0.22,
     width: 0.32,
-    height: 0.22,
+    height: 0.2,
   });
-  const shirtTone = dominantColor(maskedSource, {
+  const shirtTone = subjectDominantColor(maskedSource, {
     x: 0.3,
     y: 0.4,
     width: 0.4,

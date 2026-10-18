@@ -1,5 +1,30 @@
 import type { ImageSource, SkinTexture } from './types';
 
+function isSkyLike(color: readonly number[]) {
+  const [r, g, b] = color;
+  return b > 150 && b > r + 25 && b >= g - 5;
+}
+
+/** Dominant color that skips sky-like bins when better options exist. */
+export function subjectDominantColor(
+  source: ImageSource & { mask?: Uint8Array },
+  rect?: { x: number; y: number; width: number; height: number }
+) {
+  const color = dominantColor(source, rect);
+  if (!isSkyLike(color)) return color;
+  // Retry on a tighter interior crop to escape edge sky.
+  const tight = rect
+    ? {
+        x: rect.x + rect.width * 0.2,
+        y: rect.y + rect.height * 0.2,
+        width: rect.width * 0.6,
+        height: rect.height * 0.6,
+      }
+    : { x: 0.3, y: 0.25, width: 0.4, height: 0.4 };
+  const retry = dominantColor(source, tight);
+  return isSkyLike(retry) ? ([210, 160, 120, 255] as const) : retry;
+}
+
 export function dominantColor(
   source: ImageSource & { mask?: Uint8Array },
   rect?: { x: number; y: number; width: number; height: number }
@@ -59,18 +84,18 @@ export function paintTemplate(
       { x: x * scale, y: y * scale, width: w * scale, height: h * scale },
       color
     );
-  const shirt = dominantColor(source, {
+  const shirt = subjectDominantColor(source, {
     x: 0.25,
     y: 0.35,
     width: 0.5,
     height: 0.4,
   });
-  const fur = dominantColor(source);
-  const skin = dominantColor(source, {
-    x: 0.3,
-    y: 0.12,
-    width: 0.4,
-    height: 0.3,
+  const fur = subjectDominantColor(source);
+  const skin = subjectDominantColor(source, {
+    x: 0.35,
+    y: 0.22,
+    width: 0.3,
+    height: 0.22,
   });
   if (kind === 'animal') {
     c(20, 20, 8, 12, fur);

@@ -130,11 +130,20 @@ export async function analyzeSource(
   const [segmenter, detector, poseLandmarker, hairSegmenter] =
     await loadVision();
   onProgress?.(70);
+  // Copy mask bytes immediately — MediaPipe reuses backing buffers on the
+  // next inference, so a deferred getAsUint8Array() can read garbage/zeros.
   const segmentation = segmenter.segment(canvas);
+  const categoryRaw = segmentation.categoryMask
+    ? Uint8Array.from(segmentation.categoryMask.getAsUint8Array())
+    : undefined;
+  segmentation.categoryMask?.close?.();
   const detection = detector.detect(canvas);
   const poseResult = poseLandmarker.detect(canvas);
   const hairResult = hairSegmenter.segment(canvas);
-  const category = segmentation.categoryMask?.getAsUint8Array();
+  const hairRaw = hairResult.categoryMask
+    ? Uint8Array.from(hairResult.categoryMask.getAsUint8Array())
+    : undefined;
+  hairResult.categoryMask?.close?.();
   const face = detection.detections[0]?.boundingBox;
   const pose = poseResult.landmarks?.[0];
   const poseCrops = pose
@@ -144,8 +153,7 @@ export async function analyzeSource(
         source.height
       )
     : undefined;
-  const hairRaw = hairResult.categoryMask?.getAsUint8Array();
-  let finalMask = normalizePersonMask(category, source.width, source.height);
+  let finalMask = normalizePersonMask(categoryRaw, source.width, source.height);
   if (!face) {
     deeplabPromise ??= (async () => {
       const { FilesetResolver, ImageSegmenter } = await import(
@@ -159,9 +167,11 @@ export async function analyzeSource(
       });
     })();
     try {
-      const deeplabRaw = (await deeplabPromise)
-        .segment(canvas)
-        .categoryMask?.getAsUint8Array();
+      const deeplabResult = (await deeplabPromise).segment(canvas);
+      const deeplabRaw = deeplabResult.categoryMask
+        ? Uint8Array.from(deeplabResult.categoryMask.getAsUint8Array())
+        : undefined;
+      deeplabResult.categoryMask?.close?.();
       // PASCAL VOC: 15 = person. Do not keep sky/ground as "subject".
       finalMask =
         normalizePersonMask(
