@@ -84,29 +84,18 @@ async function captureRun(page, baseUrl, label, fixturePath) {
   const skinPath = join(destDir, 'skin.png');
   await download.saveAs(skinPath);
 
-  // Capture every sized canvas; prefer the two largest as front/back 3D
-  const canvasData = await workspace.locator('canvas').evaluateAll((nodes) =>
-    nodes.map((c, index) => ({
-      index,
-      w: c.width,
-      h: c.height,
-      data: c.toDataURL('image/png'),
-    }))
-  );
-  const ranked = canvasData
-    .filter((c) => c.w * c.h > 1000)
-    .sort((a, b) => b.w * b.h - a.w * a.h);
-  if (ranked[0])
-    writeFileSync(
-      join(destDir, 'front3d.png'),
-      Buffer.from(ranked[0].data.split(',')[1], 'base64')
-    );
-  if (ranked[1])
-    writeFileSync(
-      join(destDir, 'back3d.png'),
-      Buffer.from(ranked[1].data.split(',')[1], 'base64')
-    );
-  await workspace.screenshot({ path: join(destDir, 'preview.png') }).catch(() => {});
+  // WebGL canvases often yield blank toDataURL without preserveDrawingBuffer.
+  // Screenshot the Front/Back columns instead.
+  const preview = workspace.locator('[role="img"]').filter({ has: page.locator('canvas') }).first();
+  const cols = preview.locator(':scope > div > div');
+  const colCount = await cols.count();
+  if (colCount >= 2) {
+    await cols.nth(0).screenshot({ path: join(destDir, 'front3d.png') });
+    await cols.nth(1).screenshot({ path: join(destDir, 'back3d.png') });
+  } else {
+    await preview.screenshot({ path: join(destDir, 'preview.png') }).catch(() => {});
+  }
+  await preview.screenshot({ path: join(destDir, 'preview.png') }).catch(() => {});
 
   // Copy original
   const origBuf = readFileSync(fixturePath);

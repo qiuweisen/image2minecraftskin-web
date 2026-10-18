@@ -10,7 +10,12 @@ import {
   textureOffset,
 } from './types';
 import { getSkinRegions, type SkinPart, type SkinRegion } from './layouts';
-import { dominantColor, subjectDominantColor, paintTemplate } from './templates';
+import {
+  dominantColor,
+  subjectDominantColor,
+  paintTemplate,
+  isSkyLike,
+} from './templates';
 import { applyPixelStyle } from './style';
 
 /** Normalized (0-1) crop rectangle inside the source image. */
@@ -321,10 +326,17 @@ export function mapImageToSkin(
   }
   if (
     resolvedKind === 'portrait' ||
+    resolvedKind === 'character' ||
     resolvedKind === 'animal' ||
     resolvedKind === 'logo'
   ) {
-    paintTemplate(texture, maskedSource, resolvedKind);
+    // character: face detector often misses landscape selfies; still need limb
+    // templates so sky sampled into DEFAULT arm/torso crops cannot remain.
+    paintTemplate(
+      texture,
+      maskedSource,
+      resolvedKind === 'character' ? 'portrait' : resolvedKind
+    );
   }
   // Always solid-fill head top/back with hair tone. Photo top strips (and
   // DEFAULT_CROPS) commonly contain sky; leaving sampled pixels there is how
@@ -345,6 +357,46 @@ export function mapImageToSkin(
           texture.pixels.set(hair, textureOffset(x, y, texture.width));
     });
   }
+
+  // Final guard: any remaining sky-like base pixels (bad mask / no face) are
+  // replaced with part-appropriate subject tones so background never leaks.
+  {
+    const scrubSkin = subjectDominantColor(maskedSource, {
+      x: 0.34,
+      y: 0.22,
+      width: 0.32,
+      height: 0.2,
+    });
+    const scrubShirt = subjectDominantColor(maskedSource, {
+      x: 0.3,
+      y: 0.4,
+      width: 0.4,
+      height: 0.28,
+    });
+    regions.forEach((region, index) => {
+      const face = FACE_ORDER[index % FACE_ORDER.length]!;
+      const replacement =
+        region.part === 'head'
+          ? face === 'top' || face === 'back'
+            ? hairTone
+            : scrubSkin
+          : region.part === 'torso' || region.part.endsWith('arm')
+            ? scrubShirt
+            : scrubSkin;
+      for (let y = region.y; y < region.y + region.height; y += 1)
+        for (let x = region.x; x < region.x + region.width; x += 1) {
+          const i = textureOffset(x, y, texture.width);
+          const color = [
+            texture.pixels[i] ?? 0,
+            texture.pixels[i + 1] ?? 0,
+            texture.pixels[i + 2] ?? 0,
+            texture.pixels[i + 3] ?? 0,
+          ] as const;
+          if (isSkyLike(color)) texture.pixels.set(replacement, i);
+        }
+    });
+  }
+
   if (
     options.faceDetails &&
     resolvedKind !== 'animal' &&

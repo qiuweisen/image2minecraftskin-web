@@ -112,4 +112,33 @@ describe('skin quality v2 mapping', () => {
     );
     expect(armDistSky).toBeGreaterThan(60);
   });
+
+  it('scrubs sky-like torso/arm pixels even when kind is character', () => {
+    const width = 80;
+    const height = 64;
+    const pixels = new Uint8ClampedArray(width * height * 4);
+    const sky = [135, 206, 235, 255] as const;
+    const skin = [210, 160, 120, 255] as const;
+    for (let y = 0; y < height; y++)
+      for (let x = 0; x < width; x++) {
+        const i = (y * width + x) * 4;
+        // Entire frame sky except a small face patch
+        const isFace = x > 30 && x < 50 && y > 10 && y < 30;
+        pixels.set(isFace ? skin : sky, i);
+      }
+    const skinTex = mapImageToSkin(
+      { width, height, pixels },
+      'java-64',
+      'classic',
+      { kind: 'character' }
+    );
+    const arm = textureOffset(46, 26, skinTex.width);
+    const torso = textureOffset(24, 26, skinTex.width);
+    const armRGB = [skinTex.pixels[arm]!, skinTex.pixels[arm + 1]!, skinTex.pixels[arm + 2]!];
+    const torsoRGB = [skinTex.pixels[torso]!, skinTex.pixels[torso + 1]!, skinTex.pixels[torso + 2]!];
+    const skyDist = (c: number[]) =>
+      Math.hypot(c[0]! - sky[0], c[1]! - sky[1], c[2]! - sky[2]);
+    expect(skyDist(armRGB)).toBeGreaterThan(60);
+    expect(skyDist(torsoRGB)).toBeGreaterThan(60);
+  });
 });

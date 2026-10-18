@@ -137,7 +137,41 @@ export async function analyzeSource(
     ? Uint8Array.from(segmentation.categoryMask.getAsUint8Array())
     : undefined;
   segmentation.categoryMask?.close?.();
-  const detection = detector.detect(canvas);
+  let detection = detector.detect(canvas);
+  // Short-range blaze face misses some landscape selfies at full res; retry
+  // on a centered square downscale when the first pass finds nothing.
+  if (!detection.detections[0]) {
+    const side = Math.min(source.width, source.height);
+    const sx = Math.floor((source.width - side) / 2);
+    const sy = Math.floor((source.height - side) / 2);
+    const small = document.createElement('canvas');
+    small.width = 256;
+    small.height = 256;
+    const sctx = small.getContext('2d');
+    if (sctx) {
+      sctx.drawImage(canvas, sx, sy, side, side, 0, 0, 256, 256);
+      const retry = detector.detect(small);
+      if (retry.detections[0]?.boundingBox) {
+        const box = retry.detections[0].boundingBox;
+        detection = {
+          ...retry,
+          detections: [
+            {
+              ...retry.detections[0],
+              boundingBox: {
+                ...box,
+                originX: sx + (box.originX / 256) * side,
+                originY: sy + (box.originY / 256) * side,
+                width: (box.width / 256) * side,
+                height: (box.height / 256) * side,
+              },
+            },
+            ...retry.detections.slice(1),
+          ],
+        };
+      }
+    }
+  }
   const poseResult = poseLandmarker.detect(canvas);
   const hairResult = hairSegmenter.segment(canvas);
   const hairRaw = hairResult.categoryMask
@@ -186,12 +220,20 @@ export async function analyzeSource(
   }
   const hairMask = normalizePersonMask(hairRaw, source.width, source.height);
   onProgress?.(100);
+  const maskCoverage = finalMask
+    ? finalMask.reduce((n, v) => n + (v > 0 ? 1 : 0), 0) / finalMask.length
+    : 0;
+  // Selfie segmenter hit without a face box: still treat as portrait so limb
+  // templates run (landscape bridge selfies often miss blaze-face).
+  const kind = face
+    ? source.height > source.width * 1.35
+      ? 'full-body'
+      : 'portrait'
+    : maskCoverage > 0.04 && maskCoverage < 0.55
+      ? 'portrait'
+      : 'character';
   return {
-    kind: face
-      ? source.height > source.width * 1.35
-        ? 'full-body'
-        : 'portrait'
-      : 'character',
+    kind,
     faceFound: Boolean(face),
     ...(face
       ? {

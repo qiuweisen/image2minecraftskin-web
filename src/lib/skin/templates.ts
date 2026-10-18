@@ -1,6 +1,6 @@
 import type { ImageSource, SkinTexture } from './types';
 
-function isSkyLike(color: readonly number[]) {
+export function isSkyLike(color: readonly number[]) {
   const [r, g, b] = color;
   return b > 150 && b > r + 25 && b >= g - 5;
 }
