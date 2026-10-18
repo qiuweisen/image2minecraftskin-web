@@ -54,8 +54,7 @@ async function captureRun(page, baseUrl, label, fixturePath) {
   await fileInput.setInputFiles(fixturePath);
 
   // Wait for models + generation. Prefer "Skin ready"; also accept localized variants.
-  const ready = workspace.getByText(/skin ready|ready to download|✓/i).first();
-  await ready.waitFor({ state: 'visible', timeout: 90000 });
+  await workspace.getByText(/skin ready/i).first().waitFor({ state: 'visible', timeout: 90000 });
   // Wait until 3D canvases have painted (non-empty pixels)
   await page.waitForFunction(() => {
     const canvases = [...document.querySelectorAll('[role="region"] canvas')];
@@ -87,7 +86,7 @@ async function captureRun(page, baseUrl, label, fixturePath) {
   // WebGL canvases often yield blank toDataURL without preserveDrawingBuffer.
   // Screenshot the Front/Back columns instead.
   const preview = workspace.locator('[role="img"]').filter({ has: page.locator('canvas') }).first();
-  const cols = preview.locator(':scope > div > div');
+  const cols = preview.locator('div.grid > div');
   const colCount = await cols.count();
   if (colCount >= 2) {
     await cols.nth(0).screenshot({ path: join(destDir, 'front3d.png') });

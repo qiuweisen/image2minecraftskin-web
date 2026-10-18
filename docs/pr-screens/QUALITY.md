@@ -7,25 +7,44 @@ Total **21,899,976 bytes** (about **20.9 MiB**):
 
 `deeplab_v3.tflite` loads only when no face is detected. First use pays the download cost; browser cache applies afterward. Images never leave the device.
 
-## Mapping benchmark
-Run `pnpm exec tsx scripts/skin-quality-bench.ts`.
+## Real acceptance (2026-10-18, Asia/Shanghai)
 
-It reads every CC0 fixture in `fixtures/`, writes original | v1 | v2 | v2-pixel contact sheets (`contact-*.png`) and per-skin PNGs. On this box (Node 22, Java classic):
-- portrait-selfie: ~20 ms
-- fullbody-busy: ~29 ms
-- logo-transparent: ~8 ms
-- pixel-sprite: ~2 ms
-- anime-character: ~5 ms
-- pet-cat: ~4 ms
+Fixtures: eight Wikimedia Commons photos under `fixtures/real/` (licenses in `fixtures/LICENSES.md`).
 
-These are pure `mapImageToSkin` timings. Browser MediaPipe load time is reported by the `skin_models_load` analytics event.
+Method:
+1. Local Vite (`127.0.0.1:3015`) with self-hosted `/mediapipe` models loaded in headless Chromium.
+2. Same Playwright upload → wait for “Skin ready” → download PNG flow against production `https://image2minecraftskin.com`.
+3. Front/back 3D rendered from each skin PNG via skinview3d (WebGL).
+4. Contact sheets: `contact-real-*.png` = original | prod skin | new skin | prod/new front | prod/new back.
 
-## UI screenshots
-Captured from local Vite against the homepage workspace:
-- `ui-result-page.png` — full page with front/back 3D preview
-- `ui-generator-workspace.png` — workspace with generated result
-- `ui-ai-modal.png` — AI HD waitlist fake door ($2.99)
-- `ui-import-guide.png` — Import into Minecraft guide after download
+### Background leak (primary goal)
+| Fixture | Prod sky/foliage in torso/arms | New after fixes |
+|---------|--------------------------------|-----------------|
+| portrait-selfie (bridge, light-blue dress/sky) | Yes — torso/arms ~sky blue | **No** — scrubbed; head front keeps skin tone |
+| half-body (leafy green backdrop) | Yes — green wash on body | **No** green/sky cells in base regions |
+| busy-background | Head top sky-blue on prod | New avoids sky; coverage weak (flat fills) |
 
-## Fixture licenses
-See `fixtures/LICENSES.md` (synthetic CC0 geometry fixtures).
+Fixes that landed on this branch:
+- Copy MediaPipe category masks immediately (buffer reuse bug).
+- Hole-fill no longer samples DEFAULT_CROPS edges; head top/back use hair tone.
+- Face miss on landscape selfies → mid-coverage person mask treated as portrait; face retry on centered square; character limbs use portrait templates.
+- Final `isBackgroundLike` scrub (sky + foliage + bright outdoor wash).
+
+### What is still weak (honest)
+- **Face detector** still misses some landscape selfies; we compensate with mask-coverage heuristics and scrubbing, not a perfect face box.
+- **Head top** often falls back to flat gray (`0x888`) when hair segmenter yields empty bins — no sky, but not photoreal hair either.
+- **Back/side faces** remain low-detail (edge strips / solid fills). Side-profile sources (bridge selfie) leave large flat gray areas on the back.
+- **Busy crowd / full-body / pet / logo / pixel**: subject cutout and part crops are uneven; results are opaque and non-leaking but often posterized or template-heavy rather than recognizable.
+- **Anime**: better than prod holes, still not a faithful character map.
+- Synthetic geometry contact sheets (`contact-*.png` without `-real-`) are **not** valid acceptance; keep them only as mapping benchmarks.
+
+### UI screenshots
+Captured earlier from local Vite:
+- `ui-result-page.png`, `ui-generator-workspace.png`, `ui-ai-modal.png`, `ui-import-guide.png`
+
+### Mapping benchmark (synthetic, Node only)
+Run `pnpm exec tsx scripts/skin-quality-bench.ts` for pure `mapImageToSkin` timings (no MediaPipe).
+
+### Scripts
+- `scripts/real-skin-acceptance.mjs` — Playwright real UI vs local/prod
+- `scripts/render-skin-3d.mjs` — skinview3d front/back from skin PNGs
