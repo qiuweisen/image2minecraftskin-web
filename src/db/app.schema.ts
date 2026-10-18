@@ -86,3 +86,10 @@ export const userFilesRelations = relations(userFiles, ({ one }) => ({
     references: [user.id],
   }),
 }));
+
+export const aiWaitlist = sqliteTable('ai_waitlist', {
+  id: text('id').primaryKey(),
+  email: text('email').notNull().unique(),
+  createdAt: integer('created_at', { mode: 'timestamp_ms' }).notNull(),
+  locale: text('locale'),
+});

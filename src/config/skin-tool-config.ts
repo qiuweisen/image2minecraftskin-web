@@ -1,6 +1,8 @@
 import { m } from '@/locale/paraglide/messages';
 import type { SkinFormat, SkinModel } from '@/lib/skin/types';
 
+export const aiHdFromPriceUsd = 2.99;
+
 export interface SkinToolConfig {
   acceptedTypes: string[];
   maxFileSizeBytes: number;
@@ -29,6 +31,8 @@ export interface SkinToolConfig {
     vertical: string;
     resetFraming: string;
     inspectionHint: string;
+    subjectKind: string;
+    subjectOptions: Array<{ value: string; label: string }>;
     status: {
       idle: string;
       processing: string;
@@ -75,6 +79,15 @@ export function getSkinToolConfig(): SkinToolConfig {
       resetFraming: 'Reset framing',
       inspectionHint:
         'Rotate the model and check each side before downloading your skin.',
+      subjectKind: 'Subject kind',
+      subjectOptions: [
+        { value: 'auto', label: 'Auto' },
+        { value: 'portrait', label: 'Portrait' },
+        { value: 'full-body', label: 'Full body' },
+        { value: 'character', label: 'Character' },
+        { value: 'animal', label: 'Animal' },
+        { value: 'logo', label: 'Logo' },
+      ],
       status: {
         idle: m.skin_status_idle(),
         processing: m.skin_status_processing(),

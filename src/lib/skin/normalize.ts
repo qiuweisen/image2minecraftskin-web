@@ -4,9 +4,14 @@ import {
   type SkinFormat,
   type SkinModel,
   type SkinTexture,
+  type GenerationOptions,
+  type SkinStyle,
+  type SubjectKind,
   textureOffset,
 } from './types';
 import { getSkinRegions, type SkinPart, type SkinRegion } from './layouts';
+import { dominantColor, paintTemplate } from './templates';
+import { applyPixelStyle } from './style';
 
 /** Normalized (0-1) crop rectangle inside the source image. */
 export type PartBounds = {
@@ -187,22 +192,77 @@ export function mapImageToSkin(
   source: ImageSource,
   format: SkinFormat,
   model: SkinModel = 'classic',
-  crops?: PartCrops
+  cropsOrOptions?: PartCrops | GenerationOptions
 ): SkinTexture {
   if (source.width < 1 || source.height < 1) {
     throw new Error('Image source must have positive dimensions');
   }
   const texture = createBlankSkin(format, model);
+  const options: GenerationOptions =
+    cropsOrOptions &&
+    ('kind' in cropsOrOptions ||
+      'style' in cropsOrOptions ||
+      'faceDetails' in cropsOrOptions ||
+      'mask' in cropsOrOptions ||
+      'crops' in cropsOrOptions)
+      ? (cropsOrOptions as GenerationOptions)
+      : { crops: cropsOrOptions as PartCrops | undefined };
+  const kind: SubjectKind = options.kind ?? 'auto';
+  const resolvedKind =
+    kind === 'auto'
+      ? source.height < source.width * 1.12
+        ? 'portrait'
+        : 'full-body'
+      : kind;
+  const partCrops = (options.crops ?? cropsOrOptions) as PartCrops | undefined;
   const regions = getSkinRegions(format, model);
   regions.forEach((region, index) => {
     const face = FACE_ORDER[index % FACE_ORDER.length];
     const { rect, mirror } = faceCrop(
-      sourceCrop(source, region.part, crops),
+      sourceCrop(source, region.part, partCrops),
       face,
       region.part
     );
     paintRegion(texture, source, region, rect, mirror);
   });
+  // Base regions must never contain transparent holes, even for cutout PNGs.
+  for (const region of regions) {
+    const fallback = dominantColor(source, {
+      x: DEFAULT_CROPS[region.part].x,
+      y: DEFAULT_CROPS[region.part].y,
+      width: DEFAULT_CROPS[region.part].width,
+      height: DEFAULT_CROPS[region.part].height,
+    });
+    for (let y = region.y; y < region.y + region.height; y++)
+      for (let x = region.x; x < region.x + region.width; x++) {
+        const i = textureOffset(x, y, texture.width);
+        if ((texture.pixels[i + 3] ?? 0) < 255) texture.pixels.set(fallback, i);
+      }
+  }
+  if (
+    resolvedKind === 'portrait' ||
+    resolvedKind === 'animal' ||
+    resolvedKind === 'logo'
+  ) {
+    paintTemplate(texture, source, resolvedKind);
+  }
+  if (
+    options.faceDetails &&
+    resolvedKind !== 'animal' &&
+    resolvedKind !== 'logo'
+  ) {
+    const s = texture.width / 64;
+    const pixel = (x: number, y: number, color: number[]) =>
+      texture.pixels.set(color, textureOffset(x * s, y * s, texture.width));
+    for (const x of [10, 13]) {
+      pixel(x, 12, [31, 42, 49, 255]);
+      pixel(x, 13, [31, 42, 49, 255]);
+    }
+    pixel(11, 15, [113, 63, 57, 255]);
+    pixel(12, 15, [113, 63, 57, 255]);
+  }
+  const style: SkinStyle = options.style ?? 'photo';
+  if (style === 'pixel') applyPixelStyle(texture);
   return texture;
 }
 

@@ -143,15 +143,37 @@ function localizedPage(kind: Kind): Page {
     const match = key.match(/^(step|section|faq)([1-3])_(title|text|q|a)$/);
     if (match) {
       const index = Number(match[2]) - 1;
-      const values = match[1] === 'step' ? fallback.steps[index] : match[1] === 'section' ? fallback.sections[index] : fallback.faqs[index];
-      return values?.[match[1] === 'step' ? match[3] === 'title' ? 1 : 2 : match[3] === 'title' || match[3] === 'q' ? 0 : 1] ?? '';
+      const values =
+        match[1] === 'step'
+          ? fallback.steps[index]
+          : match[1] === 'section'
+            ? fallback.sections[index]
+            : fallback.faqs[index];
+      return (
+        values?.[
+          match[1] === 'step'
+            ? match[3] === 'title'
+              ? 1
+              : 2
+            : match[3] === 'title' || match[3] === 'q'
+              ? 0
+              : 1
+        ] ?? ''
+      );
     }
     return '';
   };
   return {
-    kicker: get('kicker'), title: get('title'), description: get('description'), answer: get('answer'),
-    steps: [1, 2, 3].map((n) => [`0${n}`, get(`step${n}_title`), get(`step${n}_text`)] as const),
-    sections: [1, 2].map((n) => [get(`section${n}_title`), get(`section${n}_text`)] as const),
+    kicker: get('kicker'),
+    title: get('title'),
+    description: get('description'),
+    answer: get('answer'),
+    steps: [1, 2, 3].map(
+      (n) => [`0${n}`, get(`step${n}_title`), get(`step${n}_text`)] as const
+    ),
+    sections: [1, 2].map(
+      (n) => [get(`section${n}_title`), get(`section${n}_text`)] as const
+    ),
     faqs: [1, 2, 3].map((n) => [get(`faq${n}_q`), get(`faq${n}_a`)] as const),
   };
 }

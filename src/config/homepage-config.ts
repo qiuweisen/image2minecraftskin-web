@@ -126,60 +126,83 @@ export function getHomepageConfig(): HomepageConfig {
     ],
     landing: {
       whatIs: {
-        eyebrow: m.landing_what_eyebrow(), title: m.landing_what_title(), description: m.landing_what_description(),
+        eyebrow: m.landing_what_eyebrow(),
+        title: m.landing_what_title(),
+        description: m.landing_what_description(),
       },
       features: [
         {
-          title: m.landing_feature_local_title(), description: m.landing_feature_local_description(),
+          title: m.landing_feature_local_title(),
+          description: m.landing_feature_local_description(),
         },
         {
-          title: m.landing_feature_formats_title(), description: m.landing_feature_formats_description(),
+          title: m.landing_feature_formats_title(),
+          description: m.landing_feature_formats_description(),
         },
         {
-          title: m.landing_feature_preview_title(), description: m.landing_feature_preview_description(),
+          title: m.landing_feature_preview_title(),
+          description: m.landing_feature_preview_description(),
         },
         {
-          title: m.landing_feature_account_title(), description: m.landing_feature_account_description(),
+          title: m.landing_feature_account_title(),
+          description: m.landing_feature_account_description(),
         },
       ],
       featuresHeading: {
-        eyebrow: m.landing_features_eyebrow(), title: m.landing_features_title(), description: m.landing_features_description(),
+        eyebrow: m.landing_features_eyebrow(),
+        title: m.landing_features_title(),
+        description: m.landing_features_description(),
       },
       compatibilityHeading: {
-        eyebrow: m.landing_formats_eyebrow(), description: m.landing_formats_description(),
+        eyebrow: m.landing_formats_eyebrow(),
+        description: m.landing_formats_description(),
       },
       faqHeading: {
-        eyebrow: m.landing_faq_eyebrow(), description: m.landing_faq_description(),
+        eyebrow: m.landing_faq_eyebrow(),
+        description: m.landing_faq_description(),
       },
       howToUse: {
-        eyebrow: m.landing_how_eyebrow(), title: m.landing_how_title(), description: m.landing_how_description(),
+        eyebrow: m.landing_how_eyebrow(),
+        title: m.landing_how_title(),
+        description: m.landing_how_description(),
         steps: [
           {
             number: '01',
-            title: m.landing_step1_title(), description: m.landing_step1_description(),
+            title: m.landing_step1_title(),
+            description: m.landing_step1_description(),
           },
           {
             number: '02',
-            title: m.landing_step2_title(), description: m.landing_step2_description(),
+            title: m.landing_step2_title(),
+            description: m.landing_step2_description(),
           },
           {
             number: '03',
-            title: m.landing_step3_title(), description: m.landing_step3_description(),
+            title: m.landing_step3_title(),
+            description: m.landing_step3_description(),
           },
           {
             number: '04',
-            title: m.landing_step4_title(), description: m.landing_step4_description(),
+            title: m.landing_step4_title(),
+            description: m.landing_step4_description(),
           },
         ],
       },
       trust: {
-        eyebrow: m.landing_trust_eyebrow(), title: m.landing_trust_title(), description: m.landing_trust_description(),
+        eyebrow: m.landing_trust_eyebrow(),
+        title: m.landing_trust_title(),
+        description: m.landing_trust_description(),
       },
       viewerHandoff: {
-        eyebrow: m.landing_viewer_eyebrow(), title: m.landing_viewer_title(), description: m.landing_viewer_description(), button: m.landing_viewer_button(),
+        eyebrow: m.landing_viewer_eyebrow(),
+        title: m.landing_viewer_title(),
+        description: m.landing_viewer_description(),
+        button: m.landing_viewer_button(),
       },
       cta: {
-        eyebrow: m.landing_cta_eyebrow(), title: m.landing_cta_title(), button: m.landing_cta_button(),
+        eyebrow: m.landing_cta_eyebrow(),
+        title: m.landing_cta_title(),
+        button: m.landing_cta_button(),
       },
     },
   };

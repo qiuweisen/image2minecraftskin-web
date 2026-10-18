@@ -4,9 +4,23 @@ import {
   IconRefresh,
   IconUpload,
 } from '@tabler/icons-react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type FormEvent,
+} from 'react';
 import { Button } from '@/components/ui/button';
-import { getSkinToolConfig } from '@/config/skin-tool-config';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { aiHdFromPriceUsd, getSkinToolConfig } from '@/config/skin-tool-config';
+import { joinAiWaitlist } from '@/api/ai-waitlist';
 import { m } from '@/locale/paraglide/messages';
 import { trackSkinEvent } from '@/lib/analytics-events';
 import {
@@ -32,6 +46,7 @@ import type {
   SkinModel,
   SkinTexture,
 } from '@/lib/skin/types';
+import type { SubjectKind, SkinStyle } from '@/lib/skin/types';
 import { SkinPreview3d } from './skin-preview-3d';
 
 const EXAMPLE_SOURCE_URL = '/examples/image-to-skin/portrait-source.webp';
@@ -104,6 +119,14 @@ export function SkinWorkspace() {
     IDENTITY_SOURCE_TRANSFORM
   );
   const [aiImproving, setAiImproving] = useState(false);
+  const [subjectKind, setSubjectKind] = useState<SubjectKind>('auto');
+  const [skinStyle, setSkinStyle] = useState<SkinStyle>('photo');
+  const [faceDetails, setFaceDetails] = useState(true);
+  const [waitlistOpen, setWaitlistOpen] = useState(false);
+  const [waitlistDone, setWaitlistDone] = useState(false);
+  const [waitlistEmail, setWaitlistEmail] = useState('');
+  const [honeypot, setHoneypot] = useState('');
+  const [importGuideOpen, setImportGuideOpen] = useState(false);
   // Latest format/model for async callbacks that outlive a render.
   const formatRef = useRef(format);
   const modelRef = useRef(model);
@@ -145,12 +168,12 @@ export function SkinWorkspace() {
       setError(false);
       requestAnimationFrame(() => {
         try {
-          const mapped = mapImageToSkin(
-            nextSource,
-            nextFormat,
-            nextModel,
-            crops
-          );
+          const mapped = mapImageToSkin(nextSource, nextFormat, nextModel, {
+            crops,
+            kind: subjectKind,
+            style: skinStyle,
+            faceDetails,
+          });
           setTexture(mapped);
           setStatus(config.copy.status.complete);
           // Once per source: slider drags and format toggles re-run this and
@@ -175,6 +198,17 @@ export function SkinWorkspace() {
             name: 'skin_generation_failed',
             payload: { reason: 'conversion_error' },
           });
+          trackSkinEvent({
+            name: 'skin_generate_done',
+            payload: {
+              subject_kind: subjectKind,
+              variant: skinStyle,
+              format: nextFormat,
+              model: nextModel,
+              face_found: false,
+              duration_ms: 0,
+            },
+          });
         }
       });
     },
@@ -184,6 +218,9 @@ export function SkinWorkspace() {
       config.copy.status.processing,
       format,
       model,
+      subjectKind,
+      skinStyle,
+      faceDetails,
     ]
   );
 
@@ -438,6 +475,15 @@ export function SkinWorkspace() {
         framing: partCrops ? 'pose_parts' : 'transform',
       },
     });
+    trackSkinEvent({ name: 'skin_download', payload: { format, model } });
+    setImportGuideOpen(true);
+  };
+
+  const submitWaitlist = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    await joinAiWaitlist({ data: { email: waitlistEmail, honeypot } });
+    trackSkinEvent({ name: 'ai_waitlist_submit', payload: {} });
+    setWaitlistDone(true);
   };
 
   const skinUrl = texture ? textureToDataUrl(texture) : undefined;
@@ -612,6 +658,59 @@ export function SkinWorkspace() {
               ))}
             </div>
           </fieldset>
+          <label className="mt-5 grid gap-2 text-xs uppercase tracking-wider text-zinc-500">
+            {config.copy.subjectKind}
+            <select
+              value={subjectKind}
+              onChange={(event) => {
+                setSubjectKind(event.target.value as SubjectKind);
+                if (source) generate(source, format, model, partCrops);
+              }}
+              className="min-h-11 border border-zinc-700 bg-zinc-900 px-3 text-sm normal-case text-zinc-100"
+            >
+              {config.copy.subjectOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="mt-4 grid gap-2 text-xs uppercase tracking-wider text-zinc-500">
+            Style
+            <select
+              value={skinStyle}
+              onChange={(event) => {
+                setSkinStyle(event.target.value as SkinStyle);
+                if (source) generate(source, format, model, partCrops);
+              }}
+              className="min-h-11 border border-zinc-700 bg-zinc-900 px-3 text-sm normal-case text-zinc-100"
+            >
+              <option value="photo">Photo</option>
+              <option value="pixel">Pixel</option>
+            </select>
+          </label>
+          <label className="mt-4 flex min-h-11 items-center gap-3 text-sm text-zinc-300">
+            <input
+              type="checkbox"
+              checked={faceDetails}
+              onChange={(event) => {
+                setFaceDetails(event.target.checked);
+                if (source) generate(source, format, model, partCrops);
+              }}
+            />{' '}
+            Face details
+          </label>
+          <Button
+            type="button"
+            variant="outline"
+            className="mt-4 w-full border-cyan-300/70 text-cyan-100"
+            onClick={() => {
+              trackSkinEvent({ name: 'ai_door_click', payload: {} });
+              setWaitlistOpen(true);
+            }}
+          >
+            AI HD version — looks more like you
+          </Button>
           <fieldset className="mt-6 grid gap-2">
             <legend className="text-xs uppercase tracking-[0.08em] text-zinc-500">
               {config.copy.modelLabel}
@@ -712,6 +811,56 @@ export function SkinWorkspace() {
           )}
         </div>
       </div>
+      <Dialog open={waitlistOpen} onOpenChange={setWaitlistOpen}>
+        <DialogContent className="border border-cyan-300/30 bg-zinc-950 text-zinc-100">
+          <DialogTitle>AI HD version — coming soon</DialogTitle>
+          <DialogDescription>
+            Join the waitlist. Planned pricing from $
+            {aiHdFromPriceUsd.toFixed(2)}. Images stay on your device.
+          </DialogDescription>
+          {waitlistDone ? (
+            <output>You’re on the waitlist.</output>
+          ) : (
+            <form
+              className="grid gap-3"
+              onSubmit={(event) => void submitWaitlist(event)}
+            >
+              <label className="grid gap-1 text-sm">
+                Email
+                <input
+                  required
+                  type="email"
+                  autoComplete="email"
+                  value={waitlistEmail}
+                  onChange={(event) => setWaitlistEmail(event.target.value)}
+                  className="min-h-11 border border-zinc-700 bg-zinc-900 px-3"
+                />
+              </label>
+              <label className="absolute -left-[10000px]" aria-hidden="true">
+                Leave blank
+                <input
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={honeypot}
+                  onChange={(event) => setHoneypot(event.target.value)}
+                />
+              </label>
+              <Button type="submit">Join waitlist</Button>
+            </form>
+          )}
+        </DialogContent>
+      </Dialog>
+      <Dialog open={importGuideOpen} onOpenChange={setImportGuideOpen}>
+        <DialogContent className="border border-cyan-300/30 bg-zinc-950 text-zinc-100">
+          <DialogTitle>Import your skin</DialogTitle>
+          <DialogDescription>
+            Java Edition: place the PNG in your skins folder or upload it from
+            the Launcher’s Skins tab. Bedrock: Dressing Room → Edit Character →
+            Classic Skins → Owned → Import → Choose New Skin, then select
+            Classic or Slim.
+          </DialogDescription>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 }
