@@ -127,5 +127,17 @@
     "vite": "^7.3.6",
     "vitest": "4.1.10",
     "wrangler": "^4.114.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "workerd",
+      "sharp",
+      "better-sqlite3",
+      "msw",
+      "@prisma/client",
+      "@esbuild/linux-x64",
+      "@cloudflare/workerd-linux-64"
+    ]
   }
 }

@@ -1,5 +1,11 @@
 export type SkinAnalyticsEventName =
   | 'skin_upload'
+  | 'skin_generate_done'
+  | 'skin_download'
+  | 'ai_door_click'
+  | 'ai_waitlist_submit'
+  | 'skin_models_load'
+  | 'skin_models_failed'
   | 'skin_generation_completed'
   | 'skin_generation_failed'
   | 'skin_format_selected'
@@ -28,6 +34,19 @@ export type SkinAnalyticsEvent = {
 
 const EVENT_FIELDS: Record<SkinAnalyticsEventName, string[]> = {
   skin_upload: ['mimeType', 'fileSize'],
+  skin_generate_done: [
+    'subject_kind',
+    'variant',
+    'format',
+    'model',
+    'face_found',
+    'duration_ms',
+  ],
+  skin_download: ['format', 'model'],
+  ai_door_click: [],
+  ai_waitlist_submit: [],
+  skin_models_load: ['duration_ms', 'bytes'],
+  skin_models_failed: ['reason'],
   skin_generation_completed: [
     'origin',
     'format',

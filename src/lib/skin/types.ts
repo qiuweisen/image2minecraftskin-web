@@ -1,5 +1,25 @@
 export type SkinFormat = 'java-64' | 'bedrock-128';
 export type SkinModel = 'classic' | 'slim';
+export type SubjectKind =
+  | 'auto'
+  | 'portrait'
+  | 'full-body'
+  | 'character'
+  | 'animal'
+  | 'logo';
+export type SkinStyle = 'photo' | 'pixel';
+export type GenerationOptions = {
+  kind?: SubjectKind;
+  style?: SkinStyle;
+  faceDetails?: boolean;
+  crops?: Partial<
+    Record<string, { x: number; y: number; width: number; height: number }>
+  >;
+  mask?: Uint8Array;
+  hairMask?: Uint8Array;
+  maskSource?: 'selfie' | 'deeplab';
+  face?: { x: number; y: number; width: number; height: number };
+};
 
 export type SkinTexture = {
   width: number;

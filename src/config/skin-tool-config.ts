@@ -1,6 +1,8 @@
 import { m } from '@/locale/paraglide/messages';
 import type { SkinFormat, SkinModel } from '@/lib/skin/types';
 
+export const aiHdFromPriceUsd = 2.99;
+
 export interface SkinToolConfig {
   acceptedTypes: string[];
   maxFileSizeBytes: number;
@@ -29,6 +31,8 @@ export interface SkinToolConfig {
     vertical: string;
     resetFraming: string;
     inspectionHint: string;
+    subjectKind: string;
+    subjectOptions: Array<{ value: string; label: string }>;
     status: {
       idle: string;
       processing: string;
@@ -68,13 +72,21 @@ export function getSkinToolConfig(): SkinToolConfig {
       sourceAlt: m.skin_source_alt(),
       textureLabel: m.skin_texture_label(),
       preview3dLabel: m.skin_preview_3d_label(),
-      adjustSource: 'Adjust source',
-      zoom: 'Zoom',
-      horizontal: 'Horizontal position',
-      vertical: 'Vertical position',
-      resetFraming: 'Reset framing',
-      inspectionHint:
-        'Rotate the model and check each side before downloading your skin.',
+      adjustSource: m.skin_adjust_source(),
+      zoom: m.skin_zoom(),
+      horizontal: m.skin_horizontal(),
+      vertical: m.skin_vertical(),
+      resetFraming: m.skin_reset_framing(),
+      inspectionHint: m.skin_inspection_hint(),
+      subjectKind: m.skin_subject_kind(),
+      subjectOptions: [
+        { value: 'auto', label: m.skin_kind_auto() },
+        { value: 'portrait', label: m.skin_kind_portrait() },
+        { value: 'full-body', label: m.skin_kind_full_body() },
+        { value: 'character', label: m.skin_kind_character() },
+        { value: 'animal', label: m.skin_kind_animal() },
+        { value: 'logo', label: m.skin_kind_logo() },
+      ],
       status: {
         idle: m.skin_status_idle(),
         processing: m.skin_status_processing(),

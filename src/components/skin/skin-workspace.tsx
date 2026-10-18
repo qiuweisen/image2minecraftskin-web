@@ -4,9 +4,23 @@ import {
   IconRefresh,
   IconUpload,
 } from '@tabler/icons-react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type FormEvent,
+} from 'react';
 import { Button } from '@/components/ui/button';
-import { getSkinToolConfig } from '@/config/skin-tool-config';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { aiHdFromPriceUsd, getSkinToolConfig } from '@/config/skin-tool-config';
+import { joinAiWaitlist } from '@/api/ai-waitlist';
 import { m } from '@/locale/paraglide/messages';
 import { trackSkinEvent } from '@/lib/analytics-events';
 import {
@@ -32,7 +46,9 @@ import type {
   SkinModel,
   SkinTexture,
 } from '@/lib/skin/types';
+import type { SubjectKind, SkinStyle } from '@/lib/skin/types';
 import { SkinPreview3d } from './skin-preview-3d';
+import { analyzeSource, type VisionAnalysis } from '@/lib/skin/vision';
 
 const EXAMPLE_SOURCE_URL = '/examples/image-to-skin/portrait-source.webp';
 
@@ -104,6 +120,16 @@ export function SkinWorkspace() {
     IDENTITY_SOURCE_TRANSFORM
   );
   const [aiImproving, setAiImproving] = useState(false);
+  const [subjectKind, setSubjectKind] = useState<SubjectKind>('auto');
+  const [skinStyle, setSkinStyle] = useState<SkinStyle>('photo');
+  const [faceDetails, setFaceDetails] = useState(true);
+  const [waitlistOpen, setWaitlistOpen] = useState(false);
+  const [waitlistDone, setWaitlistDone] = useState(false);
+  const [waitlistEmail, setWaitlistEmail] = useState('');
+  const [honeypot, setHoneypot] = useState('');
+  const [importGuideOpen, setImportGuideOpen] = useState(false);
+  const [visionProgress, setVisionProgress] = useState<number>();
+  const analysisRef = useRef<VisionAnalysis | undefined>(undefined);
   // Latest format/model for async callbacks that outlive a render.
   const formatRef = useRef(format);
   const modelRef = useRef(model);
@@ -135,24 +161,72 @@ export function SkinWorkspace() {
     recommendedTransform.zoom !== IDENTITY_SOURCE_TRANSFORM.zoom;
 
   const generate = useCallback(
-    (
+    async (
       nextSource: ImageSource,
       nextFormat = format,
       nextModel = model,
       crops?: PartCrops
     ) => {
-      setStatus(config.copy.status.processing);
+      setStatus(m.skin_models_loading({ percent: visionProgress ?? 0 }));
       setError(false);
+      const started = performance.now();
+      let analysis: VisionAnalysis | undefined = analysisRef.current;
+      if (!analysis) {
+        try {
+          analysis = await Promise.race([
+            analyzeSource(nextSource, (percent) => {
+              setVisionProgress(percent);
+              setStatus(m.skin_models_loading({ percent }));
+            }),
+            new Promise<never>((_, reject) =>
+              setTimeout(() => reject(new Error('vision_timeout')), 15000)
+            ),
+          ]);
+          analysisRef.current = analysis;
+          setVisionProgress(undefined);
+          trackSkinEvent({
+            name: 'skin_models_load',
+            payload: { duration_ms: analysis.loadMs },
+          });
+        } catch (visionError) {
+          setVisionProgress(undefined);
+          trackSkinEvent({
+            name: 'skin_models_failed',
+            payload: {
+              reason:
+                visionError instanceof Error ? visionError.message : 'unknown',
+            },
+          });
+          analysis = undefined;
+        }
+      }
       requestAnimationFrame(() => {
         try {
-          const mapped = mapImageToSkin(
-            nextSource,
-            nextFormat,
-            nextModel,
-            crops
-          );
+          const resolvedKind =
+            subjectKind === 'auto' ? analysis?.kind : subjectKind;
+          const mapped = mapImageToSkin(nextSource, nextFormat, nextModel, {
+            crops: crops ?? analysis?.poseCrops,
+            kind: resolvedKind ?? subjectKind,
+            style: skinStyle,
+            faceDetails,
+            mask: analysis?.mask,
+            hairMask: analysis?.hairMask,
+            maskSource: analysis?.maskSource,
+            face: analysis?.face,
+          });
           setTexture(mapped);
           setStatus(config.copy.status.complete);
+          trackSkinEvent({
+            name: 'skin_generate_done',
+            payload: {
+              subject_kind: resolvedKind ?? subjectKind,
+              variant: skinStyle,
+              format: nextFormat,
+              model: nextModel,
+              face_found: Boolean(analysis?.faceFound),
+              duration_ms: Math.round(performance.now() - started),
+            },
+          });
           // Once per source: slider drags and format toggles re-run this and
           // previously inflated the count ~6x.
           if (!generationTrackedRef.current) {
@@ -175,6 +249,17 @@ export function SkinWorkspace() {
             name: 'skin_generation_failed',
             payload: { reason: 'conversion_error' },
           });
+          trackSkinEvent({
+            name: 'skin_generate_done',
+            payload: {
+              subject_kind: subjectKind,
+              variant: skinStyle,
+              format: nextFormat,
+              model: nextModel,
+              face_found: false,
+              duration_ms: 0,
+            },
+          });
         }
       });
     },
@@ -182,8 +267,9 @@ export function SkinWorkspace() {
       config.copy.status.complete,
       config.copy.status.error,
       config.copy.status.processing,
-      format,
-      model,
+      subjectKind,
+      skinStyle,
+      faceDetails,
     ]
   );
 
@@ -199,6 +285,7 @@ export function SkinWorkspace() {
       const exampleSource = await loadExampleSource();
       const nextSource = exampleSource || fallbackExampleSource();
       setSource(nextSource);
+      analysisRef.current = undefined;
       setPartCrops(undefined);
       setSourcePreview(exampleSource ? EXAMPLE_SOURCE_URL : undefined);
       generate(nextSource);
@@ -229,6 +316,7 @@ export function SkinWorkspace() {
         const nextSource = await fileToImageSource(file);
         startSource('upload');
         setSource(nextSource);
+        analysisRef.current = undefined;
         setPartCrops(undefined);
         setSourcePreview(URL.createObjectURL(file));
 
@@ -301,6 +389,7 @@ export function SkinWorkspace() {
     const exampleSource = await loadExampleSource();
     const nextSource = exampleSource || fallbackExampleSource();
     setSource(nextSource);
+    analysisRef.current = undefined;
     setPartCrops(undefined);
     setSourcePreview(exampleSource ? EXAMPLE_SOURCE_URL : undefined);
     setSourceTransform(IDENTITY_SOURCE_TRANSFORM);
@@ -438,6 +527,15 @@ export function SkinWorkspace() {
         framing: partCrops ? 'pose_parts' : 'transform',
       },
     });
+    trackSkinEvent({ name: 'skin_download', payload: { format, model } });
+    setImportGuideOpen(true);
+  };
+
+  const submitWaitlist = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    await joinAiWaitlist({ data: { email: waitlistEmail, honeypot } });
+    trackSkinEvent({ name: 'ai_waitlist_submit', payload: {} });
+    setWaitlistDone(true);
   };
 
   const skinUrl = texture ? textureToDataUrl(texture) : undefined;
@@ -539,9 +637,7 @@ export function SkinWorkspace() {
                     onClick={() => void improveWithAi()}
                     disabled={aiImproving}
                   >
-                    {aiImproving
-                      ? 'Analyzing image...'
-                      : 'AI Improve (experimental)'}
+                    {aiImproving ? m.skin_ai_analyzing() : m.skin_ai_improve()}
                   </button>
                   {hasAutomaticImprovement && (
                     <button
@@ -612,6 +708,59 @@ export function SkinWorkspace() {
               ))}
             </div>
           </fieldset>
+          <label className="mt-5 grid gap-2 text-xs uppercase tracking-wider text-zinc-500">
+            {config.copy.subjectKind}
+            <select
+              value={subjectKind}
+              onChange={(event) => {
+                setSubjectKind(event.target.value as SubjectKind);
+                if (source) generate(source, format, model, partCrops);
+              }}
+              className="min-h-11 border border-zinc-700 bg-zinc-900 px-3 text-sm normal-case text-zinc-100"
+            >
+              {config.copy.subjectOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="mt-4 grid gap-2 text-xs uppercase tracking-wider text-zinc-500">
+            Style
+            <select
+              value={skinStyle}
+              onChange={(event) => {
+                setSkinStyle(event.target.value as SkinStyle);
+                if (source) generate(source, format, model, partCrops);
+              }}
+              className="min-h-11 border border-zinc-700 bg-zinc-900 px-3 text-sm normal-case text-zinc-100"
+            >
+              <option value="photo">{m.skin_style_photo()}</option>
+              <option value="pixel">{m.skin_style_pixel()}</option>
+            </select>
+          </label>
+          <label className="mt-4 flex min-h-11 items-center gap-3 text-sm text-zinc-300">
+            <input
+              type="checkbox"
+              checked={faceDetails}
+              onChange={(event) => {
+                setFaceDetails(event.target.checked);
+                if (source) generate(source, format, model, partCrops);
+              }}
+            />{' '}
+            {m.skin_face_details()}
+          </label>
+          <Button
+            type="button"
+            variant="outline"
+            className="mt-4 w-full border-cyan-300/70 text-cyan-100"
+            onClick={() => {
+              trackSkinEvent({ name: 'ai_door_click', payload: {} });
+              setWaitlistOpen(true);
+            }}
+          >
+            {m.skin_ai_hd_button()}
+          </Button>
           <fieldset className="mt-6 grid gap-2">
             <legend className="text-xs uppercase tracking-[0.08em] text-zinc-500">
               {config.copy.modelLabel}
@@ -641,7 +790,10 @@ export function SkinWorkspace() {
               disabled={!texture}
               onClick={download}
             >
-              <IconDownload /> {config.copy.download}
+              <IconDownload />{' '}
+              {format === 'java-64'
+                ? m.skin_download_java()
+                : m.skin_download_bedrock()}
             </Button>
             <Button
               type="button"
@@ -669,6 +821,8 @@ export function SkinWorkspace() {
             <SkinPreview3d
               skinUrl={skinUrl}
               label={config.copy.preview3dLabel}
+              frontLabel={m.skin_preview_front()}
+              backLabel={m.skin_preview_back()}
             />
             <div className="relative grid min-h-80 place-items-center overflow-auto border border-zinc-800 bg-zinc-900 p-4">
               <canvas
@@ -701,17 +855,64 @@ export function SkinWorkspace() {
               </p>
               <Button
                 type="button"
-                className="mt-4 w-full"
+                className="sticky bottom-4 z-10 mt-4 w-full shadow-lg shadow-black/40"
                 size="lg"
                 disabled={!texture}
                 onClick={download}
               >
-                <IconDownload /> {config.copy.download}
+                <IconDownload />{' '}
+                {format === 'java-64'
+                  ? m.skin_download_java()
+                  : m.skin_download_bedrock()}
               </Button>
             </>
           )}
         </div>
       </div>
+      <Dialog open={waitlistOpen} onOpenChange={setWaitlistOpen}>
+        <DialogContent className="border border-cyan-300/30 bg-zinc-950 text-zinc-100">
+          <DialogTitle>{m.skin_ai_hd_title()}</DialogTitle>
+          <DialogDescription>
+            {m.skin_ai_hd_description({ price: aiHdFromPriceUsd.toFixed(2) })}
+          </DialogDescription>
+          {waitlistDone ? (
+            <output>{m.skin_waitlist_done()}</output>
+          ) : (
+            <form
+              className="grid gap-3"
+              onSubmit={(event) => void submitWaitlist(event)}
+            >
+              <label className="grid gap-1 text-sm">
+                {m.skin_waitlist_email()}
+                <input
+                  required
+                  type="email"
+                  autoComplete="email"
+                  value={waitlistEmail}
+                  onChange={(event) => setWaitlistEmail(event.target.value)}
+                  className="min-h-11 border border-zinc-700 bg-zinc-900 px-3"
+                />
+              </label>
+              <label className="absolute -left-[10000px]" aria-hidden="true">
+                Leave blank
+                <input
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={honeypot}
+                  onChange={(event) => setHoneypot(event.target.value)}
+                />
+              </label>
+              <Button type="submit">{m.skin_waitlist_join()}</Button>
+            </form>
+          )}
+        </DialogContent>
+      </Dialog>
+      <Dialog open={importGuideOpen} onOpenChange={setImportGuideOpen}>
+        <DialogContent className="border border-cyan-300/30 bg-zinc-950 text-zinc-100">
+          <DialogTitle>{m.skin_import_title()}</DialogTitle>
+          <DialogDescription>{m.skin_import_description()}</DialogDescription>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 }
