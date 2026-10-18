@@ -1,0 +1,9 @@
+# Pre-deploy rollback checkpoint (Asia/Shanghai)
+recorded_at: 2026-10-18T14:47:47+08:00
+site: https://image2minecraftskin.com
+worker: image2minecraftskin-web
+account: 8db47976c18bf0ccb6e32d9671daedfb
+live_version_id: ac1b034d-2a80-40a1-b855-fad8481dc1e6
+live_deployment_id: 8ba474c3-762f-4731-9f74-a8bbd66b67c5
+live_created_on_utc: 2026-10-13T00:41:03.481261Z
+rollback_cmd: CLOUDFLARE_API_TOKEN=$CF_DEPLOY_TOKEN pnpm exec wrangler rollback --message "rollback to pre-skin-quality-v2" ac1b034d-2a80-40a1-b855-fad8481dc1e6
