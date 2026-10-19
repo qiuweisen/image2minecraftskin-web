@@ -27,3 +27,11 @@
 - [x] 04-summary-zh.md
 - [x] wireframes/*.html（7 主路径 + index + css）
 - [x] wireframes/png/*.png（7 张）
+
+| 2026-10-20 06:28 | push 完成 `3324ef22`；draft PR #2；Drive 尝试上传 04-summary |
+
+## 链接
+- 分支：`docs/ai-skin-design-2026-10-20`
+- Commit：`3324ef22`
+- PR（draft）：https://github.com/qiuweisen/image2minecraftskin-web/pull/2
+- 本地：`/home/box/work/image2minecraftskin-web/docs/design-ai-skin-2026-10-20/`
