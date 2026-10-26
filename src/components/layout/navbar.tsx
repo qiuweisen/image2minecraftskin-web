@@ -37,7 +37,7 @@ export function Navbar({ scroll = true }: NavbarProps) {
   return (
     <header
       className={cn(
-        'sticky inset-x-0 top-0 z-40 py-4 transition-all duration-300',
+        'skin-nav sticky inset-x-0 top-0 z-40 py-4 transition-all duration-300',
         showBarBg && 'border-b'
       )}
     >
@@ -154,6 +154,7 @@ export function Navbar({ scroll = true }: NavbarProps) {
             </NavigationMenu>
 
             <div className="flex items-center gap-4 shrink-0">
+              <span className="skin-local-chip">● Local first</span>
               {websiteConfig.ui?.locale?.enableSwitch && <LocaleSwitcher />}
               <ModeSwitcher />
             </div>

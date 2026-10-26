@@ -50,11 +50,17 @@ export function SkinPreview3d({
 
   return (
     <div
-      className="relative grid h-full min-h-80 w-full place-items-center overflow-hidden border border-zinc-800 bg-zinc-900"
+      className="skin-preview-world world-stage relative grid h-full min-h-80 w-full place-items-center overflow-hidden border border-zinc-800 bg-zinc-900"
       role="img"
       aria-label={label}
     >
-      <div className="grid w-full grid-cols-2 gap-2 px-2">
+      <div className="stars" aria-hidden="true" />
+      <div className="moon" aria-hidden="true" />
+      <div className="ground" aria-hidden="true">
+        <div className="grass" />
+        <div className="dirt" />
+      </div>
+      <div className="skin-preview-content grid w-full grid-cols-2 gap-2 px-2">
         <div className="grid gap-1 text-center text-[10px] uppercase tracking-widest text-zinc-500">
           <canvas ref={frontRef} className="max-h-full min-h-0 max-w-full" />
           <span>{frontLabel}</span>

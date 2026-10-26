@@ -4,14 +4,7 @@ import {
   IconRefresh,
   IconUpload,
 } from '@tabler/icons-react';
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type FormEvent,
-} from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -19,8 +12,7 @@ import {
   DialogDescription,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { aiHdFromPriceUsd, getSkinToolConfig } from '@/config/skin-tool-config';
-import { joinAiWaitlist } from '@/api/ai-waitlist';
+import { getSkinToolConfig } from '@/config/skin-tool-config';
 import { m } from '@/locale/paraglide/messages';
 import { trackSkinEvent } from '@/lib/analytics-events';
 import {
@@ -124,9 +116,6 @@ export function SkinWorkspace() {
   const [skinStyle, setSkinStyle] = useState<SkinStyle>('photo');
   const [faceDetails, setFaceDetails] = useState(true);
   const [waitlistOpen, setWaitlistOpen] = useState(false);
-  const [waitlistDone, setWaitlistDone] = useState(false);
-  const [waitlistEmail, setWaitlistEmail] = useState('');
-  const [honeypot, setHoneypot] = useState('');
   const [importGuideOpen, setImportGuideOpen] = useState(false);
   const [visionProgress, setVisionProgress] = useState<number>();
   const analysisRef = useRef<VisionAnalysis | undefined>(undefined);
@@ -277,21 +266,6 @@ export function SkinWorkspace() {
     if (texture && canvasRef.current)
       drawTexture(canvasRef.current, texture, format === 'java-64' ? 5 : 3);
   }, [texture, format]);
-
-  useEffect(() => {
-    if (source) return;
-    const loadInitialExample = async () => {
-      startSource('example');
-      const exampleSource = await loadExampleSource();
-      const nextSource = exampleSource || fallbackExampleSource();
-      setSource(nextSource);
-      analysisRef.current = undefined;
-      setPartCrops(undefined);
-      setSourcePreview(exampleSource ? EXAMPLE_SOURCE_URL : undefined);
-      generate(nextSource);
-    };
-    void loadInitialExample();
-  }, [generate, source]);
 
   const loadSource = useCallback(
     async (file?: File) => {
@@ -531,19 +505,12 @@ export function SkinWorkspace() {
     setImportGuideOpen(true);
   };
 
-  const submitWaitlist = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    await joinAiWaitlist({ data: { email: waitlistEmail, honeypot } });
-    trackSkinEvent({ name: 'ai_waitlist_submit', payload: {} });
-    setWaitlistDone(true);
-  };
-
   const skinUrl = texture ? textureToDataUrl(texture) : undefined;
 
   return (
     <section
       id="generator"
-      className="overflow-hidden rounded-lg border bg-zinc-950 text-zinc-100 shadow-xl"
+      className="skin-workspace-v51 overflow-hidden rounded-lg border bg-zinc-950 text-zinc-100 shadow-xl"
       aria-label={config.copy.workspaceLabel}
     >
       <header className="flex min-h-12 items-center justify-between gap-4 border-b border-zinc-800 px-4 font-mono text-xs uppercase tracking-[0.08em] text-cyan-300 sm:px-6">
@@ -553,10 +520,10 @@ export function SkinWorkspace() {
         </span>
       </header>
       <div className="grid lg:grid-cols-[minmax(280px,0.62fr)_minmax(0,1.38fr)]">
-        <div className="border-b border-zinc-800 p-4 sm:p-6 lg:border-b-0 lg:border-r">
+        <div className="skin-controls-v51 border-b border-zinc-800 p-4 sm:p-6 lg:border-b-0 lg:border-r">
           <button
             type="button"
-            className="grid min-h-44 w-full place-items-center border border-dashed border-cyan-300/70 bg-cyan-300/5 p-5 text-center transition-colors hover:bg-cyan-300/10"
+            className="skin-drop-v51 grid min-h-44 w-full place-items-center border border-dashed border-cyan-300/70 bg-cyan-300/5 p-5 text-center transition-colors hover:bg-cyan-300/10"
             onClick={() => inputRef.current?.click()}
             onDragOver={(event) => event.preventDefault()}
             onDrop={(event) => {
@@ -572,7 +539,7 @@ export function SkinWorkspace() {
               </span>
             </span>
           </button>
-          <div className="mt-3 rounded border border-cyan-300/20 bg-cyan-300/5 p-3 text-xs leading-relaxed text-zinc-400">
+          <div className="tips-v51 mt-3 rounded border border-cyan-300/20 bg-cyan-300/5 p-3 text-xs leading-relaxed text-zinc-400">
             <p className="mb-1 font-semibold text-cyan-300">
               {m.skin_best_results()}
             </p>
@@ -592,7 +559,7 @@ export function SkinWorkspace() {
           />
           <button
             type="button"
-            className="mt-3 h-9 w-full border border-zinc-700 bg-transparent px-3 text-sm text-zinc-300 hover:border-cyan-300 hover:text-cyan-200"
+            className="skin-example-v51 mt-3 h-9 w-full border border-zinc-700 bg-transparent px-3 text-sm text-zinc-300 hover:border-cyan-300 hover:text-cyan-200"
             onClick={loadExample}
           >
             {config.copy.exampleLabel}
@@ -694,13 +661,13 @@ export function SkinWorkspace() {
             <legend className="text-xs uppercase tracking-[0.08em] text-zinc-500">
               {config.copy.formatLabel}
             </legend>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="skin-seg-v51 grid grid-cols-2 gap-2">
               {config.formats.map((option) => (
                 <button
                   key={option.value}
                   type="button"
                   aria-pressed={format === option.value}
-                  className={`min-h-10 border px-2 text-sm ${format === option.value ? 'border-cyan-300 bg-cyan-300 text-zinc-950' : 'border-zinc-700 bg-transparent text-zinc-400 hover:border-zinc-400'}`}
+                  className={`min-h-10 border px-2 text-sm ${format === option.value ? 'is-active border-cyan-300 bg-cyan-300 text-zinc-950' : 'border-zinc-700 bg-transparent text-zinc-400 hover:border-zinc-400'}`}
                   onClick={() => changeFormat(option.value)}
                 >
                   {option.label}
@@ -753,25 +720,25 @@ export function SkinWorkspace() {
           <Button
             type="button"
             variant="outline"
-            className="mt-4 w-full border-cyan-300/70 text-cyan-100"
+            className="skin-ai-v51 mt-4 w-full border-cyan-300/70 text-cyan-100"
             onClick={() => {
               trackSkinEvent({ name: 'ai_door_click', payload: {} });
               setWaitlistOpen(true);
             }}
           >
-            {m.skin_ai_hd_button()}
+            Make it more like you · 1 credit
           </Button>
           <fieldset className="mt-6 grid gap-2">
             <legend className="text-xs uppercase tracking-[0.08em] text-zinc-500">
               {config.copy.modelLabel}
             </legend>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="skin-seg-v51 grid grid-cols-2 gap-2">
               {config.models.map((option) => (
                 <button
                   key={option.value}
                   type="button"
                   aria-pressed={model === option.value}
-                  className={`min-h-10 border px-2 text-sm ${model === option.value ? 'border-cyan-300 bg-cyan-300 text-zinc-950' : 'border-zinc-700 bg-transparent text-zinc-400 hover:border-zinc-400'}`}
+                  className={`min-h-10 border px-2 text-sm ${model === option.value ? 'is-active border-cyan-300 bg-cyan-300 text-zinc-950' : 'border-zinc-700 bg-transparent text-zinc-400 hover:border-zinc-400'}`}
                   onClick={() => changeModel(option.value)}
                 >
                   {option.label}
@@ -785,7 +752,7 @@ export function SkinWorkspace() {
           <div className="mt-6 flex gap-2">
             <Button
               type="button"
-              className="flex-1"
+              className="skin-download-v51 flex-1"
               size="lg"
               disabled={!texture}
               onClick={download}
@@ -816,7 +783,7 @@ export function SkinWorkspace() {
             </Button>
           </div>
         </div>
-        <div className="min-w-0 p-4 sm:p-6">
+        <div className="skin-output-v51 min-w-0 p-4 sm:p-6">
           <div className="grid gap-4 xl:grid-cols-[1fr_0.8fr]">
             <SkinPreview3d
               skinUrl={skinUrl}
@@ -824,7 +791,7 @@ export function SkinWorkspace() {
               frontLabel={m.skin_preview_front()}
               backLabel={m.skin_preview_back()}
             />
-            <div className="relative grid min-h-80 place-items-center overflow-auto border border-zinc-800 bg-zinc-900 p-4">
+            <div className="skin-flat-v51 relative grid min-h-80 place-items-center overflow-auto border border-zinc-800 bg-zinc-900 p-4">
               <canvas
                 ref={canvasRef}
                 className="max-w-full"
@@ -847,7 +814,7 @@ export function SkinWorkspace() {
           </div>
           {texture && (
             <>
-              <p className="mt-4 border-l-2 border-green-400 bg-green-400/5 pl-3 py-2 text-sm leading-6 text-zinc-300">
+              <p className="skin-ready-v51 mt-4 border-l-2 border-green-400 bg-green-400/5 pl-3 py-2 text-sm leading-6 text-zinc-300">
                 <strong className="text-green-400">
                   ✓ {m.skin_ready_download()}
                 </strong>{' '}
@@ -855,7 +822,7 @@ export function SkinWorkspace() {
               </p>
               <Button
                 type="button"
-                className="sticky bottom-4 z-10 mt-4 w-full shadow-lg shadow-black/40"
+                className="skin-download-v51 sticky bottom-4 z-10 mt-4 w-full shadow-lg shadow-black/40"
                 size="lg"
                 disabled={!texture}
                 onClick={download}
@@ -870,41 +837,25 @@ export function SkinWorkspace() {
         </div>
       </div>
       <Dialog open={waitlistOpen} onOpenChange={setWaitlistOpen}>
-        <DialogContent className="border border-cyan-300/30 bg-zinc-950 text-zinc-100">
-          <DialogTitle>{m.skin_ai_hd_title()}</DialogTitle>
+        <DialogContent className="ai-dialog-v51">
+          <DialogTitle>Optional AI finish</DialogTitle>
           <DialogDescription>
-            {m.skin_ai_hd_description({ price: aiHdFromPriceUsd.toFixed(2) })}
+            Keep the free local skin, or use 1 credit for a likeness-focused
+            finish. This is a UI preview — no payment is connected here.
           </DialogDescription>
-          {waitlistDone ? (
-            <output>{m.skin_waitlist_done()}</output>
-          ) : (
-            <form
-              className="grid gap-3"
-              onSubmit={(event) => void submitWaitlist(event)}
-            >
-              <label className="grid gap-1 text-sm">
-                {m.skin_waitlist_email()}
-                <input
-                  required
-                  type="email"
-                  autoComplete="email"
-                  value={waitlistEmail}
-                  onChange={(event) => setWaitlistEmail(event.target.value)}
-                  className="min-h-11 border border-zinc-700 bg-zinc-900 px-3"
-                />
-              </label>
-              <label className="absolute -left-[10000px]" aria-hidden="true">
-                Leave blank
-                <input
-                  tabIndex={-1}
-                  autoComplete="off"
-                  value={honeypot}
-                  onChange={(event) => setHoneypot(event.target.value)}
-                />
-              </label>
-              <Button type="submit">{m.skin_waitlist_join()}</Button>
-            </form>
-          )}
+          <div className="credit-pack-grid-v51">
+            <button type="button" className="credit-pack-v51">
+              <strong>$4.99</strong>
+              <span>20 credits</span>
+            </button>
+            <button type="button" className="credit-pack-v51">
+              <strong>$9.99</strong>
+              <span>60 credits</span>
+            </button>
+          </div>
+          <p className="ai-dialog-note-v51">
+            Login and consent would appear only after choosing an AI finish.
+          </p>
         </DialogContent>
       </Dialog>
       <Dialog open={importGuideOpen} onOpenChange={setImportGuideOpen}>
