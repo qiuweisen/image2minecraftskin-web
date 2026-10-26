@@ -16,6 +16,15 @@ The public product suite starts without D1 preparation because the current
 converter is browser-local. Database setup remains available for future enabled
 auth/storage suites.
 
+## Product: AI Skin Stage B (mock only)
+
+The AI skin CTA and task card are feature flagged by `AI_SKIN_ENABLED`. Run
+this journey only with local `MODE=e2e`, where `skin.kie` selects the mock
+provider. The acceptance check must assert that no request reaches
+`kieai.redpandaai.co` and no real Stripe checkout is opened. This environment
+does not provision the local D1/Playwright account, so the provider-backed
+journey remains documented until that fixture is enabled.
+
 ## Product: Image To Minecraft Skin
 
 **Priority:** P0

@@ -19,6 +19,11 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as legalsCookieRouteImport } from './routes/(legals)/cookie'
 import { Route as legalsPrivacyRouteImport } from './routes/(legals)/privacy'
 import { Route as legalsTermsRouteImport } from './routes/(legals)/terms'
+import { Route as SettingsCreationsRouteImport } from './routes/settings/creations'
+import { Route as SettingsCreditsRouteImport } from './routes/settings/credits'
+import { Route as ApiCreditsTaskResultRouteImport } from './routes/api/credits/task-result'
+import { Route as ApiWebhooksCreemRouteImport } from './routes/api/webhooks/creem'
+import { Route as ApiWebhooksStripeRouteImport } from './routes/api/webhooks/stripe'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -70,6 +75,31 @@ const legalsTermsRoute = legalsTermsRouteImport.update({
   path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SettingsCreationsRoute = SettingsCreationsRouteImport.update({
+  id: '/settings/creations',
+  path: '/settings/creations',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsCreditsRoute = SettingsCreditsRouteImport.update({
+  id: '/settings/credits',
+  path: '/settings/credits',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiCreditsTaskResultRoute = ApiCreditsTaskResultRouteImport.update({
+  id: '/api/credits/task-result',
+  path: '/api/credits/task-result',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiWebhooksCreemRoute = ApiWebhooksCreemRouteImport.update({
+  id: '/api/webhooks/creem',
+  path: '/api/webhooks/creem',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiWebhooksStripeRoute = ApiWebhooksStripeRouteImport.update({
+  id: '/api/webhooks/stripe',
+  path: '/api/webhooks/stripe',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -82,6 +112,11 @@ export interface FileRoutesByFullPath {
   '/cookie': typeof legalsCookieRoute
   '/privacy': typeof legalsPrivacyRoute
   '/terms': typeof legalsTermsRoute
+  '/settings/creations': typeof SettingsCreationsRoute
+  '/settings/credits': typeof SettingsCreditsRoute
+  '/api/credits/task-result': typeof ApiCreditsTaskResultRoute
+  '/api/webhooks/creem': typeof ApiWebhooksCreemRoute
+  '/api/webhooks/stripe': typeof ApiWebhooksStripeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -94,6 +129,11 @@ export interface FileRoutesByTo {
   '/cookie': typeof legalsCookieRoute
   '/privacy': typeof legalsPrivacyRoute
   '/terms': typeof legalsTermsRoute
+  '/settings/creations': typeof SettingsCreationsRoute
+  '/settings/credits': typeof SettingsCreditsRoute
+  '/api/credits/task-result': typeof ApiCreditsTaskResultRoute
+  '/api/webhooks/creem': typeof ApiWebhooksCreemRoute
+  '/api/webhooks/stripe': typeof ApiWebhooksStripeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -107,6 +147,11 @@ export interface FileRoutesById {
   '/(legals)/cookie': typeof legalsCookieRoute
   '/(legals)/privacy': typeof legalsPrivacyRoute
   '/(legals)/terms': typeof legalsTermsRoute
+  '/settings/creations': typeof SettingsCreationsRoute
+  '/settings/credits': typeof SettingsCreditsRoute
+  '/api/credits/task-result': typeof ApiCreditsTaskResultRoute
+  '/api/webhooks/creem': typeof ApiWebhooksCreemRoute
+  '/api/webhooks/stripe': typeof ApiWebhooksStripeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -121,6 +166,11 @@ export interface FileRouteTypes {
     | '/cookie'
     | '/privacy'
     | '/terms'
+    | '/settings/creations'
+    | '/settings/credits'
+    | '/api/credits/task-result'
+    | '/api/webhooks/creem'
+    | '/api/webhooks/stripe'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -133,6 +183,11 @@ export interface FileRouteTypes {
     | '/cookie'
     | '/privacy'
     | '/terms'
+    | '/settings/creations'
+    | '/settings/credits'
+    | '/api/credits/task-result'
+    | '/api/webhooks/creem'
+    | '/api/webhooks/stripe'
   id:
     | '__root__'
     | '/'
@@ -145,6 +200,11 @@ export interface FileRouteTypes {
     | '/(legals)/cookie'
     | '/(legals)/privacy'
     | '/(legals)/terms'
+    | '/settings/creations'
+    | '/settings/credits'
+    | '/api/credits/task-result'
+    | '/api/webhooks/creem'
+    | '/api/webhooks/stripe'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -158,6 +218,11 @@ export interface RootRouteChildren {
   legalsCookieRoute: typeof legalsCookieRoute
   legalsPrivacyRoute: typeof legalsPrivacyRoute
   legalsTermsRoute: typeof legalsTermsRoute
+  SettingsCreationsRoute: typeof SettingsCreationsRoute
+  SettingsCreditsRoute: typeof SettingsCreditsRoute
+  ApiCreditsTaskResultRoute: typeof ApiCreditsTaskResultRoute
+  ApiWebhooksCreemRoute: typeof ApiWebhooksCreemRoute
+  ApiWebhooksStripeRoute: typeof ApiWebhooksStripeRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -232,6 +297,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof legalsTermsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/settings/creations': {
+      id: '/settings/creations'
+      path: '/settings/creations'
+      fullPath: '/settings/creations'
+      preLoaderRoute: typeof SettingsCreationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings/credits': {
+      id: '/settings/credits'
+      path: '/settings/credits'
+      fullPath: '/settings/credits'
+      preLoaderRoute: typeof SettingsCreditsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/credits/task-result': {
+      id: '/api/credits/task-result'
+      path: '/api/credits/task-result'
+      fullPath: '/api/credits/task-result'
+      preLoaderRoute: typeof ApiCreditsTaskResultRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/webhooks/creem': {
+      id: '/api/webhooks/creem'
+      path: '/api/webhooks/creem'
+      fullPath: '/api/webhooks/creem'
+      preLoaderRoute: typeof ApiWebhooksCreemRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/webhooks/stripe': {
+      id: '/api/webhooks/stripe'
+      path: '/api/webhooks/stripe'
+      fullPath: '/api/webhooks/stripe'
+      preLoaderRoute: typeof ApiWebhooksStripeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -246,6 +346,11 @@ const rootRouteChildren: RootRouteChildren = {
   legalsCookieRoute: legalsCookieRoute,
   legalsPrivacyRoute: legalsPrivacyRoute,
   legalsTermsRoute: legalsTermsRoute,
+  SettingsCreationsRoute: SettingsCreationsRoute,
+  SettingsCreditsRoute: SettingsCreditsRoute,
+  ApiCreditsTaskResultRoute: ApiCreditsTaskResultRoute,
+  ApiWebhooksCreemRoute: ApiWebhooksCreemRoute,
+  ApiWebhooksStripeRoute: ApiWebhooksStripeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -16,6 +16,9 @@ export const clientEnv = createEnv({
     VITE_STRIPE_PRICE_PRO_MONTHLY: z.string().optional(),
     VITE_STRIPE_PRICE_PRO_YEARLY: z.string().optional(),
     VITE_STRIPE_PRICE_LIFETIME: z.string().optional(),
+    VITE_STRIPE_PRICE_AI_SKIN_20: z.string().optional(),
+    VITE_STRIPE_PRICE_AI_SKIN_60: z.string().optional(),
+    VITE_AI_SKIN_ENABLED: z.enum(['true', 'false']).default('false'),
 
     // Payment (Creem)
     VITE_CREEM_PRODUCT_PRO_MONTHLY: z.string().optional(),

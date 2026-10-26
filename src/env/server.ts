@@ -40,6 +40,11 @@ export const serverEnv = createEnv({
 
     // AI image generation (fal.ai)
     FAL_KEY: z.string().optional(),
+
+    // Stage A AI skin flags and provider secret
+    AI_SKIN_ENABLED: z.string().optional(),
+    AI_DAILY_MAX_TASKS: z.coerce.number().int().positive().optional(),
+    KIE_API_KEY: z.string().optional(),
   },
   runtimeEnv: process.env,
 });

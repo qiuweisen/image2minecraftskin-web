@@ -4,6 +4,12 @@ export type SkinAnalyticsEventName =
   | 'skin_download'
   | 'ai_door_click'
   | 'ai_waitlist_submit'
+  | 'ai_cta_click'
+  | 'ai_generate_start'
+  | 'ai_generate_success'
+  | 'ai_generate_fail'
+  | 'begin_checkout'
+  | 'purchase'
   | 'skin_models_load'
   | 'skin_models_failed'
   | 'skin_generation_completed'
@@ -45,6 +51,12 @@ const EVENT_FIELDS: Record<SkinAnalyticsEventName, string[]> = {
   skin_download: ['format', 'model'],
   ai_door_click: [],
   ai_waitlist_submit: [],
+  ai_cta_click: ['location'],
+  ai_generate_start: ['preset', 'subject_kind', 'model', 'free_retry'],
+  ai_generate_success: ['duration_ms', 'model'],
+  ai_generate_fail: ['reason'],
+  begin_checkout: ['package_id'],
+  purchase: ['package_id', 'value', 'currency'],
   skin_models_load: ['duration_ms', 'bytes'],
   skin_models_failed: ['reason'],
   skin_generation_completed: [

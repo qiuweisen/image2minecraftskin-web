@@ -70,11 +70,40 @@ function javaRegions(model: SkinModel): SkinRegion[] {
 
 export function getSkinRegions(
   format: SkinFormat,
-  model: SkinModel
+  model: SkinModel,
+  layer: 'base' | 'outer' = 'base'
 ): SkinRegion[] {
   const regions = javaRegions(model);
-  if (format === 'java-64') return regions;
-  return regions.map((region) => ({
+  const outerOrigins: Record<SkinPart, { x: number; y: number }> = {
+    head: { x: 32, y: 0 },
+    torso: { x: 16, y: 32 },
+    'right-arm': { x: 40, y: 32 },
+    'left-arm': { x: 48, y: 48 },
+    'right-leg': { x: 0, y: 32 },
+    'left-leg': { x: 0, y: 48 },
+  };
+  const baseOrigins: Record<SkinPart, { x: number; y: number }> = {
+    head: { x: 0, y: 0 },
+    torso: { x: 16, y: 16 },
+    'right-arm': { x: 40, y: 16 },
+    'left-arm': { x: 32, y: 48 },
+    'right-leg': { x: 0, y: 16 },
+    'left-leg': { x: 16, y: 48 },
+  };
+  const mapped =
+    layer === 'outer'
+      ? regions.map((region) => {
+          const base = baseOrigins[region.part];
+          const outer = outerOrigins[region.part];
+          return {
+            ...region,
+            x: outer.x + (region.x - base.x),
+            y: outer.y + (region.y - base.y),
+          };
+        })
+      : regions;
+  if (format === 'java-64') return mapped;
+  return mapped.map((region) => ({
     ...region,
     x: region.x * 2,
     y: region.y * 2,

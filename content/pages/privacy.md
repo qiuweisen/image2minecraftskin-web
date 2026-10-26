@@ -10,9 +10,9 @@ Welcome to our Privacy Policy. This document explains how we collect, use, and p
 
 ## Information We Collect
 
-We may collect the following types of information:
+We collect information only when you register, sign in, use an AI feature, make a purchase, or contact us.
 
-- **Personal Information**: Name, email address, and contact details you provide when registering or contacting us.
+- **Personal Information**: Name, email address, and contact details you provide in those flows.
 - **Usage Data**: Information about how you interact with our website, including pages visited and time spent.
 - **Device Information**: Details about the device you use to access our services, such as IP address, browser type, and operating system.
 
@@ -34,6 +34,10 @@ We implement appropriate security measures to protect your personal information 
 ## Third-Party Services
 
 We may employ third-party companies and individuals to facilitate our services, provide services on our behalf, or assist us in analyzing how our services are used.
+
+## AI skin generation
+
+If you choose the AI skin feature, your uploaded photo is sent to a third-party AI model to create the requested Minecraft-style character. We only start this transfer after you confirm the consent checkbox. Source photos are retained for up to 7 days for task processing and cleanup; generated skin results remain in your account until you delete them. You can continue to use the local skin converter without sending a photo to an AI provider.
 
 ## Changes to This Privacy Policy
 

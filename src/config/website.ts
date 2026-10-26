@@ -12,6 +12,11 @@ import {
 const paymentProvider = clientEnv.VITE_PAYMENT_PROVIDER;
 const isPaymentEnabled = paymentProvider !== '';
 const isCreemPayment = paymentProvider === 'creem';
+const isStripePayment = paymentProvider === 'stripe';
+const aiSkinPriceIds = {
+  ai_skin_20: clientEnv.VITE_STRIPE_PRICE_AI_SKIN_20 ?? '',
+  ai_skin_60: clientEnv.VITE_STRIPE_PRICE_AI_SKIN_60 ?? '',
+};
 // Resolve price/product IDs based on the active payment provider
 const priceIds = isPaymentEnabled
   ? {
@@ -65,9 +70,9 @@ export const websiteConfig: WebsiteConfig = {
     github: 'https://github.com/qiuweisen/image2minecraftskin-web',
   },
   auth: {
-    enable: false,
-    enableGoogleLogin: false,
-    enableCredentialLogin: false,
+    enable: true,
+    enableGoogleLogin: true,
+    enableCredentialLogin: true,
     enableDeleteAccount: false,
   },
   blog: {
@@ -97,6 +102,43 @@ export const websiteConfig: WebsiteConfig = {
     maxFileSize: DEFAULT_MAX_FILE_SIZE,
     allowedTypes: DEFAULT_ALLOWED_TYPES,
     userFilesFolder: DEFAULT_USER_FILES_FOLDER,
+  },
+  credits: {
+    enable: isStripePayment,
+    costs: {
+      'skin.kie': { kind: 'fixed', credits: 1, version: '1' },
+      'demo.mock': { kind: 'fixed', credits: 1, version: '1' },
+    },
+    taskPolicy: {
+      providerTimeoutMs: 120000,
+      maxWindowMs: 900000,
+      initialBackoffMs: 5000,
+      maxBackoffMs: 30000,
+    },
+    registerGift: { amount: 0, expireDays: 365 },
+    redemptionDefaultExpireDays: 90,
+    reconcileSampleSize: 25,
+    dailyFree: { enable: false, amount: 0 },
+    packages: {
+      ai_skin_20: {
+        id: 'ai_skin_20',
+        amount: 20,
+        price: {
+          priceId: aiSkinPriceIds.ai_skin_20,
+          amount: 499,
+          currency: 'USD',
+        },
+      },
+      ai_skin_60: {
+        id: 'ai_skin_60',
+        amount: 60,
+        price: {
+          priceId: aiSkinPriceIds.ai_skin_60,
+          amount: 999,
+          currency: 'USD',
+        },
+      },
+    },
   },
   payment: {
     enable: isPaymentEnabled,
