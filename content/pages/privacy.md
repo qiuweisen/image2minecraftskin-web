@@ -35,6 +35,10 @@ We implement appropriate security measures to protect your personal information 
 
 We may employ third-party companies and individuals to facilitate our services, provide services on our behalf, or assist us in analyzing how our services are used.
 
+## AI skin generation
+
+If you choose the AI skin feature, your uploaded photo is sent to a third-party AI model to create the requested Minecraft-style character. We only start this transfer after you confirm the consent checkbox. Source photos are retained for up to 7 days for task processing and cleanup; generated skin results remain in your account until you delete them. You can continue to use the local skin converter without sending a photo to an AI provider.
+
 ## Changes to This Privacy Policy
 
 We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page.

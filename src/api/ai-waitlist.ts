@@ -26,3 +26,16 @@ export const joinAiWaitlist = createServerFn({ method: 'POST' })
       .onConflictDoNothing();
     return { success: true };
   });
+
+/**
+ * Dry-run notification scaffold. It deliberately returns a preview and never
+ * sends email; production notification requires explicit copy approval.
+ */
+export const previewAiWaitlistNotification = createServerFn({
+  method: 'GET',
+}).handler(async () => ({
+  dryRun: true,
+  subject: '[PLACEHOLDER] AI skin generation is available',
+  body: '[PLACEHOLDER] Copy requires user approval before any mass send.',
+  pendingCount: 0,
+}));

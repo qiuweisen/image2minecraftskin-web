@@ -174,3 +174,30 @@ export const startSkinTask = createServerFn({ method: 'POST' })
     }
     return publicTask(await getCreditTask(task.id, context.userId));
   });
+
+export const uploadSkinInput = createServerFn({ method: 'POST' })
+  .validator(
+    z
+      .custom<FormData>((value): value is FormData => value instanceof FormData)
+      .transform((form) => {
+        const file = form.get('file');
+        if (!(file instanceof File)) throw new Error('FILE_REQUIRED');
+        return { file };
+      })
+  )
+  .middleware([authApiMiddleware])
+  .handler(async ({ data, context }) => {
+    if (serverEnv.AI_SKIN_ENABLED !== 'true')
+      throw new Error('AI_SKIN_DISABLED');
+    if (
+      !['image/jpeg', 'image/png', 'image/webp'].includes(data.file.type) ||
+      data.file.size > 10 * 1024 * 1024
+    )
+      throw new Error('INVALID_INPUT');
+    const key = `credit-inputs/${context.userId}/${crypto.randomUUID()}`;
+    await env.BUCKET.put(key, await data.file.arrayBuffer(), {
+      httpMetadata: { contentType: data.file.type },
+      customMetadata: { ownerId: context.userId },
+    });
+    return { key };
+  });

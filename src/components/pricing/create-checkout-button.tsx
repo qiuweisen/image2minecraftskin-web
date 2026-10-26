@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import { IconLoader2 } from '@tabler/icons-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { trackSkinEvent } from '@/lib/analytics-events';
 interface CheckoutButtonProps {
   planId: string;
   priceId: string;
@@ -34,6 +35,10 @@ export function CheckoutButton({
   const handleClick = async () => {
     try {
       setIsLoading(true);
+      trackSkinEvent({
+        name: 'begin_checkout',
+        payload: { package_id: planId },
+      });
       // merge metadata with existing metadata
       const mergedMetadata = metadata ? { ...metadata } : {};
       const result = await createCheckoutSession({
@@ -45,6 +50,7 @@ export function CheckoutButton({
         },
       });
       if (result?.url) {
+        trackSkinEvent({ name: 'purchase', payload: { package_id: planId } });
         window.location.href = result.url;
       } else {
         toast.error(m.pricing_checkout_failed());

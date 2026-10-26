@@ -19,6 +19,7 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as legalsCookieRouteImport } from './routes/(legals)/cookie'
 import { Route as legalsPrivacyRouteImport } from './routes/(legals)/privacy'
 import { Route as legalsTermsRouteImport } from './routes/(legals)/terms'
+import { Route as SettingsCreationsRouteImport } from './routes/settings/creations'
 import { Route as ApiCreditsTaskResultRouteImport } from './routes/api/credits/task-result'
 import { Route as ApiWebhooksCreemRouteImport } from './routes/api/webhooks/creem'
 import { Route as ApiWebhooksStripeRouteImport } from './routes/api/webhooks/stripe'
@@ -73,6 +74,11 @@ const legalsTermsRoute = legalsTermsRouteImport.update({
   path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SettingsCreationsRoute = SettingsCreationsRouteImport.update({
+  id: '/settings/creations',
+  path: '/settings/creations',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiCreditsTaskResultRoute = ApiCreditsTaskResultRouteImport.update({
   id: '/api/credits/task-result',
   path: '/api/credits/task-result',
@@ -100,6 +106,7 @@ export interface FileRoutesByFullPath {
   '/cookie': typeof legalsCookieRoute
   '/privacy': typeof legalsPrivacyRoute
   '/terms': typeof legalsTermsRoute
+  '/settings/creations': typeof SettingsCreationsRoute
   '/api/credits/task-result': typeof ApiCreditsTaskResultRoute
   '/api/webhooks/creem': typeof ApiWebhooksCreemRoute
   '/api/webhooks/stripe': typeof ApiWebhooksStripeRoute
@@ -115,6 +122,7 @@ export interface FileRoutesByTo {
   '/cookie': typeof legalsCookieRoute
   '/privacy': typeof legalsPrivacyRoute
   '/terms': typeof legalsTermsRoute
+  '/settings/creations': typeof SettingsCreationsRoute
   '/api/credits/task-result': typeof ApiCreditsTaskResultRoute
   '/api/webhooks/creem': typeof ApiWebhooksCreemRoute
   '/api/webhooks/stripe': typeof ApiWebhooksStripeRoute
@@ -131,6 +139,7 @@ export interface FileRoutesById {
   '/(legals)/cookie': typeof legalsCookieRoute
   '/(legals)/privacy': typeof legalsPrivacyRoute
   '/(legals)/terms': typeof legalsTermsRoute
+  '/settings/creations': typeof SettingsCreationsRoute
   '/api/credits/task-result': typeof ApiCreditsTaskResultRoute
   '/api/webhooks/creem': typeof ApiWebhooksCreemRoute
   '/api/webhooks/stripe': typeof ApiWebhooksStripeRoute
@@ -148,6 +157,7 @@ export interface FileRouteTypes {
     | '/cookie'
     | '/privacy'
     | '/terms'
+    | '/settings/creations'
     | '/api/credits/task-result'
     | '/api/webhooks/creem'
     | '/api/webhooks/stripe'
@@ -163,6 +173,7 @@ export interface FileRouteTypes {
     | '/cookie'
     | '/privacy'
     | '/terms'
+    | '/settings/creations'
     | '/api/credits/task-result'
     | '/api/webhooks/creem'
     | '/api/webhooks/stripe'
@@ -178,6 +189,7 @@ export interface FileRouteTypes {
     | '/(legals)/cookie'
     | '/(legals)/privacy'
     | '/(legals)/terms'
+    | '/settings/creations'
     | '/api/credits/task-result'
     | '/api/webhooks/creem'
     | '/api/webhooks/stripe'
@@ -194,6 +206,7 @@ export interface RootRouteChildren {
   legalsCookieRoute: typeof legalsCookieRoute
   legalsPrivacyRoute: typeof legalsPrivacyRoute
   legalsTermsRoute: typeof legalsTermsRoute
+  SettingsCreationsRoute: typeof SettingsCreationsRoute
   ApiCreditsTaskResultRoute: typeof ApiCreditsTaskResultRoute
   ApiWebhooksCreemRoute: typeof ApiWebhooksCreemRoute
   ApiWebhooksStripeRoute: typeof ApiWebhooksStripeRoute
@@ -271,6 +284,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof legalsTermsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/settings/creations': {
+      id: '/settings/creations'
+      path: '/settings/creations'
+      fullPath: '/settings/creations'
+      preLoaderRoute: typeof SettingsCreationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/credits/task-result': {
       id: '/api/credits/task-result'
       path: '/api/credits/task-result'
@@ -306,6 +326,7 @@ const rootRouteChildren: RootRouteChildren = {
   legalsCookieRoute: legalsCookieRoute,
   legalsPrivacyRoute: legalsPrivacyRoute,
   legalsTermsRoute: legalsTermsRoute,
+  SettingsCreationsRoute: SettingsCreationsRoute,
   ApiCreditsTaskResultRoute: ApiCreditsTaskResultRoute,
   ApiWebhooksCreemRoute: ApiWebhooksCreemRoute,
   ApiWebhooksStripeRoute: ApiWebhooksStripeRoute,

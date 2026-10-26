@@ -50,6 +50,7 @@ export const Routes = {
   SettingsFiles: '/settings/files',
   SettingsApiKeys: '/settings/apikeys',
   SettingsNotifications: '/settings/notifications',
+  SettingsCreations: '/settings/creations',
 
   // Admin routes
   Admin: '/admin',

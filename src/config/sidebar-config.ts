@@ -10,6 +10,7 @@ import {
   IconShieldCheck,
   IconUserCircle,
   IconUsers,
+  IconSparkles,
 } from '@tabler/icons-react';
 import { Routes } from '@/lib/routes';
 import type { MenuItemConfig } from '../types';
@@ -68,6 +69,12 @@ export function getSidebarLinks(): MenuItemConfig[] {
           title: m.dashboard_sidebar_files(),
           icon: IconFileUpload,
           href: Routes.SettingsFiles,
+          external: false,
+        },
+        {
+          title: '我的皮肤',
+          icon: IconSparkles,
+          href: Routes.SettingsCreations,
           external: false,
         },
         {

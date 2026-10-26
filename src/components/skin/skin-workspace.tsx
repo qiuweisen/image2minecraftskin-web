@@ -4,7 +4,14 @@ import {
   IconRefresh,
   IconUpload,
 } from '@tabler/icons-react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type FormEvent,
+} from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -12,7 +19,12 @@ import {
   DialogDescription,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { getSkinToolConfig } from '@/config/skin-tool-config';
+import { aiHdFromPriceUsd, getSkinToolConfig } from '@/config/skin-tool-config';
+import { joinAiWaitlist } from '@/api/ai-waitlist';
+import { startSkinTask, uploadSkinInput } from '@/api/credit-tasks';
+import { clientEnv } from '@/env/client';
+import { authClient } from '@/auth/client';
+import { SkinTaskCard } from './skin-task-card';
 import { m } from '@/locale/paraglide/messages';
 import { trackSkinEvent } from '@/lib/analytics-events';
 import {
@@ -117,6 +129,18 @@ export function SkinWorkspace() {
   const [skinStyle, setSkinStyle] = useState<SkinStyle>('photo');
   const [faceDetails, setFaceDetails] = useState(true);
   const [waitlistOpen, setWaitlistOpen] = useState(false);
+  const [aiPanelOpen, setAiPanelOpen] = useState(false);
+  const [aiFile, setAiFile] = useState<File>();
+  const [aiConsent, setAiConsent] = useState(false);
+  const [aiModel, setAiModel] = useState<SkinModel>('classic');
+  const [aiSubject, setAiSubject] = useState<'person' | 'pet'>('person');
+  const [aiTask, setAiTask] =
+    useState<Awaited<ReturnType<typeof startSkinTask>>>();
+  const [aiError, setAiError] = useState<string>();
+  const { data: session } = authClient.useSession();
+  const [waitlistDone, setWaitlistDone] = useState(false);
+  const [waitlistEmail, setWaitlistEmail] = useState('');
+  const [honeypot, setHoneypot] = useState('');
   const [importGuideOpen, setImportGuideOpen] = useState(false);
   const [visionProgress, setVisionProgress] = useState<number>();
   const analysisRef = useRef<VisionAnalysis | undefined>(undefined);
@@ -508,6 +532,62 @@ export function SkinWorkspace() {
     setImportGuideOpen(true);
   };
 
+  const submitWaitlist = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    await joinAiWaitlist({ data: { email: waitlistEmail, honeypot } });
+    trackSkinEvent({ name: 'ai_waitlist_submit', payload: {} });
+    setWaitlistDone(true);
+  };
+
+  const submitAi = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setAiError(undefined);
+    if (!session?.user) {
+      setAiError('请先登录后使用 AI 版本。');
+      return;
+    }
+    if (
+      !aiFile ||
+      !['image/jpeg', 'image/png', 'image/webp'].includes(aiFile.type) ||
+      aiFile.size > 10 * 1024 * 1024
+    ) {
+      setAiError('请选择 JPG、PNG 或 WebP 图片（最大 10MB）。');
+      return;
+    }
+    if (!aiConsent) {
+      setAiError('请先同意照片会发送给第三方 AI。');
+      return;
+    }
+    try {
+      trackSkinEvent({
+        name: 'ai_generate_start',
+        payload: { preset: aiModel, subject_kind: aiSubject, model: aiModel },
+      });
+      const form = new FormData();
+      form.append('file', aiFile);
+      const uploaded = await uploadSkinInput({ data: form });
+      const task = await startSkinTask({
+        data: {
+          bizKey: `skin-${crypto.randomUUID()}`,
+          inputKey: uploaded.key,
+          preset: `${aiModel}-${aiSubject}`,
+        },
+      });
+      setAiTask(task);
+      setAiPanelOpen(false);
+    } catch (error) {
+      setAiError(
+        error instanceof Error
+          ? error.message
+          : 'AI generation could not start.'
+      );
+      trackSkinEvent({
+        name: 'ai_generate_fail',
+        payload: { reason: 'start_failed' },
+      });
+    }
+  };
+
   const skinUrl = texture ? textureToDataUrl(texture) : undefined;
 
   return (
@@ -639,8 +719,16 @@ export function SkinWorkspace() {
                 variant="outline"
                 className="skin-ai-v51 mt-3 w-full border-cyan-300/70 text-cyan-100"
                 onClick={() => {
-                  trackSkinEvent({ name: 'ai_door_click', payload: {} });
-                  setWaitlistOpen(true);
+                  if (clientEnv.VITE_AI_SKIN_ENABLED === 'true') {
+                    trackSkinEvent({
+                      name: 'ai_cta_click',
+                      payload: { location: 'workspace' },
+                    });
+                    setAiPanelOpen(true);
+                  } else {
+                    trackSkinEvent({ name: 'ai_door_click', payload: {} });
+                    setWaitlistOpen(true);
+                  }
                 }}
               >
                 Make it more like you · 1 credit
@@ -856,28 +944,113 @@ export function SkinWorkspace() {
               </p>
             </>
           )}
+          {aiTask && (
+            <div className="mt-6">
+              <SkinTaskCard task={aiTask} model={aiModel} />
+            </div>
+          )}
         </div>
       </div>
-      <Dialog open={waitlistOpen} onOpenChange={setWaitlistOpen}>
-        <DialogContent className="ai-dialog-v51">
-          <DialogTitle>Optional AI finish</DialogTitle>
+      <Dialog open={aiPanelOpen} onOpenChange={setAiPanelOpen}>
+        <DialogContent className="border border-cyan-300/30 bg-zinc-950 text-zinc-100">
+          <DialogTitle>AI 版本：让它真的像你</DialogTitle>
           <DialogDescription>
-            Keep the free local skin, or use 1 credit for a likeness-focused
-            finish. This is a UI preview — no payment is connected here.
+            照片会发送给第三方 AI 模型；源照片最多保留 7 天。
           </DialogDescription>
-          <div className="credit-pack-grid-v51">
-            <button type="button" className="credit-pack-v51">
-              <strong>$4.99</strong>
-              <span>20 credits</span>
-            </button>
-            <button type="button" className="credit-pack-v51">
-              <strong>$9.99</strong>
-              <span>60 credits</span>
-            </button>
-          </div>
-          <p className="ai-dialog-note-v51">
-            Login and consent would appear only after choosing an AI finish.
-          </p>
+          <form
+            className="grid gap-4"
+            onSubmit={(event) => void submitAi(event)}
+          >
+            <label className="grid gap-2 text-sm">
+              照片（JPG、PNG、WebP，最大 10MB）
+              <input
+                required
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                onChange={(event) => setAiFile(event.target.files?.[0])}
+              />
+            </label>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                className={`min-h-10 border ${aiModel === 'classic' ? 'border-cyan-300 text-cyan-100' : 'border-zinc-700 text-zinc-400'}`}
+                onClick={() => setAiModel('classic')}
+              >
+                Classic
+              </button>
+              <button
+                type="button"
+                className={`min-h-10 border ${aiModel === 'slim' ? 'border-cyan-300 text-cyan-100' : 'border-zinc-700 text-zinc-400'}`}
+                onClick={() => setAiModel('slim')}
+              >
+                Slim
+              </button>
+            </div>
+            <label className="grid gap-2 text-sm">
+              主体
+              <select
+                value={aiSubject}
+                onChange={(event) =>
+                  setAiSubject(event.target.value as 'person' | 'pet')
+                }
+                className="min-h-10 border border-zinc-700 bg-zinc-900 px-2"
+              >
+                <option value="person">人物</option>
+                <option value="pet">宠物</option>
+              </select>
+            </label>
+            <label className="flex items-start gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={aiConsent}
+                onChange={(event) => setAiConsent(event.target.checked)}
+              />
+              我同意照片会发送给第三方 AI
+            </label>
+            <p className="text-xs text-zinc-500">
+              1 credit · $4.99/20 或 $9.99/60
+            </p>
+            {aiError && <p className="text-sm text-red-300">{aiError}</p>}
+            <Button type="submit">生成 AI 皮肤</Button>
+          </form>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={waitlistOpen} onOpenChange={setWaitlistOpen}>
+        <DialogContent className="ai-dialog-v51 border border-cyan-300/30 bg-zinc-950 text-zinc-100">
+          <DialogTitle>{m.skin_ai_hd_title()}</DialogTitle>
+          <DialogDescription>
+            {m.skin_ai_hd_description({ price: aiHdFromPriceUsd.toFixed(2) })}
+          </DialogDescription>
+          {waitlistDone ? (
+            <output>{m.skin_waitlist_done()}</output>
+          ) : (
+            <form
+              className="grid gap-3"
+              onSubmit={(event) => void submitWaitlist(event)}
+            >
+              <label className="grid gap-1 text-sm">
+                {m.skin_waitlist_email()}
+                <input
+                  required
+                  type="email"
+                  autoComplete="email"
+                  value={waitlistEmail}
+                  onChange={(event) => setWaitlistEmail(event.target.value)}
+                  className="min-h-11 border border-zinc-700 bg-zinc-900 px-3"
+                />
+              </label>
+              <label className="absolute -left-[10000px]" aria-hidden="true">
+                Leave blank
+                <input
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={honeypot}
+                  onChange={(event) => setHoneypot(event.target.value)}
+                />
+              </label>
+              <Button type="submit">{m.skin_waitlist_join()}</Button>
+            </form>
+          )}
         </DialogContent>
       </Dialog>
       <Dialog open={importGuideOpen} onOpenChange={setImportGuideOpen}>

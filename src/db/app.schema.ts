@@ -92,6 +92,7 @@ export const aiWaitlist = sqliteTable('ai_waitlist', {
   email: text('email').notNull().unique(),
   createdAt: integer('created_at', { mode: 'timestamp_ms' }).notNull(),
   locale: text('locale'),
+  notifiedAt: integer('notified_at', { mode: 'timestamp_ms' }),
 });
 
 
