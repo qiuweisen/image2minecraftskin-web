@@ -14,8 +14,8 @@ const isPaymentEnabled = paymentProvider !== '';
 const isCreemPayment = paymentProvider === 'creem';
 const isStripePayment = paymentProvider === 'stripe';
 const aiSkinPriceIds = {
-  ai_skin_15: clientEnv.VITE_STRIPE_PRICE_AI_SKIN_15 ?? '',
-  ai_skin_50: clientEnv.VITE_STRIPE_PRICE_AI_SKIN_50 ?? '',
+  ai_skin_20: clientEnv.VITE_STRIPE_PRICE_AI_SKIN_20 ?? '',
+  ai_skin_60: clientEnv.VITE_STRIPE_PRICE_AI_SKIN_60 ?? '',
 };
 // Resolve price/product IDs based on the active payment provider
 const priceIds = isPaymentEnabled
@@ -120,21 +120,21 @@ export const websiteConfig: WebsiteConfig = {
     reconcileSampleSize: 25,
     dailyFree: { enable: false, amount: 0 },
     packages: {
-      ai_skin_15: {
-        id: 'ai_skin_15',
-        amount: 15,
+      ai_skin_20: {
+        id: 'ai_skin_20',
+        amount: 20,
         price: {
-          priceId: aiSkinPriceIds.ai_skin_15,
-          amount: 299,
+          priceId: aiSkinPriceIds.ai_skin_20,
+          amount: 499,
           currency: 'USD',
         },
       },
-      ai_skin_50: {
-        id: 'ai_skin_50',
-        amount: 50,
+      ai_skin_60: {
+        id: 'ai_skin_60',
+        amount: 60,
         price: {
-          priceId: aiSkinPriceIds.ai_skin_50,
-          amount: 699,
+          priceId: aiSkinPriceIds.ai_skin_60,
+          amount: 999,
           currency: 'USD',
         },
       },
