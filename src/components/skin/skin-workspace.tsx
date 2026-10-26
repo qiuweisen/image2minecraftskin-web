@@ -1001,7 +1001,13 @@ export function SkinWorkspace() {
             </label>
             <p className="text-xs text-zinc-500">
               1 credit / generation · $4.99/20 · $9.99/60 · one-time packs · no
-              gift · failed tasks refund automatically
+              gift · failed tasks refund automatically.{' '}
+              <a
+                href="/settings/credits"
+                className="text-cyan-300 underline underline-offset-4"
+              >
+                Buy credits
+              </a>
             </p>
             {aiError && <p className="text-sm text-red-300">{aiError}</p>}
             <Button type="submit" disabled={!aiConsent || !aiFile}>

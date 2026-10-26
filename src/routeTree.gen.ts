@@ -20,6 +20,7 @@ import { Route as legalsCookieRouteImport } from './routes/(legals)/cookie'
 import { Route as legalsPrivacyRouteImport } from './routes/(legals)/privacy'
 import { Route as legalsTermsRouteImport } from './routes/(legals)/terms'
 import { Route as SettingsCreationsRouteImport } from './routes/settings/creations'
+import { Route as SettingsCreditsRouteImport } from './routes/settings/credits'
 import { Route as ApiCreditsTaskResultRouteImport } from './routes/api/credits/task-result'
 import { Route as ApiWebhooksCreemRouteImport } from './routes/api/webhooks/creem'
 import { Route as ApiWebhooksStripeRouteImport } from './routes/api/webhooks/stripe'
@@ -79,6 +80,11 @@ const SettingsCreationsRoute = SettingsCreationsRouteImport.update({
   path: '/settings/creations',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SettingsCreditsRoute = SettingsCreditsRouteImport.update({
+  id: '/settings/credits',
+  path: '/settings/credits',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiCreditsTaskResultRoute = ApiCreditsTaskResultRouteImport.update({
   id: '/api/credits/task-result',
   path: '/api/credits/task-result',
@@ -107,6 +113,7 @@ export interface FileRoutesByFullPath {
   '/privacy': typeof legalsPrivacyRoute
   '/terms': typeof legalsTermsRoute
   '/settings/creations': typeof SettingsCreationsRoute
+  '/settings/credits': typeof SettingsCreditsRoute
   '/api/credits/task-result': typeof ApiCreditsTaskResultRoute
   '/api/webhooks/creem': typeof ApiWebhooksCreemRoute
   '/api/webhooks/stripe': typeof ApiWebhooksStripeRoute
@@ -123,6 +130,7 @@ export interface FileRoutesByTo {
   '/privacy': typeof legalsPrivacyRoute
   '/terms': typeof legalsTermsRoute
   '/settings/creations': typeof SettingsCreationsRoute
+  '/settings/credits': typeof SettingsCreditsRoute
   '/api/credits/task-result': typeof ApiCreditsTaskResultRoute
   '/api/webhooks/creem': typeof ApiWebhooksCreemRoute
   '/api/webhooks/stripe': typeof ApiWebhooksStripeRoute
@@ -140,6 +148,7 @@ export interface FileRoutesById {
   '/(legals)/privacy': typeof legalsPrivacyRoute
   '/(legals)/terms': typeof legalsTermsRoute
   '/settings/creations': typeof SettingsCreationsRoute
+  '/settings/credits': typeof SettingsCreditsRoute
   '/api/credits/task-result': typeof ApiCreditsTaskResultRoute
   '/api/webhooks/creem': typeof ApiWebhooksCreemRoute
   '/api/webhooks/stripe': typeof ApiWebhooksStripeRoute
@@ -158,6 +167,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/terms'
     | '/settings/creations'
+    | '/settings/credits'
     | '/api/credits/task-result'
     | '/api/webhooks/creem'
     | '/api/webhooks/stripe'
@@ -174,6 +184,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/terms'
     | '/settings/creations'
+    | '/settings/credits'
     | '/api/credits/task-result'
     | '/api/webhooks/creem'
     | '/api/webhooks/stripe'
@@ -190,6 +201,7 @@ export interface FileRouteTypes {
     | '/(legals)/privacy'
     | '/(legals)/terms'
     | '/settings/creations'
+    | '/settings/credits'
     | '/api/credits/task-result'
     | '/api/webhooks/creem'
     | '/api/webhooks/stripe'
@@ -207,6 +219,7 @@ export interface RootRouteChildren {
   legalsPrivacyRoute: typeof legalsPrivacyRoute
   legalsTermsRoute: typeof legalsTermsRoute
   SettingsCreationsRoute: typeof SettingsCreationsRoute
+  SettingsCreditsRoute: typeof SettingsCreditsRoute
   ApiCreditsTaskResultRoute: typeof ApiCreditsTaskResultRoute
   ApiWebhooksCreemRoute: typeof ApiWebhooksCreemRoute
   ApiWebhooksStripeRoute: typeof ApiWebhooksStripeRoute
@@ -291,6 +304,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsCreationsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/settings/credits': {
+      id: '/settings/credits'
+      path: '/settings/credits'
+      fullPath: '/settings/credits'
+      preLoaderRoute: typeof SettingsCreditsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/credits/task-result': {
       id: '/api/credits/task-result'
       path: '/api/credits/task-result'
@@ -327,6 +347,7 @@ const rootRouteChildren: RootRouteChildren = {
   legalsPrivacyRoute: legalsPrivacyRoute,
   legalsTermsRoute: legalsTermsRoute,
   SettingsCreationsRoute: SettingsCreationsRoute,
+  SettingsCreditsRoute: SettingsCreditsRoute,
   ApiCreditsTaskResultRoute: ApiCreditsTaskResultRoute,
   ApiWebhooksCreemRoute: ApiWebhooksCreemRoute,
   ApiWebhooksStripeRoute: ApiWebhooksStripeRoute,

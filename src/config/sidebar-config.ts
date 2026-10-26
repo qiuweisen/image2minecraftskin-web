@@ -77,6 +77,16 @@ export function getSidebarLinks(): MenuItemConfig[] {
           href: Routes.SettingsCreations,
           external: false,
         },
+        ...(websiteConfig.credits?.enable
+          ? [
+              {
+                title: 'Credits',
+                icon: IconCreditCard,
+                href: Routes.SettingsCredits,
+                external: false,
+              },
+            ]
+          : []),
         {
           title: m.dashboard_sidebar_api_keys(),
           icon: IconKey,
