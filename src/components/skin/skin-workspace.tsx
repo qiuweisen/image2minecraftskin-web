@@ -1005,7 +1005,7 @@ export function SkinWorkspace() {
             </p>
             {aiError && <p className="text-sm text-red-300">{aiError}</p>}
             <Button type="submit" disabled={!aiConsent || !aiFile}>
-              生成 AI 皮肤
+              生成 · 1 credit
             </Button>
           </form>
         </DialogContent>

@@ -3,6 +3,8 @@
 import handler from '@tanstack/react-start/server-entry';
 import { localeMiddleware } from '@/locale/middleware';
 
+export { CreditTaskWorkflow } from '@/workflows/credit-task';
+
 /**
  * TanStack Start server entry
  * https://github.com/backpine/tanstack-start-on-cloudflare/blob/main/src/server.ts
