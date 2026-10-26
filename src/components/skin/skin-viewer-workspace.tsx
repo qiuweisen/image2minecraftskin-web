@@ -276,11 +276,6 @@ export function SkinViewerWorkspace() {
               label={workspace.previewLabel}
               model={model}
             />
-            {!skinUrl && (
-              <p className="pointer-events-none absolute bottom-8 max-w-64 text-center text-sm text-[#8d9a9a]">
-                {workspace.emptyPreview}
-              </p>
-            )}
           </div>
           <div className="grid min-h-[480px] place-items-center overflow-auto bg-[#11191b] p-4 sm:p-6">
             <canvas

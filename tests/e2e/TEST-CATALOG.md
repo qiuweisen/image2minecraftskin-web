@@ -29,9 +29,10 @@ auth/storage suites.
 | 5 | Privacy boundary | Verify the journey sends no auth request and no POST/upload request. |
 | 6 | Responsive journey | Run the same journey on desktop and Pixel 5 without control overflow or blocked actions. |
 | 7 | Focused discovery | Verify generator-specific answer content, HowTo/FAQ schema, and the contextual handoff to the separate viewer. |
-| 8 | Analytics boundary | Verify format and download events contain only allowlisted workflow metadata. |
-| 9 | Optional source adjustment | Keep automatic conversion as the fast path; optionally adjust zoom and framing, reset it, and regenerate locally. |
-| 10 | Result inspection | Prompt the user to inspect the 3D model and unfolded texture before download. |
+| 8 | Single-character preview stage | Verify the empty stage shows a centered ghost with Idle/Walk/Wave controls; load the example and verify one canvas renders a skin and all three animation controls switch selection. |
+| 9 | Analytics boundary | Verify format and download events contain only allowlisted workflow metadata. |
+| 10 | Optional source adjustment | Keep automatic conversion as the fast path; open More options, adjust zoom and framing, reset it, and regenerate locally. |
+| 11 | Result inspection | Prompt the user to inspect the 3D model and unfolded texture before download. |
 
 ## Product: Minecraft Skin Viewer
 

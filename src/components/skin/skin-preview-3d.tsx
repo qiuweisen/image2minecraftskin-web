@@ -1,72 +1,109 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+
+type AnimationMode = 'idle' | 'walk' | 'wave';
 
 export function SkinPreview3d({
   skinUrl,
   label,
-  frontLabel = 'Front',
-  backLabel = 'Back',
   model = 'auto-detect',
 }: {
   skinUrl?: string;
   label: string;
-  frontLabel?: string;
-  backLabel?: string;
   model?: 'auto-detect' | 'default' | 'slim';
 }) {
-  const frontRef = useRef<HTMLCanvasElement>(null);
-  const backRef = useRef<HTMLCanvasElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const viewerRef = useRef<import('skinview3d').SkinViewer | null>(null);
+  const [animation, setAnimation] = useState<AnimationMode>('idle');
 
   useEffect(() => {
-    if (!skinUrl || !frontRef.current || !backRef.current) return;
+    if (!skinUrl || !canvasRef.current) return;
     let disposed = false;
-    const viewers: Array<{ dispose: () => void }> = [];
-    import('skinview3d').then(({ SkinViewer, WalkingAnimation }) => {
-      if (disposed || !frontRef.current || !backRef.current) return;
-      for (const [canvas, z] of [
-        [frontRef.current, 30],
-        [backRef.current, -30],
-      ] as const) {
-        const next = new SkinViewer({
-          canvas,
-          width: 420,
-          height: 380,
-          skin: skinUrl,
-          model,
-          enableControls: true,
-        });
-        next.camera.position.set(12, 8, z);
-        next.autoRotate = true;
-        next.animation = new WalkingAnimation();
-        viewers.push(next);
-      }
+    let viewer: import('skinview3d').SkinViewer | undefined;
+    let resizeObserver: ResizeObserver | undefined;
+    import('skinview3d').then(({ SkinViewer, IdleAnimation }) => {
+      if (disposed || !canvasRef.current) return;
+      viewer = new SkinViewer({
+        canvas: canvasRef.current,
+        width: canvasRef.current.clientWidth || 640,
+        height: canvasRef.current.clientHeight || 520,
+        skin: skinUrl,
+        model,
+        enableControls: true,
+      });
+      viewer.camera.position.set(24, 12, 50);
+      viewer.autoRotate = false;
+      viewer.animation = new IdleAnimation();
+      viewerRef.current = viewer;
+      resizeObserver = new ResizeObserver((entries) => {
+        const { width, height } = entries[0].contentRect;
+        if (width > 0 && height > 0) {
+          viewer?.setSize(Math.round(width), Math.round(height));
+        }
+      });
+      resizeObserver.observe(canvasRef.current);
     });
     return () => {
       disposed = true;
-      viewers.forEach((viewer) => {
-        viewer.dispose();
-      });
+      resizeObserver?.disconnect();
+      viewer?.dispose();
+      if (viewerRef.current === viewer) viewerRef.current = null;
     };
   }, [model, skinUrl]);
 
+  useEffect(() => {
+    let cancelled = false;
+    const applyAnimation = async () => {
+      const { IdleAnimation, WalkingAnimation, WaveAnimation } = await import(
+        'skinview3d'
+      );
+      if (cancelled || !viewerRef.current) return;
+      const animations = {
+        idle: IdleAnimation,
+        walk: WalkingAnimation,
+        wave: WaveAnimation,
+      };
+      viewerRef.current.animation = new animations[animation]();
+    };
+    void applyAnimation();
+    return () => {
+      cancelled = true;
+    };
+  }, [animation, skinUrl]);
+
   return (
-    <div
-      className="relative grid h-full min-h-80 w-full place-items-center overflow-hidden border border-zinc-800 bg-zinc-900"
-      role="img"
+    <figure
+      className="skin-preview-world world-stage skin-preview-single relative grid h-full min-h-80 w-full place-items-center overflow-hidden border border-zinc-800 bg-zinc-900"
       aria-label={label}
     >
-      <div className="grid w-full grid-cols-2 gap-2 px-2">
-        <div className="grid gap-1 text-center text-[10px] uppercase tracking-widest text-zinc-500">
-          <canvas ref={frontRef} className="max-h-full min-h-0 max-w-full" />
-          <span>{frontLabel}</span>
-        </div>
-        <div className="grid gap-1 text-center text-[10px] uppercase tracking-widest text-zinc-500">
-          <canvas ref={backRef} className="max-h-full min-h-0 max-w-full" />
-          <span>{backLabel}</span>
-        </div>
+      <div className="stars" aria-hidden="true" />
+      <div className="moon" aria-hidden="true" />
+      <div className="skin-preview-chrome">
+        <nav className="skin-preview-animations" aria-label="Preview animation">
+          {(['idle', 'walk', 'wave'] as const).map((mode) => (
+            <button
+              key={mode}
+              type="button"
+              className={animation === mode ? 'is-active' : ''}
+              aria-pressed={animation === mode}
+              onClick={() => setAnimation(mode)}
+            >
+              {mode === 'walk' ? 'Walk' : mode[0].toUpperCase() + mode.slice(1)}
+            </button>
+          ))}
+        </nav>
+        <span className="skin-preview-drag-hint">Drag to spin</span>
       </div>
-      {!skinUrl && (
-        <span className="font-mono text-3xl text-cyan-300/60">+</span>
-      )}
-    </div>
+      <div className="skin-preview-content">
+        {skinUrl ? (
+          <canvas ref={canvasRef} aria-label={label} />
+        ) : (
+          <div className="stage-ghost-v51" aria-hidden="true" />
+        )}
+      </div>
+      <div className="ground" aria-hidden="true">
+        <div className="grass" />
+        <div className="dirt" />
+      </div>
+    </figure>
   );
 }

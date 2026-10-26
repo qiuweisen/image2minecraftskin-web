@@ -4,14 +4,7 @@ import {
   IconRefresh,
   IconUpload,
 } from '@tabler/icons-react';
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type FormEvent,
-} from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -19,8 +12,7 @@ import {
   DialogDescription,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { aiHdFromPriceUsd, getSkinToolConfig } from '@/config/skin-tool-config';
-import { joinAiWaitlist } from '@/api/ai-waitlist';
+import { getSkinToolConfig } from '@/config/skin-tool-config';
 import { m } from '@/locale/paraglide/messages';
 import { trackSkinEvent } from '@/lib/analytics-events';
 import {
@@ -110,6 +102,7 @@ export function SkinWorkspace() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [source, setSource] = useState<ImageSource>();
   const [sourcePreview, setSourcePreview] = useState<string>();
+  const [sourceName, setSourceName] = useState<string>();
   const [format, setFormat] = useState<SkinFormat>(config.defaultFormat);
   const [model, setModel] = useState<SkinModel>(config.defaultModel);
   const [texture, setTexture] = useState<SkinTexture>();
@@ -124,9 +117,6 @@ export function SkinWorkspace() {
   const [skinStyle, setSkinStyle] = useState<SkinStyle>('photo');
   const [faceDetails, setFaceDetails] = useState(true);
   const [waitlistOpen, setWaitlistOpen] = useState(false);
-  const [waitlistDone, setWaitlistDone] = useState(false);
-  const [waitlistEmail, setWaitlistEmail] = useState('');
-  const [honeypot, setHoneypot] = useState('');
   const [importGuideOpen, setImportGuideOpen] = useState(false);
   const [visionProgress, setVisionProgress] = useState<number>();
   const analysisRef = useRef<VisionAnalysis | undefined>(undefined);
@@ -278,21 +268,6 @@ export function SkinWorkspace() {
       drawTexture(canvasRef.current, texture, format === 'java-64' ? 5 : 3);
   }, [texture, format]);
 
-  useEffect(() => {
-    if (source) return;
-    const loadInitialExample = async () => {
-      startSource('example');
-      const exampleSource = await loadExampleSource();
-      const nextSource = exampleSource || fallbackExampleSource();
-      setSource(nextSource);
-      analysisRef.current = undefined;
-      setPartCrops(undefined);
-      setSourcePreview(exampleSource ? EXAMPLE_SOURCE_URL : undefined);
-      generate(nextSource);
-    };
-    void loadInitialExample();
-  }, [generate, source]);
-
   const loadSource = useCallback(
     async (file?: File) => {
       if (
@@ -318,6 +293,7 @@ export function SkinWorkspace() {
         setSource(nextSource);
         analysisRef.current = undefined;
         setPartCrops(undefined);
+        setSourceName(file.name);
         setSourcePreview(URL.createObjectURL(file));
 
         // Auto-apply recommended transform for better initial result
@@ -329,7 +305,7 @@ export function SkinWorkspace() {
 
         if (hasRecommendation) {
           setSourceTransform(recommended);
-          setAdjustmentOpen(true);
+          setAdjustmentOpen(false);
           generate(applySourceTransform(nextSource, recommended));
           trackSkinEvent({
             name: 'skin_source_improved',
@@ -391,6 +367,7 @@ export function SkinWorkspace() {
     setSource(nextSource);
     analysisRef.current = undefined;
     setPartCrops(undefined);
+    setSourceName('example.webp');
     setSourcePreview(exampleSource ? EXAMPLE_SOURCE_URL : undefined);
     setSourceTransform(IDENTITY_SOURCE_TRANSFORM);
     setAdjustmentOpen(false);
@@ -531,19 +508,12 @@ export function SkinWorkspace() {
     setImportGuideOpen(true);
   };
 
-  const submitWaitlist = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    await joinAiWaitlist({ data: { email: waitlistEmail, honeypot } });
-    trackSkinEvent({ name: 'ai_waitlist_submit', payload: {} });
-    setWaitlistDone(true);
-  };
-
   const skinUrl = texture ? textureToDataUrl(texture) : undefined;
 
   return (
     <section
       id="generator"
-      className="overflow-hidden rounded-lg border bg-zinc-950 text-zinc-100 shadow-xl"
+      className="skin-workspace-v51 overflow-hidden rounded-lg border bg-zinc-950 text-zinc-100 shadow-xl"
       aria-label={config.copy.workspaceLabel}
     >
       <header className="flex min-h-12 items-center justify-between gap-4 border-b border-zinc-800 px-4 font-mono text-xs uppercase tracking-[0.08em] text-cyan-300 sm:px-6">
@@ -552,37 +522,58 @@ export function SkinWorkspace() {
           {status}
         </span>
       </header>
-      <div className="grid lg:grid-cols-[minmax(280px,0.62fr)_minmax(0,1.38fr)]">
-        <div className="border-b border-zinc-800 p-4 sm:p-6 lg:border-b-0 lg:border-r">
-          <button
-            type="button"
-            className="grid min-h-44 w-full place-items-center border border-dashed border-cyan-300/70 bg-cyan-300/5 p-5 text-center transition-colors hover:bg-cyan-300/10"
-            onClick={() => inputRef.current?.click()}
-            onDragOver={(event) => event.preventDefault()}
-            onDrop={(event) => {
-              event.preventDefault();
-              void loadSource(event.dataTransfer.files[0]);
-            }}
-          >
-            <span className="grid justify-items-center gap-2">
-              <IconUpload className="size-7 text-cyan-300" />
-              <strong>{config.copy.uploadTitle}</strong>
-              <span className="text-xs text-zinc-400">
-                {config.copy.uploadHint}
+      <div className="grid items-stretch lg:grid-cols-[minmax(280px,0.62fr)_minmax(0,1.38fr)]">
+        <div className="skin-controls-v51 border-b border-zinc-800 p-4 sm:p-6 lg:border-b-0 lg:border-r">
+          {!source ? (
+            <button
+              type="button"
+              className="skin-drop-v51 grid min-h-44 w-full place-items-center border border-dashed border-cyan-300/70 bg-cyan-300/5 p-5 text-center transition-colors hover:bg-cyan-300/10"
+              onClick={() => inputRef.current?.click()}
+              onDragOver={(event) => event.preventDefault()}
+              onDrop={(event) => {
+                event.preventDefault();
+                void loadSource(event.dataTransfer.files[0]);
+              }}
+            >
+              <span className="grid justify-items-center gap-2">
+                <IconUpload className="size-7 text-cyan-300" />
+                <strong>{config.copy.uploadTitle}</strong>
+                <span className="text-xs text-zinc-400">
+                  {config.copy.uploadHint}
+                </span>
               </span>
-            </span>
-          </button>
-          <div className="mt-3 rounded border border-cyan-300/20 bg-cyan-300/5 p-3 text-xs leading-relaxed text-zinc-400">
-            <p className="mb-1 font-semibold text-cyan-300">
-              {m.skin_best_results()}
-            </p>
-            <ul className="space-y-0.5">
-              <li>✓ {m.skin_best_front_facing()}</li>
-              <li>✓ {m.skin_best_background()}</li>
-              <li>✓ {m.skin_best_centered()}</li>
-              <li>✓ {m.skin_best_square()}</li>
-            </ul>
-          </div>
+            </button>
+          ) : (
+            <>
+              <div className="skin-source-v51 flex items-center gap-3 p-2">
+                {sourcePreview ? (
+                  <img src={sourcePreview} alt={config.copy.sourceAlt} />
+                ) : (
+                  <span
+                    className="skin-source-placeholder-v51"
+                    aria-hidden="true"
+                  >
+                    IMG
+                  </span>
+                )}
+                <span className="grid min-w-0 gap-1">
+                  <strong className="truncate text-sm text-zinc-100">
+                    {sourceName ?? config.copy.sourceAlt}
+                  </strong>
+                  <span className="font-mono text-[11px] uppercase tracking-wide text-zinc-500">
+                    On this device
+                  </span>
+                </span>
+              </div>
+              <button
+                type="button"
+                className="skin-source-change-v51 mt-3 text-left text-xs text-cyan-200 hover:text-cyan-100"
+                onClick={() => inputRef.current?.click()}
+              >
+                Choose another image
+              </button>
+            </>
+          )}
           <input
             ref={inputRef}
             hidden
@@ -590,47 +581,161 @@ export function SkinWorkspace() {
             accept={config.acceptedTypes.join(',')}
             onChange={(event) => void loadSource(event.target.files?.[0])}
           />
-          <button
-            type="button"
-            className="mt-3 h-9 w-full border border-zinc-700 bg-transparent px-3 text-sm text-zinc-300 hover:border-cyan-300 hover:text-cyan-200"
-            onClick={loadExample}
-          >
-            {config.copy.exampleLabel}
-          </button>
-          {sourcePreview && (
-            <img
-              className="mt-4 aspect-video w-full object-cover"
-              src={sourcePreview}
-              alt={config.copy.sourceAlt}
-            />
-          )}
-          {source && (
-            <div className="mt-4 border border-zinc-800 bg-zinc-900/60">
+          <fieldset className="mt-5 grid gap-2">
+            <legend className="text-xs uppercase tracking-[0.08em] text-zinc-500">
+              {config.copy.modelLabel}
+            </legend>
+            <div className="skin-seg-v51 grid grid-cols-2 gap-2">
+              {config.models.map((option) => (
+                <button
+                  key={option.value}
+                  type="button"
+                  aria-pressed={model === option.value}
+                  className={`min-h-10 border px-2 text-sm ${model === option.value ? 'is-active border-cyan-300 bg-cyan-300 text-zinc-950' : 'border-zinc-700 bg-transparent text-zinc-400 hover:border-zinc-400'}`}
+                  onClick={() => changeModel(option.value)}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+          </fieldset>
+          {!source ? (
+            <>
+              <div className="tips-v51 mt-4 rounded border border-cyan-300/20 bg-cyan-300/5 p-3 text-xs leading-relaxed text-zinc-400">
+                <p className="mb-1 font-semibold text-cyan-300">
+                  {m.skin_best_results()}
+                </p>
+                <ul className="space-y-0.5">
+                  <li>✓ {m.skin_best_front_facing()}</li>
+                  <li>✓ {m.skin_best_background()}</li>
+                  <li>✓ {m.skin_best_centered()}</li>
+                  <li>✓ {m.skin_best_square()}</li>
+                </ul>
+              </div>
               <button
                 type="button"
-                aria-expanded={adjustmentOpen}
-                className="flex min-h-11 w-full items-center justify-between gap-3 px-3 text-left text-sm text-zinc-200 hover:bg-zinc-800"
+                className="skin-example-v51 mt-3 text-left"
+                onClick={loadExample}
+              >
+                {config.copy.exampleLabel} →
+              </button>
+            </>
+          ) : (
+            <>
+              <Button
+                type="button"
+                className="skin-download-v51 mt-5 w-full"
+                size="lg"
+                disabled={!texture}
+                onClick={download}
+              >
+                <IconDownload />{' '}
+                {format === 'java-64'
+                  ? m.skin_download_java()
+                  : m.skin_download_bedrock()}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                className="skin-ai-v51 mt-3 w-full border-cyan-300/70 text-cyan-100"
                 onClick={() => {
-                  const nextOpen = !adjustmentOpen;
-                  setAdjustmentOpen(nextOpen);
-                  if (nextOpen) {
-                    trackSkinEvent({
-                      name: 'skin_source_adjustment_opened',
-                      payload: { format, model },
-                    });
-                  }
+                  trackSkinEvent({ name: 'ai_door_click', payload: {} });
+                  setWaitlistOpen(true);
                 }}
               >
-                <span className="flex items-center gap-2">
-                  <IconAdjustmentsHorizontal className="size-4 text-cyan-300" />
-                  {config.copy.adjustSource}
-                </span>
-                <span className="font-mono text-xs text-zinc-500">
-                  {adjustmentOpen ? 'Close' : 'Optional'}
-                </span>
-              </button>
-              {adjustmentOpen && (
-                <div className="grid gap-4 border-t border-zinc-800 p-3">
+                Make it more like you · 1 credit
+              </Button>
+            </>
+          )}
+          <details
+            className="more-options-v51 mt-4"
+            open={adjustmentOpen}
+            onToggle={(event) => {
+              const nextOpen = event.currentTarget.open;
+              setAdjustmentOpen(nextOpen);
+              if (nextOpen) {
+                trackSkinEvent({
+                  name: 'skin_source_adjustment_opened',
+                  payload: { format, model },
+                });
+              }
+            }}
+          >
+            <summary aria-label={`More options · ${config.copy.adjustSource}`}>
+              <span className="flex items-center gap-2">
+                <IconAdjustmentsHorizontal className="size-4 text-cyan-300" />
+                More options
+              </span>
+              <span className="font-mono text-[11px] text-zinc-500">
+                {adjustmentOpen ? 'Close' : 'Optional'}
+              </span>
+            </summary>
+            <div className="more-options-body-v51 grid gap-4">
+              <fieldset className="grid gap-2">
+                <legend className="text-xs uppercase tracking-[0.08em] text-zinc-500">
+                  {config.copy.formatLabel}
+                </legend>
+                <div className="skin-seg-v51 grid grid-cols-2 gap-2">
+                  {config.formats.map((option) => (
+                    <button
+                      key={option.value}
+                      type="button"
+                      aria-pressed={format === option.value}
+                      className={`min-h-10 border px-2 text-sm ${format === option.value ? 'is-active border-cyan-300 bg-cyan-300 text-zinc-950' : 'border-zinc-700 bg-transparent text-zinc-400 hover:border-zinc-400'}`}
+                      onClick={() => changeFormat(option.value)}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              </fieldset>
+              <label className="grid gap-2 text-xs uppercase tracking-wider text-zinc-500">
+                {config.copy.subjectKind}
+                <select
+                  value={subjectKind}
+                  onChange={(event) => {
+                    setSubjectKind(event.target.value as SubjectKind);
+                    if (source) generate(source, format, model, partCrops);
+                  }}
+                  className="min-h-11 border border-zinc-700 bg-zinc-900 px-3 text-sm normal-case text-zinc-100"
+                >
+                  {config.copy.subjectOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="grid gap-2 text-xs uppercase tracking-wider text-zinc-500">
+                Style
+                <select
+                  value={skinStyle}
+                  onChange={(event) => {
+                    setSkinStyle(event.target.value as SkinStyle);
+                    if (source) generate(source, format, model, partCrops);
+                  }}
+                  className="min-h-11 border border-zinc-700 bg-zinc-900 px-3 text-sm normal-case text-zinc-100"
+                >
+                  <option value="photo">{m.skin_style_photo()}</option>
+                  <option value="pixel">{m.skin_style_pixel()}</option>
+                </select>
+              </label>
+              <label className="flex min-h-11 items-center gap-3 text-sm text-zinc-300">
+                <input
+                  type="checkbox"
+                  checked={faceDetails}
+                  onChange={(event) => {
+                    setFaceDetails(event.target.checked);
+                    if (source) generate(source, format, model, partCrops);
+                  }}
+                />{' '}
+                {m.skin_face_details()}
+              </label>
+              {source && (
+                <div className="grid gap-4 border-t border-zinc-800 pt-4">
+                  <p className="skin-control-label">
+                    {config.copy.adjustSource}
+                  </p>
                   <button
                     type="button"
                     className="min-h-10 border border-lime-300/70 bg-lime-300/10 px-3 text-left text-sm text-lime-100 hover:bg-lime-300/20 disabled:cursor-wait disabled:opacity-60"
@@ -689,123 +794,23 @@ export function SkinWorkspace() {
                 </div>
               )}
             </div>
-          )}
-          <fieldset className="mt-6 grid gap-2">
-            <legend className="text-xs uppercase tracking-[0.08em] text-zinc-500">
-              {config.copy.formatLabel}
-            </legend>
-            <div className="grid grid-cols-2 gap-2">
-              {config.formats.map((option) => (
-                <button
-                  key={option.value}
-                  type="button"
-                  aria-pressed={format === option.value}
-                  className={`min-h-10 border px-2 text-sm ${format === option.value ? 'border-cyan-300 bg-cyan-300 text-zinc-950' : 'border-zinc-700 bg-transparent text-zinc-400 hover:border-zinc-400'}`}
-                  onClick={() => changeFormat(option.value)}
-                >
-                  {option.label}
-                </button>
-              ))}
-            </div>
-          </fieldset>
-          <label className="mt-5 grid gap-2 text-xs uppercase tracking-wider text-zinc-500">
-            {config.copy.subjectKind}
-            <select
-              value={subjectKind}
-              onChange={(event) => {
-                setSubjectKind(event.target.value as SubjectKind);
-                if (source) generate(source, format, model, partCrops);
-              }}
-              className="min-h-11 border border-zinc-700 bg-zinc-900 px-3 text-sm normal-case text-zinc-100"
-            >
-              {config.copy.subjectOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="mt-4 grid gap-2 text-xs uppercase tracking-wider text-zinc-500">
-            Style
-            <select
-              value={skinStyle}
-              onChange={(event) => {
-                setSkinStyle(event.target.value as SkinStyle);
-                if (source) generate(source, format, model, partCrops);
-              }}
-              className="min-h-11 border border-zinc-700 bg-zinc-900 px-3 text-sm normal-case text-zinc-100"
-            >
-              <option value="photo">{m.skin_style_photo()}</option>
-              <option value="pixel">{m.skin_style_pixel()}</option>
-            </select>
-          </label>
-          <label className="mt-4 flex min-h-11 items-center gap-3 text-sm text-zinc-300">
-            <input
-              type="checkbox"
-              checked={faceDetails}
-              onChange={(event) => {
-                setFaceDetails(event.target.checked);
-                if (source) generate(source, format, model, partCrops);
-              }}
-            />{' '}
-            {m.skin_face_details()}
-          </label>
-          <Button
-            type="button"
-            variant="outline"
-            className="mt-4 w-full border-cyan-300/70 text-cyan-100"
-            onClick={() => {
-              trackSkinEvent({ name: 'ai_door_click', payload: {} });
-              setWaitlistOpen(true);
-            }}
-          >
-            {m.skin_ai_hd_button()}
-          </Button>
-          <fieldset className="mt-6 grid gap-2">
-            <legend className="text-xs uppercase tracking-[0.08em] text-zinc-500">
-              {config.copy.modelLabel}
-            </legend>
-            <div className="grid grid-cols-2 gap-2">
-              {config.models.map((option) => (
-                <button
-                  key={option.value}
-                  type="button"
-                  aria-pressed={model === option.value}
-                  className={`min-h-10 border px-2 text-sm ${model === option.value ? 'border-cyan-300 bg-cyan-300 text-zinc-950' : 'border-zinc-700 bg-transparent text-zinc-400 hover:border-zinc-400'}`}
-                  onClick={() => changeModel(option.value)}
-                >
-                  {option.label}
-                </button>
-              ))}
-            </div>
-          </fieldset>
-          <p className="mt-6 text-xs leading-5 text-zinc-500">
+          </details>
+          <p className="mt-4 text-xs leading-5 text-zinc-500">
             {config.copy.localNote}
           </p>
-          <div className="mt-6 flex gap-2">
-            <Button
-              type="button"
-              className="flex-1"
-              size="lg"
-              disabled={!texture}
-              onClick={download}
-            >
-              <IconDownload />{' '}
-              {format === 'java-64'
-                ? m.skin_download_java()
-                : m.skin_download_bedrock()}
-            </Button>
+          {source && (
             <Button
               type="button"
               variant="outline"
               size="icon-lg"
-              className="border-zinc-700 bg-transparent text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100"
+              className="mt-3 border-zinc-700 bg-transparent text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100"
               onClick={() => {
                 trackSkinEvent({
                   name: 'skin_retry_started',
                   payload: { location: 'generator_workspace' },
                 });
                 setSource(undefined);
+                setSourceName(undefined);
                 setSourcePreview(undefined);
                 setTexture(undefined);
                 setStatus(config.copy.status.idle);
@@ -814,17 +819,13 @@ export function SkinWorkspace() {
             >
               <IconRefresh />
             </Button>
-          </div>
+          )}
         </div>
-        <div className="min-w-0 p-4 sm:p-6">
-          <div className="grid gap-4 xl:grid-cols-[1fr_0.8fr]">
-            <SkinPreview3d
-              skinUrl={skinUrl}
-              label={config.copy.preview3dLabel}
-              frontLabel={m.skin_preview_front()}
-              backLabel={m.skin_preview_back()}
-            />
-            <div className="relative grid min-h-80 place-items-center overflow-auto border border-zinc-800 bg-zinc-900 p-4">
+        <div className="skin-output-v51 min-w-0 p-4 sm:p-6">
+          <SkinPreview3d skinUrl={skinUrl} label={config.copy.preview3dLabel} />
+          <details className="texture-map-v51 mt-3">
+            <summary>Texture map</summary>
+            <div className="skin-flat-v51 relative mt-3 grid min-h-80 place-items-center overflow-auto border border-zinc-800 bg-zinc-900 p-4">
               <canvas
                 ref={canvasRef}
                 className="max-w-full"
@@ -836,7 +837,7 @@ export function SkinWorkspace() {
                 </p>
               )}
             </div>
-          </div>
+          </details>
           <div className="mt-4 flex flex-wrap gap-4 font-mono text-xs text-zinc-500">
             <span>
               {config.formats.find((option) => option.value === format)?.label}
@@ -847,64 +848,36 @@ export function SkinWorkspace() {
           </div>
           {texture && (
             <>
-              <p className="mt-4 border-l-2 border-green-400 bg-green-400/5 pl-3 py-2 text-sm leading-6 text-zinc-300">
+              <p className="skin-ready-v51 mt-4 border-l-2 border-green-400 bg-green-400/5 pl-3 py-2 text-sm leading-6 text-zinc-300">
                 <strong className="text-green-400">
                   ✓ {m.skin_ready_download()}
                 </strong>{' '}
                 {m.skin_inspect_before_download()}
               </p>
-              <Button
-                type="button"
-                className="sticky bottom-4 z-10 mt-4 w-full shadow-lg shadow-black/40"
-                size="lg"
-                disabled={!texture}
-                onClick={download}
-              >
-                <IconDownload />{' '}
-                {format === 'java-64'
-                  ? m.skin_download_java()
-                  : m.skin_download_bedrock()}
-              </Button>
             </>
           )}
         </div>
       </div>
       <Dialog open={waitlistOpen} onOpenChange={setWaitlistOpen}>
-        <DialogContent className="border border-cyan-300/30 bg-zinc-950 text-zinc-100">
-          <DialogTitle>{m.skin_ai_hd_title()}</DialogTitle>
+        <DialogContent className="ai-dialog-v51">
+          <DialogTitle>Optional AI finish</DialogTitle>
           <DialogDescription>
-            {m.skin_ai_hd_description({ price: aiHdFromPriceUsd.toFixed(2) })}
+            Keep the free local skin, or use 1 credit for a likeness-focused
+            finish. This is a UI preview — no payment is connected here.
           </DialogDescription>
-          {waitlistDone ? (
-            <output>{m.skin_waitlist_done()}</output>
-          ) : (
-            <form
-              className="grid gap-3"
-              onSubmit={(event) => void submitWaitlist(event)}
-            >
-              <label className="grid gap-1 text-sm">
-                {m.skin_waitlist_email()}
-                <input
-                  required
-                  type="email"
-                  autoComplete="email"
-                  value={waitlistEmail}
-                  onChange={(event) => setWaitlistEmail(event.target.value)}
-                  className="min-h-11 border border-zinc-700 bg-zinc-900 px-3"
-                />
-              </label>
-              <label className="absolute -left-[10000px]" aria-hidden="true">
-                Leave blank
-                <input
-                  tabIndex={-1}
-                  autoComplete="off"
-                  value={honeypot}
-                  onChange={(event) => setHoneypot(event.target.value)}
-                />
-              </label>
-              <Button type="submit">{m.skin_waitlist_join()}</Button>
-            </form>
-          )}
+          <div className="credit-pack-grid-v51">
+            <button type="button" className="credit-pack-v51">
+              <strong>$4.99</strong>
+              <span>20 credits</span>
+            </button>
+            <button type="button" className="credit-pack-v51">
+              <strong>$9.99</strong>
+              <span>60 credits</span>
+            </button>
+          </div>
+          <p className="ai-dialog-note-v51">
+            Login and consent would appear only after choosing an AI finish.
+          </p>
         </DialogContent>
       </Dialog>
       <Dialog open={importGuideOpen} onOpenChange={setImportGuideOpen}>

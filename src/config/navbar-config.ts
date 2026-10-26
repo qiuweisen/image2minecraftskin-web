@@ -25,5 +25,10 @@ export function getNavbarLinks(): MenuItemConfig[] {
       href: Routes.PrivacyPolicy,
       external: false,
     },
+    {
+      title: 'Credits',
+      href: '/#generator',
+      external: false,
+    },
   ];
 }

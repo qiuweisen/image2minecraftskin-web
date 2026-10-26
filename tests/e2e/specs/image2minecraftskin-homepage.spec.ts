@@ -63,13 +63,18 @@ test('converts an image locally and downloads a skin texture', async ({
   await expect(
     workspace.getByText('Skin ready', { exact: true })
   ).toBeVisible();
-  await expect(workspace.getByRole('img').locator('canvas')).toBeVisible();
-  const adjustButton = workspace.getByRole('button', {
-    name: /adjust source/i,
-  });
-  await expect(adjustButton).toHaveAttribute('aria-expanded', 'false');
-  await adjustButton.click();
-  await expect(adjustButton).toHaveAttribute('aria-expanded', 'true');
+  const preview = workspace.locator('.skin-preview-world');
+  await expect(preview.locator('canvas')).toBeVisible();
+  await expect(preview.locator('canvas')).toHaveCount(1);
+  await expect(preview.getByRole('button', { name: 'Idle' })).toHaveAttribute(
+    'aria-pressed',
+    'true'
+  );
+  const options = workspace.locator('details.more-options-v51');
+  const optionsSummary = options.locator('summary');
+  await expect(options).not.toHaveAttribute('open', '');
+  await optionsSummary.click();
+  await expect(options).toHaveAttribute('open', '');
   const zoom = workspace.getByRole('slider', { name: /zoom/i });
   await zoom.fill('1.4');
   await workspace.getByRole('button', { name: /reset framing/i }).click();

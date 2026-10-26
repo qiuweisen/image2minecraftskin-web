@@ -35,7 +35,10 @@ export function NavbarMobile({ className, ...props }: NavbarMobileProps) {
   return (
     <>
       <div
-        className={cn('flex items-center justify-between', className)}
+        className={cn(
+          'skin-mobile-nav flex items-center justify-between',
+          className
+        )}
         {...props}
       >
         <Link to="/" className="flex items-center gap-2">
@@ -46,6 +49,7 @@ export function NavbarMobile({ className, ...props }: NavbarMobileProps) {
         </Link>
 
         <div className="flex items-center gap-4">
+          <span className="skin-local-chip">● Local first</span>
           <Button
             type="button"
             variant="ghost"
