@@ -19,8 +19,7 @@ import {
   DialogDescription,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { aiHdFromPriceUsd, getSkinToolConfig } from '@/config/skin-tool-config';
-import { joinAiWaitlist } from '@/api/ai-waitlist';
+import { getSkinToolConfig } from '@/config/skin-tool-config';
 import { startSkinTask, uploadSkinInput } from '@/api/credit-tasks';
 import { clientEnv } from '@/env/client';
 import { authClient } from '@/auth/client';
@@ -128,7 +127,6 @@ export function SkinWorkspace() {
   const [subjectKind, setSubjectKind] = useState<SubjectKind>('auto');
   const [skinStyle, setSkinStyle] = useState<SkinStyle>('photo');
   const [faceDetails, setFaceDetails] = useState(true);
-  const [waitlistOpen, setWaitlistOpen] = useState(false);
   const [aiPanelOpen, setAiPanelOpen] = useState(false);
   const [aiFile, setAiFile] = useState<File>();
   const [aiConsent, setAiConsent] = useState(false);
@@ -138,9 +136,6 @@ export function SkinWorkspace() {
     useState<Awaited<ReturnType<typeof startSkinTask>>>();
   const [aiError, setAiError] = useState<string>();
   const { data: session } = authClient.useSession();
-  const [waitlistDone, setWaitlistDone] = useState(false);
-  const [waitlistEmail, setWaitlistEmail] = useState('');
-  const [honeypot, setHoneypot] = useState('');
   const [importGuideOpen, setImportGuideOpen] = useState(false);
   const [visionProgress, setVisionProgress] = useState<number>();
   const analysisRef = useRef<VisionAnalysis | undefined>(undefined);
@@ -530,13 +525,6 @@ export function SkinWorkspace() {
     });
     trackSkinEvent({ name: 'skin_download', payload: { format, model } });
     setImportGuideOpen(true);
-  };
-
-  const submitWaitlist = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    await joinAiWaitlist({ data: { email: waitlistEmail, honeypot } });
-    trackSkinEvent({ name: 'ai_waitlist_submit', payload: {} });
-    setWaitlistDone(true);
   };
 
   const submitAi = async (event: FormEvent<HTMLFormElement>) => {
@@ -1012,10 +1000,13 @@ export function SkinWorkspace() {
               我同意照片会发送给第三方 AI
             </label>
             <p className="text-xs text-zinc-500">
-              1 credit · $4.99/20 或 $9.99/60
+              1 credit / generation · $4.99/20 · $9.99/60 · one-time packs · no
+              gift · failed tasks refund automatically
             </p>
             {aiError && <p className="text-sm text-red-300">{aiError}</p>}
-            <Button type="submit">生成 AI 皮肤</Button>
+            <Button type="submit" disabled={!aiConsent || !aiFile}>
+              生成 AI 皮肤
+            </Button>
           </form>
         </DialogContent>
       </Dialog>

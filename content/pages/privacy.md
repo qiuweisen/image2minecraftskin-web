@@ -10,9 +10,9 @@ Welcome to our Privacy Policy. This document explains how we collect, use, and p
 
 ## Information We Collect
 
-We may collect the following types of information:
+We collect information only when you register, sign in, use an AI feature, make a purchase, or contact us.
 
-- **Personal Information**: Name, email address, and contact details you provide when registering or contacting us.
+- **Personal Information**: Name, email address, and contact details you provide in those flows.
 - **Usage Data**: Information about how you interact with our website, including pages visited and time spent.
 - **Device Information**: Details about the device you use to access our services, such as IP address, browser type, and operating system.
 
