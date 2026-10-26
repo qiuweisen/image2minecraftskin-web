@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   assessAiSheet,
+  isMinecraftSkinTemplate,
   mapAiSheetToSkin,
   splitAiPanels,
 } from '@/lib/skin/ai-sheet';
@@ -55,4 +56,41 @@ describe('AI sheet mapping', () => {
     expect(mapAiSheetToSkin(fixture(), 'classic').texture.width).toBe(64);
     expect(mapAiSheetToSkin(fixture(), 'slim').texture.model).toBe('slim');
   });
+  it('detects standard Minecraft UV templates and bypasses AI mapping', () => {
+    const pixels = new Uint8ClampedArray(64 * 64 * 4);
+    pixels.fill(0);
+    pixels[textureOffset(7, 7, 64)] = 231;
+    const source = { width: 64, height: 64, pixels };
+    expect(isMinecraftSkinTemplate(source)).toBe(true);
+    const result = mapAiSheetToSkin(source);
+    expect(result.texture.pixels[textureOffset(7, 7, 64)]).toBe(231);
+    expect(result.quality.valid).toBe(true);
+  });
+  it('accepts legacy 64x32 templates and nearest-resizes them', () => {
+    const pixels = new Uint8ClampedArray(64 * 32 * 4);
+    pixels.fill(0);
+    pixels[textureOffset(9, 4, 64)] = 199;
+    const source = { width: 64, height: 32, pixels };
+    expect(isMinecraftSkinTemplate(source)).toBe(true);
+    const result = mapAiSheetToSkin(source);
+    expect(result.texture.pixels[textureOffset(9, 8, 64)]).toBe(199);
+  });
+  it('paints outer-layer volume from the AI front and back panels', () => {
+    const result = mapAiSheetToSkin(fixture(), 'classic').texture;
+    // Hat outer origin (32,0); jacket outer origin (16,32).
+    expect(
+      result.pixels
+        .slice(textureOffset(32, 0, 64), textureOffset(40, 8, 64))
+        .some((v) => v !== 0)
+    ).toBe(true);
+    expect(
+      result.pixels
+        .slice(textureOffset(16, 32, 64), textureOffset(40, 48, 64))
+        .some((v) => v !== 0)
+    ).toBe(true);
+  });
 });
+
+function textureOffset(x: number, y: number, width: number) {
+  return (y * width + x) * 4;
+}
