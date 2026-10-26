@@ -822,12 +822,7 @@ export function SkinWorkspace() {
           )}
         </div>
         <div className="skin-output-v51 min-w-0 p-4 sm:p-6">
-          <SkinPreview3d
-            skinUrl={skinUrl}
-            label={config.copy.preview3dLabel}
-            frontLabel={m.skin_preview_front()}
-            backLabel={m.skin_preview_back()}
-          />
+          <SkinPreview3d skinUrl={skinUrl} label={config.copy.preview3dLabel} />
           <details className="texture-map-v51 mt-3">
             <summary>Texture map</summary>
             <div className="skin-flat-v51 relative mt-3 grid min-h-80 place-items-center overflow-auto border border-zinc-800 bg-zinc-900 p-4">

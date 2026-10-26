@@ -63,10 +63,19 @@ test('previews an existing Minecraft skin without uploading it', async ({
   await expect(
     workspace.getByText('Java 64x64', { exact: true })
   ).toBeVisible();
-  const preview = workspace.getByRole('img', {
-    name: 'Interactive 3D Minecraft skin preview',
-  });
+  const preview = workspace.locator('.skin-preview-world');
   await expect(preview.locator('canvas')).toBeVisible();
+  const animationTabs = preview.getByRole('button');
+  await expect(animationTabs).toHaveCount(3);
+  await expect(preview.getByRole('button', { name: 'Idle' })).toHaveAttribute(
+    'aria-pressed',
+    'true'
+  );
+  await preview.getByRole('button', { name: 'Wave' }).click();
+  await expect(preview.getByRole('button', { name: 'Wave' })).toHaveAttribute(
+    'aria-pressed',
+    'true'
+  );
 
   const slimButton = page.getByRole('button', { name: 'Slim', exact: true });
   await slimButton.click();

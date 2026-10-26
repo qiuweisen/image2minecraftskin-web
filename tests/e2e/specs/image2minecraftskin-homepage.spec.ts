@@ -63,7 +63,13 @@ test('converts an image locally and downloads a skin texture', async ({
   await expect(
     workspace.getByText('Skin ready', { exact: true })
   ).toBeVisible();
-  await expect(workspace.getByRole('img').locator('canvas')).toBeVisible();
+  const preview = workspace.locator('.skin-preview-world');
+  await expect(preview.locator('canvas')).toBeVisible();
+  await expect(preview.locator('canvas')).toHaveCount(1);
+  await expect(preview.getByRole('button', { name: 'Idle' })).toHaveAttribute(
+    'aria-pressed',
+    'true'
+  );
   const options = workspace.locator('details.more-options-v51');
   const optionsSummary = options.locator('summary');
   await expect(options).not.toHaveAttribute('open', '');
