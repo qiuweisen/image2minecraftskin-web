@@ -27,6 +27,14 @@
     "VITE_BASE_URL": "https://image2minecraftskin.com"
   },
 
+  "workflows": [
+    {
+      "name": "credit-task",
+      "binding": "CREDIT_TASK_WORKFLOW",
+      "class_name": "CreditTaskWorkflow"
+    }
+  ],
+
   // Enables Workers Trace Events Logpush for a Worker
   "logpush": true,
 

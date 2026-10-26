@@ -13,11 +13,12 @@ export const PaymentTypes = {
 /**
  * Payment scene: subscription and lifetime
  */
-export type PaymentScene = 'subscription' | 'lifetime';
+export type PaymentScene = 'subscription' | 'lifetime' | 'credits';
 
 export const PaymentScenes = {
   LIFETIME: 'lifetime' as const,
   SUBSCRIPTION: 'subscription' as const,
+  CREDITS: 'credits' as const,
 };
 
 export type PlanInterval = 'month' | 'year';
@@ -84,6 +85,14 @@ export interface PricePlan {
 /**
  * Subscription data
  */
+export interface CreditPackage {
+  id: string;
+  amount: number;
+  price: { priceId: string; amount: number; currency: string; allowPromotionCode?: boolean };
+  expireDays?: number;
+  disabled?: boolean;
+}
+
 export interface Subscription {
   id: string;
   customerId: string;

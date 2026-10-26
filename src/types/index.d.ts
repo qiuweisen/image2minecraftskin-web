@@ -15,6 +15,18 @@ export interface WebsiteConfig {
   cache?: CacheConfig;
   storage?: StorageConfig;
   payment?: PaymentConfig;
+  credits?: CreditsConfig;
+}
+
+export interface CreditsConfig {
+  enable: boolean;
+  costs?: Record<string, import('@/credits/pricing').ToolPrice>;
+  taskPolicy?: { providerTimeoutMs: number; maxWindowMs: number; initialBackoffMs: number; maxBackoffMs: number };
+  registerGift?: { amount: number; expireDays?: number };
+  packages?: Record<string, import('@/payment/types').CreditPackage>;
+  redemptionDefaultExpireDays?: number;
+  reconcileSampleSize?: number;
+  dailyFree?: { enable: boolean; amount: number };
 }
 
 export interface FooterConfig {

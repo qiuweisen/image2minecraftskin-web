@@ -8,6 +8,7 @@ import {
 } from '@/payment/constants';
 import { findPlanByPlanId, findPriceInPlan } from '@/lib/price-plan';
 import { sendPaymentNotification } from '@/notification';
+import { websiteConfig } from '@/config/website';
 import { desc, eq } from 'drizzle-orm';
 import { Stripe } from 'stripe';
 import type {
@@ -211,12 +212,23 @@ export class StripeProvider implements PaymentProvider {
     try {
       // Get plan and price
       const plan = findPlanByPlanId(planId);
-      if (!plan) {
+      const creditPackage = websiteConfig.credits?.packages?.[planId];
+      if (!plan && !creditPackage) {
         throw new Error(`Plan with ID ${planId} not found`);
       }
 
       // Find price in plan
-      const price = findPriceInPlan(planId, priceId);
+      const price = plan
+        ? findPriceInPlan(planId, priceId)
+        : creditPackage?.price.priceId === priceId
+          ? {
+              type: PaymentTypes.ONE_TIME,
+              priceId,
+              amount: creditPackage.price.amount,
+              currency: creditPackage.price.currency,
+              allowPromotionCode: creditPackage.price.allowPromotionCode,
+            }
+          : undefined;
       if (!price) {
         throw new Error(`Price ID ${priceId} not found in plan ${planId}`);
       }
@@ -235,6 +247,7 @@ export class StripeProvider implements PaymentProvider {
         ...metadata,
         planId,
         priceId,
+        ...(creditPackage ? { creditPackageId: creditPackage.id } : {}),
       };
 
       // Set up the line items
@@ -680,7 +693,16 @@ export class StripeProvider implements PaymentProvider {
         const session = await this.stripe.checkout.sessions.retrieve(
           paymentRecord.sessionId
         );
-        await this.processLifetimePlanPurchase(invoice, paymentRecord, session);
+        const packageId = session.metadata?.creditPackageId;
+        if (packageId) {
+          await this.grantStripeCreditPackage(session, paymentRecord.userId);
+        } else {
+          await this.processLifetimePlanPurchase(
+            invoice,
+            paymentRecord,
+            session
+          );
+        }
       }
     } catch (error) {
       console.error('<< Update one-time payment error:', error);
@@ -940,8 +962,18 @@ export class StripeProvider implements PaymentProvider {
     const invoiceId: string | null = session.invoice as string | null;
     console.log('createOneTimePaymentRecord, invoiceId:', invoiceId);
 
-    // One-time payments in MkFast are lifetime only (no credits)
-    const scene = PaymentScenes.LIFETIME;
+    const packageId = session.metadata?.creditPackageId;
+    const creditPackage = packageId
+      ? websiteConfig.credits?.packages?.[packageId]
+      : undefined;
+    if (
+      packageId &&
+      (!creditPackage || creditPackage.price.priceId !== priceId)
+    )
+      throw new Error('Unknown credit package in Stripe checkout session');
+    const scene = creditPackage
+      ? PaymentScenes.CREDITS
+      : PaymentScenes.LIFETIME;
 
     // Create one-time payment record with proper status and paid=false
     await this.insertPaymentRecord(
@@ -958,6 +990,35 @@ export class StripeProvider implements PaymentProvider {
       },
       'one-time'
     );
+    if (
+      session.payment_status === 'paid' ||
+      session.payment_status === 'no_payment_required'
+    ) {
+      await this.grantStripeCreditPackage(session, userId);
+    }
+  }
+
+  private async grantStripeCreditPackage(
+    session: Stripe.Checkout.Session,
+    userId: string
+  ): Promise<void> {
+    const packageId = session.metadata?.creditPackageId;
+    if (!packageId) return;
+    const creditPackage = websiteConfig.credits?.packages?.[packageId];
+    if (
+      !creditPackage ||
+      creditPackage.price.priceId !== session.metadata?.priceId
+    )
+      throw new Error('Unknown credit package in paid Stripe session');
+    const { grantCreditPackage } = await import('@/credits/subscription');
+    await grantCreditPackage({
+      provider: 'stripe',
+      eventId: session.id,
+      userId,
+      packageId,
+      amount: creditPackage.amount,
+      expireDays: creditPackage.expireDays,
+    });
   }
 
   /**
