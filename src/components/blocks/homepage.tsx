@@ -12,25 +12,18 @@ import { getHomepageConfig } from '@/config/homepage-config';
 import { trackSkinEvent } from '@/lib/analytics-events';
 import { m } from '@/locale/paraglide/messages';
 
-function Voxel({ cat = false, ai = false }: { cat?: boolean; ai?: boolean }) {
+function SkinStill({
+  src,
+  alt,
+  className = '',
+}: {
+  src: string;
+  alt: string;
+  className?: string;
+}) {
   return (
-    <div className={`voxel-wrap ${cat ? 'is-cat' : ''}`} aria-hidden="true">
-      <div className="contact-shadow" />
-      <div className={`voxel ${cat ? 'cat' : ''} ${ai ? 'ai' : ''}`}>
-        <div className="hair" />
-        {cat && (
-          <>
-            <i className="ear-v l" />
-            <i className="ear-v r" />
-          </>
-        )}
-        <div className="part head" />
-        <div className="part torso" />
-        <div className="part arm l" />
-        <div className="part arm r" />
-        <div className="part leg l" />
-        <div className="part leg r" />
-      </div>
+    <div className={`skin-still ${className}`}>
+      <img src={src} alt={alt} loading="lazy" />
     </div>
   );
 }
@@ -68,7 +61,11 @@ function HeroProof() {
           <figcaption className="caption">Photo · Ivy</figcaption>
         </figure>
         <span className="proof-arrow">Local →</span>
-        <Voxel />
+        <SkinStill
+          src="/examples/v51/proof-ivy-local.png"
+          alt="Ivy local skin preview"
+          className="hero-skin-still"
+        />
         <span className="badge-float real">On-device</span>
       </div>
     </WorldChrome>
@@ -106,9 +103,15 @@ function TextSection({
 
 function GalleryRow({ cat = false }: { cat?: boolean }) {
   const photo = cat
-    ? '/examples/v51/proof-mango.jpg'
-    : '/examples/v51/proof-ivy.jpg';
-  const name = cat ? 'Mango' : 'Ivy';
+    ? '/examples/v51/gallery-pet-photo.jpg'
+    : '/examples/v51/gallery-person-photo.jpg';
+  const local = cat
+    ? '/examples/v51/gallery-pet-local.png'
+    : '/examples/v51/gallery-person-local.png';
+  const ai = cat
+    ? '/examples/v51/gallery-pet-ai.png'
+    : '/examples/v51/gallery-person-ai.png';
+  const name = cat ? 'Mango' : 'Hoodie';
   return (
     <div className="case-row">
       <div className="case-col">
@@ -135,16 +138,18 @@ function GalleryRow({ cat = false }: { cat?: boolean }) {
       </span>
       <div className="case-col">
         <h3>
-          Free local <span className="badge mint">Preview style</span>
+          Free local <span className="badge mint">Real result</span>
         </h3>
         <div className="case-stage">
           <div className="gstrip">
             <div className="grass" />
             <div className="dirt" />
           </div>
-          <div className="gallery-voxel">
-            <Voxel cat={cat} />
-          </div>
+          <SkinStill
+            src={local}
+            alt={`${name} free local skin`}
+            className="gallery-skin-still"
+          />
         </div>
         <p className="case-meta">On-device · no account</p>
       </div>
@@ -153,16 +158,18 @@ function GalleryRow({ cat = false }: { cat?: boolean }) {
       </span>
       <div className="case-col">
         <h3>
-          AI finish <span className="badge mint">Preview style</span>
+          AI finish <span className="badge mint">Real KIE</span>
         </h3>
         <div className="case-stage">
           <div className="gstrip">
             <div className="grass" />
             <div className="dirt" />
           </div>
-          <div className="gallery-voxel">
-            <Voxel cat={cat} ai />
-          </div>
+          <SkinStill
+            src={ai}
+            alt={`${name} AI skin`}
+            className="gallery-skin-still ai"
+          />
         </div>
         <p className="case-meta">Optional · 1 credit</p>
       </div>
@@ -220,8 +227,8 @@ function HomePage() {
           <div className="section-eye-v51">PREVIEW GALLERY</div>
           <h2>PHOTO → FREE LOCAL → AI</h2>
           <p className="lead">
-            Open examples. No paywall. Free local first — AI only if you want
-            more likeness.
+            Real Photo → Local → AI examples. Free local first — AI only if you
+            want more likeness.
           </p>
           <GalleryRow />
           <GalleryRow cat />

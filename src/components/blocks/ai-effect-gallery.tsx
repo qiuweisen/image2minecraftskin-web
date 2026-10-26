@@ -1,9 +1,27 @@
 import Container from '@/components/layout/container';
 
 const examples = [
-  { name: 'person', label: 'Person portrait' },
-  { name: 'pet', label: 'Pet companion' },
-  { name: 'outfit', label: 'Full outfit' },
+  {
+    name: 'person',
+    label: 'Person · hoodie',
+    photo: '/content/ai-examples/person/photo.jpg',
+    local: '/content/ai-examples/person/local-3d.png',
+    ai: '/content/ai-examples/person/ai-front.png',
+  },
+  {
+    name: 'pet',
+    label: 'Pet · mango',
+    photo: '/content/ai-examples/pet/photo.jpg',
+    local: '/content/ai-examples/pet/local-3d.png',
+    ai: '/content/ai-examples/pet/ai-front.png',
+  },
+  {
+    name: 'outfit',
+    label: 'Full outfit',
+    photo: '/content/ai-examples/outfit/photo.jpg',
+    local: '/content/ai-examples/outfit/local-3d.png',
+    ai: '/content/ai-examples/outfit/ai-front.png',
+  },
 ];
 
 export function AiEffectGallery() {
@@ -36,22 +54,24 @@ export function AiEffectGallery() {
                 {example.label}
               </figcaption>
               <div className="grid grid-cols-3 gap-2">
-                {(['photo', 'local', 'ai'] as const).map((kind) => (
+                {(
+                  [
+                    ['photo', example.photo, 'Photo'],
+                    ['local', example.local, 'Local free'],
+                    ['ai', example.ai, 'AI'],
+                  ] as const
+                ).map(([kind, src, label]) => (
                   <div key={kind} className="min-w-0">
                     <div className="aspect-square overflow-hidden border border-[#2a7378] bg-[#0b1011]">
                       <img
-                        src={`/content/ai-examples/${example.name}/${kind}.svg`}
-                        alt={`${example.label} ${kind}`}
-                        className="size-full"
+                        src={src}
+                        alt={`${example.label} ${label}`}
+                        className="size-full object-contain"
                         loading="lazy"
                       />
                     </div>
                     <span className="mt-2 block font-mono text-[10px] uppercase text-[#8d9a9a]">
-                      {kind === 'ai'
-                        ? 'AI'
-                        : kind === 'local'
-                          ? 'Local free'
-                          : 'Photo'}
+                      {label}
                     </span>
                   </div>
                 ))}
