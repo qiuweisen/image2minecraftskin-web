@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { mapAiSheetToSkin } from '@/lib/skin/ai-sheet';
 import { textureToDataUrl } from '@/lib/skin/browser';
 import type { SkinModel } from '@/lib/skin/types';
+import { trackSkinEvent } from '@/lib/analytics-events';
 
 type Task = {
   id: string;
@@ -69,7 +70,15 @@ export function SkinTaskCard({
             model
           );
           setQuality(mapped.quality.valid ? undefined : 'AI 图不规范');
-          if (mapped.quality.valid) setResult(textureToDataUrl(mapped.texture));
+          if (mapped.quality.valid) {
+            setResult(textureToDataUrl(mapped.texture));
+            trackSkinEvent({ name: 'ai_generate_success', payload: { model } });
+          } else {
+            trackSkinEvent({
+              name: 'ai_generate_fail',
+              payload: { reason: 'layout_invalid' },
+            });
+          }
           URL.revokeObjectURL(url);
         };
         image.src = url;
