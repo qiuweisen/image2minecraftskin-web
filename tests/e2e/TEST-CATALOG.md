@@ -30,7 +30,7 @@ auth/storage suites.
 | 6 | Responsive journey | Run the same journey on desktop and Pixel 5 without control overflow or blocked actions. |
 | 7 | Focused discovery | Verify generator-specific answer content, HowTo/FAQ schema, and the contextual handoff to the separate viewer. |
 | 8 | Analytics boundary | Verify format and download events contain only allowlisted workflow metadata. |
-| 9 | Optional source adjustment | Keep automatic conversion as the fast path; optionally adjust zoom and framing, reset it, and regenerate locally. |
+| 9 | Optional source adjustment | Keep automatic conversion as the fast path; open More options, adjust zoom and framing, reset it, and regenerate locally. |
 | 10 | Result inspection | Prompt the user to inspect the 3D model and unfolded texture before download. |
 
 ## Product: Minecraft Skin Viewer

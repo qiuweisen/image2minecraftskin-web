@@ -601,6 +601,7 @@
   text-transform: none;
 }
 .skin-workspace-v51 > div {
+  align-items: stretch;
   background: var(--skin-panel);
 }
 .skin-workspace-v51 .skin-controls-v51 {
@@ -634,13 +635,20 @@
   color: var(--skin-mint);
 }
 .skin-workspace-v51 .skin-example-v51 {
-  min-height: 42px;
-  border: 1px solid var(--skin-line);
+  min-height: 0;
+  padding: 0;
+  border: 0;
   color: var(--skin-mint);
   background: transparent;
   font-size: 13px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 .skin-workspace-v51 .skin-source-v51 {
+  display: flex;
+  min-height: 72px;
+  align-items: center;
+  gap: 12px;
   border: 1px solid var(--skin-line);
   background: var(--skin-panel-2);
 }
@@ -648,6 +656,69 @@
   width: 56px;
   height: 56px;
   object-fit: cover;
+}
+.skin-source-placeholder-v51 {
+  display: grid;
+  width: 56px;
+  height: 56px;
+  flex: 0 0 56px;
+  place-items: center;
+  color: var(--skin-mint);
+  background: var(--skin-bg);
+  border: 1px solid var(--skin-line);
+  font-family: var(--font-pixel);
+  font-size: 10px;
+}
+.skin-source-change-v51 {
+  display: inline-block;
+  border: 0;
+  background: transparent;
+  font-family: var(--font-ui);
+}
+.more-options-v51 {
+  border: 1px solid var(--skin-line);
+  background: rgba(255, 255, 255, 0.015);
+}
+.more-options-v51 summary,
+.texture-map-v51 summary {
+  display: flex;
+  min-height: 42px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  cursor: pointer;
+  color: var(--skin-text);
+  font-size: 12px;
+  list-style: none;
+}
+.more-options-v51 summary::-webkit-details-marker,
+.texture-map-v51 summary::-webkit-details-marker {
+  display: none;
+}
+.more-options-v51 summary::after,
+.texture-map-v51 summary::after {
+  content: "+";
+  color: var(--skin-mint);
+  font-family: var(--font-pixel);
+  font-size: 14px;
+}
+.more-options-v51[open] summary::after,
+.texture-map-v51[open] summary::after {
+  content: "−";
+}
+.more-options-body-v51 {
+  padding: 12px;
+  border-top: 1px solid var(--skin-line);
+}
+.texture-map-v51 {
+  border: 1px solid var(--skin-line);
+  background: rgba(255, 255, 255, 0.015);
+}
+.texture-map-v51 summary {
+  color: var(--skin-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 .skin-workspace-v51 .skin-control-label {
   color: var(--skin-muted);
@@ -694,6 +765,8 @@
   font-size: 13px;
 }
 .skin-workspace-v51 .skin-output-v51 {
+  min-height: 420px;
+  height: 100%;
   padding: 18px;
   background: #0b1018;
 }
