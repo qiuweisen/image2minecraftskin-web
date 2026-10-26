@@ -1,4 +1,4 @@
-import { getCreditTaskStatus } from '@/api/credit-tasks';
+import { getCreditTaskStatus, startSkinTask } from '@/api/credit-tasks';
 import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
 import { mapAiSheetToSkin } from '@/lib/skin/ai-sheet';
@@ -9,20 +9,33 @@ import { trackSkinEvent } from '@/lib/analytics-events';
 type Task = {
   id: string;
   status: string;
+  cost?: number;
   preset?: string | null;
   completedAt?: number | null;
   refundTransactionId?: string | null;
+  freeRetryAvailable?: boolean;
 };
+
 export function SkinTaskCard({
   task: initial,
   model = 'classic',
+  onTaskReplace,
 }: {
   task: Task;
   model?: SkinModel;
+  onTaskReplace?: (task: Task) => void;
 }) {
   const [task, setTask] = useState(initial);
   const [result, setResult] = useState<string>();
   const [quality, setQuality] = useState<string>();
+  const [retrying, setRetrying] = useState(false);
+  const [retryError, setRetryError] = useState<string>();
+  const [retryUsedLocally, setRetryUsedLocally] = useState(false);
+
+  useEffect(() => {
+    setTask(initial);
+  }, [initial]);
+
   useEffect(() => {
     if (['succeeded', 'failed', 'rejected'].includes(task.status)) return;
     let cancelled = false;
@@ -48,6 +61,7 @@ export function SkinTaskCard({
       window.clearTimeout(timer);
     };
   }, [task.id, task.status]);
+
   useEffect(() => {
     if (task.status !== 'succeeded') return;
     let cancelled = false;
@@ -88,10 +102,76 @@ export function SkinTaskCard({
       cancelled = true;
     };
   }, [task.id, task.status, model]);
+
+  const showFreeRetry =
+    !retryUsedLocally &&
+    task.freeRetryAvailable === true &&
+    (task.status === 'failed' ||
+      (task.status === 'succeeded' && quality === 'AI 图不规范'));
+
+  const runFreeRetry = async () => {
+    if (retrying || retryUsedLocally) return;
+    setRetrying(true);
+    setRetryError(undefined);
+    try {
+      trackSkinEvent({
+        name: 'ai_generate_start',
+        payload: { preset: task.preset ?? model, model, free_retry: true },
+      });
+      const next = await startSkinTask({
+        data: {
+          bizKey: `skin-retry-${crypto.randomUUID()}`,
+          retryOf: task.id,
+        },
+      });
+      setRetryUsedLocally(true);
+      setTask(next);
+      setResult(undefined);
+      setQuality(undefined);
+      onTaskReplace?.(next);
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : 'FREE_RETRY_FAILED';
+      setRetryError(message);
+      if (message === 'FREE_RETRY_ALREADY_USED') setRetryUsedLocally(true);
+      trackSkinEvent({
+        name: 'ai_generate_fail',
+        payload: { reason: 'free_retry_failed' },
+      });
+    } finally {
+      setRetrying(false);
+    }
+  };
+
+  const freeRetryButton = showFreeRetry ? (
+    <div className="grid gap-2">
+      <Button
+        type="button"
+        variant="outline"
+        disabled={retrying || retryUsedLocally}
+        onClick={() => void runFreeRetry()}
+      >
+        {retrying ? '正在免费重新生成…' : '免费重新生成一次'}
+      </Button>
+      {retryError && (
+        <p className="text-xs text-red-300">
+          {retryError === 'FREE_RETRY_ALREADY_USED'
+            ? '该任务的免费重试已用过。'
+            : `免费重试失败：${retryError}`}
+        </p>
+      )}
+    </div>
+  ) : null;
+
   if (task.status === 'failed' || task.status === 'rejected')
     return (
-      <div className="border border-red-400/30 p-4 text-sm text-red-200">
-        生成失败，积分已退回。请稍后重试。
+      <div className="grid gap-3 border border-red-400/30 p-4 text-sm text-red-200">
+        <div>
+          {task.status === 'rejected'
+            ? '积分不足，未能开始生成。'
+            : '生成失败，积分已退回。请稍后重试。'}
+        </div>
+        {task.status === 'failed' && freeRetryButton}
       </div>
     );
   if (task.status === 'refund_pending')
@@ -106,12 +186,19 @@ export function SkinTaskCard({
         {task.status === 'succeeded'
           ? 'AI skin ready'
           : `AI skin ${task.status}`}
+        {task.cost === 0 ? ' · free retry' : ''}
       </div>
       {quality && (
         <div className="text-sm text-amber-200">
-          {quality} · 可免费重新生成一次
+          {quality}
+          {showFreeRetry
+            ? ' · 可免费重新生成一次'
+            : retryUsedLocally
+              ? ' · 免费重试已使用'
+              : ''}
         </div>
       )}
+      {freeRetryButton}
       {result && (
         <>
           <img

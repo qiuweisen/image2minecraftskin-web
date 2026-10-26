@@ -946,7 +946,11 @@ export function SkinWorkspace() {
           )}
           {aiTask && (
             <div className="mt-6">
-              <SkinTaskCard task={aiTask} model={aiModel} />
+              <SkinTaskCard
+                task={aiTask}
+                model={aiModel}
+                onTaskReplace={setAiTask}
+              />
             </div>
           )}
         </div>

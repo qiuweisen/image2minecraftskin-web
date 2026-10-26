@@ -57,7 +57,10 @@ export async function getCreditTask(
   if (!task) throw new Error('TASK_NOT_FOUND');
   return task;
 }
-export function publicTask(task: CreditTask) {
+export function publicTask(
+  task: CreditTask,
+  extras?: { freeRetryAvailable?: boolean }
+) {
   return {
     id: task.id,
     status: task.status,
@@ -66,6 +69,7 @@ export function publicTask(task: CreditTask) {
     createdAt: task.createdAt,
     completedAt: task.completedAt,
     refundTransactionId: task.refundTransactionId,
+    freeRetryAvailable: extras?.freeRetryAvailable ?? false,
   };
 }
 function canonical(value: unknown): string {
@@ -86,6 +90,8 @@ export async function createCreditTask(input: {
   params: Record<string, unknown>;
   inputR2Key?: string;
   preset?: string;
+  /** Server-validated free layout retry: store cost 0 (ledger skipped on consume). */
+  freeRetry?: boolean;
 }) {
   if (!websiteConfig.credits?.enable) throw new Error('CREDITS_DISABLED');
   if (!input.bizKey || input.bizKey.length > 128)
@@ -109,7 +115,23 @@ export async function createCreditTask(input: {
       throw new Error('IDEMPOTENCY_CONFLICT');
     return existing;
   }
-  const quote = getToolCost(input.toolId, input.params);
+  // Quote against tool params without retry_of so pricing stays stable.
+  const pricedParams = { ...input.params };
+  delete pricedParams.retry_of;
+  const baseQuote = getToolCost(
+    input.toolId,
+    Object.keys(pricedParams).length ? pricedParams : input.params
+  );
+  const quote = input.freeRetry
+    ? { amount: 0, pricingVersion: baseQuote.pricingVersion }
+    : baseQuote;
+  if (
+    !input.freeRetry &&
+    (!Number.isSafeInteger(quote.amount) || quote.amount <= 0)
+  )
+    throw new Error('INVALID_CREDIT_AMOUNT');
+  if (input.freeRetry && quote.amount !== 0)
+    throw new Error('INVALID_FREE_RETRY_COST');
   const policy = websiteConfig.credits.taskPolicy!;
   if (Object.values(policy).some((n) => !Number.isSafeInteger(n) || n <= 0))
     throw new Error('INVALID_TASK_POLICY');

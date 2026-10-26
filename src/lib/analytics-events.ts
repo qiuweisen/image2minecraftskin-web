@@ -52,7 +52,7 @@ const EVENT_FIELDS: Record<SkinAnalyticsEventName, string[]> = {
   ai_door_click: [],
   ai_waitlist_submit: [],
   ai_cta_click: ['location'],
-  ai_generate_start: ['preset', 'subject_kind', 'model'],
+  ai_generate_start: ['preset', 'subject_kind', 'model', 'free_retry'],
   ai_generate_success: ['duration_ms', 'model'],
   ai_generate_fail: ['reason'],
   begin_checkout: ['package_id'],

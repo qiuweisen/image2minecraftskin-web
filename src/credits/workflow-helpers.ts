@@ -41,6 +41,14 @@ const realRuntime: TaskRuntime = {
 export async function consumeTaskCredits(id: string) {
   const task = await getCreditTask(id);
   if (isTerminal(task) || task.status === 'refund_pending') return task;
+  // Free layout retry: cost 0, no ledger row; task row itself is the audit trail.
+  if (task.cost === 0) {
+    await updateTask(id, {
+      status: 'running',
+      startedAt: task.startedAt ?? Date.now(),
+    });
+    return getCreditTask(id);
+  }
   const consumed = await consumeCredits({
     userId: task.userId,
     amount: task.cost,
@@ -85,7 +93,17 @@ export async function refundTaskCredits(
         .bind(task.userId, `task:${id}`)
         .first<{ id: string }>()
     )?.id;
-  if (!usageId) throw new Error('REFUND_WITHOUT_CHARGE');
+  // Zero-cost free retry never charged — mark failed without a refund row.
+  if (!usageId) {
+    if (task.cost !== 0) throw new Error('REFUND_WITHOUT_CHARGE');
+    await updateTask(id, {
+      status: 'failed',
+      errorCode: 'TASK_FAILED',
+      errorMessage: reason.slice(0, 300),
+      completedAt: Date.now(),
+    });
+    return getCreditTask(id);
+  }
   await updateTask(id, {
     status: 'refund_pending',
     usageTransactionId: usageId,
